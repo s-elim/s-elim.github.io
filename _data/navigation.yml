@@ -3,20 +3,20 @@ main:
   - title: "Updates"
     url: /updates/
     
-  - title: "Publications"
-    url: /publications/
-
   - title: "Experience"
-    url: /experience/    
+    url: /experience/
+
+  - title: "Awards"
+    url: /awards/    
     
+  - title: "ECA"
+    url: /eca/
+
   - title: "Projects"
     url: /projects/
 
-  - title: "Awards"
-    url: /awards/
-
-  - title: "ECA"
-    url: /eca/
+  - title: "Publications"
+    url: /publications/
      
   - title: "CV"
     url: /cv/
