@@ -35,6 +35,26 @@ author_profile: true
         <li> For MS-PhD combined program in Electrical and Computer Science </li>
         <li> Yonsei University, South Korea (July. 2023) </li>
     </ul>
- 
- 
+  <li><i class='fas fa-medal' style="color:gold"></i> AIT Scholarship ( Declined) </li>
+    <ul>
+      <li> For  Graduate Studies in Data Science </li>
+         <li>  Asian Institute Of Technology, Thailand (Feb. 2023) </li>
+   
+    </ul>
+  <li><i class='fas fa-medal' style="color:gold"></i> National Youth Inspiration Award - 2017 </li>
+    <ul>
+      <li> Awarded as Youth Leadership and Connectivity Category among Whole Bangladesh </li>
+         <li>  Citizens Open Forum (COF) (Nov. 2017) </li>
+    </ul>
 
+  <li><i class='fas fa-medal' style="color:gold"></i> Winner Of MR. Halloween Award </li>
+    <ul>
+      <li> KIIT International Student Society </li>
+         <li>  Halloween Event of 2021 </li>
+    </ul>
+
+    <li><i class='fas fa-medal' style="color:gold"></i> Scholarship for Excellence in Secondary School Certificate </li>
+    <ul>
+      <li> For academic excellence </li>
+         <li> Bangladesh Ministry Of  Education (Nov. 2016 - June.2018) </li>
+    </ul>
