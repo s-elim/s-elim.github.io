@@ -6,17 +6,15 @@ author_profile: true
 ---
 
 <ul>
-  <li><i class='fas fa-medal' style="color:gold"></i> Selected as an Outstanding Speaker in the NTHU Foreign Student Association welcome conference, 2021</li>
 
-
-  <li><i class='fas fa-medal' style="color:gold"></i> Awarded M.Sc. Full Scholarship (Merit-Based) from the National Tsing Hua University (two times), 2020 & 2021</li>
+  <li><i class='fas fa-medal' style="color:gold"></i> Awarded NTHU International Graduate Students Scholarship (Merit‑Based) for M.Sc. degree (2023)</li>
     <ul>
-        <li> The highest award offered to NTHU international students </li>
+        <li> The highest award offered to NTHU international students. Full Scholarship - Type A (Tuition fee waiver, Credit Fee waiver and Monthly stipend) </li>
   </ul>
   
-  <li><i class='fas fa-medal' style="color:gold"></i> Ranked 1st among all undergraduate students of Communications Branch, 2019</li>
+  <li><i class='fas fa-medal' style="color:gold"></i> Study In India Government Scholarship, Ministry Of Education, India (June,2019 - June,2023) </li>
     <ul>
-        <li>  Department of Electrical Engineering, University of Guilan, 2019 </li>
+        <li>  This is awarded for Undergraduate (B. TECH) Program in India with full funding </li>
     </ul>
         
 
