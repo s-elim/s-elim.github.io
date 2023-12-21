@@ -4,7 +4,7 @@ main:
     url: /updates/
     
   - title: "Experiences"
-    url: /experiences.html/
+    url: /experiences/
 
   - title: "Awards"
     url: /awards/    
@@ -19,4 +19,4 @@ main:
     url: /publications/
      
   - title: "CV"
-    url: /cv.md/
+    url: /cv/
