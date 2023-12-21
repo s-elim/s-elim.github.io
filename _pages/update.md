@@ -4,7 +4,7 @@ title: "Updates"
 permalink: /update/
 author_profile: true
 redirect_from:
----
+---/https://sites.google.com/view/selimsarowar13/updates?authuser=0
 
 {% include base_path %}
 
