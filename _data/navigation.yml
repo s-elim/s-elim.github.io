@@ -3,8 +3,8 @@ main:
   - title: "Updates"
     url: /updates/
     
-  - title: "Experience"
-    url: /experience/
+  - title: "Experiences"
+    url: /experiences.html/
 
   - title: "Awards"
     url: /awards/    
@@ -19,4 +19,4 @@ main:
     url: /publications/
      
   - title: "CV"
-    url: /cv/
+    url: /cv.md/
