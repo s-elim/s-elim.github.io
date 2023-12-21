@@ -3,7 +3,6 @@ layout: archive
 title: "Updates"
 permalink: /update/
 author_profile: true
-<ul>
 
 <h2 class="year">2023</h2>
 
