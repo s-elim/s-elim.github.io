@@ -9,4 +9,4 @@ redirect_from:
 
 {% include base_path %}
 
-Click <a href="https://sites.google.com/view/selimsarowar13/updates" target="\_blank" style="color: #A7EEF3; text-decoration:none">here</a>.
+ <a href="https://sites.google.com/view/selimsarowar13/updates" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Click here</a>.
