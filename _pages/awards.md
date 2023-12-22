@@ -9,37 +9,37 @@ author_profile: true
 
   <i class='fas fa-medal' style="color:gold"></i> Awarded NTHU International Graduate Students Scholarship (Merit‑Based) for M.Sc. degree (2023)
     <ul>
-        <li> The highest award offered to NTHU international students. Full Scholarship - Type A (Tuition fee waiver, Credit Fee waiver and Monthly stipend) </li>
+      &#x2022 The highest award offered to NTHU international students. Full Scholarship - Type A (Tuition fee waiver, Credit Fee waiver and Monthly stipend)
   </ul>
   
   <i class='fas fa-medal' style="color:gold"></i> Study In India Government Scholarship, Ministry Of Education, India (June. 2019 - June. 2023)
     <ul>
-        <li>  This is awarded for Undergraduate (B. TECH) Program in India with full funding </li>
+      &#x2022 This is awarded for Undergraduate (B. TECH) Program in India with full funding
     </ul>
         
 
   <i class='fas fa-medal' style="color:gold"></i> KIIT University International Scholarship Program (KUISP) 
     <ul>
-       <li>  For  Academic Excellence </li>
-      <li>  Kalinga Institute Of Industrial Technology (Aug. 2019 - June. 2023) </li>
+      &#x2022 For  Academic Excellence <br>
+      &#x2022 Kalinga Institute Of Industrial Technology (Aug. 2019 - June. 2023)
     </ul>
 
   <i class='fas fa-medal' style="color:gold"></i> Abay Kunanbayev Scholarship ( Declined)
     <ul>
-      <li> For  Graduate Studies in Electrical and Computer Engineering with full fund </li>
-         <li>  Nazarbayev University, Kazakhstan (May. 2023) </li>
+    &#x2022 For  Graduate Studies in Electrical and Computer Engineering with full fund <br>
+    &#x2022 Nazarbayev University, Kazakhstan (May. 2023)
     </ul>
   
    <i class='fas fa-medal' style="color:gold"></i> Merit Based Scholarship ( Declined)
     <ul>
-        <li> For MS-PhD combined program in Electrical and Computer Science </li>
-        <li> Yonsei University, South Korea (July. 2023) </li>
+       &#x2022 For MS-PhD combined program in Electrical and Computer Science <br>
+       &#x2022 Yonsei University, South Korea (July. 2023)
     </ul>
  
   <i class='fas fa-medal' style="color:gold"></i> AIT Scholarship ( Declined)
     <ul>
-      <li> For  Graduate Studies in Data Science </li>
-         <li>  Asian Institute Of Technology, Thailand (Feb. 2023) </li>
+     &#x2022 For  Graduate Studies in Data Science <br>
+    &#x2022 Asian Institute Of Technology, Thailand (Feb. 2023)
    
     </ul>
   <i class='fas fa-medal' style="color:gold"></i> National Youth Inspiration Award - 2017
