@@ -87,24 +87,24 @@ author:
   employer         :
   googlescholar    : "https://scholar.google.com/citations?user=-DRQiWcAAAAJ&hl=en"
   email            : "selim.sarowar12@gmail.com"
-  researchgate     :  # example: "https://www.researchgate.net/profile/Selim_Sarowar"
+  researchgate     : "https://www.researchgate.net/profile/Selim_Sarowar"
   uri              :
   bitbucket        :
   codepen          :
   dribbble         :
   flickr           :
-  facebook         : "shadhin.2000"
+  facebook         :
   foursquare       :
   github           :
   google_plus      :
   keybase          :
-  instagram        : #""
-  impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
+  instagram        :
+  impactstory      : 
   lastfm           :
   linkedin         : "selimsarowar"
   pinterest        :
   soundcloud       :
-  stackoverflow    : # http://stackoverflow.com/users/123456/username
+  stackoverflow    : 
   steam            :
   tumblr           :
   twitter          : "SarowarSelim"
