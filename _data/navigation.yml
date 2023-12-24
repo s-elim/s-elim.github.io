@@ -12,6 +12,9 @@ main:
   - title: "ECA"
     url: /eca/
 
+  - title: "Conference & Seminar"
+    url: /conference&seminar/
+    
   - title: "Projects"
     url: /projects/
 
