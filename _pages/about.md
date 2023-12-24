@@ -61,30 +61,24 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
 <div class="News">
 <h2>News</h2>
 
-<div class="list__item">
-<article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> January&nbsp;2023</p>
-<p align="justify">Our research paper, "<a href="https://ieeexplore.ieee.org/abstract/document/10032531" style="color: #A7EEF3; text-decoration:none;" target="\_blank">Robust Hyperspectral Inpainting via Low-Rank Regularized Untrained Convolutional Neural Network</a>", has been accepted by&nbsp;<strong>IEEE Geoscience and Remote Sensing Letters</strong>.</p>
-</article>
-</div> 
 
 <div class="list__item">
 <article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> July. 2023</p>
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2023</p>
 <p align="justify">I started my M. Sc. (Research) at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University</a>.</p>
 </article>
 </div>  
 
 <div class="list__item">
 <article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> July. 2023</p>
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> July, 2023</p>
 <p align="justify">I completed my B. Tech with distinction & received convocation from <a href="https://sites.google.com/view/selimsarowar13/gallery" target="\_blank" style="color: #A7EEF3; text-decoration:none">KIIT, India</a>.</p>
 </article>
 </div>  
 <div class="list__item">
 <article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> February. 2022</p>
-<p align="justify">My research paper, "<a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank">Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</a>", has been published by&nbsp;<strong>IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC)</strong>.</p>
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> February, 2022</p>
+<p align="justify">Our research paper, "<a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank">Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</a>", has been published by&nbsp;<strong>IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC)</strong>.</p>
 </article>
 </div>
 
