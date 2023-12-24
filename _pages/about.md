@@ -59,7 +59,7 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
  </div>
 
 <div class="Updates">
-<h2>News</h2>
+<h2>Updates</h2>
 
 
 <div class="list__item">
