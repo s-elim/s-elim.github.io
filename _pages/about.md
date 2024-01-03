@@ -24,7 +24,7 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
   
 
 <p align="center">
-  <img width="450" height="450" src="images/Md_Selim_Word_Research_Interests.png">
+  <img width="500" height="400" src="https://github.com/selimsarowar/selimsarowar.github.io/blob/7be58b3c2cd3a5eb00bc35e20addfca7956ff103/images/Md_Selim_Word_Research_Interests-2.png">
 </p>
  
  
