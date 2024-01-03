@@ -24,7 +24,7 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
   
 
 <p align="center">
-  <img width="450" height="300" src="images/Untitled%20design%20(1).png">
+  <img width="500" height="450" src="images/Untitled%20design%20(1).png">
 </p>
  
  
