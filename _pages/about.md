@@ -24,7 +24,7 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
   
 
 <p align="center">
-  <img width="420" height="320" src="images/Untitled%20design%20(3).png">
+  <img width="400" height="300" src="images/Untitled%20design%20(3).png">
 </p>
  
 <div class="Featured Publications">
@@ -33,7 +33,7 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
 <table style="width:100%">
   <tr style="border: solid; border-color: gray">
     <th>
-      <img src="images/Convolutional-Autoencoder-Architecture_W640.jpg" height="400" width="230"/>
+      <img src="images/Convolutional-Autoencoder-Architecture_W640.jpg" height="300" width="230"/>
     </th>
     <th style="text-align:left">
              <span style="font-size:14px"><a href="https://ieeexplore.ieee.org/abstract/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><p align="justify"><strong>Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</strong></p> </a></span>
