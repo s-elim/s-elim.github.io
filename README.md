@@ -35,4 +35,3 @@ See more info at https://academicpages.github.io/
 There is one logistical issue with a ready-to-fork template theme like academic pages that makes it a little tricky to get bug fixes and updates to the core theme. If you fork this repository, customize it, then pull again, you'll probably get merge conflicts. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch. 
 
 
-![Convolutional-Autoencoder-Architecture_W640](https://github.com/selimsarowar/selimsarowar.github.io/assets/80826756/48a443f7-ba15-4f8d-9bab-179b3a510cc6)
