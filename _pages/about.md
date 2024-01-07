@@ -33,13 +33,13 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
 <table style="width:100%">
   <tr style="border: solid; border-color: gray">
     <th>
-      <img src="https://user-images.githubusercontent.com/107177894/219032448-2475d5dd-44ac-418e-9072-a6044d060663.gif" width="200"/>
+      <img src="images/Convolutional-Autoencoder-Architecture_W640.jpg" width="200"/>
     </th>
     <th style="text-align:left">
-             <span style="font-size:14px"><a href="https://ieeexplore.ieee.org/abstract/document/10032531" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><p align="justify"><strong>Robust Hyperspectral Inpainting via Low-Rank Regularized Untrained Convolutional Neural Network</strong></p> </a></span>
-            <span style="font-size:13px">Keivan Faghih Niresi<span style="font-weight:normal">, and Chong-Yung Chi</span></span><br><br>
-     <span style="font-weight:normal;font-size:13px">IEEE Geoscience and Remote Sensing Letters, 2023</span><br><br>
- <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://ieeexplore.ieee.org/abstract/document/10032531" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IEEE Xplore</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://www.ee.nthu.edu.tw/cychi/publications/journal_articles2011/Robust_Hyperspectral_Inpainting_via_Low-Rank_Regularized_Untrained_Convolutional_Neural_Network.pdf" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> | <i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://github.com/Keiv4n/R-DLRHyIn" style="color: Aquamarine; text-decoration:none;" target="\_blank">Code</a> </span>
+             <span style="font-size:14px"><a href="https://ieeexplore.ieee.org/abstract/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><p align="justify"><strong>Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</strong></p> </a></span>
+            <span style="font-size:13px">Md Selim Sarowar<span style="font-weight:normal">, Koustav Dutta and Rasmita Lenka</span></span><br><br>
+     <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing, & Communication (AESPC), 2022</span><br><br>
+ <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://ieeexplore.ieee.org/abstract/document/9708513" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IEEE Xplore</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> </span>
     </th>
   </tr>    
 </table>
