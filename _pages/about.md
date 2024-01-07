@@ -71,6 +71,6 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
 </div>
 
   
-<a href="https://sites.google.com/view/selimsarowar13/updates" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><b>see more(to get latest updates)...</b> </a> 
+<a href="https://sites.google.com/view/selimsarowar13/updates" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><b>see more(to get updates)...</b> </a> 
   
   <br>
