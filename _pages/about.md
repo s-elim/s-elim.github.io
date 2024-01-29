@@ -52,6 +52,13 @@ Prior to joining NTHU, I obtained my B. Tech degree from the <a href="https://el
 
 <div class="list__item">
 <article class="archive__item">
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2024</p>
+<p align="justify">I have started M.Sc. at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University, Taiwan</a>.</p>
+</article>
+</div> 
+
+<div class="list__item">
+<article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2023</p>
 <p align="justify">I joined as Research Assistant at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University, Taiwan</a>.</p>
 </article>
