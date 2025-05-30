@@ -76,8 +76,5 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 <p align="justify">Our research paper, "<a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank">Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</a>", has been published by&nbsp;<strong>IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC)</strong>.</p>
 </article>
 </div>
-
-  
-<a href="https://sites.google.com/view/selimsarowar13/updates" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><b>see more(to get updates)...</b> </a> 
   
   <br>
