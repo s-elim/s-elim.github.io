@@ -52,22 +52,22 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 
 <div class="list__item">
 <article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2024</p>
-<p align="justify">I have started 1 year training on Korean Language & Literature under GKS program at <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2025</p>
+<p align="justify">I have started my M.Sc (Research) after completing 1 year training on Korean Language & Literature under GKS program at <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
 </article>
 </div> 
 
 <div class="list__item">
 <article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2023</p>
-<p align="justify">I joined as Research Assistant at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University, Taiwan</a>.</p>
+<p align="justify">I joined as a Research Assistant at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University, Taiwan</a>.</p>
 </article>
 </div>  
 
 <div class="list__item">
 <article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> July, 2023</p>
-<p align="justify">I've completed B. Tech with distinction & received convocation from <a href="https://sites.google.com/view/selimsarowar13/gallery" target="\_blank" style="color: #A7EEF3; text-decoration:none">KIIT, India</a>.</p>
+<p align="justify">I've completed my B. Tech degree with distinction & received convocation from <a href="https://sites.google.com/view/selimsarowar13/gallery" target="\_blank" style="color: #A7EEF3; text-decoration:none">KIIT, India</a>.</p>
 </article>
 </div>  
 <div class="list__item">
