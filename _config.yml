@@ -11,9 +11,9 @@ title                    : "Md Selim Sarowar"
 title_separator          : "-"
 name                     : &name "Md Selim Sarowar"
 description              :  &description "Graduate Research Assistant at AVI Lab, YU, South Korea"
-url                      : https://selimsarowar.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://s-elim.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "selimsarowar.github.io"
+repository               : "s-elim.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
@@ -56,10 +56,9 @@ alexa_site_verification  :
 yandex_site_verification :
 
 # Social Sharing
-twitter:
-  username               : SarowarSelim
+
 facebook:
-  username               : Shadhin.2000
+  username               : selim.sarowar30
   app_id                 :
   publisher              :
 og_image                 :  # Open Graph/Twitter default site image
@@ -80,7 +79,7 @@ analytics:
 
 # Site Author
 author:
-  name             : "Md Selim Sarowar"
+  name             : "Selim Sarowar"
   avatar           : "profile.png"
   bio              : "Graduate Research Assistant <br> AVI Lab <br> YU"
   location         : "South Korea"
@@ -107,7 +106,7 @@ author:
   stackoverflow    : 
   steam            :
   tumblr           :
-  twitter          : "SarowarSelim"
+  twitter          : #SarowarSelim"
   vine             :
   weibo            :
   xing             :
