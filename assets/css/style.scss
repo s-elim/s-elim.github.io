@@ -1,4 +1,11 @@
 ---
+# Only the main Sass file needs front matter (the triple dashes).
 ---
-@import "minimal-mistakes/skins/default"; // Switch to light theme
-@import "minimal-mistakes"; // Load the full theme
+
+@charset "utf-8";
+
+// Import default Minimal Mistakes light skin
+@import "minimal-mistakes/skins/default";
+
+// Import the rest of the theme
+@import "minimal-mistakes";
