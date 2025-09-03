@@ -65,6 +65,13 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 
 <div class="list__item">
 <article class="archive__item">
+<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> August, 2024</p>
+<p align="justify">I moved to South Korea for Korean Language and Literature program under GKS Scholarship at <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
+</article>
+</div> 
+
+<div class="list__item">
+<article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2023</p>
 <p align="justify">I joined as a Research Assistant at <a href="https://nthu-en.site.nthu.edu.tw/" target="\_blank" style="color: #A7EEF3; text-decoration:none">National Tsing Hua University, Taiwan</a>.</p>
 </article>
