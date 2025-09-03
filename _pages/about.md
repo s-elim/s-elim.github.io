@@ -16,7 +16,7 @@ redirect_from:
 
 <p align="justify">
 
-I am pursuing M.Sc.(Computer Vision & AI) at <a href="http://www.ynu.kr/_english/main/index.php" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU) as GKS Scholar</a>, funded by <a href="https://github.com/selimsarowar/selimsarowar.github.io/blob/b4ebed67333a6920315fd60afe02217daadc6cda/files/CS01240517.pdf" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Global Korea Scholarship (GKS), NIIED</a> & additional funding by <a href="https://www.kakaocorp.com/page/" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Kakao Inc. </a> & <a href="https://www.slworld.com/index_eng.php" target="\_blank" style="color: #A7EEF3; text-decoration:none"> SL Automotive projects</a>. I joined the <a href="https://avilabyu.wixsite.com/avil" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Advanced Visual Intelligence Lab </a> under the supervision of <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Prof. Sungho Kim </a>. <br> <br>
+I am pursuing M.Sc.(Computer Vision & AI) at <a href="http://www.ynu.kr/_english/main/index.php" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU) as GKS Scholar</a>, funded by <a href="https://github.com/selimsarowar/selimsarowar.github.io/blob/b4ebed67333a6920315fd60afe02217daadc6cda/files/CS01240517.pdf" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Global Korea Scholarship (GKS), NIIED</a> & additional funding by RLRC and RISE projects </a> & <a href="https://www.slworld.com/index_eng.php" target="\_blank" style="color: #A7EEF3; text-decoration:none"> SL Automotive </a>. I joined the <a href="https://avilabyu.wixsite.com/avil" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Advanced Visual Intelligence Lab </a> under the supervision of <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Prof. Sungho Kim </a>. <br> <br>
 
 My current research interests lie primarily in Autonomous Systems, Computer Vision, 3D/6D Pose Estimation, 3D Object Detection & Tracking, Humanoid Robot Vision(Robot AI) and Vision Language Models(VLM) applications.<br> <br>
 
@@ -52,7 +52,7 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 <div class="list__item">
 <article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2025</p>
-<p align="justify"> Awarded Multiple Research Grant for 5 years(Collaborative), from Sl Corporation and RISE Projects( Collaboration with kakao Inc. ,Sk Telecom, ETRI AI etc)- 2025 for my lab(AVI lab) <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
+<p align="justify"> Awarded Multiple Research Grant for 5 years(Collaborative), from RLRC projects, Sl Corporation and RISE Projects( Collaboration with kakao Inc. ,Sk Telecom, and Nanosystemz Ltd.)- 2025 <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
 </article>
 </div> 
 
