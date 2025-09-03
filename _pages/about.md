@@ -83,11 +83,6 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 <p align="justify">I've completed my B. Tech degree with distinction & received convocation from <a href="https://sites.google.com/view/selimsarowar13/gallery" target="\_blank" style="color: #A7EEF3; text-decoration:none">KIIT, India</a>.</p>
 </article>
 </div>  
-<div class="list__item">
-<article class="archive__item">
-<p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> February, 2022</p>
-<p align="justify">Our research paper, "<a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank">Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</a>", has been published by&nbsp;<strong>IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC)</strong>.</p>
-</article>
-</div>
+
   
   <br>
