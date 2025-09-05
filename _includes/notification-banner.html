@@ -23,12 +23,7 @@
     padding: 0;
     color: red;
     font-weight: bold;
-    animation: slideIn 1s ease;
-  }
-
-  @keyframes slideIn {
-    from { transform: translateY(-100%); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
   #close-banner-btn {
@@ -48,8 +43,8 @@
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // 🔄 Messages for slideshow
+  // Wait until the whole page is loaded
+  window.onload = function() {
     const messages = [
       "Website last updated on 5 Sept 2025",
       "Currently visiting CERN, Switzerland",
@@ -60,12 +55,19 @@
     const bannerText = document.getElementById("banner-text");
 
     function showMessage() {
-      bannerText.innerHTML = messages[index];
-      bannerText.style.animation = "none"; // reset animation
-      bannerText.offsetHeight; // force reflow
-      bannerText.style.animation = "slideIn 1s ease";
+      // Fade out current text
+      bannerText.style.opacity = 0;
+      bannerText.style.transform = "translateY(-20px)";
 
-      index = (index + 1) % messages.length;
+      setTimeout(() => {
+        // Change text
+        bannerText.innerHTML = messages[index];
+        // Fade in
+        bannerText.style.opacity = 1;
+        bannerText.style.transform = "translateY(0)";
+        // Next message
+        index = (index + 1) % messages.length;
+      }, 500); // match transition duration
     }
 
     // Show first message immediately
@@ -75,8 +77,8 @@
     setInterval(showMessage, 4000);
 
     // Close button
-    document.getElementById("close-banner-btn").onclick = function () {
+    document.getElementById("close-banner-btn").onclick = function() {
       document.getElementById("notification-banner").style.display = "none";
     };
-  });
+  };
 </script>
