@@ -1,0 +1,24 @@
+<div id="notification-banner">
+  <p>📢 **Update:** This page was last updated on September 5, 2025. I am currently visiting CERN in Switzerland!</p>
+  <span id="close-banner-btn">&times;</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const banner = document.getElementById('notification-banner');
+  const closeBtn = document.getElementById('close-banner-btn');
+
+  // Check if the user has already closed the banner in this session
+  if (sessionStorage.getItem('bannerClosed') === 'true') {
+    banner.style.display = 'none';
+    return;
+  }
+
+  // Event listener for the close button
+  closeBtn.addEventListener('click', function() {
+    banner.style.display = 'none';
+    // Remember that the user has closed the banner for this session
+    sessionStorage.setItem('bannerClosed', 'true');
+  });
+});
+</script>
