@@ -1,24 +1,80 @@
 <div id="notification-banner">
-  <p>📢 **Update:** This page was last updated on September 5, 2025. I am currently visiting CERN in Switzerland!</p>
+  <p id="banner-text"></p>
   <span id="close-banner-btn">&times;</span>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const banner = document.getElementById('notification-banner');
-  const closeBtn = document.getElementById('close-banner-btn');
-
-  // Check if the user has already closed the banner in this session
-  if (sessionStorage.getItem('bannerClosed') === 'true') {
-    banner.style.display = 'none';
-    return;
+<style>
+  #notification-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #e0e0e0; /* gray background */
+    text-align: center;
+    padding: 12px 40px 12px 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-size: 0.9rem;
+    overflow: hidden;
   }
 
-  // Event listener for the close button
-  closeBtn.addEventListener('click', function() {
-    banner.style.display = 'none';
-    // Remember that the user has closed the banner for this session
-    sessionStorage.setItem('bannerClosed', 'true');
-  });
-});
+  #notification-banner p {
+    margin: 0;
+    padding: 0;
+    color: red;
+    font-weight: bold;
+    animation: slideIn 1s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-100%); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  #close-banner-btn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  #close-banner-btn:hover {
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  // 🔄 Messages for slideshow
+  const messages = [
+    "Website last updated on 5 Sept 2025",
+    "Currently visiting CERN, Switzerland",
+    "New publication coming soon 🚀"
+  ];
+
+  let index = 0;
+  const bannerText = document.getElementById("banner-text");
+
+  function showMessage() {
+    bannerText.innerHTML = messages[index];
+    bannerText.style.animation = "none"; // reset animation
+    bannerText.offsetHeight; // trigger reflow
+    bannerText.style.animation = "slideIn 1s ease";
+
+    index = (index + 1) % messages.length;
+  }
+
+  // Show first message
+  showMessage();
+
+  // Rotate every 4 seconds
+  setInterval(showMessage, 4000);
+
+  // Close button
+  document.getElementById("close-banner-btn").onclick = function() {
+    document.getElementById("notification-banner").style.display = "none";
+  };
 </script>
