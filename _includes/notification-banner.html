@@ -1,83 +1,33 @@
-<div id="notification-banner">
-  <p>Loading...</p>
-  <span id="close-banner-btn">&times;</span>
-</div>
+#notification-banner {
+  position: fixed; /* Or 'sticky' if you prefer */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #e0e0e0; /* gray background */
+  color: red;
+  text-align: center;
+  padding: 12px 40px 12px 20px; /* Top, Right, Bottom, Left padding */
+  z-index: 1000; /* Ensures it's on top of other content */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 0.9rem;
+}
 
-<style>
-  #notification-banner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #e0e0e0; /* gray background */
-    text-align: center;
-    padding: 12px 40px 12px 20px;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    font-size: 0.9rem;
-    overflow: hidden;
-  }
+#notification-banner p {
+  margin: 0;
+  padding: 0;
+}
 
-  #notification-banner p {
-    margin: 0;
-    padding: 0;
-    color: red;           /* red text */
-    font-weight: bold;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+#close-banner-btn {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
 
-  #close-banner-btn {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
-  }
-
-  #close-banner-btn:hover {
-    opacity: 0.7;
-  }
-</style>
-
-<script>
-  window.onload = function() {
-    const messages = [
-      "Website last updated on 5 Sept 2025",
-      "Currently visiting CERN, Switzerland",
-      "New publication coming soon 🚀"
-    ];
-
-    let index = 0;
-    const bannerText = document.querySelector("#notification-banner p");
-
-    function showMessage() {
-      // Fade out
-      bannerText.style.opacity = 0;
-      bannerText.style.transform = "translateY(-20px)";
-
-      setTimeout(() => {
-        // Change text
-        bannerText.innerHTML = messages[index];
-        // Fade in
-        bannerText.style.opacity = 1;
-        bannerText.style.transform = "translateY(0)";
-        // Next message
-        index = (index + 1) % messages.length;
-      }, 500);
-    }
-
-    // Show first message immediately
-    showMessage();
-
-    // Rotate every 4 seconds
-    setInterval(showMessage, 4000);
-
-    // Close button
-    document.getElementById("close-banner-btn").onclick = function() {
-      document.getElementById("notification-banner").style.display = "none";
-    };
-  };
-</script>
+#close-banner-btn:hover {
+  opacity: 0.7;
+}
