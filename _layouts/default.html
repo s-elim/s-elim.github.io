@@ -13,8 +13,7 @@ layout: compress
 
   <body>
 
-
-    <!doctype html>
+<!doctype html>
 <html lang="{{ site.locale | slice: 0,2 | default: "en" }}" class="no-js">
   <head>
     {% include head.html %}
@@ -22,9 +21,8 @@ layout: compress
   </head>
 
   <body class="layout--{{ page.layout | default: "single" }}">
-    {% include notification-banner.html %}  {% include_cached browser-upgrade.html %}
-    {% include_cached masthead.html %}
-    ...
+    {% include notification-banner.html %}  {% include browser-upgrade.html %}
+    {% include masthead.html %}
 
     
     {% include browser-upgrade.html %}
