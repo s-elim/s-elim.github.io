@@ -1,33 +1,24 @@
-#notification-banner {
-  position: fixed; /* Or 'sticky' if you prefer */
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #e0e0e0; /* gray background */
-  color: red;
-  text-align: center;
-  padding: 12px 40px 12px 20px; /* Top, Right, Bottom, Left padding */
-  z-index: 1000; /* Ensures it's on top of other content */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  font-size: 0.9rem;
-}
+<div id="notification-banner">
+  <p>📢 **Update:** New publication coming soon 🚀 (last updated on September 5, 2025)</p>
+  <span id="close-banner-btn">&times;</span>
+</div>
 
-#notification-banner p {
-  margin: 0;
-  padding: 0;
-}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const banner = document.getElementById('notification-banner');
+  const closeBtn = document.getElementById('close-banner-btn');
 
-#close-banner-btn {
-  position: absolute;
-  top: 50%;
-  right: 15px;
-  transform: translateY(-50%);
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  line-height: 1;
-}
+  // Check if the user has already closed the banner in this session
+  if (sessionStorage.getItem('bannerClosed') === 'true') {
+    banner.style.display = 'none';
+    return;
+  }
 
-#close-banner-btn:hover {
-  opacity: 0.7;
-}
+  // Event listener for the close button
+  closeBtn.addEventListener('click', function() {
+    banner.style.display = 'none';
+    // Remember that the user has closed the banner for this session
+    sessionStorage.setItem('bannerClosed', 'true');
+  });
+});
+</script>
