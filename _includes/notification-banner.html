@@ -1,5 +1,5 @@
 <div id="notification-banner">
-  <p id="banner-text">Loading...</p>
+  <p>Loading...</p>
   <span id="close-banner-btn">&times;</span>
 </div>
 
@@ -21,7 +21,7 @@
   #notification-banner p {
     margin: 0;
     padding: 0;
-    color: red;
+    color: red;           /* red text */
     font-weight: bold;
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
@@ -43,7 +43,6 @@
 </style>
 
 <script>
-  // Wait until the whole page is loaded
   window.onload = function() {
     const messages = [
       "Website last updated on 5 Sept 2025",
@@ -52,10 +51,10 @@
     ];
 
     let index = 0;
-    const bannerText = document.getElementById("banner-text");
+    const bannerText = document.querySelector("#notification-banner p");
 
     function showMessage() {
-      // Fade out current text
+      // Fade out
       bannerText.style.opacity = 0;
       bannerText.style.transform = "translateY(-20px)";
 
@@ -67,7 +66,7 @@
         bannerText.style.transform = "translateY(0)";
         // Next message
         index = (index + 1) % messages.length;
-      }, 500); // match transition duration
+      }, 500);
     }
 
     // Show first message immediately
