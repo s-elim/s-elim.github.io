@@ -1,5 +1,5 @@
 <div id="notification-banner">
-  <p id="banner-text"></p>
+  <p id="banner-text">Loading...</p>
   <span id="close-banner-btn">&times;</span>
 </div>
 
@@ -48,33 +48,35 @@
 </style>
 
 <script>
-  // 🔄 Messages for slideshow
-  const messages = [
-    "Website last updated on 5 Sept 2025",
-    "Currently visiting CERN, Switzerland",
-    "New publication coming soon 🚀"
-  ];
+  document.addEventListener("DOMContentLoaded", function () {
+    // 🔄 Messages for slideshow
+    const messages = [
+      "Website last updated on 5 Sept 2025",
+      "Currently visiting CERN, Switzerland",
+      "New publication coming soon 🚀"
+    ];
 
-  let index = 0;
-  const bannerText = document.getElementById("banner-text");
+    let index = 0;
+    const bannerText = document.getElementById("banner-text");
 
-  function showMessage() {
-    bannerText.innerHTML = messages[index];
-    bannerText.style.animation = "none"; // reset animation
-    bannerText.offsetHeight; // trigger reflow
-    bannerText.style.animation = "slideIn 1s ease";
+    function showMessage() {
+      bannerText.innerHTML = messages[index];
+      bannerText.style.animation = "none"; // reset animation
+      bannerText.offsetHeight; // force reflow
+      bannerText.style.animation = "slideIn 1s ease";
 
-    index = (index + 1) % messages.length;
-  }
+      index = (index + 1) % messages.length;
+    }
 
-  // Show first message
-  showMessage();
+    // Show first message immediately
+    showMessage();
 
-  // Rotate every 4 seconds
-  setInterval(showMessage, 4000);
+    // Rotate every 4 seconds
+    setInterval(showMessage, 4000);
 
-  // Close button
-  document.getElementById("close-banner-btn").onclick = function() {
-    document.getElementById("notification-banner").style.display = "none";
-  };
+    // Close button
+    document.getElementById("close-banner-btn").onclick = function () {
+      document.getElementById("notification-banner").style.display = "none";
+    };
+  });
 </script>
