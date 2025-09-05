@@ -39,3 +39,38 @@
 @import "vendor/font-awesome/brands";
 @import "vendor/magnific-popup/magnific-popup";
 @import "print";
+
+/* --- Custom Notification Banner --- */
+#notification-banner {
+  position: fixed; /* Or 'sticky' if you prefer */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #4a86e8; /* A nice blue color, change as you like */
+  color: white;
+  text-align: center;
+  padding: 12px 40px 12px 20px; /* Top, Right, Bottom, Left padding */
+  z-index: 1000; /* Ensures it's on top of other content */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 0.9rem;
+}
+
+#notification-banner p {
+  margin: 0;
+  padding: 0;
+}
+
+#close-banner-btn {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#close-banner-btn:hover {
+  opacity: 0.7;
+}
