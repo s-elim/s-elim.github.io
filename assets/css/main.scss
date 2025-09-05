@@ -46,8 +46,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #4a86e8; /* A nice blue color, change as you like */
-  color: white;
+  background-color: #e0e0e0; /* gray background */
+  color: red;
   text-align: center;
   padding: 12px 40px 12px 20px; /* Top, Right, Bottom, Left padding */
   z-index: 1000; /* Ensures it's on top of other content */
@@ -58,6 +58,15 @@
 #notification-banner p {
   margin: 0;
   padding: 0;
+
+  /* 🔴 Animation added */
+  animation: pulseText 2s infinite;
+}
+
+@keyframes pulseText {
+  0%   { color: red; }
+  50%  { color: darkred; }
+  100% { color: red; }
 }
 
 #close-banner-btn {
