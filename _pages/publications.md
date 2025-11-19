@@ -15,8 +15,6 @@ author_profile: true
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/pdf/2511.00120" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2511.00120" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
 
 
-<h2 class="year">2025</h2>
-
  <span style="font-size:14px"><a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends</strong> </a></span><br>
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal">, and Nur E Jannatul Farjana et. all </span></span><br>
      <span style="font-weight:normal;font-size:13px"> International Journal of Computer Applications</span><br>
