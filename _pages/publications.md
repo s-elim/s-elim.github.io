@@ -9,6 +9,11 @@ author_profile: true
 
 <h2 class="year">2025</h2>
 
+ <span style="font-size:14px"><a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>Explainable Parkinsons Disease Gait Recognition Using Multimodal RGB-D Fusion and Large Language Models</strong> </a></span><br>
+            <span style="font-size:13px"><span style="font-weight:normal"> Manar Alnaasan </span><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
+     <span style="font-weight:normal;font-size:13px"> Pattern Recognition, Elsevier(under review)</span><br>
+ <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
+
  <span style="font-size:14px"><a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong> </a></span><br>
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
      <span style="font-weight:normal;font-size:13px"> The Institute Of Electronics & Information Engineers(ieie Fall 2025 conference)</span><br>
