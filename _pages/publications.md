@@ -7,10 +7,14 @@ author_profile: true
 
 
 
+<h2 class="year">2026</h2>
+
+
+
 <h2 class="year">2025</h2>
 
  <span style="font-size:14px"><a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>Explainable Parkinsons Disease Gait Recognition Using Multimodal RGB-D Fusion and Large Language Models</strong> </a></span><br>
-            <span style="font-size:13px"><span style="font-weight:normal"> Manar Alnaasan </span><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
+            <span style="font-size:13px"><span style="font-weight:normal"> Manar Alnaasan, </span><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
      <span style="font-weight:normal;font-size:13px"> Pattern Recognition, Elsevier(under review)</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
 
@@ -29,6 +33,6 @@ author_profile: true
 <h2 class="year">2022</h2>
 
  <span style="font-size:14px"><a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</strong> </a></span><br>
-            <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal">, and Kaustav Dutta, Rasmita Lenka</span></span><br>
+            <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal">, Kaustav Dutta, and Rasmita Lenka</span></span><br>
      <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://ieeexplore.ieee.org/document/9708513" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IEEE Xplore</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
