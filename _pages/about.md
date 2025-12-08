@@ -52,7 +52,7 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
 <div class="list__item">
 <article class="archive__item">
 <p class="page__meta"><em class="fa fa-calendar">&nbsp;</em> September, 2025</p>
-<p align="justify"> Awarded Multiple Research Grant for 5 years(Collaborative), from RLRC projects, Sl Corporation and RISE Projects( Collaboration with kakao Inc. ,Sk Telecom, and Nanosystemz Ltd.)- 2025 <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
+<p align="justify"> Awarded Multiple Research Grant for 5 years(Collaborative), from RLRC projects and RISE Projects( Collaboration with kakao Inc. ,Sk Telecom, and Nanosystemz Ltd.)- 2025 <a href="https://homep.yu.ac.kr/en/academic/index.php?c=academic_01_a_01" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU), South Korea</a>.</p>
 </article>
 </div> 
 
