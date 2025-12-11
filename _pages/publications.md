@@ -11,7 +11,7 @@ author_profile: true
 
  <span style="font-size:14px"><a href="https://arxiv.org/abs/2512.07215" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation</strong> </a></span><br>
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
-     <span style="font-weight:normal;font-size:13px"> International Journal of Control, Automation, and Systems(IJCAS)(Under Review), SCOPUS/KCI Indexed</span><br>
+     <span style="font-weight:normal;font-size:13px"> Journal of Institute of Control, Robotics and Systems(Under Review), SCOPUS/KCI Indexed</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
 
 <h2 class="year">2025</h2>
