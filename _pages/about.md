@@ -24,7 +24,7 @@ Prior to joining YU MS degree, I have completed 1 year Korean Language & Literat
   
 
 <p align="center">
-  <img width="450" height="320" src="https://raw.githubusercontent.com/selimsarowar/selimsarowar.github.io/master/images/Untitled%20design%20(5).png">
+  <img width="450" height="320" src="../../images/wordcloud.png">
 </p>
  
 <div class="Featured Publications">
