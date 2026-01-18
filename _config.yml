@@ -11,6 +11,7 @@ title                    : "Md Selim Sarowar"
 title_separator          : "-"
 name                     : &name "Md Selim Sarowar"
 description              :  &description "Graduate Research Assistant at AVI Lab, YU, South Korea"
+site_theme               : air
 url                      : https://s-elim.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "s-elim.github.io"
