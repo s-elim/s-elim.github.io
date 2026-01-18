@@ -1,0 +1,7 @@
+body {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+.page__content, .archive, .sidebar, .masthead {
+  background-color: #ffffff !important;
+}
