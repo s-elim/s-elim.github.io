@@ -24,7 +24,7 @@ author_profile: true
  <span style="font-size:14px"><a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong> </a></span><br>
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
      <span style="font-weight:normal;font-size:13px"> The Institute Of Electronics & Information Engineers(ieie Fall 2025 conference)</span><br>
- <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/pdf/2511.00120" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2511.00120" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
+ <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IEIE</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2511.00120" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
 
 
  <span style="font-size:14px"><a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: #A7EEF3; text-decoration:none;" target="\_blank"><strong>Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends</strong> </a></span><br>
