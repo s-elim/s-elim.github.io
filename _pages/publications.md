@@ -14,6 +14,7 @@ author_profile: true
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal"> and Sungho Kim </span></span><br>
      <span style="font-weight:normal;font-size:13px"> arxiv</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">arxiv</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
+ 
 </details>
 
 <details>
@@ -34,6 +35,7 @@ author_profile: true
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal">, and Nur E Jannatul Farjana et. all </span></span><br>
      <span style="font-weight:normal;font-size:13px"> International Journal of Computer Applications</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IJCA Journal</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
+ 
 </details>
 
 
@@ -44,4 +46,5 @@ author_profile: true
             <span style="font-size:13px"><strong>Md Selim Sarowar</strong><span style="font-weight:normal">, Kaustav Dutta, and Rasmita Lenka</span></span><br>
      <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021</span><br>
  <span style="font-weight:normal;font-size:14px"><i class="fa fa-file" style="color:LightSkyBlue"></i> <a href="https://ieeexplore.ieee.org/document/9708513" style="color: LightSkyBlue; text-decoration:none;" target="\_blank">IEEE Xplore</a> | <i class="fas fa-file-pdf" style="color:Coral"></i> <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="\_blank">PDF</a> |
+ 
  </details>
