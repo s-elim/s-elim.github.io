@@ -16,7 +16,7 @@ redirect_from:
 
 <p align="justify">
 
-<strong>I aim to become a rising star in 3D Computer Vision and Physical AI (Robotics).</strong>
+<strong>I aim to become a rising star in 3D Computer Vision and Physical AI !!!</strong> <br> <br>
 
 I am pursuing M.Sc.(Computer Vision & AI) at <a href="http://www.ynu.kr/_english/main/index.php" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Yeungnam University (YU) as GKS Scholar</a>, funded by <a href="https://github.com/selimsarowar/selimsarowar.github.io/blob/b4ebed67333a6920315fd60afe02217daadc6cda/files/CS01240517.pdf" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Global Korea Scholarship (GKS), NIIED</a> as well as additional funding by RLRC & RISE projects (Industry Collaboration). I joined the <a href="https://avilabyu.wixsite.com/avil" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Advanced Visual Intelligence Lab </a> under the supervision of <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="\_blank" style="color: #A7EEF3; text-decoration:none"> Prof. Sungho Kim </a>. <br> <br>
 
