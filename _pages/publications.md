@@ -8,8 +8,6 @@ author_profile: true
 <details>
   <summary><h2 style="display:inline-block; margin:0;">2026</h2></summary>
   <div style="margin-top: 10px;"> 
-
-    <div style="margin-top: 10px;">
     
     <span style="font-size:14px">
       <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
