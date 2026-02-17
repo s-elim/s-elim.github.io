@@ -29,7 +29,7 @@ author_profile: true
     </span>
 
 
-    <span style="font-size:14px">
+    <br><br><span style="font-size:14px">
       <a href="https://arxiv.org/abs/2512.07215" style="color: #A7EEF3; text-decoration:none;" target="_blank">
         <strong>VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation</strong>
       </a>
