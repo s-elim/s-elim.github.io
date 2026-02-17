@@ -7,7 +7,31 @@ author_profile: true
 
 <details>
   <summary><h2 style="display:inline-block; margin:0;">2026</h2></summary>
-  <div style="margin-top: 10px;"> <span style="font-size:14px">
+  <div style="margin-top: 10px;"> 
+
+    <div style="margin-top: 10px;">
+    
+    <span style="font-size:14px">
+      <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+        <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
+      </a>
+    </span><br>
+    
+    <span style="font-size:13px">
+      <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
+    </span><br>
+    
+    <span style="font-weight:normal;font-size:13px">IEEE Access(Q1, IF: 3.6)</span><br>
+    
+    <span style="font-weight:normal;font-size:14px">
+      <i class="fa fa-file" style="color:LightSkyBlue"></i> 
+      <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+      <i class="fas fa-file-pdf" style="color:Coral"></i> 
+      <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    </span>
+
+
+    <span style="font-size:14px">
       <a href="https://arxiv.org/abs/2512.07215" style="color: #A7EEF3; text-decoration:none;" target="_blank">
         <strong>VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation</strong>
       </a>
