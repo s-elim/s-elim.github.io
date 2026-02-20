@@ -23,7 +23,7 @@ author_profile: true
     
     <span style="font-weight:normal;font-size:14px">
       <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-      <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+      <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
       <i class="fas fa-file-pdf" style="color:Coral"></i> 
       <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
     </span>
