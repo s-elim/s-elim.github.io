@@ -25,7 +25,7 @@ author_profile: true
       <i class="fa fa-file" style="color:LightSkyBlue"></i> 
       <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
       <i class="fas fa-file-pdf" style="color:Coral"></i> 
-      <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+      <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
     </span>
 
 
