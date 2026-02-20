@@ -10,7 +10,7 @@ author_profile: true
   <div style="margin-top: 10px;"> 
     
     <span style="font-size:14px">
-      <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
         <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
       </a>
     </span><br>
@@ -29,7 +29,7 @@ author_profile: true
     </span>
     
     <br><br><span style="font-size:14px">
-      <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <a href="https://www.ijcas.org/main.html" style="color: #A7EEF3; text-decoration:none;" target="_blank">
         <strong>Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications</strong>
       </a>
     </span><br>
@@ -44,7 +44,7 @@ author_profile: true
       <i class="fa fa-file" style="color:LightSkyBlue"></i> 
       <a href="https://www.ijcas.org/main.html" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IJCAS</a> | 
       <i class="fas fa-file-pdf" style="color:Coral"></i> 
-      <a href=https://www.ijcas.org/main.html" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+      <a href="https://www.ijcas.org/main.html" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
     </span>
     
 
