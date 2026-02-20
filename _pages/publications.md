@@ -28,7 +28,7 @@ author_profile: true
       <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
     </span>
     
-    <span style="font-size:14px">
+    <br><br><span style="font-size:14px">
       <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
         <strong>Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications</strong>
       </a>
