@@ -18,7 +18,7 @@ author_profile: true
     <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
   </span><br>
   
-  <span style="font-weight:normal;font-size:13px">IEEE Access(Q1, IF: 3.6)</span><br>
+  <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
   
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
