@@ -1,123 +1,24 @@
-<style>
-  /* Styling for the floating, boxed banner */
-  #notification-banner {
-    position: fixed;
-    top: 20px; 
-    left: 50%;
-    transform: translateX(-50%); 
-    z-index: 9999; 
-    
-    /* Box styling matching your CV theme */
-    background-color: rgba(17, 34, 50, 0.95); 
-    border: 2px solid #A7EEF3; 
-    border-radius: 8px;
-    padding: 15px 45px 15px 20px; 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px); 
-    
-    color: white;
-    text-align: center;
-    font-family: inherit;
-    
-    /* Smooth slide-in animation on load */
-    animation: slideDown 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    
-    display: none; 
-    align-items: center;
-    width: max-content;
-    max-width: 90%; 
-  }
-
-  /* Class added via JS to trigger the fade-out */
-  .fade-out-anim {
-    animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
-  }
-
-  #notification-banner p {
-    margin: 0;
-    font-size: 16px;
-  }
-
-  #notification-banner a {
-    color: #A7EEF3;
-    font-weight: bold;
-    text-decoration: underline;
-    transition: color 0.2s ease;
-  }
-
-  #notification-banner a:hover {
-    color: #ffffff;
-  }
-
-  /* Close button styling */
-  #close-banner-btn {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    font-size: 24px;
-    cursor: pointer;
-    color: #A7EEF3;
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-
-  #close-banner-btn:hover {
-    color: #ffffff;
-    transform: translateY(-50%) scale(1.1); 
-  }
-
-  /* The slide-in keyframes */
-  @keyframes slideDown {
-    0% {
-      top: -100px;
-      opacity: 0;
-    }
-    100% {
-      top: 20px;
-      opacity: 1;
-    }
-  }
-
-  /* The slide-out and fade keyframes */
-  @keyframes slideUpFade {
-    0% {
-      top: 20px;
-      opacity: 1;
-    }
-    100% {
-      top: -100px;
-      opacity: 0;
-    }
-  }
-</style>
-
 <div id="notification-banner">
-  <p>📢 New paper is out... For Research Collaboration, <a href="https://forms.gle/FEhDFrjykWqXVMm5A" target="_blank">Click here</a> and submit the form ASAP !!! ✈️🚀</p>
-  <span id="close-banner-btn">&times;</span>
+  <p>📢 New paper is out... For Research Collaboration,<a href="https://forms.gle/FEhDFrjykWqXVMm5A">Click here</a> and submit the form ASAP !!!✈️🚀</p>
+  <span id="close-banner-btn">&times;</span>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const banner = document.getElementById('notification-banner');
-  const closeBtn = document.getElementById('close-banner-btn');
+  const banner = document.getElementById('notification-banner');
+  const closeBtn = document.getElementById('close-banner-btn');
 
-  // Check if the user has already closed the banner in this session
-  if (sessionStorage.getItem('bannerClosed') !== 'true') {
-    banner.style.display = 'flex';
-  }
+  // Check if the user has already closed the banner in this session
+  if (sessionStorage.getItem('bannerClosed') === 'true') {
+    banner.style.display = 'none';
+    return;
+  }
 
-  // Event listener for the close button
-  closeBtn.addEventListener('click', function() {
-    // Add the CSS class that triggers the fade-out animation
-    banner.classList.add('fade-out-anim');
-    
-    // Wait for the animation to finish before removing it from the layout
-    banner.addEventListener('animationend', function() {
-      banner.style.display = 'none';
-    }, { once: true }); // { once: true } ensures the listener removes itself after firing
-    
-    // Remember that the user has closed the banner for this session
-    sessionStorage.setItem('bannerClosed', 'true');
-  });
+  // Event listener for the close button
+  closeBtn.addEventListener('click', function() {
+    banner.style.display = 'none';
+    // Remember that the user has closed the banner for this session
+    sessionStorage.setItem('bannerClosed', 'true');
+  });
 });
 </script>
