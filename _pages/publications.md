@@ -5,8 +5,8 @@ permalink: /publications/
 author_profile: true
 ---
 
-<h2 style="margin-bottom:0;">2026</h2>
-<div style="margin-top: 10px; margin-bottom: 30px;">
+<h2 style="margin-bottom: 10px;">2026</h2>
+<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
   
   <span style="font-size:14px">
     <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
@@ -64,10 +64,11 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
+
 </div>
 
-<h2 style="margin-bottom:0;">2025</h2>
-<div style="margin-top: 10px; margin-bottom: 30px;">
+<h2 style="margin-bottom: 10px;">2025</h2>
+<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
   
   <span style="font-size:14px">
     <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
@@ -125,10 +126,11 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
+
 </div>
 
-<h2 style="margin-bottom:0;">2022</h2>
-<div style="margin-top: 10px; margin-bottom: 30px;">
+<h2 style="margin-bottom: 10px;">2022</h2>
+<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
 
   <span style="font-size:14px">
     <a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="_blank">
@@ -148,4 +150,5 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
+
 </div>
