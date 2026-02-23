@@ -5,37 +5,52 @@ layout: compress
 {% include base_path %}
 
 <!doctype html>
+<html lang="{{ site.locale | slice: 0,2 }}" class="no-js">
+  <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F5BGF1X25M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F5BGF1X25M');
+</script>
+    
+    {% include head.html %}
+    {% include head/custom.html %}
+  </head>
+
+  <body>
+
+<!doctype html>
 <html lang="{{ site.locale | slice: 0,2 | default: "en" }}" class="no-js">
-  <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5BGF1X25M"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+  <head>
+    {% include head.html %}
+    {% include head/custom.html %}
+  </head>
 
-      gtag('config', 'G-F5BGF1X25M');
-    </script>
-    
-    {% include head.html %}
-    {% include head/custom.html %}
-  </head>
+  <body class="layout--{{ page.layout | default: "single" }}">
+    {% include notification-banner.html %}  {% include browser-upgrade.html %}
+    {% include masthead.html %}
 
-  <body class="layout--{{ page.layout | default: "single" }}">
-    
-    {% include notification-banner.html %}
-    {% include browser-upgrade.html %}
-    {% include masthead.html %}
+    
+    {% include browser-upgrade.html %}
+    {% include masthead.html %}
 
-    {{ content }}
+    {{ content }}
 
-    <div class="page__footer">
-      <footer>
-        {% include footer/custom.html %}
-        {% include footer.html %}
-      </footer>
-    </div>
 
-    {% include scripts.html %}
+    <div class="page__footer">
+      <footer>
+        {% include footer/custom.html %}
+        {% include footer.html %}
+      </footer>
+    </div>
 
-  </body>
+
+
+    {% include scripts.html %}
+
+  </body>
 </html>
