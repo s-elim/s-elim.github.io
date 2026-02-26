@@ -5,169 +5,28 @@ permalink: /projects/
 author_profile: true
 ---
 
-
 {% include base_path %}
 
-<h2><i style="font-size:24px" class="fa">&#xf013;</i> Latest Project:</h2>
-<p style="text-align: center;"><span style="color: orange;"><strong>C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data</strong></span></p>
-<p align="center">
-  <img width="600" height="179" src="../../images/C3G_VM6D_Architecture.jpg">
-</p>
-
-<p align="center"><button onclick="myFunction20()" id="myBtn20" 
-                          style= "background-color: #112232; color: white; border: 2px solid #7FFFD4; font-size: 16px"> Read More</button></p>
- 
-
- 
-<span id="dots20"></span><span id="more20">
-
- <script>
-  if (document.getElementById("dots20").style.display != "none"){
-  document.getElementById("dots20").style.display = "inline";
-  document.getElementById("more20").style.display = "none";
-  }
- </script>
-
-
-
-<p><u>Project Aims &amp; Objectives:</u></p>
-<p align="justify"> The estimation of 6D pose from RGB-D data remains challenging due to occlusions, textureless objects, and depth noise. In this work, We introduce a novel architecture to calculate precisely the 6DoF object pose from a single RGB-D image. Unlike existing structures that rely on direct regression & convolution based pose estimation as well as heavily depend on large model training, our vision based dual stream approach addresses this challenging task using hybrid multi modal fusion architecture combining self-supervised vision transformers (DINOv2) and attention based point cloud processing using C3G (Compact 3D Gaussian representations integrated with Point Transformer V3). The DINOv2 approach provides robust semantic understanding without requiring fine-tuning of visual backbone, while Point Transformer V3 employs vector attention mechanisms to model complex 3D geometric patterns from depth point clouds. Moreover, we present a mask guided point cloud extraction approach that concentrates processing on object relevant regions while filtering out background noise. The model’s efficacy is demonstrated by the experimental results on the LineMOD-Occluded dataset over RDPN SOTA benchmark, which show that our network requires substantially fewer trainable parameters than fully-supervised alternatives while achieving competitive performance and notable improvements with ADD, ADD(S) metric, rotation error, and translation error. Self-supervised learning and attention based geometric reasoning together provide new era for data efficient 6D pose estimation.</p>
-<p align="center"><img width="500" height="292" src="../../images/Picture2.png"></p></span>
-
-<script>
-function myFunction20() {
-  var dots = document.getElementById("dots20");
-  var moreText = document.getElementById("more20");
-  var btnText = document.getElementById("myBtn20");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = " Read More"; 
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = " Read Less"; 
-    moreText.style.display = "inline";
-  }
-}
-</script>
-
-
-  
-<p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https:/" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-<br>
-
-
-
-<p style="text-align: center;"><span style="color: orange;"><strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong></span></p>
-<p align="center">
-  <img width="500" height="250" src="../../images/VLM6D_arch.png">
-</p>
-
-<p align="center"><button onclick="myFunction10()" id="myBtn10" 
-                           style= "background-color: #112232; color: white; border: 2px solid #7FFFD4; font-size: 16px"> Read More</button></p>
- 
-
- 
-<span id="dots10"></span><span id="more10">
-
- <script>
-  if (document.getElementById("dots10").style.display != "none"){
-  document.getElementById("dots10").style.display = "inline";
-  document.getElementById("more10").style.display = "none";
-  }
- </script>
-
-<p><u>Project Aims &amp; Objectives:</u></p>
-<p align="justify">VLM6D, a novel dual-stream architecture that leverages the distinct strengths of visual and geometric data from RGB-D input for robust and precise pose estimation. Our framework uniquely integrates two specialized encoders: a powerful, self-supervised Vision Transformer (DINOv2) processes the RGB modality, harnessing its rich, pre-trained understanding of visual grammar to achieve remarkable resilience against texture and lighting variations. Concurrently, a PointNet++ encoder processes the 3D point cloud derived from depth data, enabling robust geometric reasoning that excels even with the sparse, fragmented data typical of severe occlusion. </p>
-<p align="center"><img width="600" height="180" src="../../images/Picture01.png"></p></span>
-
-<script>
-function myFunction10() {
-  var dots = document.getElementById("dots10");
-  var moreText = document.getElementById("more10");
-  var btnText = document.getElementById("myBtn10");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = " Read More"; 
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = " Read Less"; 
-    moreText.style.display = "inline";
-  }
-}
-</script>
-  
-<p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-
-<p style="text-align: center;"><span style="color: orange;"><strong> My Research Proposal for RISE Project: 2026(2nd year)</strong></span></p>
-<p align="center">
-  <img width="500" height="250" src="../../images/2026_Proposal - Copy.gif">
-</p>
-
-<p align="center">
-<img width="700" height="300" alt="Gemini_Generated_Image_eynpvxeynpvxeynp" src="https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b" />
-</p>
-<p align="center"><button onclick="myFunction10()" id="myBtn10" 
-                           style= "background-color: #112232; color: white; border: 2px solid #7FFFD4; font-size: 16px"> Read More</button></p>
- 
-
- 
-<span id="dots10"></span><span id="more10">
-
- <script>
-  if (document.getElementById("dots10").style.display != "none"){
-  document.getElementById("dots10").style.display = "inline";
-  document.getElementById("more10").style.display = "none";
-  }
- </script>
-
-<p><u>Project Aims &amp; Objectives:</u></p>
-<p align="justify">OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다.
-모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다.
-또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다. </p>
-  
-
-<script>
-function myFunction10() {
-  var dots = document.getElementById("dots10");
-  var moreText = document.getElementById("more10");
-  var btnText = document.getElementById("myBtn10");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = " Read More"; 
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = " Read Less"; 
-    moreText.style.display = "inline";
-  }
-}
-</script>
-
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+/* Consolidated and Cleaned up CSS for Collapsible Boxes */
 .collapsible {
   background-color: #252b35;
-  color: white;
+  color: orange; /* Changed to orange to match your project titles */
   cursor: pointer;
   padding: 18px;
   width: 100%;
-  border: ridge;
+  border: 2px solid #112232;
+  border-radius: 5px;
   text-align: left;
   outline: none;
-  font-size: 15px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  transition: 0.3s;
 }
 
 .active, .collapsible:hover {
-  background-color: #252b35;
+  background-color: #112232;
+  border-color: #7FFFD4;
 }
 
 .collapsible:after {
@@ -186,97 +45,75 @@ function myFunction10() {
   padding: 0 18px;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  background-color: #0a0000
-;
+  transition: max-height 0.4s ease-out;
+  background-color: #0a0000;
+  margin-bottom: 15px;
+  border-radius: 0 0 5px 5px;
 }
 </style>
-</head>
-<body>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.collapsible {
-  background-color: #252b35;
-  color: white;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: ridge
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-}
+<h2><i style="font-size:24px" class="fa">&#xf013;</i> Latest Projects:</h2>
 
-.active, .collapsible:hover {
-  background-color: #112232 ;
-  color: white;
-}
-
-.collapsible:after {
-  content: white;
-  color: #252b35
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-}
-
-.active:after {
-  content: "\2212";
-}
-
-.content {
-  padding: 0 18px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  background-color: #112232 
-;
-}
-</style>
-</head>
-<body>
-
- <h2><i style="font-size:24px" class="fa">&#xf085;</i> Industrial & Research Institute collaboration Projects:</h2>
-<button class="collapsible"> <strong>RISE(Regional Innovation System & Education)</strong> (Funding with Nanosystem ltd, SL Corp. SK telecom, kakao Inc, ETRI AI etc..), Korea</button>
+<button class="collapsible"><strong>C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data</strong></button>
 <div class="content">
- <ul>
-<li> Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)</li>
-<li> 3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong> Project-2</strong>)</li>
-<li> 3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong> Project-3</strong>)</li>
-</ul>
-    
-</div>
-<button class="collapsible"> <strong>RLRC </strong> (Regional Leading Research Center), South Korea</button>
-<div class="content">
-<ul>
-<li> 3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project </strong>)</li>
-</ul>
+  <br>
+  <p align="center">
+    <img width="600" height="179" src="../../images/C3G_VM6D_Architecture.jpg">
+  </p>
+  <p><u>Project Aims &amp; Objectives:</u></p>
+  <p align="justify">The estimation of 6D pose from RGB-D data remains challenging due to occlusions, textureless objects, and depth noise. In this work, We introduce a novel architecture to calculate precisely the 6DoF object pose from a single RGB-D image. Unlike existing structures that rely on direct regression & convolution based pose estimation as well as heavily depend on large model training, our vision based dual stream approach addresses this challenging task using hybrid multi modal fusion architecture combining self-supervised vision transformers (DINOv2) and attention based point cloud processing using C3G (Compact 3D Gaussian representations integrated with Point Transformer V3). The DINOv2 approach provides robust semantic understanding without requiring fine-tuning of visual backbone, while Point Transformer V3 employs vector attention mechanisms to model complex 3D geometric patterns from depth point clouds. Moreover, we present a mask guided point cloud extraction approach that concentrates processing on object relevant regions while filtering out background noise. The model’s efficacy is demonstrated by the experimental results on the LineMOD-Occluded dataset over RDPN SOTA benchmark, which show that our network requires substantially fewer trainable parameters than fully-supervised alternatives while achieving competitive performance and notable improvements with ADD, ADD(S) metric, rotation error, and translation error. Self-supervised learning and attention based geometric reasoning together provide new era for data efficient 6D pose estimation.</p>
+  <p align="center"><img width="500" height="292" src="../../images/Picture2.png"></p>
+  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https:/" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
+  <br>
 </div>
 
+<button class="collapsible"><strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong></button>
+<div class="content">
+  <br>
+  <p align="center">
+    <img width="500" height="250" src="../../images/VLM6D_arch.png">
+  </p>
+  <p><u>Project Aims &amp; Objectives:</u></p>
+  <p align="justify">VLM6D, a novel dual-stream architecture that leverages the distinct strengths of visual and geometric data from RGB-D input for robust and precise pose estimation. Our framework uniquely integrates two specialized encoders: a powerful, self-supervised Vision Transformer (DINOv2) processes the RGB modality, harnessing its rich, pre-trained understanding of visual grammar to achieve remarkable resilience against texture and lighting variations. Concurrently, a PointNet++ encoder processes the 3D point cloud derived from depth data, enabling robust geometric reasoning that excels even with the sparse, fragmented data typical of severe occlusion.</p>
+  <p align="center"><img width="600" height="180" src="../../images/Picture01.png"></p>
+  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
+  <br>
+</div>
 
-<script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
+<button class="collapsible"><strong>My Research Proposal for RISE Project: 2026 (2nd year)</strong></button>
+<div class="content">
+  <br>
+  <p align="center">
+    <img width="500" height="250" src="../../images/2026_Proposal - Copy.gif">
+  </p>
+  <p align="center">
+    <img width="700" height="300" alt="Gemini_Generated_Image" src="https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b" />
+  </p>
+  <p><u>Project Aims &amp; Objectives:</u></p>
+  <p align="justify">OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.</p>
+  <br>
+</div>
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    } 
-  });
-}
-</script>
+<br>
 
-</body>
-</html>
+<h2><i style="font-size:24px" class="fa">&#xf085;</i> Industrial & Research Institute collaboration Projects:</h2>
+<button class="collapsible" style="color:white;"> <strong>RISE(Regional Innovation System & Education)</strong> (Funding with Nanosystem ltd, SL Corp. SK telecom, kakao Inc, ETRI AI etc..), Korea</button>
+<div class="content">
+  <ul>
+    <li>Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)</li>
+    <li>3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong>Project-2</strong>)</li>
+    <li>3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong>Project-3</strong>)</li>
+  </ul>
+</div>
+
+<button class="collapsible" style="color:white;"> <strong>RLRC </strong> (Regional Leading Research Center), South Korea</button>
+<div class="content">
+  <ul>
+    <li>3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)</li>
+  </ul>
+</div>
+
+<br>
 
 <h2><i class='fas fa-pencil-ruler' style='font-size:20px'></i> Skills:</h2>     
 <br> 
@@ -333,6 +170,23 @@ for (i = 0; i < coll.length; i++) {
     </tbody>
 </table>
 
+<br>
 
 <h2><i style="font-size:24px" class="fa">&#xf15c;</i>  <a href="https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr" target="\_blank" style="color: #A7EEF3; text-decoration:none">Certifications (MOOC & Workshops)</a>.</h2>
 
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    } 
+  });
+}
+</script>
