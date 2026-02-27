@@ -20,9 +20,12 @@ author_profile: true
     transform: translateY(-2px); /* Slight lift effect on hover */
   }
   .cv-box h3 {
-    margin-top: 0;
+    margin-top: 20px; /* Added top margin for items that aren't first */
     margin-bottom: 12px;
     font-size: 1.25em;
+  }
+  .cv-box h3:first-child {
+    margin-top: 0; /* Ensures the very first item doesn't have extra top space */
   }
   .cv-box ul.meta-info {
     list-style-type: none;
@@ -41,6 +44,13 @@ author_profile: true
     margin-bottom: 6px;
     list-style-type: disc;
   }
+  /* Optional: A subtle divider to separate items within the same box */
+  .cv-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(167, 238, 243, 0.2); 
+    margin: 20px 0;
+  }
 </style>
 
 <p><h2><i class="fa fa-user-graduate"></i> Education:</h2></p>
@@ -52,23 +62,24 @@ author_profile: true
     <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Korean Language & Literature (Sep 2024 - Aug 2025)</li>
     <li><i class="fas fa-chalkboard-teacher"></i> Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Sungho Kim</a></li>
   </ul>
-</div>
 
-<div class="cv-box">
+  <hr class="cv-divider">
+
   <h3><i class="fa fa-university" aria-hidden="true"></i> Kalinga Institute Of Industrial Technology (KIIT),India</h3>
   <ul class="meta-info">
     <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Bachelor of Technology (B. Tech) in Electrical & Electronics Engineering (Jul 2019 - Jul 2023)</li>
     <li><i class="fas fa-chalkboard-teacher"></i> Advisor: <a href="https://scholar.google.com/citations?user=L8xPWy8AAAAJ&hl=en" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Jitendra Kumar Das</a> & <a href="https://www.researchgate.net/profile/Tejaswini-Kar" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Tejaswini Kar</a></li>
   </ul>
-</div>
 
-<div class="cv-box">
+  <hr class="cv-divider">
+
   <h3><i class="fa fa-university" aria-hidden="true"></i> Saint Joseph Higher Secondary School, Dhaka, Bangladesh</h3>
   <ul class="meta-info">
     <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Higher Secondary Certificate</li>
     <li><i class="fas fa-chalkboard-teacher"></i> Mentor: <a href="https://sjs.edu.bd/new/faculty_details.php?id=132" target="_blank" style="color: #A7EEF3; text-decoration:none">Dr. Dipak Kumar Sarkar</a></li>
   </ul>
 </div>
+
 
 <p><h2><i class="fa fa-book"></i> Research & Work Experience:</h2></p>
 
@@ -83,9 +94,9 @@ author_profile: true
     <li>VLA based robotic manipulation (perception → posture recognition → grasp planning/picking → industrial execution)</li>
     <li>3D Computer Vision, VLA, Diffusion Models, Robot Manipulation</li>
   </ul>
-</div>
 
-<div class="cv-box">
+  <hr class="cv-divider">
+
   <h3><i class='fa fa-briefcase'></i> Research Assistant</h3>
   <ul class="meta-info">
     <li><i class="fa fa-building"></i> <a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" style="color: #A7EEF3; text-decoration:none">Wireless Communications & Signal Processing Lab (WCSP)</a> | National Tsing Hua University, Hsinchu, Taiwan</li>
@@ -94,9 +105,9 @@ author_profile: true
   <ul class="bullet-points">
     <li>Conducted research on Convex Optimization</li>
   </ul>
-</div>
 
-<div class="cv-box">
+  <hr class="cv-divider">
+
   <h3><i class='fa fa-briefcase'></i> Machine Learning Intern</h3>
   <ul class="meta-info">
     <li><i class="fa fa-building"></i> <a href="https://diginique.com/" target="_blank" style="color: #A7EEF3; text-decoration:none">Diginique Tech. lab, IIT Roorke, India</a></li>
