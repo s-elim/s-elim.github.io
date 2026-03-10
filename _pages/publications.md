@@ -7,40 +7,34 @@ author_profile: true
 
 <h2 style="margin-bottom: 10px;">2026</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
-
+  
   <span style="font-size:14px">
     <a href="https://arxiv.org/user/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>	GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
+      <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Omer Tariq and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">arxiv</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/user/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/user/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-  
-  <br><br><span style="font-size:14px">
-  
+
+  <br><br>
+
   <span style="font-size:14px">
     <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
@@ -48,18 +42,17 @@ author_profile: true
     <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
-  <br><br><span style="font-size:14px">
+  <br><br>
+
+  <span style="font-size:14px">
     <a href="https://www.ijcas.org/main.html" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://peerj.com/journals/computer-science/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">PeerJ Computer Science</a> | 
@@ -67,25 +60,23 @@ author_profile: true
     <a href="https://peerj.com/journals/computer-science/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
-  <br><br><span style="font-size:14px">
+  <br><br>
+
+  <span style="font-size:14px">
     <a href="https://arxiv.org/abs/2512.07215" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">arxiv</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-
 </div>
 
 <h2 style="margin-bottom: 10px;">2025</h2>
@@ -96,13 +87,10 @@ author_profile: true
       <strong>Explainable Parkinsons Disease Gait Recognition Using Multimodal RGB-D Fusion and Large Language Models</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     Manar Alnaasan, <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">Pattern Recognition, Elsevier(under review)</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -110,18 +98,17 @@ author_profile: true
     <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
-  <br><br> <span style="font-size:14px">
+  <br><br> 
+
+  <span style="font-size:14px">
     <a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">The Institute Of Electronics & Information Engineers(ieie Fall 2025 conference)</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEIE</a> | 
@@ -129,25 +116,23 @@ author_profile: true
     <a href="https://arxiv.org/pdf/2511.00120" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
-  <br><br> <span style="font-size:14px">
+  <br><br> 
+
+  <span style="font-size:14px">
     <a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, and Nur E Jannatul Farjana et. all
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">International Journal of Computer Applications</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IJCA Journal</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-
 </div>
 
 <h2 style="margin-bottom: 10px;">2022</h2>
@@ -158,18 +143,14 @@ author_profile: true
       <strong>Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</strong>
     </a>
   </span><br>
-  
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Kaustav Dutta, and Rasmita Lenka
   </span><br>
-  
   <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021</span><br>
-  
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://ieeexplore.ieee.org/document/9708513" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Xplore</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-
 </div>
