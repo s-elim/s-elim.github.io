@@ -37,13 +37,13 @@ author_profile: true
     <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
   
-  <span style="font-weight:normal;font-size:13px">IJCAS(SCIE-Q2, IF:3)</span><br>
+  <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
   
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://www.ijcas.org/main.html" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IJCAS</a> | 
+    <a href="https://peerj.com/journals/computer-science/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">PeerJ Computer Science</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://www.ijcas.org/main.html" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="https://peerj.com/journals/computer-science/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
   <br><br><span style="font-size:14px">
