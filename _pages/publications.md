@@ -9,7 +9,7 @@ author_profile: true
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
   
   <span style="font-size:14px">
-    <a href="https://arxiv.org/user/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
     </a>
   </span><br>
@@ -19,9 +19,9 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">arxiv</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/user/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/user/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="https://arxiv.org/pdf/2603.09079" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
   <br><br>
