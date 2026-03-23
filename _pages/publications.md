@@ -89,10 +89,10 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">arxiv</span><br>
+  <span style="font-weight:normal;font-size:13px">arxiv(Incomplete Paper)</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv(Incomplete Paper)</a> | 
+    <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
