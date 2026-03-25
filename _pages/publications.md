@@ -14,9 +14,9 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">ICRA'27</span><br>
+  <span style="font-weight:normal;font-size:13px">CoRL'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -32,9 +32,9 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Omer Tariq and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">ACCV'26</span><br>
+  <span style="font-weight:normal;font-size:13px">BMVC'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
