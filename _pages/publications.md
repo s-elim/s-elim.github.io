@@ -10,7 +10,7 @@ author_profile: true
   
  <span style="font-size:14px">
     <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GST-WorldVLA: Structured Gaussian Spatial Tokenization for Vision-Language-Action and World Model </strong>
+      <strong>GST-WorldVLA: Fine-Grained Gaussian Spatial Tokenization for Vision-Language-Action and World Model </strong>
     </a>
   </span><br>
   <span style="font-size:13px">
@@ -19,16 +19,18 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">CoRL'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
   <br><br>
  
  <span style="font-size:14px">
     <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GST-VLA Pro: Structured Gaussian Spatial Tokenization for Vision-Language-Action Models via 3D Depth-Aware Chaint of Thoughts</strong>
+      <strong>GST-VLA Pro: Integrating 3D Depth-Aware
+Chain-of-Thought with Gaussian Spatial
+Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
@@ -37,9 +39,9 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">BMVC'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
   <br><br>
