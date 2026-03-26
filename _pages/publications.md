@@ -9,7 +9,7 @@ author_profile: true
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
   
  <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-WorldVLA: Fine-Grained Gaussian Spatial Tokenization for Vision-Language-Action and World Model </strong>
     </a>
   </span><br>
@@ -27,7 +27,7 @@ author_profile: true
   <br><br>
  
  <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-VLA Pro: Integrating 3D Depth-Aware
 Chain-of-Thought with Gaussian Spatial
 Tokenization for VLA Model</strong>
@@ -47,7 +47,7 @@ Tokenization for VLA Model</strong>
   <br><br>
   
   <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2603.09079" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://openreview.net/forum?id=Ko1ueoA4AW&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Dthecvf.com%2FCVPR%2F2026%2FWorkshop%2FScaleBot%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
     </a>
   </span><br>
