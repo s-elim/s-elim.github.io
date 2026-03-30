@@ -14,7 +14,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
   <span style="font-weight:normal;font-size:13px">CoRL'26</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -34,7 +34,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
   <span style="font-weight:normal;font-size:13px">BMVC'26</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -52,9 +52,9 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Omer Tariq and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Omer Tariq and *Sungho Kim.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">CVPRw'26</span><br>
+  <span style="font-weight:normal;font-size:13px">CVPRw'26, ACCV'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -70,7 +70,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and *Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -88,7 +88,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
+    <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -105,7 +105,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and Sungho Kim
+    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">Pattern Recognition, Elsevier(under review)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -125,7 +125,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
+    <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">arxiv(Incomplete Paper)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -143,7 +143,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
+    <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">The Institute Of Electronics & Information Engineers(ieie Fall 2025 conference)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -161,7 +161,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, and Nur E Jannatul Farjana et. all
+    <strong>*Md Selim Sarowar</strong>, and Nur E Jannatul Farjana et. all
   </span><br>
   <span style="font-weight:normal;font-size:13px">International Journal of Computer Applications</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -181,7 +181,7 @@ Tokenization for VLA Model</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Kaustav Dutta, and Rasmita Lenka
+    <strong>Md Selim Sarowar</strong>, Kaustav Dutta, and *Rasmita Lenka
   </span><br>
   <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021</span><br>
   <span style="font-weight:normal;font-size:14px">
