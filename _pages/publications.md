@@ -5,7 +5,8 @@ permalink: /publications/
 author_profile: true
 ---
 
-<h2 style="margin-bottom: 10px;">2026</h2>
+
+<h2 style="margin-bottom: 10px;">2027</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
   
  <span style="font-size:14px">
@@ -16,7 +17,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">CoRL'26</span><br>
+  <span style="font-weight:normal;font-size:13px">ICRA'27</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -24,8 +25,11 @@ author_profile: true
     <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
 
-  <br><br>
- 
+</div>
+
+
+<h2 style="margin-bottom: 10px;">2026</h2>
+<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GCoT: Grounding Vision-Language-Action Models through Multimodal Tokens and Implicit Gaussian Representations.</strong>
