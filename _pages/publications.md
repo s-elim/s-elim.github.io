@@ -17,7 +17,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">ICRA'27</span><br>
+  <span style="font-weight:normal;font-size:13px">IEEE International Conference on Robotics & Automation<strong>(ICRA'27)</strong></span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -38,7 +38,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">BMVC'26</span><br>
+  <span style="font-weight:normal;font-size:13px">The 37th British Machine Vision Conference<strong>(BMVC'26)</strong></span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
