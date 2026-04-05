@@ -28,9 +28,7 @@ author_profile: true
  
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GST-VLA Pro: Integrating 3D Depth-Aware
-Chain-of-Thought with Gaussian Spatial
-Tokenization for VLA Model</strong>
+      <strong>GCoT: Grounding Vision-Language-Action Models through Multimodal Tokens and Implicit Gaussian Representations.</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
