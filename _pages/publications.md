@@ -11,7 +11,7 @@ author_profile: true
   
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Agentic-WorldVLA: Code-Driven Spatial Intelligence for Unified Manipulation Policy </strong>
+      <strong>Agent as Policy: World-Model Driven Agentic Intelligence for Unified Manipulation </strong>
     </a>
   </span><br>
   <span style="font-size:13px">
