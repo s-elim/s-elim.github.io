@@ -4,17 +4,16 @@ main:
   - title: "Experience"
     url: /experience/
 
+
+  - title: "Projects"
+    url: /projects/
+
+    
   - title: "Awards"
     url: /awards/    
-    
-  - title: "ECA"
-    url: /eca/
 
   - title: "Conference"
     url: /conference&seminar/
-    
-  - title: "Projects"
-    url: /projects/
 
   - title: "Publications"
     url: /publications/
