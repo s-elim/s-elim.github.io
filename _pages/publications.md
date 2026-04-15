@@ -51,7 +51,7 @@ author_profile: true
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
  <span style="font-size:14px">
     <a href="https://mot-vla.github.io/motvla/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>SpatialMoT: Eliciting Spatial Reasoning in Mamba-based Vision-Language-Action Models via Multimodal Token Embeddings.</strong>
+      <strong>MoTVLA: Eliciting Spatial Reasoning in Mamba-based Vision-Language-Action Models via Multimodal Token Embeddings.</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
@@ -75,7 +75,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Omer Tariq and *Sungho Kim.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">CVPRw'26, ACCV'26</span><br>
+  <span style="font-weight:normal;font-size:13px">CVPRw'26/ACCV'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
