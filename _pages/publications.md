@@ -27,9 +27,9 @@ author_profile: true
 
 /* Vision → cool blue box */
 .flagship-box.vision {
-  color: #4cc9f0;
-  border-color: #4cc9f0;
-  background-color: rgba(76, 201, 240, 0.12);
+  color: #ff9e5e;
+  border-color:#ff9e5e;
+  background-color: rgba(255, 158, 94, 0.12);
 }
 </style>
 
