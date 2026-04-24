@@ -4,7 +4,34 @@ title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
+<style>
+/* Base box style */
+.flagship-box {
+  margin-left: 8px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: inline-block;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  vertical-align: middle;
+}
 
+/* Robotics → warm orange box */
+.flagship-box.robotics {
+  color: #ff9e5e;
+  border-color: #ff9e5e;
+  background-color: rgba(255, 158, 94, 0.12);
+}
+
+/* Vision → cool blue box */
+.flagship-box.vision {
+  color: #4cc9f0;
+  border-color: #4cc9f0;
+  background-color: rgba(76, 201, 240, 0.12);
+}
+</style>
 
 <h2 style="margin-bottom: 10px;">2027</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
@@ -19,8 +46,8 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px"> </span> 
-   <strong>IROS'27</strong> <span class="flagship-box robotics">Flagship in Robotics</span> <br>
+  <span style="font-weight:normal;font-size:13px"> <strong>IROS'27</strong> </span> 
+    <span class="flagship-box robotics">Flagship in Robotics</span> <br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
