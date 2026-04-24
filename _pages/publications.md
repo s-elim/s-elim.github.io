@@ -37,7 +37,8 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px"><strong>ICRA'27</strong></span> <span class="flagship-robotics"> Flagship in Robotics</span><br>
+  <span style="font-weight:normal;font-size:13px"><strong>ICRA'27</strong></span> 
+  <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -58,7 +59,8 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
   </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> <span class="flagship-vision"> Flagship in Vision</span><br>
+  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
+  <span class="flagship-box vision">Flagship in Vision</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
