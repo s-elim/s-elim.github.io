@@ -96,6 +96,24 @@ author_profile: true
   </span>
 
   <br><br>
+
+    <span style="font-size:14px">
+    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
+    </a>
+  </span><br>
+  <span style="font-size:13px">
+    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and *Sungho Kim
+  </span><br>
+  <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
+  <span style="font-weight:normal;font-size:14px">
+    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
+    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
+    <i class="fas fa-file-pdf" style="color:Coral"></i> 
+    <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+  </span>
+  
+  <br><br>
   
   <span style="font-size:14px">
     <a href="https://openreview.net/forum?id=Ko1ueoA4AW&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Dthecvf.com%2FCVPR%2F2026%2FWorkshop%2FScaleBot%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
@@ -115,23 +133,6 @@ author_profile: true
 
   <br><br>
 
-  <span style="font-size:14px">
-    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and *Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-  
-  <br><br>
 
   <span style="font-size:14px">
     <a href="https://www.ijcas.org/main.html" style="color: #A7EEF3; text-decoration:none;" target="_blank">
