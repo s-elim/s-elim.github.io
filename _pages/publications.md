@@ -112,7 +112,25 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-  
+
+  <br><br>
+   <span style="font-size:14px">
+    <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <strong>Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis</strong>
+    </a>
+  </span><br>
+  <span style="font-size:13px">
+    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and *Sungho Kim
+  </span><br>
+  <span style="font-weight:normal;font-size:13px">Pattern Recognition, Elsevier(under review)</span><br>
+  <span style="font-weight:normal;font-size:14px">
+    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
+    <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <i class="fas fa-file-pdf" style="color:Coral"></i> 
+    <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+  </span>
+</div>
+
   <br><br>
   
   <span style="font-size:14px">
@@ -150,23 +168,7 @@ author_profile: true
     <a href="https://peerj.com/journals/computer-science/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
-  <br><br>
-   <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Explainable Parkinsons Disease Gait Recognition Using Multimodal RGB-D Fusion and Large Language Models</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and *Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">Pattern Recognition, Elsevier(under review)</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-</div>
+  
 
 <h2 style="margin-bottom: 10px;">2025</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
