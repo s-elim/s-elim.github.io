@@ -129,7 +129,6 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-</div>
 
   <br><br>
   
@@ -168,7 +167,7 @@ author_profile: true
     <a href="https://peerj.com/journals/computer-science/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
-  
+</div>
 
 <h2 style="margin-bottom: 10px;">2025</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
