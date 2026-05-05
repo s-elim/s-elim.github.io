@@ -140,7 +140,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Omer Tariq and *Sungho Kim.
   </span><br>
-  <span style="font-weight:normal;font-size:13px">CVPRw'26/ACCV'26</span><br>
+  <span style="font-weight:normal;font-size:13px">ICMLw'26/ACCV'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
