@@ -180,7 +180,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">arxiv(Incomplete Paper)</span><br>
+  <span style="font-weight:normal;font-size:13px">IEIE'26 Conference, South Korea</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
@@ -198,7 +198,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">The Institute Of Electronics & Information Engineers(ieie Fall 2025 conference)</span><br>
+  <span style="font-weight:normal;font-size:13px">IEIE'25 Conference, South Korea</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEIE</a> | 
