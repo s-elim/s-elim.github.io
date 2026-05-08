@@ -122,7 +122,7 @@ author_profile: true
   <span style="font-size:13px">
     Manar Alnaasan, <strong>Md Selim Sarowar</strong> and *Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">Pattern Recognition, Elsevier(under review)</span><br>
+  <span style="font-weight:normal;font-size:13px">Scientific Reports((SCIE-Q1, IF: 3.9))</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
