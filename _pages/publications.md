@@ -97,6 +97,25 @@ author_profile: true
 
   <br><br>
 
+  <span style="font-size:14px">
+    <a href="https://mot-vla.github.io/motvla/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <strong>Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition</strong>
+    </a>
+  </span><br>
+  <span style="font-size:13px">
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Khan Muhammad.
+  </span><br>
+  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
+  <span class="flagship-box vision">Flagship in Vision</span><br>
+  <span style="font-weight:normal;font-size:14px">
+    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
+    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <i class="fas fa-file-pdf" style="color:Coral"></i> 
+    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+  </span>
+
+  <br><br>
+
     <span style="font-size:14px">
     <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
