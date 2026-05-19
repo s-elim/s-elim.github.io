@@ -103,7 +103,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    Ashik&dagger, <strong>Md Selim Sarowar&dagger</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad.
+    Ashik†, <strong>Md Selim Sarowar†</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad.
   </span><br>
   <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
   <span class="flagship-box vision">Flagship in Vision</span><br>
