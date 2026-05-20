@@ -105,8 +105,7 @@ author_profile: true
   <span style="font-size:13px">
     Ashik†, <strong>Md Selim Sarowar†</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad
   </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
-  <span class="flagship-box vision">Flagship in Vision</span><br>
+  <span style="font-weight:normal;font-size:13px"> <strong> IEEE Sensor(SCIE-Q1) </strong></span> 
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
