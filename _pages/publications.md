@@ -44,7 +44,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px"> <strong>IROS'27</strong> </span> 
     <span class="flagship-box robotics">Flagship in Robotics</span> <br>
@@ -62,7 +62,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px"><strong>ICRA'27</strong></span> 
   <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
@@ -84,7 +84,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, *Sungho Kim and Sangtae Ahn.
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, Sungho Kim and Sangtae Ahn
   </span><br>
   <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
   <span class="flagship-box vision">Flagship in Vision</span><br>
@@ -103,7 +103,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    Ashik†, <strong>Md Selim Sarowar†</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad.
+    Ashik†, <strong>Md Selim Sarowar†</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad
   </span><br>
   <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
   <span class="flagship-box vision">Flagship in Vision</span><br>
@@ -122,7 +122,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and *Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">IEEE Access(SCIE-Q1, IF: 3.9)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -139,7 +139,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and *Sungho Kim
+    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">Scientific Reports((SCIE-Q1, IF: 3.9))</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -157,7 +157,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Omer Tariq and *Sungho Kim.
+    <strong>Md Selim Sarowar</strong>, and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">ICMLw'26/ACCV'26</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -176,7 +176,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and *Sungho Kim
+    <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -197,7 +197,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and *Sungho Kim
+    <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">IEIE'26 Conference, South Korea</span><br>
   <span style="font-weight:normal;font-size:14px">
@@ -215,7 +215,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and *Sungho Kim
+    <strong>Md Selim Sarowar</strong> and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px">IEIE'25 Conference, South Korea</span><br>
   <span style="font-weight:normal;font-size:14px">
