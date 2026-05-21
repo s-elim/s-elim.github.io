@@ -90,7 +90,7 @@ author_profile: true
   <span class="flagship-box vision">Flagship in Vision</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="https://openreview.net/forum?id=IYv9sR4feE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Dbmva.org%2FBMVC%2F2026%2FConference%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
