@@ -46,7 +46,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong>IROS'27</strong> </span> 
+  <span style="font-weight:normal;font-size:13px"> <strong>IROS'27(To be submitted)</strong> </span> 
     <span class="flagship-box robotics">Flagship in Robotics</span> <br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
@@ -64,7 +64,7 @@ author_profile: true
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px"><strong>ICRA'27</strong></span> 
+  <span style="font-weight:normal;font-size:13px"><strong>ICRA'27(To be submitted)</strong></span> 
   <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
@@ -152,17 +152,17 @@ author_profile: true
   <br><br>
   
   <span style="font-size:14px">
-    <a href="https://openreview.net/forum?id=Ko1ueoA4AW&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Dthecvf.com%2FCVPR%2F2026%2FWorkshop%2FScaleBot%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
     </a>
   </span><br>
   <span style="font-size:13px">
     <strong>Md Selim Sarowar</strong>, and Sungho Kim
   </span><br>
-  <span style="font-weight:normal;font-size:13px">ICMLw'26/ACCV'26</span><br>
+  <span style="font-weight:normal;font-size:13px">ICMLw'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2603.09079" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
