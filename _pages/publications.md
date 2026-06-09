@@ -58,7 +58,7 @@ author_profile: true
   <br><br>
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Agent as Policy: World-Model Driven Agentic Intelligence for Unified Manipulation </strong>
+      <strong>Agent as Policy: Agentic Intelligence in Latent World Model for Robot Manipulation </strong>
     </a>
   </span><br>
   <span style="font-size:13px">
