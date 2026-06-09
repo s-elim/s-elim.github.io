@@ -171,7 +171,7 @@ author_profile: true
 
 
   <span style="font-size:14px">
-    <a href="https://www.ijcas.org/main.html" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://www.preprints.org/manuscript/202606.0400" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications</strong>
     </a>
   </span><br>
@@ -181,9 +181,9 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://peerj.com/journals/computer-science/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">PeerJ Computer Science</a> | 
+    <a href="https://www.preprints.org/manuscript/202606.0400" style="color: LightSkyBlue; text-decoration:none;" target="_blank">PeerJ Computer Science</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://peerj.com/journals/computer-science/" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="https://www.preprints.org/frontend/manuscript/271cac1669e8fbdcaba01f102d4045db/download_pub" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
 </div>
