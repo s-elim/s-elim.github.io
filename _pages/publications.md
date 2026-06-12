@@ -44,7 +44,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px"> <strong>IROS'27(To be submitted)</strong> </span> 
     <span class="flagship-box robotics">Flagship in Robotics</span> <br>
@@ -58,11 +58,11 @@ author_profile: true
   <br><br>
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Agent as Policy: Agentic Intelligence in Latent World Model for Robot Manipulation </strong>
+      <strong>AGI: Agentic Intelligence in Latent World Model for Robot Manipulation </strong>
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, and Sungho Kim
   </span><br>
   <span style="font-weight:normal;font-size:13px"><strong>ICRA'27(To be submitted)</strong></span> 
   <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
