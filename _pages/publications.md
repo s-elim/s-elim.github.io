@@ -62,7 +62,7 @@ author_profile: true
     </a>
   </span><br>
   <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, and Sungho Kim
+    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, Sungho Kim, and Sangtae Anh
   </span><br>
   <span style="font-weight:normal;font-size:13px"><strong>ICRA'27(To be submitted)</strong></span> 
   <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
@@ -115,7 +115,25 @@ author_profile: true
   </span>
 
   <br><br>
+  
+  <span style="font-size:14px">
+    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+      <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
+    </a>
+  </span><br>
+  <span style="font-size:13px">
+    <strong>Md Selim Sarowar</strong>, and Sungho Kim
+  </span><br>
+  <span style="font-weight:normal;font-size:13px">ICMLw'26</span><br>
+  <span style="font-weight:normal;font-size:14px">
+    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
+    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
+    <i class="fas fa-file-pdf" style="color:Coral"></i> 
+    <a href="https://openreview.net/pdf?id=J57nR3hyAd" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+  </span>
 
+  <br><br>
+  
     <span style="font-size:14px">
     <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
@@ -151,23 +169,6 @@ author_profile: true
 
   <br><br>
   
-  <span style="font-size:14px">
-    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">ICMLw'26</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2603.09079" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br>
 
 
   <span style="font-size:14px">
