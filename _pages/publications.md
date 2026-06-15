@@ -166,8 +166,6 @@ author_profile: true
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
-
-  <br><br>
   
   <br><br>
    <span style="font-size:14px">
