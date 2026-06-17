@@ -152,7 +152,7 @@ author_profile: true
 
 <br><br>
    <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://www.preprints.org/manuscript/202606.1149" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>What Matters: Datasets or Robust Frameworks in Modern Robot Learning?</strong>
     </a>
   </span><br>
@@ -162,9 +162,9 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">Information Fusion(Under Review)</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Preprint</a> | 
+    <a href="https://www.preprints.org/manuscript/202606.1149" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Preprint</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
+    <a href="https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
   
   <br><br>
