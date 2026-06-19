@@ -40,7 +40,7 @@ author_profile: true
 
  <span style="font-size:14px">
     <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong> DreamJEPA: Unified Joint World-Action Modeling in Latent Space </strong>
+      <strong> Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation. </strong>
     </a>
   </span><br>
   <span style="font-size:13px">
