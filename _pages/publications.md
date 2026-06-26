@@ -159,7 +159,7 @@ author_profile: true
   <span style="font-size:13px">
      <strong>Md Selim Sarowar</strong>
   </span><br>
-  <span style="font-weight:normal;font-size:13px">Information Fusion(Under Review)</span><br>
+  <span style="font-weight:normal;font-size:13px">Artificial Intelligence Review(Under Review)</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://www.preprints.org/manuscript/202606.1149" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Preprint</a> | 
