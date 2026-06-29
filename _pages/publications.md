@@ -79,7 +79,7 @@ author_profile: true
 <h2 style="margin-bottom: 10px;">2026</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
  <span style="font-size:14px">
-    <a href="https://mot-vla.github.io/motvla/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://gaussvla.github.io/GaussVLA/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model</strong>
     </a>
   </span><br>
@@ -90,7 +90,7 @@ author_profile: true
   <span class="flagship-box vision">Flagship in Vision</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=IYv9sR4feE&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Dbmva.org%2FBMVC%2F2026%2FConference%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
+    <a href="https://openreview.net/forum?id=IYv9sR4feE" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
@@ -98,7 +98,7 @@ author_profile: true
   <br><br>
 
   <span style="font-size:14px">
-    <a href="https://mot-vla.github.io/motvla/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://github.com/s-elim/RWFL-HNH40K" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition</strong>
     </a>
   </span><br>
@@ -109,7 +109,7 @@ author_profile: true
   <span class="flagship-box vision">Flagship in Vision</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
+    <a href="https://openreview.net/forum?id=C23KZbQblz" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
@@ -117,7 +117,7 @@ author_profile: true
   <br><br>
   
   <span style="font-size:14px">
-    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: #A7EEF3; text-decoration:none;" target="_blank">
+    <a href="https://openreview.net/forum?id=J57nR3hyAd" style="color: #A7EEF3; text-decoration:none;" target="_blank">
       <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
     </a>
   </span><br>
@@ -127,7 +127,7 @@ author_profile: true
   <span style="font-weight:normal;font-size:13px">ICMLw'26</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=J57nR3hyAd&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICML.cc%2F2026%2FWorkshop%2FMusIML%2FAuthors%23your-submissions)" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
+    <a href="https://openreview.net/forum?id=J57nR3hyAd" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
     <i class="fas fa-file-pdf" style="color:Coral"></i> 
     <a href="https://openreview.net/pdf?id=J57nR3hyAd" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
   </span>
@@ -159,7 +159,7 @@ author_profile: true
   <span style="font-size:13px">
      <strong>Md Selim Sarowar</strong>
   </span><br>
-  <span style="font-weight:normal;font-size:13px">Artificial Intelligence Review(Under Review)</span><br>
+  <span style="font-weight:normal;font-size:13px">Artificial Intelligence Review((SCIE-Q1/Top 3%, IF: 19))</span><br>
   <span style="font-weight:normal;font-size:14px">
     <i class="fa fa-file" style="color:LightSkyBlue"></i> 
     <a href="https://www.preprints.org/manuscript/202606.1149" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Preprint</a> | 
