@@ -26,7 +26,8 @@ Prior to joining the YU MS degree, I completed a 1-year Korean Language & Litera
   
 
 <p align="center">
-  <img width="450" height="320" src="https://raw.githubusercontent.com/selimsarowar/selimsarowar.github.io/master/images/Profile_Card.png" />
+<img width="480" height="350" alt="Selim_Card" src="https://github.com/user-attachments/assets/34a5ec63-c46c-4806-a2db-2115e85a549e" />
+
 </p>
  
 <div class="Featured Publications">
