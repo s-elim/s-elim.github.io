@@ -1,0 +1,72 @@
+// ==========================================================================
+//  Publications page — toolbar (search + filter chips)
+// ==========================================================================
+
+.pub-toolbar {
+  position: sticky;
+  top: 64px;
+  z-index: 40;
+  background: var(--bg);
+  padding: .85rem 0 1rem;
+  margin-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.pub-search {
+  position: relative;
+  margin-bottom: .85rem;
+}
+.pub-search i {
+  position: absolute;
+  left: .9rem; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.pub-search input {
+  width: 100%;
+  padding: .7rem .9rem .7rem 2.4rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.pub-search input::placeholder { color: var(--muted); }
+.pub-search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.filter-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.filter-chip {
+  padding: .38em .85em;
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all .18s var(--ease);
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.pub-year { font-family: var(--font-head); font-size: var(--fs-xl); font-weight: 700; margin: 1.75rem 0 1rem; color: var(--text-strong); }
+.pub-empty { display: none; padding: 2rem; text-align: center; color: var(--muted); }
+.pub-empty.show { display: block; }
+
+// When a card is filtered out
+.pub-card[hidden], .pub-year[hidden] { display: none !important; }
+
+// Copy-feedback toast on badges
+.pub-badge.copied { color: var(--good) !important; border-color: var(--good) !important; }

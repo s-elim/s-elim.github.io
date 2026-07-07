@@ -1,0 +1,62 @@
+// ==========================================================================
+//  Layout — container, page grid, sidebar
+// ==========================================================================
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+// Two-column shell: sticky profile sidebar + content
+.site-main {
+  padding-block: 2.25rem 3rem;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: $bp-lg) {
+  .layout-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+}
+
+.sidebar-col {
+  position: sticky;
+  top: 84px;
+}
+@media (max-width: $bp-lg) {
+  .sidebar-col { position: static; }
+}
+
+.content-col { min-width: 0; }
+
+// Generic page header (interior pages)
+.page-head {
+  margin-bottom: 1.5rem;
+}
+.page-head__title {
+  font-size: var(--fs-3xl);
+  margin-bottom: .25rem;
+}
+.page-head__subtitle {
+  color: var(--muted);
+  font-size: var(--fs-lg);
+  margin: 0;
+}
+
+// Section heading used across pages
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: var(--fs-2xl);
+  margin: 2.25rem 0 1.1rem;
+  padding-bottom: .45rem;
+  border-bottom: 2px solid var(--border);
+}
+.section-title > i { color: var(--accent); font-size: .85em; }
+.section-title:first-child { margin-top: 0; }

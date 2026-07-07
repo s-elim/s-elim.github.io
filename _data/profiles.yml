@@ -1,0 +1,32 @@
+# Central profile / contact data used by the sidebar, hero, footer, and SEO.
+name: "Md Selim Sarowar"
+short_name: "Selim Sarowar"
+role: "Graduate Research Assistant · AVI Lab, Yeungnam University"
+tagline: "GKS Scholar · 3D Computer Vision & Physical AI"
+location: "South Korea"
+email: "selim.sarowar12@gmail.com"
+avatar: "profile.png"
+scholar: "https://scholar.google.com/citations?user=zzX9GscAAAAJ&hl=en"
+github: "s-elim"
+linkedin: "selimsarowar"
+researchgate: "https://www.researchgate.net/profile/Selim_Sarowar"
+cv_url: "https://drive.google.com/drive/folders/1JE0lqOTokk1UW-2vRKrb76Z_0rFw1ASH"
+
+credentials:
+  - icon: "fa-graduation-cap"
+    title: "M.Sc. Computer Vision & AI"
+    sub: "Yeungnam University · GKS Scholar"
+  - icon: "fa-flask"
+    title: "Research Assistant"
+    sub: "National Tsing Hua University"
+  - icon: "fa-university"
+    title: "B.Tech, EEE"
+    sub: "KIIT · SII Scholar"
+
+collaborations:
+  - icon: "fa-handshake"
+    title: "RLRC & RISE"
+    sub: "Industry Collaboration"
+  - icon: "fa-award"
+    title: "Global Korea Scholarship"
+    sub: "NIIED, Republic of Korea"

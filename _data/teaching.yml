@@ -1,0 +1,13 @@
+# Teaching experience (Experience page). `university` is raw HTML (may contain a link).
+- course: 'Computer Vision (Teaching Assistant)'
+  university: 'Yeungnam University (YU), South Korea'
+  date: 'Fall 2025'
+- course: 'EE203000 Linear Algebra (Teaching Assistant)'
+  university: 'National Tsing Hua University (NTHU), Taiwan'
+  date: 'Spring 2024'
+- course: 'ELTA (Teaching Assistant)'
+  university: 'National Tsinghua Affiliated School, T.O.S campus <a href="https://tfetp.epa.ntnu.edu.tw/en/elta/web/home" target="_blank" rel="noopener">(ELTA), Ministry Of Education, Taiwan</a>'
+  date: 'Nov 2023 to Aug 2024'
+- course: 'Advanced Chemistry and Mathematics (Instructor)'
+  university: 'Genex Academic and Admission Centre, Dhaka Bangladesh'
+  date: 'Jan 2019 to Apr 2019'

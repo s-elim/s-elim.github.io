@@ -2,130 +2,24 @@
 layout: archive
 title: "Awards & Honors"
 permalink: /awards/
-author_profile: true
+description: "Scholarships, fellowships, and honors received by Md Selim Sarowar, including the Global Korea Scholarship (GKS) and Study In India Government Scholarship."
 ---
 
-<style>
-  /* Custom CSS for the box layout (you can remove this block if it's already in your main CSS/header) */
-  .cv-box {
-    background-color: rgba(17, 34, 50, 0.6);
-    border-left: 4px solid #A7EEF3;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease;
-  }
-  .cv-box:hover {
-    transform: translateY(-2px);
-  }
-  .cv-box h3 {
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 1.25em;
-  }
-  .cv-box ul.meta-info {
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 0;
-  }
-  .cv-box ul.meta-info > li {
-    margin-bottom: 8px;
-  }
-  .cv-box ul.bullet-points {
-    padding-left: 20px;
-    margin-top: 10px;
-    margin-bottom: 0;
-  }
-  .cv-box ul.bullet-points > li {
-    margin-bottom: 6px;
-    list-style-type: disc;
-  }
-</style>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Appointed as Honorary Young Diplomat</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> Jeju Special Governance Province</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Awarded for promoting Korean cultures and simultaneously engaging with international professionals for the social well-being of Jeju Island.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Global Korea Scholarship (GKS/KGSP)</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-calendar"></i> Sept 2024 - Aug 2027</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>The most prestigious fellowship offered to GKS Scholars to pursue a 1-year language program & 2-year research-based M.Sc.</li>
-    <li>Includes full tuition & credit fee waiver, monthly allowance of 1750 USD, Korean language training fee, round trip airfare, health insurance, and research incentives.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Bangladesh Sweden Trust Fund (BSTF) Travel Grant - 2024</h3>
-  <ul class="bullet-points">
-    <li>Awarded for higher studies in Taiwan (one-way flight ticket).</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> NTHU International Graduate Students Assistantship</h3>
-  <ul class="bullet-points">
-    <li>The highest award offered to National Tsing Hua University (NTHU) international students.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Study In India Government Scholarship</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> Ministry Of Education, India</li>
-    <li><i class="fa fa-calendar"></i> June 2019 - June 2023</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Awarded for Undergraduate (B.Tech) degree in India with full funding.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> KIIT University International Scholarship Program (KUISP)</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> Kalinga Institute Of Industrial Technology</li>
-    <li><i class="fa fa-calendar"></i> Aug 2019 - June 2023</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Awarded for Academic Excellence.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> National Youth Inspiration Award - 2017</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> Citizens Open Forum (COF)</li>
-    <li><i class="fa fa-calendar"></i> Nov 2017</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Awarded in the Youth Leadership and Connectivity Category.</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Winner Of MR. Halloween Award</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> KIIT International Student Society</li>
-    <li><i class="fa fa-calendar"></i> Halloween Event 2021</li>
-  </ul>
-</div>
-
-<div class="cv-box">
-  <h3><i class='fas fa-medal' style="color:gold"></i> Meritorious Scholarship in Secondary School Certificate</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> Bangladesh Ministry Of Education</li>
-    <li><i class="fa fa-calendar"></i> Nov 2016 - June 2018</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Awarded for Academic Excellence.</li>
-  </ul>
+<div class="awards-grid">
+  {% for a in site.data.awards %}
+  <div class="award-card reveal">
+    <h3 class="award-card__title"><i class="fas fa-medal award-card__medal" aria-hidden="true"></i> <span>{{ a.title }}</span></h3>
+    {% if a.org or a.date %}
+    <ul class="entry-meta">
+      {% if a.org %}<li><i class="fas fa-building" aria-hidden="true"></i> {{ a.org }}</li>{% endif %}
+      {% if a.date %}<li><i class="fas fa-calendar" aria-hidden="true"></i> {{ a.date }}</li>{% endif %}
+    </ul>
+    {% endif %}
+    {% if a.points %}
+    <ul class="entry-points">
+      {% for pt in a.points %}<li>{{ pt }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
 </div>

@@ -1,0 +1,39 @@
+{% assign pub = include.pub %}
+{% assign pid = pub.title | slugify | truncate: 40, "" %}
+{% assign authors = pub.authors | replace: "Md Selim Sarowar", "<strong class=\"me\">Md Selim Sarowar</strong>" %}
+{% assign search = pub.title | append: " " | append: pub.authors | append: " " | append: pub.venue | downcase %}
+{% if pub.type == "journal" %}{% assign bibtype = "@article" %}{% assign container = "journal" %}
+{% elsif pub.type == "preprint" %}{% assign bibtype = "@misc" %}{% assign container = "howpublished" %}
+{% else %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% endif %}
+<article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-search="{{ search | escape }}">
+  <div class="pub-card__body">
+    <h3 class="pub-card__title">
+      {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
+      {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
+    </h3>
+    <p class="pub-card__authors">{{ authors }}</p>
+    <p class="pub-card__venue">{{ pub.venue }}{% if pub.status %} · {{ pub.status }}{% endif %}</p>
+    <div class="pub-badges">
+      {% for l in pub.links %}
+        {% case l.kind %}
+          {% when "pdf" %}{% assign ic = "fas fa-file-pdf" %}
+          {% when "code" %}{% assign ic = "fab fa-github" %}
+          {% when "project" %}{% assign ic = "fas fa-globe" %}
+          {% else %}{% assign ic = "fas fa-external-link-alt" %}
+        {% endcase %}
+        <a class="pub-badge pub-badge--{{ l.kind }}" href="{{ l.url }}" target="_blank" rel="noopener"><i class="{{ ic }}" aria-hidden="true"></i> {{ l.label }}</a>
+      {% endfor %}
+      <button class="pub-badge pub-badge--bibtex js-toggle" data-target="#bib-{{ pid }}" type="button" aria-label="Show BibTeX"><i class="fas fa-quote-right" aria-hidden="true"></i> BibTeX</button>
+    </div>
+    <div class="bibtex-block" id="bib-{{ pid }}">
+      <button class="pub-badge pub-badge--bibtex js-copy" data-copy="#bibpre-{{ pid }}" type="button" style="margin-bottom:.5rem"><i class="fas fa-copy" aria-hidden="true"></i> <span class="js-copy-label">Copy</span></button>
+<pre id="bibpre-{{ pid }}">{{ bibtype }}{% raw %}{{% endraw %}{{ pid | replace: "-", "" | truncate: 24, "" }}{{ pub.year }},
+  title     = {% raw %}{{% endraw %}{{ pub.title }}},
+  author    = {% raw %}{{% endraw %}{{ pub.authors }}},
+  {{ container }} = {% raw %}{{% endraw %}{{ pub.venue }}},
+  year      = {% raw %}{{% endraw %}{{ pub.year }}}
+  % TODO: verify entry type, add volume/pages/doi
+}</pre>
+    </div>
+  </div>
+</article>

@@ -1,27 +1,16 @@
-{% include base_path %}
-
-{% comment %}
-
-<div class="page__footer-follow">
-  <ul class="social-icons">
-    {% if site.data.ui-text[site.locale].follow_label %}
-      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
-    {% endif %}
-    {% if site.twitter.username %}
-      <li><a href="https://twitter.com/{{ site.twitter.username }}"><i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
-    {% endif %}
-    {% if site.facebook.username %}
-      <li><a href="https://facebook.com/{{ site.facebook.username }}"><i class="fa fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
-    {% endif %}
-    {% if site.author.github %}
-      <li><a href="http://github.com/{{ site.author.github }}"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
-    {% endif %}
-    {% if site.author.bitbucket %}
-      <li><a href="http://bitbucket.org/{{ site.author.bitbucket }}"><i class="fa fa-fw fa-bitbucket" aria-hidden="true"></i> Bitbucket</a></li>
-    {% endif %}
-  </ul>
-</div>
-
-{% endcomment %}
-
-<div class="page__footer-copyright">&copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. {{ site.data.ui-text[site.locale].powered_by | default: "Powered by" }} <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>.</div>
+{% assign p = site.data.profiles %}
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__social">
+      {% if p.scholar %}<a href="{{ p.scholar }}" target="_blank" rel="noopener" aria-label="Google Scholar"><i class="fas fa-graduation-cap" aria-hidden="true"></i></a>{% endif %}
+      {% if p.github %}<a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
+      {% if p.linkedin %}<a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>{% endif %}
+      {% if p.researchgate %}<a href="{{ p.researchgate }}" target="_blank" rel="noopener" aria-label="ResearchGate"><i class="fab fa-researchgate" aria-hidden="true"></i></a>{% endif %}
+      {% if p.email %}<a href="mailto:{{ p.email }}" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+    </div>
+    <div class="site-footer__meta">
+      &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>
+      Last updated {{ site.time | date: '%B %Y' }} · Built with <a href="https://jekyllrb.com" rel="nofollow noopener" target="_blank">Jekyll</a>.
+    </div>
+  </div>
+</footer>

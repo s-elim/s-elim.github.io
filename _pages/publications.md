@@ -2,255 +2,45 @@
 layout: archive
 title: "Publications"
 permalink: /publications/
-author_profile: true
+description: "Peer-reviewed publications and preprints by Md Selim Sarowar across 3D computer vision, 6D pose estimation, vision-language-action models, and robot learning."
 ---
-<!-- Flagship pill + card styling is provided globally by assets/css/custom.css (theme-aware). -->
 
-<h2 style="margin-bottom: 10px;">2027</h2>
-<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
+{% assign pubs = site.data.publications %}
+{% assign total = pubs | size %}
+{% assign flag = pubs | where_exp: "p", "p.flagship" | size %}
+{% assign scie = 0 %}{% for pub in pubs %}{% if pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
+{% assign years = pubs | map: "year" | uniq %}
 
-
-
- <span style="font-size:14px">
-    <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong> Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation. </strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong>IROS'27(To be submitted)</strong> </span> 
-    <span class="flagship-box robotics">Flagship in Robotics</span> <br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-  
-  <br><br>
- <span style="font-size:14px">
-    <a href="" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>AGI: Agentic Intelligence in Latent World Model for Robot Manipulation </strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, Sungho Kim, and Sangtae Anh
-  </span><br>
-  <span style="font-weight:normal;font-size:13px"><strong>ICRA'27(To be submitted)</strong></span> 
-  <span class="flagship-box robotics">Flagship in Robotics</span><br><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
+<div class="stat-row reveal">
+  <div class="stat"><div class="stat__num">{{ total }}</div><div class="stat__label">Publications</div></div>
+  <div class="stat"><div class="stat__num">{{ flag }}</div><div class="stat__label">Flagship Papers</div></div>
+  <div class="stat"><div class="stat__num">{{ scie }}</div><div class="stat__label">SCIE-Q1 Journals</div></div>
 </div>
 
-
-<h2 style="margin-bottom: 10px;">2026</h2>
-<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
- <span style="font-size:14px">
-    <a href="https://gaussvla.github.io/GaussVLA/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, Sungho Kim and Sangtae Ahn
-  </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span> 
-  <span class="flagship-box vision">Flagship in Vision</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=IYv9sR4feE" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br>
-
-  <span style="font-size:14px">
-    <a href="https://github.com/s-elim/RWFL-HNH40K" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    Ashikuzzaman, <strong>Md Selim Sarowar</strong>, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad
-  </span><br>
-  <span style="font-weight:normal;font-size:13px"> <strong> BMVC'26 </strong></span>
-  <span class="flagship-box vision">Flagship in Vision</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=C23KZbQblz" style="color: LightSkyBlue; text-decoration:none;" target="_blank">OpenReview</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br>
-  
-  <span style="font-size:14px">
-    <a href="https://openreview.net/forum?id=J57nR3hyAd" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">ICMLw'26</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://openreview.net/forum?id=J57nR3hyAd" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Openreview</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://openreview.net/pdf?id=J57nR3hyAd" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br>
-  
-    <span style="font-size:14px">
-    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Manar Alnaasan and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">IEEE Access (SCIE-Q1, IF: 4.2)</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://ieeexplore.ieee.org/document/11400555" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Access</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-<br><br>
-   <span style="font-size:14px">
-    <a href="https://www.preprints.org/manuscript/202606.1149" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>What Matters: Datasets or Robust Frameworks in Modern Robot Learning?</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-     <strong>Md Selim Sarowar</strong>
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://www.preprints.org/manuscript/202606.1149" style="color: LightSkyBlue; text-decoration:none;" target="_blank">Preprint</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-  
-  <br><br>
-   <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2512.04425" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    Manar Alnaasan, <strong>Md Selim Sarowar</strong> and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">Scientific Reports((SCIE-Q1, IF: 3.9))</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/abs/2512.04425" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2512.04425" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br>
-  
-
-
-  <span style="font-size:14px">
-    <a href="https://www.preprints.org/manuscript/202606.0400" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">PeerJ Computer Science(SCIE-Q1, IF:3)</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://www.preprints.org/manuscript/202606.0400" style="color: LightSkyBlue; text-decoration:none;" target="_blank">PeerJ Computer Science</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://www.preprints.org/frontend/manuscript/271cac1669e8fbdcaba01f102d4045db/download_pub" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-  
+<div class="pub-toolbar">
+  <div class="pub-search">
+    <i class="fas fa-search" aria-hidden="true"></i>
+    <input id="pub-search" type="search" placeholder="Search title, author, or venue…" aria-label="Search publications">
+  </div>
+  <div class="filter-chips" data-group="type" role="group" aria-label="Filter by type">
+    <button class="filter-chip is-active" data-value="all" type="button">All Types</button>
+    <button class="filter-chip" data-value="conference" type="button">Conference</button>
+    <button class="filter-chip" data-value="journal" type="button">Journal</button>
+    <button class="filter-chip" data-value="preprint" type="button">Preprint</button>
+    <button class="filter-chip" data-value="workshop" type="button">Workshop</button>
+  </div>
+  <div class="filter-chips" data-group="year" role="group" aria-label="Filter by year" style="margin-top:.5rem">
+    <button class="filter-chip is-active" data-value="all" type="button">All Years</button>
+    {% for y in years %}<button class="filter-chip" data-value="{{ y }}" type="button">{{ y }}</button>{% endfor %}
+  </div>
 </div>
 
-<h2 style="margin-bottom: 10px;">2025</h2>
-<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
-  
-  <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2512.07215" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">IEIE'26 Conference, South Korea</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://arxiv.org/abs/2512.07215" style="color: LightSkyBlue; text-decoration:none;" target="_blank">arxiv</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2512.07215" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-  
-  <br><br> 
-
-  <span style="font-size:14px">
-    <a href="https://arxiv.org/abs/2511.00120" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong> and Sungho Kim
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">IEIE'25 Conference, South Korea</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEIE</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://arxiv.org/pdf/2511.00120" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-
-  <br><br> 
-
-  <span style="font-size:14px">
-    <a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>*Md Selim Sarowar</strong>, and Nur E Jannatul Farjana et. all
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">International Journal of Computer Applications</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IJCA Journal</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
+<div id="pub-list">
+{% for y in years %}
+  <section class="pub-year-section" data-year="{{ y }}">
+    <h2 class="pub-year">{{ y }}</h2>
+    {% for pub in pubs %}{% if pub.year == y %}{% include pub-card.html pub=pub %}{% endif %}{% endfor %}
+  </section>
+{% endfor %}
 </div>
-
-<h2 style="margin-bottom: 10px;">2022</h2>
-<div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">
-
-  <span style="font-size:14px">
-    <a href="https://ieeexplore.ieee.org/document/9708513" style="color: #A7EEF3; text-decoration:none;" target="_blank">
-      <strong>Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)</strong>
-    </a>
-  </span><br>
-  <span style="font-size:13px">
-    <strong>Md Selim Sarowar</strong>, Kaustav Dutta, and *Rasmita Lenka
-  </span><br>
-  <span style="font-weight:normal;font-size:13px">IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021</span><br>
-  <span style="font-weight:normal;font-size:14px">
-    <i class="fa fa-file" style="color:LightSkyBlue"></i> 
-    <a href="https://ieeexplore.ieee.org/document/9708513" style="color: LightSkyBlue; text-decoration:none;" target="_blank">IEEE Xplore</a> | 
-    <i class="fas fa-file-pdf" style="color:Coral"></i> 
-    <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513" style="color: Coral; text-decoration:none;" target="_blank">PDF</a>
-  </span>
-</div>
+<p class="pub-empty" id="pub-empty">No publications match your filters.</p>

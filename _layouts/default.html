@@ -1,37 +1,26 @@
----
-layout: compress
----
-
-{% include base_path %}
-
 <!doctype html>
-<html lang="{{ site.locale | slice: 0,2 | default: "en" }}" class="no-js">
+<html lang="{{ site.locale | slice: 0,2 | default: 'en' }}">
   <head>
+    {% include head.html %}
+  </head>
+  <body>
+    <a class="sr-only" href="#main-content">Skip to content</a>
+
+    {% include nav.html %}
+
+    {{ content }}
+
+    {% include footer.html %}
+
+    <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
+
+    {% comment %} Google Analytics (preserved from previous site) {% endcomment %}
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5BGF1X25M"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-F5BGF1X25M');
     </script>
-    
-    {% include head.html %}
-    {% include head/custom.html %}
-  </head>
-
-  <body>
-    {% include masthead.html %}
-
-    {{ content }}
-
-    <div class="page__footer">
-      <footer>
-        {% include footer/custom.html %}
-        {% include footer.html %}
-      </footer>
-    </div>
-
-    {% include scripts.html %}
   </body>
 </html>

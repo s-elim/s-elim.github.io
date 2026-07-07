@@ -1,0 +1,117 @@
+// ==========================================================================
+//  Timeline — experience, news, activities
+// ==========================================================================
+
+.timeline { position: relative; margin: 0; padding: 0; list-style: none; }
+
+.timeline-group { margin-bottom: 1.75rem; }
+.timeline-group__year {
+  font-family: var(--font-head);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-bottom: 1rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 1.5rem 1.75rem;
+  border-left: 2px solid var(--border);
+}
+.timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px; top: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.timeline-item--flag::before { background: var(--robotics); box-shadow: 0 0 0 4px color-mix(in srgb, var(--robotics) 20%, transparent); }
+
+.timeline-item__date {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .2rem;
+}
+.timeline-item__title { font-family: var(--font-head); font-size: var(--fs-lg); font-weight: 700; color: var(--text-strong); margin: 0 0 .15rem; }
+.timeline-item__org { color: var(--muted); font-size: var(--fs-sm); margin: 0 0 .5rem; }
+.timeline-item__body { color: var(--text); font-size: var(--fs-sm); }
+.timeline-item__body ul { margin: .4rem 0 0; padding-left: 1.15rem; }
+
+// ---- CV entry card (education/experience blocks) ----
+.entry-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 1.15rem 1.35rem;
+  margin-bottom: 1.1rem;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.entry-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.entry-card__title { font-size: var(--fs-lg); margin: 0 0 .5rem; display: flex; align-items: center; gap: .5rem; }
+.entry-card__title i { color: var(--accent); }
+.entry-meta { list-style: none; margin: 0; padding: 0; }
+.entry-meta li { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .4rem; font-size: var(--fs-sm); color: var(--text); }
+.entry-meta li i { color: var(--accent); width: 16px; text-align: center; flex-shrink: 0; }
+.entry-points { margin: .6rem 0 0; padding-left: 1.2rem; }
+.entry-points li { font-size: var(--fs-sm); color: var(--text); margin-bottom: .35rem; }
+
+// ---- Awards grid ----
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.15rem;
+}
+.award-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.2rem 1.3rem;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+.award-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+.award-card__title { font-size: var(--fs-lg); margin: 0 0 .55rem; display: flex; gap: .55rem; align-items: baseline; }
+.award-card__medal { color: #eab308; flex-shrink: 0; }
+
+// ---- Activity (fun-time) list ----
+.activity-item {
+  display: flex;
+  gap: .7rem;
+  padding: .55rem 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  border-bottom: 1px dashed var(--border);
+}
+.activity-item:last-child { border-bottom: 0; }
+.activity-item__icon { color: var(--accent); flex-shrink: 0; margin-top: .2rem; }
+.activity-item__type {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  color: var(--accent);
+  margin-right: .35rem;
+}
+
+// ---- CV download panel ----
+.cv-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 2rem 1.75rem;
+  text-align: center;
+  max-width: 560px;
+}
+.cv-panel h2 { margin-top: 0; }
+.cv-panel p { color: var(--muted); margin-bottom: 1.25rem; }

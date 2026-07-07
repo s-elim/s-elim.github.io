@@ -1,0 +1,33 @@
+{% assign p = site.data.profiles %}
+<div class="profile-card">
+  <img class="profile-card__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="{{ p.name }}" width="138" height="138">
+  <h2 class="profile-card__name">{{ p.short_name | default: p.name }}</h2>
+  <p class="profile-card__role">{{ p.role }}</p>
+
+  <ul class="profile-links">
+    {% if p.location %}<li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ p.location }}</li>{% endif %}
+    {% if p.email %}<li><a href="mailto:{{ p.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a></li>{% endif %}
+    {% if p.scholar %}<li><a href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Google Scholar</a></li>{% endif %}
+    {% if p.github %}<li><a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>{% endif %}
+    {% if p.linkedin %}<li><a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener"><i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>{% endif %}
+    {% if p.researchgate %}<li><a href="{{ p.researchgate }}" target="_blank" rel="noopener"><i class="fab fa-researchgate" aria-hidden="true"></i> ResearchGate</a></li>{% endif %}
+  </ul>
+
+  {% if p.credentials %}
+  <div class="profile-section">
+    <p class="profile-section__title">Academic Credentials</p>
+    {% for c in p.credentials %}
+      <div class="profile-cred"><i class="fas {{ c.icon }}" aria-hidden="true"></i><div>{{ c.title }}<br><span>{{ c.sub }}</span></div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if p.collaborations %}
+  <div class="profile-section">
+    <p class="profile-section__title">Industry &amp; Funded Projects</p>
+    {% for c in p.collaborations %}
+      <div class="profile-cred"><i class="fas {{ c.icon }}" aria-hidden="true"></i><div>{{ c.title }}<br><span>{{ c.sub }}</span></div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

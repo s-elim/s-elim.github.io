@@ -1,155 +1,45 @@
 ---
 layout: archive
-title: ""
+title: "Experience"
 permalink: /experience/
-author_profile: true
+description: "Education, research, work, and teaching experience of Md Selim Sarowar across Yeungnam University, National Tsing Hua University, KIIT, and IIT Roorkee."
 ---
 
-<style>
-  /* Custom CSS for the box layout */
-  .cv-box {
-    background-color: rgba(17, 34, 50, 0.6); /* Dark background matching your table theme */
-    border-left: 4px solid #A7EEF3; /* Cyan accent border */
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease;
-  }
-  .cv-box:hover {
-    transform: translateY(-2px); /* Slight lift effect on hover */
-  }
-  .cv-box h3 {
-    margin-top: 20px; /* Added top margin for items that aren't first */
-    margin-bottom: 12px;
-    font-size: 1.25em;
-  }
-  .cv-box h3:first-child {
-    margin-top: 0; /* Ensures the very first item doesn't have extra top space */
-  }
-  .cv-box ul.meta-info {
-    list-style-type: none;
-    padding-left: 0;
-    margin-bottom: 0;
-  }
-  .cv-box ul.meta-info > li {
-    margin-bottom: 8px;
-  }
-  .cv-box ul.bullet-points {
-    padding-left: 20px;
-    margin-top: 10px;
-    margin-bottom: 0;
-  }
-  .cv-box ul.bullet-points > li {
-    margin-bottom: 6px;
-    list-style-type: disc;
-  }
-  /* Optional: A subtle divider to separate items within the same box */
-  .cv-divider {
-    border: 0;
-    height: 1px;
-    background: rgba(167, 238, 243, 0.2); 
-    margin: 20px 0;
-  }
-</style>
-
-<p><h2><i class="fa fa-user-graduate"></i> Education:</h2></p>
-
-<div class="cv-box">
-  <h3><i class="fa fa-university" aria-hidden="true"></i> Yeungnam University, South Korea</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> M.Sc.(Research) in Electronics Engineering (CV & AI) (Sep 2025 - Aug 2027)</li>
-    <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Korean Language & Literature (Sep 2024 - Aug 2025)</li>
-    <li><i class="fas fa-chalkboard-teacher"></i> Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Sungho Kim</a></li>
-  </ul>
-
-  <hr class="cv-divider">
-
-  <h3><i class="fa fa-university" aria-hidden="true"></i> Kalinga Institute Of Industrial Technology (KIIT),India</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Bachelor of Technology (B. Tech) in Electrical & Electronics Engineering (Jul 2019 - Jul 2023)</li>
-    <li><i class="fas fa-chalkboard-teacher"></i> Advisor: <a href="https://scholar.google.com/citations?user=L8xPWy8AAAAJ&hl=en" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Jitendra Kumar Das</a> & <a href="https://www.researchgate.net/profile/Tejaswini-Kar" target="_blank" style="color: #A7EEF3; text-decoration:none">Prof. Tejaswini Kar</a></li>
-  </ul>
-
-  <hr class="cv-divider">
-
-  <h3><i class="fa fa-university" aria-hidden="true"></i> Saint Joseph Higher Secondary School, Dhaka, Bangladesh</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-graduation-cap" aria-hidden="true"></i> Higher Secondary Certificate</li>
-    <li><i class="fas fa-chalkboard-teacher"></i> Mentor: <a href="https://sjs.edu.bd/new/faculty_details.php?id=132" target="_blank" style="color: #A7EEF3; text-decoration:none">Dr. Dipak Kumar Sarkar</a></li>
+<h2 class="section-title reveal"><i class="fas fa-user-graduate" aria-hidden="true"></i> Education</h2>
+{% for edu in site.data.education %}
+<div class="entry-card reveal">
+  <h3 class="entry-card__title"><i class="fas fa-university" aria-hidden="true"></i> {{ edu.institution }}</h3>
+  <ul class="entry-meta">
+    {% for line in edu.lines %}<li>{{ line }}</li>{% endfor %}
   </ul>
 </div>
+{% endfor %}
 
-
-<p><h2><i class="fa fa-book"></i> Research & Work Experience:</h2></p>
-
-<div class="cv-box">
-  <h3><i class='fa fa-briefcase'></i> Graduate Research Assistant</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> <a href="https://avilabyu.wixsite.com/avil" target="_blank" style="color: #A7EEF3; text-decoration:none">Advanced Visual Intelligence Lab (AVI)</a> | Yeungnam University, South Korea</li>
-    <li><i class="fa fa-calendar"></i> Aug 2025 - Aug 2027</li>
+<h2 class="section-title reveal"><i class="fas fa-flask" aria-hidden="true"></i> Research &amp; Work Experience</h2>
+{% for ex in site.data.experience %}
+<div class="entry-card reveal">
+  <h3 class="entry-card__title"><i class="fas fa-briefcase" aria-hidden="true"></i> {{ ex.role }}</h3>
+  <ul class="entry-meta">
+    {% for line in ex.lines %}<li>{{ line }}</li>{% endfor %}
   </ul>
-  <ul class="bullet-points">
-    <li><strong>Vision-Language-Action(VLAs) & World Models</strong>: Developed GST-VLA: Structured Gaussian Spatial Tokens for 3D-Aware Vision-Language-Action Models and Outperformed baseline SOTAs.</li>
-    <li><strong>6D Pose Estimation & Vision Foundation Model</strong>: Authored "C3G-VM6D" (IEEE Access), a real-time 6D pose estimation system using DINOv2 and 3D Gaussian mixture models. As well, achieved the state-of-the-art performance (80.9% accuracy) on the LineMOD-Occluded dataset,
-improving robustness in heavy occlusion scenarios by over 30%.</li>
-    <li>3D Computer Vision, Spatial Reasoning & Depth Sensing, VLA, Diffusion Transformers, 5D Robot Manipulation</li>
+  {% if ex.points %}
+  <ul class="entry-points">
+    {% for pt in ex.points %}<li>{{ pt }}</li>{% endfor %}
   </ul>
-
-  <hr class="cv-divider">
-
-  <h3><i class='fa fa-briefcase'></i> Research Assistant</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> <a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" style="color: #A7EEF3; text-decoration:none">Wireless Communications & Signal Processing Lab (WCSP)</a> | National Tsing Hua University, Hsinchu, Taiwan</li>
-    <li><i class="fa fa-calendar"></i> Sep 2023 - Aug 2024</li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Conducted research on Convex Optimization</li>
-  </ul>
-
-  <hr class="cv-divider">
-
-  <h3><i class='fa fa-briefcase'></i> Machine Learning Intern</h3>
-  <ul class="meta-info">
-    <li><i class="fa fa-building"></i> <a href="https://diginique.com/" target="_blank" style="color: #A7EEF3; text-decoration:none">Diginique Tech. lab, IIT Roorke, India</a></li>
-    <li><i class="fa fa-calendar"></i> Jul 2022 - Aug 2022</li>
-    <li><i class="fas fa-chalkboard-teacher"></i> Mentor: <a href="https://in.linkedin.com/in/sudhirchaudharyy" target="_blank" style="color: #A7EEF3; text-decoration:none">Sudhir Chaudhary (IIT, Roorke)</a></li>
-  </ul>
-  <ul class="bullet-points">
-    <li>Collected finger motion data using wearable devices and developed feature extraction algorithms; conducted experiments, performed statistical analysis, and improved the accuracy</li>
-  </ul>
+  {% endif %}
 </div>
+{% endfor %}
 
-<p><h2><i class="fa fa-chalkboard-teacher"></i> Teaching Experience:</h2></p>
-
-<table>
-  <thead> 
-    <tr>
-      <th style="background-color:#112232; font-size:17px">Course (Role)</th>
-      <th style="background-color:#112232; font-size:17px">University</th>
-      <th style="background-color:#112232; font-size:17px">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><b>Computer Vision (Teaching Assistant)</b></td>
-      <td>Yeungnam University (YU), South Korea</td>
-      <td>Fall 2025</td>
-    </tr>
-    <tr>
-      <td><b>EE203000 Linear Algebra (Teaching Assistant)</b></td>
-      <td>National Tsing Hua University (NTHU), Taiwan</td>
-      <td>Spring 2024</td>
-    </tr>
-    <tr>
-      <td><b>ELTA (Teaching Assistant)</b></td>
-      <td>National Tsinghua Affiliated School, T.O.S campus <a href="https://tfetp.epa.ntnu.edu.tw/en/elta/web/home" target="_blank" style="color: #A7EEF3; text-decoration:none">(ELTA), Ministry Of Education, Taiwan</a></td>
-      <td>Nov 2023 to Aug 2024</td>
-    </tr>
-    <tr>
-      <td><b>Advanced Chemistry and Mathematics (Instructor)</b></td>
-      <td>Genex Academic and Admission Centre, Dhaka Bangladesh</td>
-      <td>Jan 2019 to Apr 2019</td>
-    </tr> 
-  </tbody>
-</table>
+<h2 class="section-title reveal"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Teaching Experience</h2>
+<div class="table-scroll reveal">
+  <table class="data-table">
+    <thead>
+      <tr><th>Course (Role)</th><th>University</th><th>Date</th></tr>
+    </thead>
+    <tbody>
+      {% for t in site.data.teaching %}
+      <tr><td><strong>{{ t.course }}</strong></td><td>{{ t.university }}</td><td>{{ t.date }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

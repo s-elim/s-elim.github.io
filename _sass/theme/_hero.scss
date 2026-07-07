@@ -1,0 +1,120 @@
+// ==========================================================================
+//  Hero (home) + sidebar profile card
+// ==========================================================================
+
+// ---- Home hero (full width) ----
+.hero {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 2.25rem;
+  align-items: center;
+  padding-block: 2.5rem 1rem;
+}
+@media (max-width: $bp-sm) {
+  .hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+}
+.hero__avatar {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid var(--surface);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--border);
+}
+.hero__eyebrow {
+  font-family: var(--font-head);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.hero__name {
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  margin: .1em 0 .15em;
+  background: linear-gradient(92deg, var(--text-strong), var(--brand-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (max-width: $bp-sm) { .hero__name { font-size: var(--fs-3xl); } }
+.hero__role {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  color: var(--text);
+  margin-bottom: .6rem;
+}
+.hero__bio {
+  color: var(--text);
+  max-width: 62ch;
+  margin-bottom: 1rem;
+}
+.hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.15rem; }
+@media (max-width: $bp-sm) { .hero__chips { justify-content: center; } }
+.hero__actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+@media (max-width: $bp-sm) { .hero__actions { justify-content: center; } }
+.hero__social { display: flex; gap: .4rem; margin-left: .25rem; }
+.hero__social a {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--surface);
+  transition: transform .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+}
+.hero__social a:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+
+// ---- Sidebar profile card (interior pages) ----
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.35rem 1.25rem;
+  text-align: center;
+}
+.profile-card__avatar {
+  width: 138px; height: 138px;
+  margin: 0 auto .8rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border), var(--shadow-sm);
+}
+.profile-card__name { font-size: var(--fs-xl); margin-bottom: .1rem; }
+.profile-card__role { color: var(--muted); font-size: var(--fs-sm); line-height: 1.5; margin-bottom: 1rem; }
+
+.profile-links { list-style: none; margin: 0; padding: 0; text-align: left; }
+.profile-links li {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .5rem .1rem;
+  font-size: var(--fs-sm);
+  border-bottom: 1px solid var(--border);
+}
+.profile-links li:last-child { border-bottom: 0; }
+.profile-links i, .profile-links .ai { color: var(--accent); width: 17px; text-align: center; }
+.profile-links a { color: var(--text); }
+.profile-links a:hover { color: var(--accent); }
+
+.profile-section { margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--border); text-align: left; }
+.profile-section__title {
+  font-family: var(--font-head);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .6rem;
+}
+.profile-cred { display: flex; gap: .5rem; margin-bottom: .6rem; font-size: .82rem; line-height: 1.35; }
+.profile-cred:last-child { margin-bottom: 0; }
+.profile-cred i { color: var(--accent); width: 16px; text-align: center; flex-shrink: 0; margin-top: .15rem; }
+.profile-cred span { color: var(--muted); }

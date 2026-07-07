@@ -1,0 +1,134 @@
+# Publications, newest year first. `year` groups + drives the year filter.
+# `type`: conference | journal | preprint | workshop. `flagship`: vision | robotics.
+# `links[].kind`: pdf | code | project | link. abstract/bibtex intentionally omitted (TODO).
+
+- title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation.'
+  authors: 'Md Selim Sarowar, and Sungho Kim'
+  venue: "IROS'27 (To be submitted)"
+  year: 2027
+  type: 'conference'
+  flagship: 'robotics'
+  status: 'To be submitted'
+
+- title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
+  authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Anh'
+  venue: "ICRA'27 (To be submitted)"
+  year: 2027
+  type: 'conference'
+  flagship: 'robotics'
+  status: 'To be submitted'
+
+- title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
+  authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim and Sangtae Ahn'
+  venue: "BMVC'26"
+  year: 2026
+  type: 'conference'
+  flagship: 'vision'
+  featured: true
+  url: 'https://gaussvla.github.io/GaussVLA/'
+  links:
+    - { label: 'Project Page', url: 'https://gaussvla.github.io/GaussVLA/', kind: 'project' }
+    - { label: 'OpenReview', url: 'https://openreview.net/forum?id=IYv9sR4feE', kind: 'link' }
+
+- title: 'Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition'
+  authors: 'Ashikuzzaman, Md Selim Sarowar, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
+  venue: "BMVC'26"
+  year: 2026
+  type: 'conference'
+  flagship: 'vision'
+  url: 'https://github.com/s-elim/RWFL-HNH40K'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
+    - { label: 'OpenReview', url: 'https://openreview.net/forum?id=C23KZbQblz', kind: 'link' }
+
+- title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
+  authors: 'Md Selim Sarowar, and Sungho Kim'
+  venue: "ICMLw'26"
+  year: 2026
+  type: 'workshop'
+  url: 'https://openreview.net/forum?id=J57nR3hyAd'
+  links:
+    - { label: 'OpenReview', url: 'https://openreview.net/forum?id=J57nR3hyAd', kind: 'link' }
+    - { label: 'PDF', url: 'https://openreview.net/pdf?id=J57nR3hyAd', kind: 'pdf' }
+
+- title: 'C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data'
+  authors: 'Md Selim Sarowar, Manar Alnaasan and Sungho Kim'
+  venue: 'IEEE Access (SCIE-Q1, IF: 4.2)'
+  year: 2026
+  type: 'journal'
+  featured: true
+  url: 'https://ieeexplore.ieee.org/document/11400555'
+  links:
+    - { label: 'IEEE Access', url: 'https://ieeexplore.ieee.org/document/11400555', kind: 'link' }
+    - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555', kind: 'pdf' }
+
+- title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
+  authors: 'Md Selim Sarowar'
+  venue: 'Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)'
+  year: 2026
+  type: 'preprint'
+  url: 'https://www.preprints.org/manuscript/202606.1149'
+  links:
+    - { label: 'Preprint', url: 'https://www.preprints.org/manuscript/202606.1149', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub', kind: 'pdf' }
+
+- title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
+  authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim'
+  venue: 'Scientific Reports((SCIE-Q1, IF: 3.9))'
+  year: 2026
+  type: 'journal'
+  featured: true
+  url: 'https://arxiv.org/abs/2512.04425'
+  links:
+    - { label: 'arXiv', url: 'https://arxiv.org/abs/2512.04425', kind: 'link' }
+    - { label: 'PDF', url: 'https://arxiv.org/pdf/2512.04425', kind: 'pdf' }
+
+- title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
+  authors: 'Md Selim Sarowar and Sungho Kim'
+  venue: 'PeerJ Computer Science(SCIE-Q1, IF:3)'
+  year: 2026
+  type: 'journal'
+  url: 'https://www.preprints.org/manuscript/202606.0400'
+  links:
+    - { label: 'PeerJ Computer Science', url: 'https://www.preprints.org/manuscript/202606.0400', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/271cac1669e8fbdcaba01f102d4045db/download_pub', kind: 'pdf' }
+
+- title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
+  authors: 'Md Selim Sarowar and Sungho Kim'
+  venue: "IEIE'26 Conference, South Korea"
+  year: 2025
+  type: 'conference'
+  url: 'https://arxiv.org/abs/2512.07215'
+  links:
+    - { label: 'arXiv', url: 'https://arxiv.org/abs/2512.07215', kind: 'link' }
+    - { label: 'PDF', url: 'https://arxiv.org/pdf/2512.07215', kind: 'pdf' }
+
+- title: 'VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images'
+  authors: 'Md Selim Sarowar and Sungho Kim'
+  venue: "IEIE'25 Conference, South Korea"
+  year: 2025
+  type: 'conference'
+  url: 'https://arxiv.org/abs/2511.00120'
+  links:
+    - { label: 'IEIE', url: 'https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231', kind: 'link' }
+    - { label: 'PDF', url: 'https://arxiv.org/pdf/2511.00120', kind: 'pdf' }
+
+- title: 'Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends'
+  authors: '*Md Selim Sarowar, and Nur E Jannatul Farjana et. all'
+  venue: 'International Journal of Computer Applications'
+  year: 2025
+  type: 'journal'
+  url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/'
+  links:
+    - { label: 'IJCA Journal', url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf', kind: 'pdf' }
+
+- title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
+  authors: 'Md Selim Sarowar, Kaustav Dutta, and *Rasmita Lenka'
+  venue: 'IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021'
+  year: 2022
+  type: 'conference'
+  url: 'https://ieeexplore.ieee.org/document/9708513'
+  links:
+    - { label: 'IEEE Xplore', url: 'https://ieeexplore.ieee.org/document/9708513', kind: 'link' }
+    - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513', kind: 'pdf' }

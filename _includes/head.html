@@ -1,38 +1,82 @@
-{% include base_path %}
-
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
 
-<!-- Set theme before first paint to avoid flash of the wrong theme -->
+{% comment %} ---- Title & description ---- {% endcomment %}
+{% if page.url == "/" %}
+  {% assign page_title = site.title %}
+{% else %}
+  {% capture page_title %}{{ page.title | default: site.title | strip_html | strip_newlines }} · {{ site.title }}{% endcapture %}
+{% endif %}
+{% assign page_desc = page.description | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 200 %}
+{% assign og_image = site.author.avatar | default: "profile.png" | prepend: "/images/" | absolute_url %}
+
+<title>{{ page_title }}</title>
+<meta name="description" content="{{ page_desc }}">
+<meta name="author" content="{{ site.author.name | default: site.name }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+{% comment %} ---- Open Graph / Twitter ---- {% endcomment %}
+<meta property="og:type" content="{% if page.url == '/' %}profile{% else %}website{% endif %}">
+<meta property="og:site_name" content="{{ site.title }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:image" content="{{ og_image }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ og_image }}">
+
+<link href="{{ '/feed.xml' | relative_url }}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Feed">
+
+{% comment %} ---- Favicons (existing assets) ---- {% endcomment %}
+<link rel="apple-touch-icon" sizes="180x180" href="{{ '/images/apple-touch-icon-180x180.png' | relative_url }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon-32x32.png' | relative_url }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ '/images/favicon-16x16.png' | relative_url }}">
+<link rel="shortcut icon" href="{{ '/images/favicon.ico' | relative_url }}">
+<meta name="theme-color" content="#3680e8">
+
+{% comment %} ---- No-flash theme init (before stylesheet) ---- {% endcomment %}
 <script>
   (function () {
-    var t = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.classList.add('js');
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
+      }
+    } catch (e) {}
   })();
 </script>
 
-{% include seo.html %}
-
-<link href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ base_path }}/feed.xml{% endif %}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
-</script>
-
-<!-- Modern developer/researcher typefaces -->
+{% comment %} ---- Fonts + styles ---- {% endcomment %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/academicons.css' | relative_url }}">
 
-<!-- For all browsers -->
-<link rel="stylesheet" href="{{ base_path }}/assets/css/main.css">
-
-<!-- Theme system + interactive components (loaded last so they win) -->
-<link rel="stylesheet" href="{{ base_path }}/assets/css/custom.css">
-<link rel="stylesheet" href="{{ base_path }}/assets/css/collapse.css">
-
-<meta http-equiv="cleartype" content="on">
+{% comment %} ---- JSON-LD Person (home only) ---- {% endcomment %}
+{% if page.url == "/" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ site.author.name | default: site.name }}",
+  "url": "{{ '/' | absolute_url }}",
+  "image": "{{ og_image }}",
+  "jobTitle": "Graduate Research Assistant",
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "Yeungnam University"
+  },
+  "sameAs": [
+    "{{ site.author.googlescholar }}",
+    "https://github.com/{{ site.data.profiles.github | default: 's-elim' }}",
+    "https://www.linkedin.com/in/{{ site.author.linkedin }}",
+    "{{ site.author.researchgate }}"
+  ]
+}
+</script>
+{% endif %}

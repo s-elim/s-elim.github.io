@@ -1,0 +1,62 @@
+# Projects page. `desc` and `points` are raw HTML; `images` are local filenames or full URLs.
+certifications_url: 'https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr'
+
+latest:
+  - title: 'Extensive Bootcamp on VLAs and World Models (3 Months), Vizuara AI Lab'
+    category: 'Bootcamp'
+    desc: 'Completed vision‑language foundations, open‑source VLAs like Pi0, SmolVLA, and OpenVLA, Diffusion Policy for robotic manipulation, world‑model‑based simulation, SO‑101 integration, and edge deployment, culminating in a capstone project.'
+  - title: 'Extensive Bootcamp on Agentic & AI Context Engineering (3 Months), Vizuara AI Lab'
+    category: 'Bootcamp'
+    desc: 'Gained hands-on experience with large language models, context foundations, instructional prompting, and building dynamic personal and voice agents. And so, Implemented Retrieval-Augmented Generation (WRITE & SELECT), tool use and MCP-based workflows, and advanced memory architectures for production-grade AI agents.'
+  - title: 'Bootcamp on MLLM & VLM Reasoning, Vizuara AI Lab'
+    category: 'Bootcamp'
+    desc: 'Implemented and coded from scratch models like ViT, DeiT, Swin, DETR, Mask2Former, SAM, TimeSformer, VideoMAE, CLIP, BLIP, Flamingo, LLaVA, and Stable Diffusion. As well, projects on object detection and segmentation to multimodal chat systems and generative image pipelines.'
+  - title: 'C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data'
+    category: 'Research'
+    images: ['C3G_VM6D_Architecture.jpg', 'Picture2.png']
+    repo: 'https://github.com/s-elim/C3G-VM6D'
+    desc: 'The estimation of 6D pose from RGB-D data remains challenging due to occlusions, textureless objects, and depth noise. In this work, we introduce a novel architecture for precisely estimating the 6DoF object pose from a single RGB-D image. Unlike existing structures that rely on direct regression & convolution based pose estimation as well as heavily depend on large model training, our vision based dual stream approach addresses this challenging task using hybrid multi modal fusion architecture combining self-supervised vision transformers (DINOv2) and attention based point cloud processing using C3G (Compact 3D Gaussian representations integrated with Point Transformer V3). The DINOv2 approach provides robust semantic understanding without requiring fine-tuning of visual backbone, while Point Transformer V3 employs vector attention mechanisms to model complex 3D geometric patterns from depth point clouds. Moreover, we present a mask guided point cloud extraction approach that concentrates processing on object relevant regions while filtering out background noise. The model’s efficacy is demonstrated by the experimental results on the LineMOD-Occluded dataset over RDPN SOTA benchmark, which show that our network requires substantially fewer trainable parameters than fully-supervised alternatives while achieving competitive performance and notable improvements with ADD, ADD(S) metric, rotation error, and translation error. Self-supervised learning and attention based geometric reasoning together provide new era for data efficient 6D pose estimation.'
+  - title: 'Building Personal AI News Aggregator with Agentic AI (Claude Code)'
+    category: 'Research'
+    images: ['Screenshot 2026-02-27 083432.jpg', 'chatbot.png']
+    repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
+    desc: '<ul><li>Aggregates AI updates from curated high-quality sources</li><li>Filters noise</li><li>Adapts to personal preferences</li><li>Summarizes intelligently</li><li>Allows feedback (thumbs up / thumbs down style)</li><li>Improves over time using an agent-based backend</li></ul>'
+  - title: 'Personal Chatbot by instructions fine-tuning LLM with open-source dataset'
+    category: 'Research'
+    images: ['Screenshot 2026-02-27 083432.jpg', 'chatbot.png']
+    repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
+    desc: 'we run the LLM fine-tuning loop on the instruction dataset. We demonstrate how fine-tuning can improve LLM performance while following instructions.'
+  - title: 'Fine-tuning LLM for Classification task, email Spam or ham, with UC Irvine dataset'
+    category: 'Research'
+    images: ['Screenshot 2026-02-27 083432.jpg', 'email_spam.png']
+    repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
+    desc: 'we run the LLM fine-tuning loop on the email spam or not spam(ham) dataset. We demonstrate how fine-tuning can improve LLM performance in the classification tasks.'
+  - title: 'VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images'
+    category: 'Research'
+    images: ['VLM6D_arch.png', 'Picture01.png']
+    desc: 'VLM6D, a novel dual-stream architecture that leverages the distinct strengths of visual and geometric data from RGB-D input for robust and precise pose estimation. Our framework uniquely integrates two specialized encoders: a powerful, self-supervised Vision Transformer (DINOv2) processes the RGB modality, harnessing its rich, pre-trained understanding of visual grammar to achieve remarkable resilience against texture and lighting variations. Concurrently, a PointNet++ encoder processes the 3D point cloud derived from depth data, enabling robust geometric reasoning that excels even with the sparse, fragmented data typical of severe occlusion.'
+  - title: 'My Research Proposal for RISE Project: 2026 (2nd year)'
+    category: 'Research'
+    images: ['2026_Proposal - Copy.gif', 'https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b']
+    desc: 'OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.'
+
+industry:
+  - name: 'Future Drive Ltd. Korea'
+    points:
+      - 'Building VLA models for autonomous mobile robots.(<strong>Project-1</strong>)'
+  - name: 'RISE(Regional Innovation System & Education) (Funding with Nanosystem ltd, SL Corp. SK telecom, kakao Inc, ETRI AI etc..), Korea'
+    points:
+      - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)'
+      - '3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong>Project-2</strong>)'
+      - '3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong>Project-3</strong>)'
+  - name: 'RLRC (Regional Leading Research Center), South Korea'
+    points:
+      - '3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)'
+
+skills:
+  - group: 'Framework/Library'
+    items: ['PyTorch', 'Hugging Face', 'TensorFlow', 'Matplotlib', 'Open3D', 'ROS2', 'CUDA', 'OpenCV']
+  - group: 'Software/Research'
+    items: ['Blender (3D Modeling)', 'Isaac Sim', 'LaTeX', 'World Models', 'VLAs', 'Jetson AGX Orin', 'RGBD+LiDAR sensor']
+  - group: 'Language'
+    items: ['Bengali: Native', 'English: Fluent', 'Korean: Intermediate', 'Hindi: Fluent', 'Chinese (Mandarin): Elementary']

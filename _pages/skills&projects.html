@@ -1,274 +1,78 @@
 ---
 layout: archive
-title: ""
+title: "Projects"
 permalink: /projects/
-author_profile: true
+description: "Research projects, bootcamps, and industrial collaborations by Md Selim Sarowar in 3D vision, 6D pose estimation, VLAs, and world models — plus a technical skills overview."
 ---
 
-{% include base_path %}
+{% assign pj = site.data.projects %}
 
-<style>
-/* Consolidated and Cleaned up CSS for Collapsible Boxes */
-.collapsible {
-  background-color: #252b35;
-  color: white; /* Changed to orange to match your project titles */
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: 2px solid #112232;
-  border-radius: 5px;
-  text-align: left;
-  outline: none;
-  font-size: 16px;
-  margin-bottom: 10px;
-  transition: 0.3s;
-}
+<h2 class="section-title reveal"><i class="fas fa-cog" aria-hidden="true"></i> Latest Projects</h2>
 
-.active, .collapsible:hover {
-  background-color: #112232;
-  border-color: #7FFFD4;
-}
+{% assign cats = "Bootcamp,Research" | split: "," %}
+{% for cat in cats %}
+  {% assign group = pj.latest | where: "category", cat %}
+  {% if group.size > 0 %}
+    <h3 class="reveal">{% if cat == "Bootcamp" %}Bootcamps{% else %}Research &amp; Applied{% endif %}</h3>
+    <div class="accordion reveal">
+      {% for proj in group %}
+      <div class="accordion__item">
+        <button class="accordion__header" type="button" aria-expanded="false">
+          <span>{{ proj.title }}</span>
+          <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
+        </button>
+        <div class="accordion__panel">
+          <div class="accordion__panel-inner">
+            <p style="margin-bottom:.7rem"><span class="tag">{{ proj.category }}</span></p>
+            {% for img in proj.images %}
+              {% if img contains "://" %}
+                <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+              {% else %}
+                <p style="text-align:center"><img src="{{ '/images/' | append: img | relative_url }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+              {% endif %}
+            {% endfor %}
+            <div>{{ proj.desc }}</div>
+            {% if proj.repo %}
+              <p style="margin-top:.8rem"><a class="pub-badge pub-badge--code" href="{{ proj.repo }}" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> Repository</a></p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}
 
-.collapsible:after {
-  content: '\002B';
-  color: white;
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-}
-
-.active:after {
-  content: "\2212";
-}
-
-.content {
-  padding: 0 18px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out;
-  background-color: transparent;
-  margin-bottom: 15px;
-  border-radius: 0 0 5px 5px;
-}
-</style>
-
-<h2><i style="font-size:24px" class="fa">&#xf013;</i> Latest Projects:</h2>
-
-
-<button class="collapsible"><strong>Extensive Bootcamp on VLAs and World Models (3 Months), Vizuara AI Lab</strong></button>
-<div class="content">
-  <br>
- 
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify"> Completed vision‑language foundations, open‑source VLAs like Pi0, SmolVLA, and OpenVLA, Diffusion Policy for robotic manipulation, world‑model‑based simulation, SO‑101 integration, and edge deployment, culminating in a capstone project.</p>
-  <br>
-</div>
-<button class="collapsible"><strong>Extensive Bootcamp on Agentic & AI Context Engineering (3 Months), Vizuara AI Lab</strong></button>
-<div class="content">
-  <br>
- 
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">Gained hands-on experience with large language models, context foundations, instructional prompting, and building dynamic personal and voice agents. And so, Implemented Retrieval-Augmented Generation (WRITE & SELECT), tool use and MCP-based workflows, and advanced memory architectures for production-grade AI agents.</p>
-  <br>
+<h2 class="section-title reveal"><i class="fas fa-handshake" aria-hidden="true"></i> Industrial &amp; Research Institute Collaborations</h2>
+<div class="accordion reveal">
+  {% for col in pj.industry %}
+  <div class="accordion__item">
+    <button class="accordion__header" type="button" aria-expanded="false">
+      <span>{{ col.name }}</span>
+      <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
+    </button>
+    <div class="accordion__panel">
+      <div class="accordion__panel-inner">
+        <ul>
+          {% for pt in col.points %}<li>{{ pt }}</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
-<button class="collapsible"><strong>Bootcamp on MLLM & VLM Reasoning, Vizuara AI Lab</strong></button>
-<div class="content">
-  <br>
- 
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">Implemented and coded from scratch models like ViT, DeiT, Swin, DETR, Mask2Former, SAM, TimeSformer, VideoMAE, CLIP, BLIP, Flamingo, LLaVA, and Stable Diffusion. As well, projects on object detection and segmentation to multimodal chat systems and generative image pipelines.</p>
-  <br>
+<h2 class="section-title reveal"><i class="fas fa-pencil-ruler" aria-hidden="true"></i> Skills</h2>
+<div class="skills-grid reveal">
+  {% for grp in pj.skills %}
+  <div class="skill-group">
+    <div class="skill-group__title">{{ grp.group }}</div>
+    <div class="skill-chips">
+      {% for item in grp.items %}<span class="skill-chip">{{ item }}</span>{% endfor %}
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
-<button class="collapsible"><strong>C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="600" height="179" src="../../images/C3G_VM6D_Architecture.jpg">
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">The estimation of 6D pose from RGB-D data remains challenging due to occlusions, textureless objects, and depth noise. In this work, we introduce a novel architecture for precisely estimating the 6DoF object pose from a single RGB-D image. Unlike existing structures that rely on direct regression & convolution based pose estimation as well as heavily depend on large model training, our vision based dual stream approach addresses this challenging task using hybrid multi modal fusion architecture combining self-supervised vision transformers (DINOv2) and attention based point cloud processing using C3G (Compact 3D Gaussian representations integrated with Point Transformer V3). The DINOv2 approach provides robust semantic understanding without requiring fine-tuning of visual backbone, while Point Transformer V3 employs vector attention mechanisms to model complex 3D geometric patterns from depth point clouds. Moreover, we present a mask guided point cloud extraction approach that concentrates processing on object relevant regions while filtering out background noise. The model’s efficacy is demonstrated by the experimental results on the LineMOD-Occluded dataset over RDPN SOTA benchmark, which show that our network requires substantially fewer trainable parameters than fully-supervised alternatives while achieving competitive performance and notable improvements with ADD, ADD(S) metric, rotation error, and translation error. Self-supervised learning and attention based geometric reasoning together provide new era for data efficient 6D pose estimation.</p>
-  <p align="center"><img width="500" height="292" src="../../images/Picture2.png"></p>
-  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://github.com/s-elim/C3G-VM6D" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-  <br>
-</div>
-
-<button class="collapsible"><strong>Building Personal AI News Aggregator with Agentic AI (Claude Code)</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="600" height="179" src="../../images/Screenshot 2026-02-27 083432.jpg">
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">
-•Aggregates AI updates from curated high-quality sources
-• Filters noise
-• Adapts to personal preferences
-• Summarizes intelligently
-• Allows feedback (thumbs up / thumbs down style)
-• Improves over time using an agent-based backend</p>
-  <p align="center"><img width="500" height="292" src="../../images/chatbot.png"></p>
-  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://github.com/s-elim/Chatbot-LLM_Fine-Tuning" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-  <br>
-</div>
-
-<button class="collapsible"><strong>Personal Chatbot by instructions fine-tuning LLM with open-source dataset</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="600" height="179" src="../../images/Screenshot 2026-02-27 083432.jpg">
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">we run the LLM fine-tuning loop on the instruction dataset. We demonstrate how fine-tuning can improve LLM performance while following instructions.</p>
-  <p align="center"><img width="500" height="292" src="../../images/chatbot.png"></p>
-  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://github.com/s-elim/Chatbot-LLM_Fine-Tuning" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-  <br>
-</div>
-
-<button class="collapsible"><strong> Fine-tuning LLM for Classification task, email Spam or ham, with UC Irvine dataset</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="600" height="179" src="../../images/Screenshot 2026-02-27 083432.jpg">
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">we run the LLM fine-tuning loop on the email spam or not spam(ham) dataset. We demonstrate how fine-tuning can improve LLM performance in the classification tasks.</p>
-  <p align="center"><img width="500" height="292" src="../../images/email_spam.png"></p>
-  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://github.com/s-elim/Chatbot-LLM_Fine-Tuning" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-  <br>
-</div>
-
-
-<button class="collapsible"><strong>VLM6D: VLM based 6Dof Pose Estimation based on RGB-D Images</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="500" height="250" src="../../images/VLM6D_arch.png">
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">VLM6D, a novel dual-stream architecture that leverages the distinct strengths of visual and geometric data from RGB-D input for robust and precise pose estimation. Our framework uniquely integrates two specialized encoders: a powerful, self-supervised Vision Transformer (DINOv2) processes the RGB modality, harnessing its rich, pre-trained understanding of visual grammar to achieve remarkable resilience against texture and lighting variations. Concurrently, a PointNet++ encoder processes the 3D point cloud derived from depth data, enabling robust geometric reasoning that excels even with the sparse, fragmented data typical of severe occlusion.</p>
-  <p align="center"><img width="600" height="180" src="../../images/Picture01.png"></p>
-  <p><i class="fab fa-github" style="color:Aquamarine"></i> <a href="https://" style="color: Aquamarine; text-decoration:none;" target="\_blank">Repository</a></p>
-  <br>
-</div>
-
-<button class="collapsible"><strong>My Research Proposal for RISE Project: 2026 (2nd year)</strong></button>
-<div class="content">
-  <br>
-  <p align="center">
-    <img width="500" height="250" src="../../images/2026_Proposal - Copy.gif">
-  </p>
-  <p align="center">
-    <img width="700" height="300" alt="Gemini_Generated_Image" src="https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b" />
-  </p>
-  <p><u>Project Aims &amp; Objectives:</u></p>
-  <p align="justify">OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.</p>
-  <br>
-</div>
-
-<br>
-
-<h2><i style="font-size:24px" class="fa">&#xf085;</i> Industrial & Research Institute collaboration Projects:</h2>
-
-<button class="collapsible" style="color:white;"> <strong>Future Drive Ltd.</strong> Korea</button>
-<div class="content">
-  <ul>
-    <li>Building VLA models for autonomous mobile robots.(<strong>Project-1</strong>)</li>
-  </ul>
-</div>
-
-
-<button class="collapsible" style="color:white;"> <strong>RISE(Regional Innovation System & Education)</strong> (Funding with Nanosystem ltd, SL Corp. SK telecom, kakao Inc, ETRI AI etc..), Korea</button>
-<div class="content">
-  <ul>
-    <li>Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)</li>
-    <li>3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong>Project-2</strong>)</li>
-    <li>3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong>Project-3</strong>)</li>
-  </ul>
-</div>
-
-<button class="collapsible" style="color:white;"> <strong>RLRC </strong> (Regional Leading Research Center), South Korea</button>
-<div class="content">
-  <ul>
-    <li>3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)</li>
-  </ul>
-</div>
-
-<br>
-
-<h2><i class='fas fa-pencil-ruler' style='font-size:20px'></i> Skills:</h2>     
-<br> 
-  
-<table style="margin-right: calc(50%); width: 100%;">
-    <thead>
-        <tr>
-            <th style="background-color:#112232">Framework/Library</th>
-            <th style="background-color:#112232">Software/Research</th>
-            <th style="background-color:#112232">Language</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>PyTorch</td>
-            <td>Blender(3D Modeling)</td>
-            <td>Bengali: Native</td>
-        </tr>
-        <tr>
-            <td>Hugging Face</td>
-            <td>Isaac Sim</td>
-            <td>English: Fluent</td>
-        </tr>
-        <tr>
-            <td>TensorFlow</td>
-            <td>LaTeX</td>
-            <td>Korean: Intermediate</td>
-        </tr>
-        <tr>
-            <td>Matplotlib</td>
-            <td>World Models</td>
-            <td>Hindi: Fluent</td>
-        </tr>
-        <tr>
-            <td>Open3D</td>
-            <td>VLAs</td>
-            <td>Chinese (Mandarin): Elementary</td>
-        </tr>
-        <tr>
-            <td>ROS2</td>
-            <td>Jetson AGX Orin</td>
-            <td><br></td>
-        </tr>
-        <tr>
-            <td>CUDA</td>
-            <td>RGBD+LiDAR sensor</td>
-            <td><br></td>
-        </tr>
-        <tr>
-            <td>OpenCV</td>
-            <td><br></td>
-            <td><br></td>
-        </tr>
-    </tbody>
-</table>
-
-<br>
-
-<h2><i style="font-size:24px" class="fa">&#xf15c;</i>  <a href="https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr" target="\_blank" style="color: #A7EEF3; text-decoration:none">Certifications (MOOC & Workshops)</a>.</h2>
-
-<script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    } 
-  });
-}
-</script>
+<h2 class="section-title reveal"><i class="fas fa-certificate" aria-hidden="true"></i> Certifications</h2>
+<p class="reveal"><a class="btn btn--primary" href="{{ pj.certifications_url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Certifications (MOOC &amp; Workshops)</a></p>

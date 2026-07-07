@@ -1,12 +1,14 @@
 ---
 layout: archive
-title: ""
+title: "Curriculum Vitae"
 permalink: /cv/
-author_profile: true
 redirect_from:
   - /resume
+description: "Curriculum Vitae of Md Selim Sarowar — available on request."
 ---
 
-{% include base_path %}
-
- <a href="https://drive.google.com/drive/folders/1JE0lqOTokk1UW-2vRKrb76Z_0rFw1ASH" target="\_blank" style="color: #A7EEF3; text-decoration:none"> <b>click here (available on request) </b></a>
+<div class="cv-panel reveal">
+  <h2><i class="fas fa-file-alt" aria-hidden="true"></i> Curriculum Vitae</h2>
+  <p>My full CV is available on request. Use the link below to access the document.</p>
+  <a class="btn btn--primary" href="{{ site.data.profiles.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Open CV (available on request)</a>
+</div>
