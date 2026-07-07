@@ -20,7 +20,6 @@
   </div>
 
   <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
     <ul class="author__urls social-icons">
       {% if author.location %}
         <li><i class="fa fa-fw fa-map-marker" style="color:red" aria-hidden="true"></i> {{ author.location }}</li>
@@ -119,5 +118,18 @@
         <li><a href="https://en.wikipedia.org/wiki/User:{{ author.wikipedia }}"><i class="fab fa-fw fa-wikipedia-w" aria-hidden="true"></i> Wikipedia</a></li>
 {% endif %}
     </ul>
+
+    <div class="sidebar-section">
+      <p class="sidebar-section__title">Academic Credentials</p>
+      <div class="sidebar-cred"><i class="fas fa-graduation-cap"></i><div>M.Sc. Computer Vision &amp; AI<br><span>Yeungnam University · GKS Scholar</span></div></div>
+      <div class="sidebar-cred"><i class="fas fa-flask"></i><div>Research Assistant<br><span>National Tsing Hua University</span></div></div>
+      <div class="sidebar-cred"><i class="fas fa-university"></i><div>B.Tech, EEE<br><span>KIIT · SII Scholar</span></div></div>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-section__title">Industry &amp; Funded Projects</p>
+      <div class="sidebar-cred"><i class="fas fa-handshake"></i><div>RLRC &amp; RISE<br><span>Industry Collaboration</span></div></div>
+      <div class="sidebar-cred"><i class="fas fa-award"></i><div>Global Korea Scholarship<br><span>NIIED, Republic of Korea</span></div></div>
+    </div>
   </div>
 </div>

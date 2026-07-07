@@ -4,34 +4,7 @@ title: "Publications"
 permalink: /publications/
 author_profile: true
 ---
-<style>
-/* Base box style */
-.flagship-box {
-  margin-left: 8px;
-  padding: 3px 10px;
-  font-size: 11.5px;
-  border-radius: 4px;
-  border: 1px solid;
-  display: inline-block;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  vertical-align: middle;
-}
-
-/* Robotics → warm orange box */
-.flagship-box.robotics {
-  color: #ff9e5e;
-  border-color: #ff9e5e;
-  background-color: rgba(255, 158, 94, 0.12);
-}
-
-/* Vision → cool blue box */
-.flagship-box.vision {
-  color: #ff9e5e;
-  border-color:#ff9e5e;
-  background-color: rgba(255, 158, 94, 0.12);
-}
-</style>
+<!-- Flagship pill + card styling is provided globally by assets/css/custom.css (theme-aware). -->
 
 <h2 style="margin-bottom: 10px;">2027</h2>
 <div style="border: 1px solid #444; border-radius: 8px; padding: 20px; margin-bottom: 30px; background-color: rgba(255, 255, 255, 0.02);">

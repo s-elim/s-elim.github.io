@@ -1,34 +1,640 @@
+/* ==========================================================================
+   Elegant Scientist Portfolio — Theme System
+   Loaded AFTER main.css so these rules intentionally win.
+   Controlled entirely by [data-theme] on <html>.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens (Light default / Dark override)
+   -------------------------------------------------------------------------- */
+:root {
+  --primary-bg:    #f8f9fa;   /* clean off-white */
+  --card-bg:       #ffffff;
+  --nav-bg:        rgba(255, 255, 255, 0.85);
+  --text-color:    #1e293b;   /* slate-800 */
+  --text-muted:    #64748b;   /* slate-500 */
+  --heading-color: #0f172a;   /* slate-900 */
+  --accent-color:  #2563eb;   /* royal blue */
+  --accent-hover:  #1d4ed8;
+  --accent-soft:   rgba(37, 99, 235, 0.10);
+  --border-color:  #e2e8f0;   /* slate-200 */
+  --code-bg:       #f1f5f9;
+  --shadow-sm:     0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-md:     0 4px 16px rgba(15, 23, 42, 0.08);
+  --shadow-lg:     0 12px 32px rgba(15, 23, 42, 0.12);
+
+  /* Semantic badge colors */
+  --badge-pdf:     #f97362;   /* coral */
+  --badge-code:    #334155;   /* dark slate */
+  --badge-project: #0d9488;   /* teal-600 */
+  --badge-arxiv:   #b91c1c;   /* arxiv red */
+
+  --font-head: "Outfit", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "Inter", "Roboto", system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  --primary-bg:    #0f172a;   /* slate-900 */
+  --card-bg:       #1e293b;   /* slate-800 */
+  --nav-bg:        rgba(15, 23, 42, 0.82);
+  --text-color:    #f8fafc;   /* slate-50 */
+  --text-muted:    #94a3b8;   /* slate-400 */
+  --heading-color: #f8fafc;
+  --accent-color:  #38bdf8;   /* sky-400 */
+  --accent-hover:  #7dd3fc;
+  --accent-soft:   rgba(56, 189, 248, 0.14);
+  --border-color:  #334155;   /* slate-700 */
+  --code-bg:       #0b1220;
+  --shadow-sm:     0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md:     0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg:     0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --badge-pdf:     #fb7185;
+  --badge-code:    #cbd5e1;
+  --badge-project: #2dd4bf;   /* teal-400 */
+  --badge-arxiv:   #f87171;
+}
+
+/* --------------------------------------------------------------------------
+   2. Base elements
+   -------------------------------------------------------------------------- */
+html { background-color: var(--primary-bg); }
+
 body {
-  background-color: #ffffff !important;
-  color: #111111 !important;
+  background-color: var(--primary-bg) !important;
+  color: var(--text-color) !important;
+  font-family: var(--font-body) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-.page__content, .archive, .sidebar, .masthead {
-  background-color: #ffffff !important;
+
+.page__content,
+.archive,
+.sidebar,
+#main {
+  background-color: transparent !important;
+  color: var(--text-color);
 }
 
+h1, h2, h3, h4, h5, h6,
+.page__title, .archive__item-title, .author__name, .post-title {
+  font-family: var(--font-head) !important;
+  color: var(--heading-color) !important;
+  letter-spacing: -0.01em;
+}
 
+.page__content p,
+.page__content li,
+.page__content dl { color: var(--text-color); }
 
+.page__content h2 { border-bottom: 1px solid var(--border-color) !important; }
+
+/* Links */
+a { color: var(--accent-color); }
+.page__content a {
+  color: var(--accent-color) !important;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.page__content a:hover {
+  color: var(--accent-hover) !important;
+  border-bottom-color: var(--accent-hover);
+}
+
+hr { border-top: 1px solid var(--border-color) !important; }
+
+blockquote {
+  border-left: 0.25em solid var(--accent-color) !important;
+  color: var(--text-muted);
+}
+
+/* Inline code + code blocks */
+code, tt, kbd, samp, pre { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+p > code, a > code, li > code, td > code {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--accent-color) !important;
+  box-shadow: none !important;
+}
+div.highlighter-rouge, figure.highlight, pre.highlight {
+  background: var(--code-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 10px;
+}
+
+/* Tables (generic) */
+.page__content table { border-color: var(--border-color); }
+.page__content td, .page__content th { border-color: var(--border-color); color: var(--text-color); }
+
+/* Selection */
+::selection { background: var(--accent-soft); color: var(--heading-color); }
+
+/* --------------------------------------------------------------------------
+   3. Masthead + navigation
+   -------------------------------------------------------------------------- */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--nav-bg) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.masthead__inner-wrap { position: relative; }
+
+.greedy-nav { background: transparent !important; padding-right: 3.25em; }
+
+.greedy-nav a {
+  color: var(--text-muted) !important;
+  font-family: var(--font-head) !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+.greedy-nav a:hover { color: var(--accent-color) !important; }
+
+.greedy-nav .visible-links li:first-child a {
+  color: var(--heading-color) !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+/* Underline reveal uses accent */
+.greedy-nav .visible-links a:before { background: var(--accent-color) !important; height: 2px !important; }
+
+/* Overflow (hamburger) button — moved left of the theme toggle */
+.greedy-nav > button {
+  right: 2.75em !important;
+  background-color: var(--accent-color) !important;
+  border-radius: 8px;
+}
+
+.greedy-nav .hidden-links {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+.greedy-nav .hidden-links:after { border-color: var(--card-bg) transparent !important; }
+.greedy-nav .hidden-links:before { border-color: var(--border-color) transparent !important; }
+.greedy-nav .hidden-links a:hover { background: var(--accent-soft) !important; color: var(--accent-color) !important; }
+.greedy-nav .hidden-links li { border-bottom: 1px solid var(--border-color) !important; }
+
+/* --------------------------------------------------------------------------
+   4. Theme toggle button
+   -------------------------------------------------------------------------- */
+#theme-toggle {
+  position: absolute;
+  top: 50%;
+  right: 1em;
+  transform: translateY(-50%);
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+#theme-toggle:hover {
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+#theme-toggle:active { transform: translateY(-50%) scale(0.96); }
+#theme-toggle svg { width: 20px; height: 20px; display: block; }
+
+/* Icon swap based on theme */
+#theme-toggle .icon-sun { display: none; }
+#theme-toggle .icon-moon { display: block; }
+[data-theme="dark"] #theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
+
+/* --------------------------------------------------------------------------
+   5. Sidebar / author profile
+   -------------------------------------------------------------------------- */
+.sidebar .author__avatar img {
+  max-width: 200px;
+  border: 4px solid var(--card-bg) !important;
+  border-radius: 50%;
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--border-color);
+}
+
+.sidebar .author__name { color: var(--heading-color) !important; font-weight: 700; }
+.sidebar .author__bio { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
+.author__urls-wrapper > button.btn { display: none !important; } /* hide "Follow" */
+
+.sidebar .author__urls { border: 0 !important; background: transparent !important; box-shadow: none !important; }
+.sidebar .author__urls li {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.sidebar .author__urls li:last-child { border-bottom: 0; }
+.sidebar .author__urls a { color: var(--text-color) !important; }
+.sidebar .author__urls a:hover { color: var(--accent-color) !important; text-decoration: none; }
+.sidebar .author__urls i, .sidebar .author__urls .ai { color: var(--accent-color); }
+
+/* Credential / collaboration blocks in the sidebar */
+.sidebar-section {
+  margin-top: 1.1em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--border-color);
+}
+.sidebar-section__title {
+  margin: 0 0 0.55em 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted) !important;
+}
+.sidebar-cred {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-bottom: 0.55em;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+.sidebar-cred i { color: var(--accent-color); width: 15px; text-align: center; flex-shrink: 0; }
+.sidebar-cred span { color: var(--text-muted); }
+
+/* --------------------------------------------------------------------------
+   6. Hero (about page intro)
+   -------------------------------------------------------------------------- */
+.post-header { margin-bottom: 0.5em; }
+.post-title, .post-header .post-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0 0 0.15em 0;
+  background: linear-gradient(90deg, var(--heading-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lead-statement {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--heading-color);
+  margin: 0.2em 0 1em 0;
+}
+.intro-text { color: var(--text-color); font-size: 0.95rem; line-height: 1.7; }
+.intro-text a { font-weight: 500; }
+
+.profile-figure {
+  margin: 1.5em auto;
+  text-align: center;
+}
+.profile-figure img {
+  max-width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   7. Topic / research tags (GitHub-style)
+   -------------------------------------------------------------------------- */
+.tag-row { display: flex; flex-wrap: wrap; gap: 0.5em; margin: 0.75em 0 1.5em 0; }
+.topic-tag {
+  display: inline-block;
+  padding: 0.3em 0.85em;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-color) !important;
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.topic-tag:hover { transform: translateY(-2px); border-color: var(--accent-color); text-decoration: none; }
+
+/* --------------------------------------------------------------------------
+   8. Section headings
+   -------------------------------------------------------------------------- */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-head) !important;
+  font-size: 1.5rem !important;
+  font-weight: 700;
+  color: var(--heading-color) !important;
+  margin: 2em 0 0.9em 0 !important;
+  padding-bottom: 0.4em !important;
+  border-bottom: 2px solid var(--border-color) !important;
+}
+.section-title i { color: var(--accent-color); font-size: 1.1rem; }
+
+/* --------------------------------------------------------------------------
+   9. Publication cards + badges + BibTeX toggle
+   -------------------------------------------------------------------------- */
+.pub-card {
+  display: flex;
+  gap: 1.25em;
+  padding: 1.15em 1.25em;
+  margin-bottom: 1.15em;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.pub-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+}
+.pub-card__media {
+  flex: 0 0 200px;
+  max-width: 200px;
+}
+.pub-card__media img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+}
+.pub-card__body { flex: 1 1 auto; min-width: 0; }
+.pub-card__title {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--heading-color) !important;
+  margin: 0 0 0.35em 0;
+  border-bottom: 0 !important;
+}
+.pub-card__title:hover { color: var(--accent-color) !important; }
+.pub-card__authors { font-size: 0.85rem; color: var(--text-color); margin: 0 0 0.2em 0; }
+.pub-card__authors .me { font-weight: 700; color: var(--heading-color); }
+.pub-card__venue { font-size: 0.82rem; color: var(--text-muted); font-style: italic; margin: 0 0 0.7em 0; }
+
+/* Quick-action badges */
+.pub-badges { display: flex; flex-wrap: wrap; gap: 0.45em; align-items: center; }
+.pub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.32em 0.7em;
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 600;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: transform 0.18s ease, filter 0.18s ease, background 0.18s ease;
+}
+.pub-badge:hover { transform: translateY(-2px); text-decoration: none !important; border-bottom: 1px solid transparent !important; }
+.pub-badge i { font-size: 0.78rem; }
+
+.pub-badge--pdf     { background: var(--badge-pdf);     color: #fff !important; }
+.pub-badge--arxiv   { background: transparent; color: var(--badge-arxiv) !important; border-color: var(--badge-arxiv); }
+.pub-badge--code    { background: var(--badge-code);    color: #fff !important; }
+.pub-badge--project { background: var(--badge-project); color: #fff !important; }
+.pub-badge--bibtex  { background: transparent; color: var(--text-muted) !important; border-color: var(--border-color); }
+.pub-badge--bibtex:hover { border-color: var(--accent-color); color: var(--accent-color) !important; }
+[data-theme="dark"] .pub-badge--code { color: #0f172a !important; }
+
+/* BibTeX collapsible block */
+.bibtex-block {
+  display: none;
+  margin-top: 0.75em;
+  padding: 0.9em 1em;
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.bibtex-block.open { display: block; }
+.bibtex-block pre {
+  margin: 0;
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+/* Flagship pills (used on about + publications pages) */
 .flagship-box {
-  margin-left: 8px;
-  padding: 3px 10px;
-  font-size: 11.5px;
-  border-radius: 4px;
+  margin-left: 6px;
+  padding: 2px 9px;
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
   border: 1px solid;
   display: inline-block;
-  font-weight: 500;
+  vertical-align: middle;
   letter-spacing: 0.2px;
 }
+.flagship-box.robotics { color: #f97316; border-color: #f97316; background-color: rgba(249, 115, 22, 0.12); }
+.flagship-box.vision   { color: #06b6d4; border-color: #06b6d4; background-color: rgba(6, 182, 212, 0.12); }
 
-/* Robotics → warm orange box */
-.flagship-box.robotics {
-  color: #ff9e5e;
-  border-color: #ff9e5e;
-  background-color: rgba(255, 158, 94, 0.12);
+/* --------------------------------------------------------------------------
+   10. Research highlight cards (industry bridging)
+   -------------------------------------------------------------------------- */
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.1em;
+  margin: 1em 0 1.5em 0;
+}
+.highlight-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.highlight-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent-color); }
+.highlight-card__media { aspect-ratio: 16 / 9; overflow: hidden; background: var(--code-bg); }
+.highlight-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.highlight-card:hover .highlight-card__media img { transform: scale(1.05); }
+.highlight-card__body { padding: 1em 1.1em 1.15em; }
+.highlight-card__title {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--heading-color) !important;
+  margin: 0 0 0.4em 0 !important;
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.highlight-card__desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; margin: 0 0 0.8em 0; }
+.badge-tags { display: flex; flex-wrap: wrap; gap: 0.4em; }
+.badge-tag {
+  display: inline-block;
+  padding: 0.22em 0.6em;
+  font-family: var(--font-head);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--accent-soft);
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
 }
 
-/* Vision → cool blue box */
-.flagship-box.vision {
-  color: #4cc9f0;
-  border-color: #4cc9f0;
-  background-color: rgba(76, 201, 240, 0.12);
+/* --------------------------------------------------------------------------
+   11. Updates timeline
+   -------------------------------------------------------------------------- */
+.updates-timeline { margin: 0.5em 0 1.5em 0; padding-left: 0; }
+.update-item {
+  position: relative;
+  padding: 0 0 1.1em 1.6em;
+  border-left: 2px solid var(--border-color);
+}
+.update-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.update-item:before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.update-item__date {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 0.15em;
+}
+.update-item__text { font-size: 0.87rem; color: var(--text-color); line-height: 1.55; margin: 0; }
+
+/* --------------------------------------------------------------------------
+   12. Buttons / notices / footer
+   -------------------------------------------------------------------------- */
+.btn { background-color: var(--accent-color) !important; border-radius: 8px !important; }
+.btn:hover { background-color: var(--accent-hover) !important; }
+
+.page__footer {
+  background-color: var(--card-bg) !important;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+.page__footer a { color: var(--text-muted) !important; }
+.page__footer a:hover { color: var(--accent-color) !important; }
+
+/* --------------------------------------------------------------------------
+   13. Legacy inline-color neutralizer
+   Older pages hardcode pale-cyan link colors (#A7EEF3 / LightSkyBlue) and
+   dark-assumption borders. Re-map them to theme tokens so both modes read well.
+   -------------------------------------------------------------------------- */
+.page__content a[style*="A7EEF3"],
+.page__content a[style*="a7eef3"],
+.page__content a[style*="LightSkyBlue"],
+.page__content a[style*="lightskyblue"] {
+  color: var(--accent-color) !important;
+}
+.page__content a[style*="Coral"],
+.page__content a[style*="coral"] {
+  color: var(--badge-pdf) !important;
+}
+
+/* Pale accents (Aquamarine / #7FFFD4) vanish on light backgrounds → theme accent */
+.page__content [style*="color:Aquamarine"],
+.page__content [style*="color: Aquamarine"],
+.page__content [style*="color:#7FFFD4"],
+.page__content [style*="color: #7FFFD4"] { color: var(--accent-color) !important; }
+
+/* Gold medal icons → readable amber in both themes */
+.page__content [style*="color:gold"],
+.page__content [style*="color: gold"] { color: #eab308 !important; }
+
+/* Soft "Wheat" highlight → muted theme text */
+.page__content [style*="color:Wheat"],
+.page__content [style*="color: Wheat"] { color: var(--text-muted) !important; }
+
+/* Dark-navy table headers keep light text in both themes */
+.page__content th[style*="#112232"],
+.page__content th[style*="#22272e"],
+.page__content th[style*="#252b35"] { color: #fff !important; }
+
+/* Publications year-group cards (inline-styled in publications.md) */
+.page__content div[style*="border: 1px solid #444"],
+.page__content div[style*="border:1px solid #444"] {
+  border: 1px solid var(--border-color) !important;
+  background-color: var(--card-bg) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   14. Specificity boosts (beat base `.page__content a` !important rule
+   so anchor-based badges/titles/tags keep their component colors)
+   -------------------------------------------------------------------------- */
+.page__content a.pub-card__title,
+.page__content a.highlight-card__title,
+.page__content a.pub-badge,
+.page__content a.topic-tag { border-bottom: 0 !important; }
+
+.page__content a.pub-card__title       { color: var(--heading-color) !important; }
+.page__content a.pub-card__title:hover  { color: var(--accent-color) !important; }
+.page__content a.highlight-card__title  { color: var(--heading-color) !important; }
+.page__content a.topic-tag              { color: var(--accent-color) !important; }
+.page__content a.pub-badge--pdf,
+.page__content a.pub-badge--code,
+.page__content a.pub-badge--project     { color: #fff !important; }
+[data-theme="dark"] .page__content a.pub-badge--code { color: #0f172a !important; }
+.page__content a.pub-badge--arxiv       { color: var(--badge-arxiv) !important; }
+.page__content a.pub-badge:hover        { text-decoration: none !important; }
+
+/* Section-title underline must beat base `.page__content h2` (0,0,1,1) */
+.page__content h2.section-title {
+  border-bottom: 2px solid var(--border-color) !important;
+  color: var(--heading-color) !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .pub-card { flex-direction: column; gap: 0.8em; }
+  .pub-card__media { flex-basis: auto; max-width: 100%; }
+  .post-title, .post-header .post-title { font-size: 1.7rem; }
+  #theme-toggle { width: 36px; height: 36px; }
+  #theme-toggle svg { width: 18px; height: 18px; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }
