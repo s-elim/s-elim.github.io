@@ -12,11 +12,8 @@ main:
   - title: "Awards"
     url: /awards/    
 
-  - title: "Fun time"
+  - title: "Activity"
     url: /fun-time/
 
   - title: "Publications"
     url: /publications/
-     
-  - title: "CV"
-    url: /cv/

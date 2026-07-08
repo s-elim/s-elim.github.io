@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "Fun Time & Activities"
+title: "Activity"
 permalink: /fun-time/
 description: "Bootcamps, summer schools, conferences, oral presentations, and delegate activities attended by Md Selim Sarowar."
 ---
