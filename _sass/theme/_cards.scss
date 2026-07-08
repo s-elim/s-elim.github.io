@@ -54,6 +54,7 @@
 .pub-card__authors { font-size: var(--fs-sm); margin: 0 0 .2rem; color: var(--text); }
 .pub-card__authors .me { font-weight: 700; color: var(--text-strong); }
 .pub-card__venue { font-size: .82rem; color: var(--muted); font-style: italic; margin: 0 0 .7rem; }
+.pub-card__venue-name { color: var(--red); font-weight: 600; }
 @media (max-width: $bp-sm) {
   .pub-card { flex-direction: column; gap: .8rem; }
   .pub-card__media { flex-basis: auto; max-width: 100%; }
