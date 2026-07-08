@@ -7,14 +7,32 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 
 {% assign pj = site.data.projects %}
 
-<h2 class="section-title reveal"><i class="fas fa-cog" aria-hidden="true"></i> Latest Projects</h2>
-
 {% assign cats = "Bootcamp,Research" | split: "," %}
 {% for cat in cats %}
   {% assign group = pj.latest | where: "category", cat %}
   {% if group.size > 0 %}
-    <h3 class="reveal">{% if cat == "Bootcamp" %}Bootcamps{% else %}Research &amp; Applied{% endif %}</h3>
-    <div class="accordion reveal">
+    {% if cat == "Bootcamp" %}
+      {% assign cat_title = "Bootcamps" %}
+      {% assign cat_icon = "fa-laptop-code" %}
+      {% assign cat_sub = "Intensive hands-on training programs" %}
+      {% assign cat_unit = "programs" %}
+    {% else %}
+      {% assign cat_title = "Research & Applied" %}
+      {% assign cat_icon = "fa-flask" %}
+      {% assign cat_sub = "Research prototypes and applied AI systems" %}
+      {% assign cat_unit = "projects" %}
+    {% endif %}
+<section class="project-cat-card reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas {{ cat_icon }}" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">{{ cat_title }}</h2>
+      <p class="project-cat-card__sub">{{ cat_sub }}</p>
+    </div>
+    <span class="project-cat-card__count">{{ group.size }} {{ cat_unit }}</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="accordion">
       {% for proj in group %}
       <div class="accordion__item">
         <button class="accordion__header" type="button" aria-expanded="false">
@@ -23,7 +41,6 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
         </button>
         <div class="accordion__panel">
           <div class="accordion__panel-inner">
-            <p style="margin-bottom:.7rem"><span class="tag">{{ proj.category }}</span></p>
             {% for img in proj.images %}
               {% if img contains "://" %}
                 <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
@@ -40,27 +57,43 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
       </div>
       {% endfor %}
     </div>
+  </div>
+</section>
   {% endif %}
 {% endfor %}
 
-<h2 class="section-title reveal"><i class="fas fa-handshake" aria-hidden="true"></i> Industrial &amp; Research Institute Collaborations</h2>
-<div class="accordion reveal">
-  {% for col in pj.industry %}
-  <div class="accordion__item">
-    <button class="accordion__header" type="button" aria-expanded="false">
-      <span>{{ col.name }}</span>
-      <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
-    </button>
-    <div class="accordion__panel">
-      <div class="accordion__panel-inner">
-        <ul>
-          {% for pt in col.points %}<li>{{ pt }}</li>{% endfor %}
-        </ul>
+{% assign partner_count = pj.industry | size %}
+{% assign collab_count = 0 %}
+{% for col in pj.industry %}{% assign collab_count = collab_count | plus: col.points.size %}{% endfor %}
+<section class="project-cat-card reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-handshake" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Industry Research Collaboration</h2>
+      <p class="project-cat-card__sub">Funded projects with industry &amp; research institutes</p>
+    </div>
+    <span class="project-cat-card__count">{{ collab_count }} projects · {{ partner_count }} partners</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="accordion">
+      {% for col in pj.industry %}
+      <div class="accordion__item">
+        <button class="accordion__header" type="button" aria-expanded="false">
+          <span>{{ col.name }}</span>
+          <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
+        </button>
+        <div class="accordion__panel">
+          <div class="accordion__panel-inner">
+            <ul>
+              {% for pt in col.points %}<li>{{ pt }}</li>{% endfor %}
+            </ul>
+          </div>
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
 
 <h2 class="section-title reveal"><i class="fas fa-pencil-ruler" aria-hidden="true"></i> Skills</h2>
 <div class="skills-grid reveal">

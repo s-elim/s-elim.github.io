@@ -158,6 +158,57 @@
 .bibtex-block { overflow-x: auto; }
 .bibtex-block pre { margin: 0; background: transparent; border: 0; padding: 0; color: var(--muted); font-size: .78rem; line-height: 1.55; white-space: pre; }
 
+// ---- Project category cards (Bootcamps / Research & Applied / Industry) ----
+.project-cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.6rem;
+  overflow: hidden;
+}
+.project-cat-card__header {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: 1.05rem 1.25rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.project-cat-card__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  font-size: 1.15rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+}
+.project-cat-card__titles { min-width: 0; }
+.project-cat-card__title { margin: 0; font-size: var(--fs-lg); line-height: 1.25; }
+.project-cat-card__sub { margin: .15rem 0 0; font-size: var(--fs-sm); color: var(--muted); }
+.project-cat-card__count {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  padding: .3em .8em;
+  white-space: nowrap;
+}
+.project-cat-card__body { padding: 1rem; }
+@media (max-width: $bp-sm) {
+  .project-cat-card__count { display: none; }
+}
+
 // ---- Project accordion cards ----
 .accordion { display: flex; flex-direction: column; gap: .75rem; }
 .accordion__item {
