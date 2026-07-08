@@ -51,7 +51,7 @@ redirect_from:
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
 <div class="highlight-grid">
   <article class="highlight-card card reveal" data-delay="1">
-    <div class="highlight-card__media"><img src="{{ '/images/Research_Design.png' | relative_url }}" alt="Physical AI and agentic robotics" loading="lazy"></div>
+    <div class="highlight-card__media"><img src="{{ '/images/10-years-robotics-taxonomy.png' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation — bridging perception, reasoning, and control toward physical AGI.</p>
