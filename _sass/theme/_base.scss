@@ -9,6 +9,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  font-size: 112.5%; // 18px base — all rem-based type scales proportionally
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
