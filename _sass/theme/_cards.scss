@@ -80,8 +80,43 @@
   display: inline-block;
   vertical-align: middle;
 }
-.flagship-box.robotics { color: var(--robotics); border-color: var(--robotics); background: color-mix(in srgb, var(--robotics) 12%, transparent); }
-.flagship-box.vision   { color: var(--vision);   border-color: var(--vision);   background: color-mix(in srgb, var(--vision) 12%, transparent); }
+.flagship-box.robotics,
+.flagship-box.vision {
+  color: var(--red);
+  border-color: var(--red);
+  background: color-mix(in srgb, var(--red) 10%, transparent);
+}
+
+// CORE conference rank badge — glowing, interactive
+.rank-box {
+  margin-left: 6px;
+  padding: 2px 9px;
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  border-radius: 6px;
+  border: 1px solid var(--rank-gold);
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--rank-gold);
+  background: color-mix(in srgb, var(--rank-gold) 10%, transparent);
+  cursor: default;
+  animation: rank-glow 2.4s ease-in-out infinite;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.rank-box:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--rank-gold) 65%, transparent);
+  animation-play-state: paused;
+}
+@keyframes rank-glow {
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--rank-gold) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--rank-gold) 55%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rank-box { animation: none; }
+}
 
 // Quick-action link/badge buttons
 .pub-badges { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; }

@@ -8,6 +8,7 @@
   year: 2027
   type: 'conference'
   flagship: 'robotics'
+  rank: 'A'
   status: 'To be submitted'
 
 - title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
@@ -16,6 +17,7 @@
   year: 2027
   type: 'conference'
   flagship: 'robotics'
+  rank: 'A*'
   status: 'To be submitted'
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
@@ -24,6 +26,7 @@
   year: 2026
   type: 'conference'
   flagship: 'vision'
+  rank: 'A'
   featured: true
   url: 'https://gaussvla.github.io/GaussVLA/'
   links:
@@ -36,6 +39,7 @@
   year: 2026
   type: 'conference'
   flagship: 'vision'
+  rank: 'A'
   url: 'https://github.com/s-elim/RWFL-HNH40K'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
