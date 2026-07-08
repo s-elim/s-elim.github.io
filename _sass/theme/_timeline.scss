@@ -83,25 +83,62 @@
 .award-card__title { font-size: var(--fs-lg); margin: 0 0 .55rem; display: flex; gap: .55rem; align-items: baseline; }
 .award-card__medal { color: #eab308; flex-shrink: 0; }
 
-// ---- Activity (fun-time) list ----
-.activity-item {
+// ---- Activity (fun-time) interactive cards ----
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.1rem;
+}
+.activity-card {
   display: flex;
-  gap: .7rem;
-  padding: .55rem 0;
-  font-size: var(--fs-sm);
-  line-height: 1.55;
-  border-bottom: 1px dashed var(--border);
+  flex-direction: column;
+  gap: .55rem;
+  padding: 1.1rem 1.2rem;
 }
-.activity-item:last-child { border-bottom: 0; }
-.activity-item__icon { color: var(--accent); flex-shrink: 0; margin-top: .2rem; }
-.activity-item__type {
-  display: inline-block;
+.activity-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.activity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3em .78em;
   font-family: var(--font-head);
-  font-weight: 700;
   font-size: var(--fs-xs);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
   color: var(--accent);
-  margin-right: .35rem;
+  background: var(--accent-soft);
+  white-space: nowrap;
 }
+.activity-badge--summer-school { color: var(--badge-project); background: color-mix(in srgb, var(--badge-project) 12%, transparent); }
+.activity-badge--oral          { color: var(--robotics);      background: color-mix(in srgb, var(--robotics) 12%, transparent); }
+.activity-badge--delegate      { color: var(--vision);        background: color-mix(in srgb, var(--vision) 12%, transparent); }
+.activity-badge--in-person     { color: var(--good);          background: color-mix(in srgb, var(--good) 12%, transparent); }
+.activity-badge--virtual       { color: var(--muted);         background: var(--surface-2); }
+.activity-card__year {
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.activity-card__title { font-size: 1rem; line-height: 1.4; margin: 0; }
+.activity-card__title a { color: var(--text-strong); }
+.activity-card__title a:hover { color: var(--accent); }
+.activity-card__meta {
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+  margin: 0;
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.activity-card__meta i { color: var(--accent); flex-shrink: 0; }
 
 // ---- CV download panel ----
 .cv-panel {

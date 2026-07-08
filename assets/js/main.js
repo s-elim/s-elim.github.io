@@ -193,6 +193,37 @@
     apply();
   }
 
+  /* ---- Activities filter (fun-time) ----------------------------------- */
+  function initActivityFilter() {
+    var list = document.getElementById("activity-list");
+    var chipsWrap = document.getElementById("activity-filters");
+    if (!list || !chipsWrap) return;
+    var cards = Array.prototype.slice.call(list.querySelectorAll(".activity-card"));
+    var sections = Array.prototype.slice.call(list.querySelectorAll(".activity-year"));
+    var empty = document.getElementById("activity-empty");
+
+    function apply(value) {
+      var anyVisible = false;
+      cards.forEach(function (card) {
+        var ok = value === "all" || card.getAttribute("data-cat") === value;
+        card.hidden = !ok;
+        if (ok) anyVisible = true;
+      });
+      sections.forEach(function (sec) {
+        sec.hidden = sec.querySelectorAll(".activity-card:not([hidden])").length === 0;
+      });
+      if (empty) empty.classList.toggle("show", !anyVisible);
+    }
+
+    chipsWrap.querySelectorAll(".filter-chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        chipsWrap.querySelectorAll(".filter-chip").forEach(function (c) { c.classList.remove("is-active"); });
+        chip.classList.add("is-active");
+        apply(chip.getAttribute("data-value"));
+      });
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -204,6 +235,7 @@
     safe(initToggles);
     safe(initCopy);
     safe(initPubFilter);
+    safe(initActivityFilter);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

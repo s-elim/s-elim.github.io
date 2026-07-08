@@ -9,6 +9,9 @@
   padding-inline: 1.25rem;
 }
 
+// Interior pages: comfortable reading width (no sidebar)
+.container--content { max-width: 980px; }
+
 // Two-column shell: sticky profile sidebar + content
 .site-main {
   padding-block: 2.25rem 3rem;
