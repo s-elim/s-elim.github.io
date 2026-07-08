@@ -83,62 +83,38 @@
 .award-card__title { font-size: var(--fs-lg); margin: 0 0 .55rem; display: flex; gap: .55rem; align-items: baseline; }
 .award-card__medal { color: #eab308; flex-shrink: 0; }
 
-// ---- Activity (fun-time) interactive cards ----
+// ---- Activity (fun-time) interactive cards — award-card style ----
 .activity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.15rem;
 }
 .activity-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.2rem 1.3rem;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+.activity-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+.activity-card__title {
+  font-size: var(--fs-lg);
+  margin: 0 0 .55rem;
   display: flex;
-  flex-direction: column;
   gap: .55rem;
-  padding: 1.1rem 1.2rem;
+  align-items: baseline;
+  line-height: 1.4;
 }
-.activity-card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-}
-.activity-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .45rem;
-  padding: .3em .78em;
-  font-family: var(--font-head);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  border-radius: var(--radius-pill);
-  color: var(--accent);
-  background: var(--accent-soft);
-  white-space: nowrap;
-}
-.activity-badge--summer-school { color: var(--badge-project); background: color-mix(in srgb, var(--badge-project) 12%, transparent); }
-.activity-badge--oral          { color: var(--robotics);      background: color-mix(in srgb, var(--robotics) 12%, transparent); }
-.activity-badge--delegate      { color: var(--vision);        background: color-mix(in srgb, var(--vision) 12%, transparent); }
-.activity-badge--in-person     { color: var(--good);          background: color-mix(in srgb, var(--good) 12%, transparent); }
-.activity-badge--virtual       { color: var(--muted);         background: var(--surface-2); }
-.activity-card__year {
-  font-family: var(--font-head);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-.activity-card__title { font-size: 1rem; line-height: 1.4; margin: 0; }
 .activity-card__title a { color: var(--text-strong); }
 .activity-card__title a:hover { color: var(--accent); }
-.activity-card__meta {
-  display: flex;
-  gap: .5rem;
-  align-items: baseline;
-  margin: 0;
-  font-size: .82rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
-.activity-card__meta i { color: var(--accent); flex-shrink: 0; }
+.activity-card__icon { flex-shrink: 0; color: var(--accent); }
+.activity-card__icon--summer-school { color: var(--badge-project); }
+.activity-card__icon--oral          { color: var(--robotics); }
+.activity-card__icon--delegate      { color: var(--vision); }
+.activity-card__icon--in-person     { color: var(--good); }
+.activity-card__icon--virtual       { color: var(--muted); }
+.activity-card .entry-meta li { font-size: var(--fs-sm); }
 
 // ---- CV download panel ----
 .cv-panel {

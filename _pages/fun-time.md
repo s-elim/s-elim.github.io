@@ -29,16 +29,16 @@ description: "Bootcamps, summer schools, conferences, oral presentations, and de
       {% when 'virtual' %}{% assign ic = 'fa-video' %}
       {% else %}{% assign ic = 'fa-globe' %}
     {% endcase %}
-    <article class="activity-card card" data-cat="{{ ev.cat }}">
-      <div class="activity-card__top">
-        <span class="activity-badge activity-badge--{{ ev.cat }}"><i class="fas {{ ic }}" aria-hidden="true"></i> {{ ev.type }}</span>
-        <span class="activity-card__year">{{ group.year }}</span>
-      </div>
+    <article class="activity-card" data-cat="{{ ev.cat }}">
       <h3 class="activity-card__title">
-        {% if ev.url %}<a href="{{ ev.url }}" target="_blank" rel="noopener">{{ ev.title }}</a>{% else %}{{ ev.title }}{% endif %}
+        <i class="fas {{ ic }} activity-card__icon activity-card__icon--{{ ev.cat }}" aria-hidden="true"></i>
+        <span>{% if ev.url %}<a href="{{ ev.url }}" target="_blank" rel="noopener">{{ ev.title }}</a>{% else %}{{ ev.title }}{% endif %}</span>
       </h3>
-      {% if ev.org %}<p class="activity-card__meta"><i class="fas fa-building" aria-hidden="true"></i> <span>{{ ev.org }}</span></p>{% endif %}
-      {% if ev.where %}<p class="activity-card__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span>{{ ev.where }}</span></p>{% endif %}
+      <ul class="entry-meta">
+        <li><i class="fas fa-tag" aria-hidden="true"></i> {{ ev.type }} · {{ group.year }}</li>
+        {% if ev.org %}<li><i class="fas fa-building" aria-hidden="true"></i> {{ ev.org }}</li>{% endif %}
+        {% if ev.where %}<li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ ev.where }}</li>{% endif %}
+      </ul>
     </article>
     {% endfor %}
   </div>
