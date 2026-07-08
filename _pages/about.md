@@ -55,7 +55,7 @@ redirect_from:
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation — bridging perception, reasoning, and control toward physical AGI.</p>
-      <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Manipulation</span></div>
+      <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Robot Learning</span></div>
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
