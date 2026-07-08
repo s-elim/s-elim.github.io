@@ -22,7 +22,7 @@
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim and Sangtae Ahn'
-  venue: "BMVC'26"
+  venue: "BMVC'26 (Accepted)"
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -35,7 +35,7 @@
 
 - title: 'Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition'
   authors: 'Ashikuzzaman, Md Selim Sarowar, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
-  venue: "BMVC'26"
+  venue: "BMVC'26 (Accepted)"
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -47,7 +47,7 @@
 
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
   authors: 'Md Selim Sarowar, and Sungho Kim'
-  venue: "ICMLw'26"
+  venue: "ICMLw'26 (Accepted)"
   year: 2026
   type: 'workshop'
   url: 'https://openreview.net/forum?id=J57nR3hyAd'

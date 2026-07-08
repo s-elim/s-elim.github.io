@@ -10,12 +10,11 @@
     <h3 class="pub-card__title">
       {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
       {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
-      {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
     </h3>
     <p class="pub-card__authors">{{ authors }}</p>
     {% assign vparts = pub.venue | split: "(" %}
     {% assign vrest = pub.venue | remove_first: vparts[0] %}
-    <p class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status %} · {{ pub.status }}{% endif %}</p>
+    <p class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if pub.rank %} <span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status %} · {{ pub.status }}{% endif %}</p>
     <div class="pub-badges">
       {% for l in pub.links %}
         {% case l.kind %}
