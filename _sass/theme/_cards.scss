@@ -174,10 +174,10 @@ button.pub-card__media:hover {
   background: var(--surface-2);
 }
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
-.pub-tag--conference { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
+.pub-tag--conference,
+.pub-tag--preprint,
+.pub-tag--workshop   { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
 .pub-tag--journal    { color: var(--badge-project); border-color: currentColor; background: color-mix(in srgb, var(--badge-project) 10%, transparent); }
-.pub-tag--preprint   { color: var(--badge-pdf); border-color: currentColor; background: color-mix(in srgb, var(--badge-pdf) 10%, transparent); }
-.pub-tag--workshop   { color: var(--vision); border-color: currentColor; background: color-mix(in srgb, var(--vision) 10%, transparent); }
 .pub-tag--prep       { font-style: italic; }
 // Impact + venue short-name pills - interactive like the rank box
 .pub-tag--impact,
@@ -262,9 +262,9 @@ button.pub-card__media:hover {
 }
 .flagship-box.robotics,
 .flagship-box.vision {
-  color: var(--red);
-  border-color: var(--red);
-  background: color-mix(in srgb, var(--red) 10%, transparent);
+  color: var(--venue);
+  border-color: var(--venue);
+  background: color-mix(in srgb, var(--venue) 10%, transparent);
 }
 
 // CORE conference rank badge - glowing, interactive
