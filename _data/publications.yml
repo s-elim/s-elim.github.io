@@ -47,7 +47,7 @@
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=IYv9sR4feE', kind: 'link' }
 
 - title: 'Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition'
-  authors: 'Ashikuzzaman, Md Selim Sarowar, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
+  authors: 'Ashikuzzaman†, Md Selim Sarowar†, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
   venue: 'British Machine Vision Conference (Accepted)'
   venue_short: "BMVC'26"
   year: 2026

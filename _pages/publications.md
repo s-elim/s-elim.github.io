@@ -56,4 +56,4 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 {% endfor %}
 </div>
 <p class="pub-empty" id="pub-empty">No publications match your filters.</p>
-<p class="text-muted reveal" style="font-size:.82rem;margin-top:1.2rem">* Corresponding author</p>
+<p class="text-muted reveal" style="font-size:.82rem;margin-top:1.2rem">* Corresponding author &nbsp;·&nbsp; † Equal contribution</p>
