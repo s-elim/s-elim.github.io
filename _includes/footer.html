@@ -6,7 +6,7 @@
       {% if p.github %}<a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
       {% if p.linkedin %}<a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>{% endif %}
       {% if p.researchgate %}<a href="{{ p.researchgate }}" target="_blank" rel="noopener" aria-label="ResearchGate"><i class="fab fa-researchgate" aria-hidden="true"></i></a>{% endif %}
-      {% if p.email %}<a href="mailto:{{ p.email }}" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+      {% if p.email %}<a href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}" target="_blank" rel="noopener" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
     </div>
     <div class="site-footer__meta">
       &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>

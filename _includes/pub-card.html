@@ -52,9 +52,9 @@
     {% endunless %}
   </div>
   {% if pub.image %}
-  {% if pub.url %}<a class="pub-card__media" href="{{ pub.url }}" target="_blank" rel="noopener" tabindex="-1">{% else %}<div class="pub-card__media">{% endif %}
+  <button class="pub-card__media js-lightbox" type="button" data-full="{{ pub.image | relative_url }}" data-caption="{{ pub.title | escape }}" aria-label="Zoom figure from “{{ pub.title | escape }}”">
     <img src="{{ pub.image | relative_url }}" alt="Figure from “{{ pub.title | escape }}”" loading="lazy">
-  {% if pub.url %}</a>{% else %}</div>{% endif %}
+  </button>
   {% else %}
   {% assign phlabel = pub.thumb | default: vparts[0] | strip | truncate: 14 %}
   <div class="pub-card__media pub-card__media--ph" aria-hidden="true"><span>{{ phlabel }}</span></div>

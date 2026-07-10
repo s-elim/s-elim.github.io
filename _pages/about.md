@@ -17,7 +17,7 @@ redirect_from:
     <h1 class="hero__name">{{ p.name }}</h1>
     <span class="hero__role">M.Sc. Student · 3D Computer Vision &amp; Physical AI · Advanced Visual Intelligence Lab</span>
     <p class="hero__bio">Building embodied agents that perceive, reason, and act in the physical world — with first-author papers at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong> across 3D vision, VLAs, and world models, working toward <strong>physical AGI</strong>.</p>
-    <p class="hero__availability"><a class="chip chip--open" href="mailto:{{ p.email }}?subject=Research%20collaboration%20%2F%20PhD%20opportunity" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
+    <p class="hero__availability"><a class="chip chip--open" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Research%20collaboration%20%2F%20PhD%20opportunity" target="_blank" rel="noopener" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
     <div class="hero__chips">
       <span class="chip">3D Computer Vision</span>
       <span class="chip">Spatial Intelligence</span>
@@ -29,7 +29,7 @@ redirect_from:
     </div>
     <div class="hero__actions">
       <a class="btn btn--primary" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
-      <a class="btn btn--ghost" href="mailto:{{ p.email }}"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
+      <a class="btn btn--ghost" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Contact%20via%20portfolio" target="_blank" rel="noopener"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
       <a class="btn btn--ghost" href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a>
       <span class="hero__social">
         <a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>

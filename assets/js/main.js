@@ -242,6 +242,43 @@
     check();
   }
 
+  /* ---- Figure lightbox (publication thumbnails) ----------------------- */
+  function initLightbox() {
+    var triggers = Array.prototype.slice.call(document.querySelectorAll(".js-lightbox"));
+    if (!triggers.length) return;
+    var box = document.createElement("div");
+    box.className = "lightbox";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.setAttribute("aria-label", "Figure preview");
+    box.innerHTML = '<img alt=""><p class="lightbox__caption"></p>';
+    document.body.appendChild(box);
+    var img = box.querySelector("img");
+    var cap = box.querySelector(".lightbox__caption");
+    var lastTrigger = null;
+
+    function close() {
+      if (!box.classList.contains("is-open")) return;
+      box.classList.remove("is-open");
+      document.body.style.overflow = "";
+      if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+    }
+    triggers.forEach(function (t) {
+      t.addEventListener("click", function () {
+        lastTrigger = t;
+        img.src = t.getAttribute("data-full");
+        img.alt = t.getAttribute("data-caption") || "";
+        cap.textContent = t.getAttribute("data-caption") || "";
+        box.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+      });
+    });
+    box.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -255,6 +292,7 @@
     safe(initPubFilter);
     safe(initActivityFilter);
     safe(initUpdatesScroll);
+    safe(initLightbox);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
