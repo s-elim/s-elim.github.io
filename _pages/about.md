@@ -82,14 +82,19 @@ redirect_from:
 {% assign featured = site.data.publications | where: "featured", true %}
 {% for pub in featured %}{% include pub-card.html pub=pub %}{% endfor %}
 </div>
-<p class="reveal" style="text-align:right"><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
+<p class="reveal" style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="text-muted" style="font-size:.82rem">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
 <h2 class="section-title reveal"><i class="fas fa-bullhorn" aria-hidden="true"></i> Updates</h2>
-<ul class="timeline reveal">
-  {% for item in site.data.news %}
-  <li class="timeline-item">
-    <span class="timeline-item__date">{{ item.date }}</span>
-    <p class="timeline-item__body">{{ item.text }}</p>
-  </li>
-  {% endfor %}
-</ul>
+<div class="updates-card card reveal">
+  <div class="updates-card__scroll" id="updates-scroll" tabindex="0" aria-label="Updates timeline, scroll for older news">
+    <ul class="timeline">
+      {% for item in site.data.news %}
+      <li class="timeline-item">
+        <span class="timeline-item__date">{{ item.date }}</span>
+        <p class="timeline-item__body">{{ item.text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="updates-card__hint" aria-hidden="true"><i class="fas fa-chevron-down"></i> Scroll for older updates</div>
+</div>

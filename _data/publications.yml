@@ -67,7 +67,7 @@
     - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555', kind: 'pdf' }
 
 - title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
-  authors: 'Md Selim Sarowar'
+  authors: '*Md Selim Sarowar'
   venue: 'Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)'
   year: 2026
   type: 'preprint'

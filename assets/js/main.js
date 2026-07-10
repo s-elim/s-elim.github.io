@@ -224,6 +224,20 @@
     });
   }
 
+  /* ---- Updates card scroll hint (homepage) ---------------------------- */
+  function initUpdatesScroll() {
+    var scroller = document.getElementById("updates-scroll");
+    if (!scroller) return;
+    var card = scroller.closest(".updates-card");
+    function check() {
+      var atEnd = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4;
+      card.classList.toggle("is-at-end", atEnd);
+    }
+    scroller.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    check();
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -236,6 +250,7 @@
     safe(initCopy);
     safe(initPubFilter);
     safe(initActivityFilter);
+    safe(initUpdatesScroll);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
