@@ -32,7 +32,7 @@
   flagship: 'vision'
   rank: 'A'
   featured: true
-  thumb: "BMVC '26"
+  image: '/images/gaussvla_model.webp'
   url: 'https://gaussvla.github.io/GaussVLA/'
   links:
     - { label: 'Project Page', url: 'https://gaussvla.github.io/GaussVLA/', kind: 'project' }
