@@ -224,7 +224,7 @@ button.pub-card__media:hover {
 .pub-card__meta span span { display: inline; }
 .pub-card__authors .me { font-weight: 700; color: var(--text-strong); }
 .pub-card__venue { color: var(--muted); }
-.pub-card__venue-name { color: var(--text-strong); font-weight: 700; font-style: italic; }
+.pub-card__venue-name { color: var(--muted); font-weight: 400; font-style: italic; }
 
 @media (max-width: 900px) {
   .pub-grid { grid-template-columns: 1fr; }
@@ -265,6 +265,22 @@ button.pub-card__media:hover {
   color: var(--venue);
   border-color: var(--venue);
   background: color-mix(in srgb, var(--venue) 10%, transparent);
+  cursor: default;
+  animation: flagship-glow 2.4s ease-in-out infinite;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.flagship-box.robotics:hover,
+.flagship-box.vision:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--venue) 65%, transparent);
+  animation-play-state: paused;
+}
+@keyframes flagship-glow {
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--venue) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--venue) 55%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flagship-box { animation: none; }
 }
 
 // CORE conference rank badge - glowing, interactive
