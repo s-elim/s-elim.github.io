@@ -58,20 +58,29 @@
 }
 .hero__availability { margin: 0 0 1rem; }
 .chip.chip--open {
-  color: var(--good, #16a34a);
-  background: color-mix(in srgb, var(--good, #16a34a) 10%, transparent);
-  border-color: color-mix(in srgb, var(--good, #16a34a) 45%, transparent);
+  color: var(--red, #dc2626);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--red, #dc2626) 10%, transparent);
+  border-color: var(--red, #dc2626);
+  animation: chip-glow 2.2s ease-in-out infinite;
 }
+.chip.chip--open > i { margin-right: .15em; }
 a.chip.chip--open {
   cursor: pointer;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
 a.chip.chip--open:hover, a.chip.chip--open:focus-visible {
-  color: var(--good, #16a34a);
-  border-color: var(--good, #16a34a);
+  color: var(--red, #dc2626);
+  border-color: var(--red, #dc2626);
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--good, #16a34a) 30%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--red, #dc2626) 55%, transparent);
+  animation-play-state: paused;
 }
+@keyframes chip-glow {
+  0%, 100% { box-shadow: 0 0 4px color-mix(in srgb, var(--red, #dc2626) 25%, transparent); }
+  50%      { box-shadow: 0 0 15px color-mix(in srgb, var(--red, #dc2626) 60%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .chip.chip--open { animation: none; } }
 .chip__cta {
   display: inline-block;
   max-width: 0;
@@ -90,21 +99,6 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 @media (prefers-reduced-motion: reduce) {
   .chip__cta { transition: opacity .2s var(--ease); }
 }
-.chip__dot {
-  display: inline-block;
-  width: .5em;
-  height: .5em;
-  border-radius: 50%;
-  background: var(--good, #16a34a);
-  margin-right: .15em;
-  vertical-align: middle;
-  animation: dot-pulse 2s ease-in-out infinite;
-}
-@keyframes dot-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .35; }
-}
-@media (prefers-reduced-motion: reduce) { .chip__dot { animation: none; } }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.15rem; }
 @media (max-width: $bp-sm) { .hero__chips { justify-content: center; } }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }

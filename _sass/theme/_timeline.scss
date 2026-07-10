@@ -169,6 +169,36 @@
 .activity-card__icon--virtual       { color: var(--muted); }
 .activity-card .entry-meta li { font-size: var(--fs-sm); }
 
+// ---- Teaching cards ----
+.teaching-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.15rem;
+}
+.teaching-card { padding: 1.2rem 1.3rem; }
+.teaching-card__title {
+  font-size: var(--fs-lg);
+  margin: 0 0 .6rem;
+  display: flex;
+  gap: .55rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  line-height: 1.35;
+}
+.teaching-card__title > i { color: var(--accent); flex-shrink: 0; }
+.teaching-card__role {
+  font-size: var(--fs-xs);
+  align-self: center;
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.teaching-card__role--instructor {
+  color: var(--badge-project);
+  background: color-mix(in srgb, var(--badge-project) 10%, transparent);
+  border-color: color-mix(in srgb, var(--badge-project) 40%, transparent);
+}
+.teaching-card .entry-meta li { font-size: var(--fs-sm); }
+
 // ---- CV download panel ----
 .cv-panel {
   background: var(--surface);

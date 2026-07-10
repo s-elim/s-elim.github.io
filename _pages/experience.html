@@ -31,15 +31,18 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
 {% endfor %}
 
 <h2 class="section-title reveal"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Teaching Experience</h2>
-<div class="table-scroll reveal">
-  <table class="data-table">
-    <thead>
-      <tr><th>Course (Role)</th><th>University</th><th>Date</th></tr>
-    </thead>
-    <tbody>
-      {% for t in site.data.teaching %}
-      <tr><td><strong>{{ t.course }}</strong></td><td>{{ t.university }}</td><td>{{ t.date }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="teaching-grid">
+  {% for t in site.data.teaching %}
+  <div class="teaching-card card reveal">
+    <h3 class="teaching-card__title">
+      <i class="fas {% if t.role == 'Instructor' %}fa-user-tie{% else %}fa-chalkboard-teacher{% endif %}" aria-hidden="true"></i>
+      <span>{{ t.course }}</span>
+      <span class="tag teaching-card__role{% if t.role == 'Instructor' %} teaching-card__role--instructor{% endif %}">{{ t.role }}</span>
+    </h3>
+    <ul class="entry-meta">
+      <li><i class="fas fa-university" aria-hidden="true"></i> <span>{{ t.university }}</span></li>
+      <li><i class="fas fa-calendar" aria-hidden="true"></i> {{ t.date }}</li>
+    </ul>
+  </div>
+  {% endfor %}
 </div>
