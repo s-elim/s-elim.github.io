@@ -338,6 +338,12 @@ button.pub-card__media:hover {
 .bibtex-block pre { margin: 0; background: transparent; border: 0; padding: 0; color: var(--muted); font-size: .78rem; line-height: 1.55; white-space: pre; }
 
 // ---- Project category cards (Bootcamps / Research & Applied / Industry) ----
+// Per-section accent: modifiers set --cat, consumed by icon tile, count pill,
+// stat numbers, skill-group icons and chip hovers (fallback = accent blue).
+.project-cat-card--research, .stat--research { --cat: var(--badge-project); }
+.project-cat-card--industry, .stat--industry { --cat: var(--robotics); }
+.project-cat-card--skills,   .stat--skills   { --cat: var(--rank); }
+.project-cat-card--certs                     { --cat: var(--good); }
 .project-cat-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -363,8 +369,8 @@ button.pub-card__media:hover {
   justify-content: center;
   border-radius: 11px;
   font-size: 1.15rem;
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--cat, var(--accent));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 10%, transparent);
   border: 1px solid var(--border);
 }
 .project-cat-card__titles { min-width: 0; }
@@ -376,9 +382,9 @@ button.pub-card__media:hover {
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent);
+  color: var(--cat, var(--accent));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 10%, transparent);
+  border: 1px solid var(--cat, var(--accent));
   border-radius: var(--radius-pill);
   padding: .3em .8em;
   white-space: nowrap;
@@ -434,9 +440,9 @@ button.pub-card__media:hover {
   padding: 1.1rem 1.2rem;
   transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
 }
-.skill-group:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+.skill-group:hover { border-color: var(--cat, var(--accent)); box-shadow: var(--shadow-sm); }
 .skill-group__title { font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
-.skill-group__title > i { color: var(--accent); margin-right: .35rem; }
+.skill-group__title > i { color: var(--cat, var(--accent)); margin-right: .35rem; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
 .skill-chip {
   padding: .35em .7em;
@@ -452,9 +458,9 @@ button.pub-card__media:hover {
 }
 .skill-chip:hover {
   transform: translateY(-1px);
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--cat, var(--accent));
+  border-color: var(--cat, var(--accent));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 10%, transparent);
 }
 
 // ---- Stat tiles ----
@@ -467,5 +473,5 @@ button.pub-card__media:hover {
   box-shadow: var(--shadow-sm);
   padding: 1rem 1.15rem;
 }
-.stat__num { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-2xl); color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat__num { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-2xl); color: var(--cat, var(--accent)); line-height: 1; font-variant-numeric: tabular-nums; }
 .stat__label { font-size: var(--fs-xs); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }

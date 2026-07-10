@@ -6,6 +6,18 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 ---
 
 {% assign pj = site.data.projects %}
+{% assign bootcamp_count = pj.latest | where: "category", "Bootcamp" | size %}
+{% assign research_count = pj.latest | where: "category", "Research" | size %}
+{% assign partner_count = pj.industry | size %}
+{% assign collab_count = 0 %}{% for col in pj.industry %}{% assign collab_count = collab_count | plus: col.points.size %}{% endfor %}
+{% assign skill_count = 0 %}{% for grp in pj.skills %}{% assign skill_count = skill_count | plus: grp.items.size %}{% endfor %}
+
+<div class="stat-row reveal">
+  <div class="stat"><div class="stat__num">{{ bootcamp_count }}</div><div class="stat__label">Bootcamps</div></div>
+  <div class="stat stat--research"><div class="stat__num">{{ research_count }}</div><div class="stat__label">Research Projects</div></div>
+  <div class="stat stat--industry"><div class="stat__num">{{ collab_count }}</div><div class="stat__label">Industry Projects</div></div>
+  <div class="stat stat--skills"><div class="stat__num">{{ skill_count }}</div><div class="stat__label">Skills</div></div>
+</div>
 
 {% assign cats = "Bootcamp,Research" | split: "," %}
 {% for cat in cats %}
@@ -16,13 +28,15 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
       {% assign cat_icon = "fa-laptop-code" %}
       {% assign cat_sub = "Intensive hands-on training programs" %}
       {% assign cat_unit = "programs" %}
+      {% assign cat_mod = "" %}
     {% else %}
       {% assign cat_title = "Research & Applied" %}
       {% assign cat_icon = "fa-flask" %}
       {% assign cat_sub = "Research prototypes and applied AI systems" %}
       {% assign cat_unit = "projects" %}
+      {% assign cat_mod = "project-cat-card--research" %}
     {% endif %}
-<section class="project-cat-card reveal">
+<section class="project-cat-card {{ cat_mod }} reveal">
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas {{ cat_icon }}" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
@@ -62,8 +76,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 </section>
   {% endif %}
   {% if cat == "Bootcamp" %}
-{% assign skill_count = 0 %}{% for grp in pj.skills %}{% assign skill_count = skill_count | plus: grp.items.size %}{% endfor %}
-<section class="project-cat-card reveal">
+<section class="project-cat-card project-cat-card--skills reveal">
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas fa-pencil-ruler" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
@@ -88,10 +101,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   {% endif %}
 {% endfor %}
 
-{% assign partner_count = pj.industry | size %}
-{% assign collab_count = 0 %}
-{% for col in pj.industry %}{% assign collab_count = collab_count | plus: col.points.size %}{% endfor %}
-<section class="project-cat-card reveal">
+<section class="project-cat-card project-cat-card--industry reveal">
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas fa-handshake" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
@@ -121,7 +131,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   </div>
 </section>
 
-<section class="project-cat-card reveal">
+<section class="project-cat-card project-cat-card--certs reveal">
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas fa-certificate" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
