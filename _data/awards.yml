@@ -1,13 +1,13 @@
 # Awards & Honors (Awards page). `org`, `date` optional; `points` are plain text.
-- title: 'Appointed as Honorary Young Diplomat'
-  org: 'Jeju Special Governance Province'
-  points:
-    - 'Awarded for promoting Korean cultures and simultaneously engaging with international professionals for the social well-being of Jeju Island.'
 - title: 'Global Korea Scholarship (GKS/KGSP)'
   date: 'Sept 2024 - Aug 2027'
   points:
     - 'The most prestigious fellowship offered to GKS Scholars to pursue a 1-year language program & 2-year research-based M.Sc.'
     - 'Includes full tuition & credit fee waiver, monthly allowance of 1750 USD, Korean language training fee, round trip airfare, health insurance, and research incentives.'
+- title: 'Appointed as Honorary Young Diplomat'
+  org: 'Jeju Special Governance Province'
+  points:
+    - 'Awarded for promoting Korean cultures and simultaneously engaging with international professionals for the social well-being of Jeju Island.'
 - title: 'Bangladesh Sweden Trust Fund (BSTF) Travel Grant - 2024'
   points:
     - 'Awarded for higher studies in Taiwan (one-way flight ticket).'

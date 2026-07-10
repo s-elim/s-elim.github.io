@@ -2,14 +2,17 @@
 certifications_url: 'https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr'
 
 latest:
-  - title: 'Extensive Bootcamp on VLAs and World Models (3 Months), Vizuara AI Lab'
+  - title: 'Modern Robot Learning (VLAs & World Models)'
     category: 'Bootcamp'
+    meta: '3-Month Intensive Bootcamp · Vizuara AI Lab'
     desc: 'Completed vision‑language foundations, open‑source VLAs like Pi0, SmolVLA, and OpenVLA, Diffusion Policy for robotic manipulation, world‑model‑based simulation, SO‑101 integration, and edge deployment, culminating in a capstone project.'
-  - title: 'Extensive Bootcamp on Agentic & AI Context Engineering (3 Months), Vizuara AI Lab'
+  - title: 'Agentic & AI Context Engineering'
     category: 'Bootcamp'
+    meta: '3-Month Intensive Bootcamp · Vizuara AI Lab'
     desc: 'Gained hands-on experience with large language models, context foundations, instructional prompting, and building dynamic personal and voice agents. And so, Implemented Retrieval-Augmented Generation (WRITE & SELECT), tool use and MCP-based workflows, and advanced memory architectures for production-grade AI agents.'
-  - title: 'Bootcamp on MLLM & VLM Reasoning, Vizuara AI Lab'
+  - title: 'MLLM & VLM Reasoning'
     category: 'Bootcamp'
+    meta: '3-Month Intensive Bootcamp · Vizuara AI Lab'
     desc: 'Implemented and coded from scratch models like ViT, DeiT, Swin, DETR, Mask2Former, SAM, TimeSformer, VideoMAE, CLIP, BLIP, Flamingo, LLaVA, and Stable Diffusion. As well, projects on object detection and segmentation to multimodal chat systems and generative image pipelines.'
   - title: 'C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data'
     category: 'Research'
@@ -41,11 +44,12 @@ latest:
     desc: 'OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.'
 
 industry:
-  - name: 'Future Drive Ltd. Korea'
+  - name: 'Future Drive Ltd., Korea'
     points:
-      - 'Building VLA models for autonomous mobile robots.(<strong>Project-1</strong>)'
-  - name: 'RISE(Regional Innovation System & Education) (Funding with Nanosystem ltd, SL Corp. SK telecom, kakao Inc, ETRI AI etc..), Korea'
+      - 'Building VLA models for autonomous mobile robots (<strong>Project-1</strong>)'
+  - name: 'RISE — Regional Innovation System & Education, Korea'
     points:
+      - '<em>Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.</em>'
       - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)'
       - '3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong>Project-2</strong>)'
       - '3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong>Project-3</strong>)'

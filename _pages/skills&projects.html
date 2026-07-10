@@ -41,6 +41,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
         </button>
         <div class="accordion__panel">
           <div class="accordion__panel-inner">
+            {% if proj.meta %}<p class="text-muted" style="font-size:.85rem;margin:0 0 .6rem"><i class="fas fa-clock" aria-hidden="true"></i> {{ proj.meta }}</p>{% endif %}
             {% for img in proj.images %}
               {% if img contains "://" %}
                 <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>

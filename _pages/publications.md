@@ -5,8 +5,8 @@ permalink: /publications/
 description: "Peer-reviewed publications and preprints by Md Selim Sarowar across 3D computer vision, 6D pose estimation, vision-language-action models, and robot learning."
 ---
 
-{% assign pubs = site.data.publications | where_exp: "p", "p.status != 'To be submitted'" %}
-{% assign prep = site.data.publications | where_exp: "p", "p.status == 'To be submitted'" %}
+{% assign pubs = site.data.publications %}
+{% assign prep = pubs | where: "status", "To be submitted" %}
 {% assign total = pubs | size %}
 {% assign scie = 0 %}{% for pub in pubs %}{% if pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
 {% assign ranked = 0 %}{% for pub in pubs %}{% if pub.rank %}{% assign ranked = ranked | plus: 1 %}{% endif %}{% endfor %}
@@ -14,7 +14,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 <div class="stat-row reveal">
   <div class="stat"><div class="stat__num">{{ total }}</div><div class="stat__label">Publications</div></div>
-  <div class="stat"><div class="stat__num">{{ ranked }}</div><div class="stat__label">Flagship Conferences (A* &amp; A Rank)</div></div>
+  <div class="stat"><div class="stat__num">{{ ranked }}</div><div class="stat__label">Flagship Conf. (A* &amp; A)</div></div>
   <div class="stat"><div class="stat__num">{{ scie }}</div><div class="stat__label">SCIE-Q1 Journals</div></div>
   <div class="stat"><div class="stat__num">{{ prep | size }}</div><div class="stat__label">In Preparation</div></div>
 </div>
@@ -39,17 +39,12 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 <div id="pub-list">
 {% for y in years %}
+  {% assign y_prep = prep | where: "year", y | size %}
   <section class="pub-year-section" data-year="{{ y }}">
-    <h2 class="pub-year">{{ y }}</h2>
+    <h2 class="pub-year">{{ y }}{% if y_prep > 0 %} <span class="pub-year__note">In Preparation</span>{% endif %}</h2>
     {% for pub in pubs %}{% if pub.year == y %}{% include pub-card.html pub=pub %}{% endif %}{% endfor %}
   </section>
 {% endfor %}
-{% if prep.size > 0 %}
-  <section class="pub-year-section">
-    <h2 class="pub-year">In Preparation</h2>
-    {% for pub in prep %}{% include pub-card.html pub=pub %}{% endfor %}
-  </section>
-{% endif %}
 </div>
 <p class="pub-empty" id="pub-empty">No publications match your filters.</p>
 <p class="text-muted reveal" style="font-size:.82rem;margin-top:1.2rem">* Corresponding author</p>
