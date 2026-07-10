@@ -23,8 +23,8 @@
     {% assign vparts = pub.venue | split: "(" %}
     {% assign vrest = pub.venue | remove_first: vparts[0] %}
     <div class="pub-card__meta">
-      <span class="pub-card__authors">{{ authors }}</span>
       <span class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status and pub.status != "To be submitted" %} · {{ pub.status }}{% endif %}</span>
+      <span class="pub-card__authors">{{ authors }}</span>
     </div>
     <div class="pub-badges">
       {% for l in pub.links %}
