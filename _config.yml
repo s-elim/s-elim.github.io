@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Md Selim Sarowar"
 title_separator          : "-"
 name                     : &name "Md Selim Sarowar"
-description              :  &description "Graduate Research Assistant at AVI Lab, YU, South Korea"
+description              :  &description "M.Sc. researcher in 3D computer vision, VLA models, world models, and agentic robotics at AVI Lab, Yeungnam University — GKS Scholar, BMVC'26 & IEEE Access author."
 site_theme: air
 minimal_mistakes_skin: air
 enable_darkmode: false

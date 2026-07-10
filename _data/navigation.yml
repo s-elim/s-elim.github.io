@@ -13,7 +13,7 @@ main:
     url: /awards/    
 
   - title: "Activity"
-    url: /fun-time/
+    url: /activity/
 
   - title: "Publications"
     url: /publications/

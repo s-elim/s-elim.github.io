@@ -82,6 +82,10 @@
   events:
     - type: 'In person'
       cat: 'in-person'
+      title: 'Winner of Mr. Halloween Award'
+      where: 'KIIT International Student Society, Halloween Event (2021)'
+    - type: 'In person'
+      cat: 'in-person'
       title: 'International Conference on Applied Electromagnetics, Signal Processing & Communication By IEEE'
       where: 'KIIT University (Nov. 2021)'
     - type: 'In person'

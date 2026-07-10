@@ -16,7 +16,8 @@ redirect_from:
     <span class="hero__eyebrow">GKS Scholar · Yeungnam University</span>
     <h1 class="hero__name">{{ p.name }}</h1>
     <span class="hero__role">M.Sc. Student · 3D Computer Vision &amp; Physical AI · Advanced Visual Intelligence Lab</span>
-    <p class="hero__bio">Aspiring to become a rising star in 3D Computer Vision &amp; Physical AI — building embodied agents that perceive, reason, and act in the physical world toward <strong>physical AGI</strong>.</p>
+    <p class="hero__bio">Building embodied agents that perceive, reason, and act in the physical world — with first-author papers at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong> across 3D vision, VLAs, and world models, working toward <strong>physical AGI</strong>.</p>
+    <p class="hero__availability"><span class="chip chip--open"><span class="chip__dot" aria-hidden="true"></span> Open to research collaborations &amp; PhD opportunities</span></p>
     <div class="hero__chips">
       <span class="chip">3D Computer Vision</span>
       <span class="chip">Spatial Intelligence</span>
@@ -51,7 +52,7 @@ redirect_from:
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
 <div class="highlight-grid">
   <article class="highlight-card card reveal" data-delay="1">
-    <div class="highlight-card__media"><img src="{{ '/images/10-years-robotics-taxonomy.png' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy"></div>
+    <div class="highlight-card__media"><img src="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation — bridging perception, reasoning, and control toward physical AGI.</p>
@@ -59,7 +60,7 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
-    <div class="highlight-card__media"><img src="{{ '/images/C3G_VM6D_Architecture.jpg' | relative_url }}" alt="6D pose estimation architecture" loading="lazy"></div>
+    <div class="highlight-card__media"><img src="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" alt="6D pose estimation architecture" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">3D Vision &amp; 6D Pose Estimation</h3>
       <p class="highlight-card__desc">Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding.</p>
@@ -67,7 +68,7 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="3">
-    <div class="highlight-card__media"><img src="{{ '/images/3d_point_cloud_visualization.png' | relative_url }}" alt="Point cloud representation learning" loading="lazy"></div>
+    <div class="highlight-card__media"><img src="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" alt="Point cloud representation learning" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Perception &amp; Representation Learning</h3>
       <p class="highlight-card__desc">Learning transferable visual representations — from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks.</p>
