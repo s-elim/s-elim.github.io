@@ -61,6 +61,19 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   </div>
 </section>
   {% endif %}
+  {% if cat == "Bootcamp" %}
+<h2 class="section-title reveal"><i class="fas fa-pencil-ruler" aria-hidden="true"></i> Skills</h2>
+<div class="skills-grid reveal">
+  {% for grp in pj.skills %}
+  <div class="skill-group">
+    <div class="skill-group__title">{{ grp.group }}</div>
+    <div class="skill-chips">
+      {% for item in grp.items %}<span class="skill-chip">{{ item }}</span>{% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  {% endif %}
 {% endfor %}
 
 {% assign partner_count = pj.industry | size %}
@@ -95,18 +108,6 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     </div>
   </div>
 </section>
-
-<h2 class="section-title reveal"><i class="fas fa-pencil-ruler" aria-hidden="true"></i> Skills</h2>
-<div class="skills-grid reveal">
-  {% for grp in pj.skills %}
-  <div class="skill-group">
-    <div class="skill-group__title">{{ grp.group }}</div>
-    <div class="skill-chips">
-      {% for item in grp.items %}<span class="skill-chip">{{ item }}</span>{% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-</div>
 
 <h2 class="section-title reveal"><i class="fas fa-certificate" aria-hidden="true"></i> Certifications</h2>
 <p class="reveal"><a class="btn btn--primary" href="{{ pj.certifications_url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Certifications (MOOC &amp; Workshops)</a></p>
