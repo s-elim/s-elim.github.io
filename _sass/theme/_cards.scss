@@ -46,14 +46,21 @@
 }
 .pub-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 166px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  grid-template-areas:
+    "tags  tags"
+    "title title"
+    "body  media";
+  column-gap: 12px;
   align-items: start;
   min-height: 204px;
   padding: 12px 14px;
   font-size: .88rem;
 }
-.pub-card__body { min-width: 0; }
+.pub-card__tags  { grid-area: tags; }
+.pub-card__title { grid-area: title; }
+.pub-card__body  { grid-area: body; min-width: 0; }
+.pub-card__media { grid-area: media; }
 
 // Framed figure column (real image or placeholder label)
 .pub-card__media {
@@ -151,7 +158,11 @@
   .pub-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: $bp-sm) {
-  .pub-card { grid-template-columns: 1fr; min-height: 0; }
+  .pub-card {
+    grid-template-columns: 1fr;
+    grid-template-areas: "tags" "title" "body" "media";
+    min-height: 0;
+  }
   .pub-card__media { min-height: 0; max-width: 260px; }
   .pub-card__media--ph { display: none; }
 }

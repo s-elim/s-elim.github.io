@@ -2,6 +2,7 @@
 layout: archive
 title: "Publications"
 permalink: /publications/
+wide: true
 description: "Peer-reviewed publications and preprints by Md Selim Sarowar across 3D computer vision, 6D pose estimation, vision-language-action models, and robot learning."
 ---
 

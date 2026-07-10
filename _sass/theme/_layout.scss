@@ -11,6 +11,8 @@
 
 // Interior pages: comfortable reading width (no sidebar)
 .container--content { max-width: 980px; }
+// Opt-in full width for dense grid pages (page frontmatter: wide: true)
+.container--content.container--wide { max-width: var(--container); }
 
 // Two-column shell: sticky profile sidebar + content
 .site-main {
