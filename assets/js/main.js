@@ -170,7 +170,7 @@
 
     function apply() {
       var term = (search && search.value || "").trim().toLowerCase();
-      var anyVisible = false;
+      var shownTotal = 0;
       cards.forEach(function (card) {
         var ok = true;
         for (var key in groups) {
@@ -180,13 +180,17 @@
           ok = (card.getAttribute("data-search") || "").indexOf(term) !== -1;
         }
         card.hidden = !ok;
-        if (ok) anyVisible = true;
+        if (ok) shownTotal++;
       });
       sections.forEach(function (sec) {
         var visible = sec.querySelectorAll(".pub-card:not([hidden])").length;
         sec.hidden = visible === 0;
+        var count = sec.querySelector(".pub-year__count");
+        if (count) count.textContent = visible;
       });
-      if (empty) empty.classList.toggle("show", !anyVisible);
+      var shown = document.getElementById("pub-shown");
+      if (shown) shown.textContent = shownTotal;
+      if (empty) empty.classList.toggle("show", shownTotal === 0);
     }
 
     if (search) search.addEventListener("input", apply);

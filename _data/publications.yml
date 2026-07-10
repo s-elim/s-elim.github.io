@@ -1,6 +1,8 @@
 # Publications, newest year first. `year` groups + drives the year filter.
 # `type`: conference | journal | preprint | workshop. `flagship`: vision | robotics.
 # `links[].kind`: pdf | code | project | link. abstract/bibtex intentionally omitted (TODO).
+# `image`: paper figure thumbnail (WebP ≤250KB). `thumb`: short label for the
+# placeholder thumbnail when no figure is available yet.
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim'
@@ -10,6 +12,7 @@
   flagship: 'robotics'
   rank: 'A'
   status: 'To be submitted'
+  thumb: "IROS '27"
 
 - title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
@@ -19,6 +22,7 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'To be submitted'
+  thumb: "ICRA '27"
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
@@ -28,6 +32,7 @@
   flagship: 'vision'
   rank: 'A'
   featured: true
+  thumb: "BMVC '26"
   url: 'https://gaussvla.github.io/GaussVLA/'
   links:
     - { label: 'Project Page', url: 'https://gaussvla.github.io/GaussVLA/', kind: 'project' }
@@ -40,6 +45,7 @@
   type: 'conference'
   flagship: 'vision'
   rank: 'A'
+  thumb: "BMVC '26"
   url: 'https://github.com/s-elim/RWFL-HNH40K'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
@@ -50,6 +56,7 @@
   venue: "ICML'26 Workshop (Accepted)"
   year: 2026
   type: 'workshop'
+  thumb: "ICML-W '26"
   url: 'https://openreview.net/forum?id=J57nR3hyAd'
   links:
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=J57nR3hyAd', kind: 'link' }
@@ -61,6 +68,7 @@
   year: 2026
   type: 'journal'
   featured: true
+  image: '/images/C3G_VM6D_Architecture.webp'
   url: 'https://ieeexplore.ieee.org/document/11400555'
   links:
     - { label: 'IEEE Access', url: 'https://ieeexplore.ieee.org/document/11400555', kind: 'link' }
@@ -71,6 +79,7 @@
   venue: 'Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)'
   year: 2026
   type: 'preprint'
+  thumb: 'Preprint'
   url: 'https://www.preprints.org/manuscript/202606.1149'
   links:
     - { label: 'Preprint', url: 'https://www.preprints.org/manuscript/202606.1149', kind: 'link' }
@@ -81,6 +90,7 @@
   venue: 'Scientific Reports (SCIE-Q1, IF: 3.9)'
   year: 2026
   type: 'journal'
+  thumb: 'Sci. Reports'
   url: 'https://arxiv.org/abs/2512.04425'
   links:
     - { label: 'arXiv', url: 'https://arxiv.org/abs/2512.04425', kind: 'link' }
@@ -91,6 +101,7 @@
   venue: 'PeerJ Computer Science (SCIE-Q1, IF: 3)'
   year: 2026
   type: 'journal'
+  image: '/images/10-years-robotics-taxonomy.webp'
   url: 'https://www.preprints.org/manuscript/202606.0400'
   links:
     - { label: 'PeerJ Computer Science', url: 'https://www.preprints.org/manuscript/202606.0400', kind: 'link' }
@@ -101,6 +112,7 @@
   venue: "IEIE'26 Conference, South Korea"
   year: 2025
   type: 'conference'
+  thumb: "IEIE '26"
   url: 'https://arxiv.org/abs/2512.07215'
   links:
     - { label: 'arXiv', url: 'https://arxiv.org/abs/2512.07215', kind: 'link' }
@@ -111,6 +123,7 @@
   venue: "IEIE'25 Conference, South Korea"
   year: 2025
   type: 'conference'
+  image: '/images/VLM6D_arch.png'
   url: 'https://arxiv.org/abs/2511.00120'
   links:
     - { label: 'IEIE', url: 'https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231', kind: 'link' }
@@ -121,6 +134,7 @@
   venue: 'International Journal of Computer Applications'
   year: 2025
   type: 'journal'
+  thumb: 'IJCA'
   url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/'
   links:
     - { label: 'IJCA Journal', url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/', kind: 'link' }
@@ -131,6 +145,7 @@
   venue: 'IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021'
   year: 2022
   type: 'conference'
+  thumb: 'IEEE AESPC'
   url: 'https://ieeexplore.ieee.org/document/9708513'
   links:
     - { label: 'IEEE Xplore', url: 'https://ieeexplore.ieee.org/document/9708513', kind: 'link' }

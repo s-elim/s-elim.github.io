@@ -2,19 +2,26 @@
 {% assign pid = pub.title | slugify | truncate: 40, "" %}
 {% assign authors = pub.authors | replace: "Md Selim Sarowar", '<strong class="me">Md Selim Sarowar</strong>' %}
 {% assign search = pub.title | append: " " | append: pub.authors | append: " " | append: pub.venue | downcase %}
-{% if pub.type == "journal" %}{% assign bibtype = "@article" %}{% assign container = "journal" %}
-{% elsif pub.type == "preprint" %}{% assign bibtype = "@misc" %}{% assign container = "howpublished" %}
-{% else %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% endif %}
+{% if pub.type == "journal" %}{% assign bibtype = "@article" %}{% assign container = "journal" %}{% assign typelabel = "Journal" %}
+{% elsif pub.type == "preprint" %}{% assign bibtype = "@misc" %}{% assign container = "howpublished" %}{% assign typelabel = "Preprint" %}
+{% elsif pub.type == "workshop" %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% assign typelabel = "Workshop" %}
+{% else %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% assign typelabel = "Conference" %}{% endif %}
 <article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-search="{{ search | escape }}">
   <div class="pub-card__body">
+    <div class="pub-card__tags">
+      <span class="pub-tag pub-tag--year">{{ pub.year }}</span>
+      <span class="pub-tag pub-tag--{{ pub.type }}">{{ typelabel }}</span>
+      {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
+      {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
+      {% if pub.status == "To be submitted" %}<span class="pub-tag pub-tag--prep">In Preparation</span>{% endif %}
+    </div>
     <h3 class="pub-card__title">
       {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
-      {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
     </h3>
-    <p class="pub-card__authors">{{ authors }}</p>
     {% assign vparts = pub.venue | split: "(" %}
     {% assign vrest = pub.venue | remove_first: vparts[0] %}
-    <p class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if pub.rank %} <span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status %} · {{ pub.status }}{% endif %}</p>
+    <p class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status and pub.status != "To be submitted" %} · {{ pub.status }}{% endif %}</p>
+    <p class="pub-card__authors">{{ authors }}</p>
     <div class="pub-badges">
       {% for l in pub.links %}
         {% case l.kind %}
@@ -39,5 +46,15 @@
 }</pre>
     </div>
     {% endunless %}
+  </div>
+  <div class="pub-card__media">
+    {% if pub.image %}
+      {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener" tabindex="-1">{% endif %}
+      <img src="{{ pub.image | relative_url }}" alt="Figure from “{{ pub.title | escape }}”" loading="lazy">
+      {% if pub.url %}</a>{% endif %}
+    {% else %}
+      {% assign phlabel = pub.thumb | default: vparts[0] | strip | truncate: 14 %}
+      <div class="pub-thumb-ph pub-thumb-ph--{{ pub.type }}" aria-hidden="true"><span>{{ phlabel }}</span></div>
+    {% endif %}
   </div>
 </article>

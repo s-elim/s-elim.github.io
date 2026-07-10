@@ -20,9 +20,12 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 </div>
 
 <div class="pub-toolbar">
-  <div class="pub-search">
-    <i class="fas fa-search" aria-hidden="true"></i>
-    <input id="pub-search" type="search" placeholder="Search title, author, or venue…" aria-label="Search publications">
+  <div class="pub-toolbar__top">
+    <div class="pub-search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input id="pub-search" type="search" placeholder="Search title, author, or venue…" aria-label="Search publications">
+    </div>
+    <div class="pub-showing" aria-live="polite">Showing <strong id="pub-shown">{{ total }}</strong> / {{ total }}</div>
   </div>
   <div class="filter-chips" data-group="type" role="group" aria-label="Filter by type">
     <button class="filter-chip is-active" data-value="all" type="button">All Types</button>
@@ -40,8 +43,9 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 <div id="pub-list">
 {% for y in years %}
   {% assign y_prep = prep | where: "year", y | size %}
+  {% assign y_total = pubs | where: "year", y | size %}
   <section class="pub-year-section" data-year="{{ y }}">
-    <h2 class="pub-year">{{ y }}{% if y_prep > 0 %} <span class="pub-year__note">In Preparation</span>{% endif %}</h2>
+    <h2 class="pub-year">{{ y }} <span class="pub-year__count">{{ y_total }}</span>{% if y_prep > 0 %} <span class="pub-year__note">In Preparation</span>{% endif %}</h2>
     {% for pub in pubs %}{% if pub.year == y %}{% include pub-card.html pub=pub %}{% endif %}{% endfor %}
   </section>
 {% endfor %}
