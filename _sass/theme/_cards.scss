@@ -427,8 +427,16 @@ button.pub-card__media:hover {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.15rem;
 }
-.skill-group { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.skill-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.2rem;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.skill-group:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
 .skill-group__title { font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
+.skill-group__title > i { color: var(--accent); margin-right: .35rem; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
 .skill-chip {
   padding: .35em .7em;
@@ -439,6 +447,14 @@ button.pub-card__media:hover {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
+  cursor: default;
+  transition: transform .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease);
+}
+.skill-chip:hover {
+  transform: translateY(-1px);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 // ---- Stat tiles ----

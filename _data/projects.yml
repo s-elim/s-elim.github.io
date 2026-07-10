@@ -58,9 +58,12 @@ industry:
       - '3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)'
 
 skills:
-  - group: 'Framework/Library'
+  - group: 'Frameworks & Libraries'
+    icon: 'fa-cubes'
     items: ['PyTorch', 'Hugging Face', 'TensorFlow', 'Matplotlib', 'Open3D', 'ROS2', 'CUDA', 'OpenCV']
-  - group: 'Software/Research'
+  - group: 'Research Tools & Hardware'
+    icon: 'fa-microchip'
     items: ['Blender (3D Modeling)', 'Isaac Sim', 'LaTeX', 'World Models', 'VLAs', 'Jetson AGX Orin', 'RGBD+LiDAR sensor']
-  - group: 'Language'
+  - group: 'Languages'
+    icon: 'fa-language'
     items: ['Bengali: Native', 'English: Fluent', 'Korean: Intermediate', 'Hindi: Fluent', 'Chinese (Mandarin): Elementary']

@@ -62,17 +62,29 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 </section>
   {% endif %}
   {% if cat == "Bootcamp" %}
-<h2 class="section-title reveal"><i class="fas fa-pencil-ruler" aria-hidden="true"></i> Skills</h2>
-<div class="skills-grid reveal">
-  {% for grp in pj.skills %}
-  <div class="skill-group">
-    <div class="skill-group__title">{{ grp.group }}</div>
-    <div class="skill-chips">
-      {% for item in grp.items %}<span class="skill-chip">{{ item }}</span>{% endfor %}
+{% assign skill_count = 0 %}{% for grp in pj.skills %}{% assign skill_count = skill_count | plus: grp.items.size %}{% endfor %}
+<section class="project-cat-card reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-pencil-ruler" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Skills</h2>
+      <p class="project-cat-card__sub">Tools, frameworks &amp; languages I work with</p>
+    </div>
+    <span class="project-cat-card__count">{{ skill_count }} skills</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="skills-grid">
+      {% for grp in pj.skills %}
+      <div class="skill-group">
+        <div class="skill-group__title">{% if grp.icon %}<i class="fas {{ grp.icon }}" aria-hidden="true"></i> {% endif %}{{ grp.group }}</div>
+        <div class="skill-chips">
+          {% for item in grp.items %}<span class="skill-chip">{{ item }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
-  {% endfor %}
-</div>
+</section>
   {% endif %}
 {% endfor %}
 
@@ -109,5 +121,15 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   </div>
 </section>
 
-<h2 class="section-title reveal"><i class="fas fa-certificate" aria-hidden="true"></i> Certifications</h2>
-<p class="reveal"><a class="btn btn--primary" href="{{ pj.certifications_url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Certifications (MOOC &amp; Workshops)</a></p>
+<section class="project-cat-card reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-certificate" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Certifications</h2>
+      <p class="project-cat-card__sub">MOOC &amp; workshop credentials</p>
+    </div>
+  </header>
+  <div class="project-cat-card__body">
+    <a class="btn btn--primary" href="{{ pj.certifications_url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> View Certifications (MOOC &amp; Workshops)</a>
+  </div>
+</section>
