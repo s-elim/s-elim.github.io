@@ -1,8 +1,8 @@
 # Home page "Updates" timeline (most recent first). HTML allowed in `text`.
 - date: 'July 2026'
-  text: 'Two papers accepted at <strong>BMVC''26</strong> (CORE Rank A): <a href="https://gaussvla.github.io/GaussVLA/" target="_blank" rel="noopener">GaussVLA</a> — geometry-aware spatial reasoning for VLA models (first author), and <a href="https://github.com/s-elim/RWFL-HNH40K" target="_blank" rel="noopener">Hands or Not?</a> — a robust dataset for dynamic gesture recognition.'
+  text: 'Two papers accepted at <strong>BMVC''26</strong> (CORE Rank A): <a href="https://gaussvla.github.io/GaussVLA/" target="_blank" rel="noopener">GaussVLA</a>, geometry-aware spatial reasoning for VLA models (first author), and <a href="https://github.com/s-elim/RWFL-HNH40K" target="_blank" rel="noopener">Hands or Not?</a>, a robust dataset for dynamic gesture recognition.'
 - date: 'June 2026'
-  text: '<strong>GST-VLA</strong> — Structured Gaussian Spatial Tokens for 3D depth-aware VLA models — accepted at an <a href="https://openreview.net/forum?id=J57nR3hyAd" target="_blank" rel="noopener">ICML''26 workshop</a>.'
+  text: '<strong>GST-VLA</strong> (Structured Gaussian Spatial Tokens for 3D depth-aware VLA models) accepted at an <a href="https://openreview.net/forum?id=J57nR3hyAd" target="_blank" rel="noopener">ICML''26 workshop</a>.'
 - date: '2026'
   text: '<strong>C3G-VM6D</strong>, our data-efficient 6D pose estimation system, is published in <a href="https://ieeexplore.ieee.org/document/11400555" target="_blank" rel="noopener">IEEE Access</a> (SCIE-Q1), and <strong>Fusion VLM-Gait</strong> is published in <a href="https://arxiv.org/abs/2512.04425" target="_blank" rel="noopener">Scientific Reports</a> (SCIE-Q1).'
 - date: 'September 2025'

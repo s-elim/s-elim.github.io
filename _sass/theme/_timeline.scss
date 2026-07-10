@@ -1,5 +1,5 @@
 // ==========================================================================
-//  Timeline — experience, news, activities
+//  Timeline - experience, news, activities
 // ==========================================================================
 
 .timeline { position: relative; margin: 0; padding: 0; list-style: none; }
@@ -45,7 +45,7 @@
 .timeline-item__body { color: var(--text); font-size: var(--fs-sm); }
 .timeline-item__body ul { margin: .4rem 0 0; padding-left: 1.15rem; }
 
-// ---- Updates card (homepage) — latest ~2 visible, scroll for the rest ----
+// ---- Updates card (homepage) - latest ~2 visible, scroll for the rest ----
 .updates-card {
   position: relative;
   padding: 1.25rem 1.35rem .55rem;
@@ -135,7 +135,7 @@
 .award-card__title { font-size: var(--fs-lg); margin: 0 0 .55rem; display: flex; gap: .55rem; align-items: baseline; }
 .award-card__medal { color: #eab308; flex-shrink: 0; }
 
-// ---- Activity (fun-time) interactive cards — award-card style ----
+// ---- Activity (fun-time) interactive cards - award-card style ----
 .activity-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

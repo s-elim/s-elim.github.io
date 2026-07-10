@@ -47,7 +47,7 @@ industry:
   - name: 'Future Drive Ltd., Korea'
     points:
       - 'Building VLA models for autonomous mobile robots (<strong>Project-1</strong>)'
-  - name: 'RISE — Regional Innovation System & Education, Korea'
+  - name: 'RISE (Regional Innovation System & Education), Korea'
     points:
       - '<em>Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.</em>'
       - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)'

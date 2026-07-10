@@ -2,7 +2,7 @@
 permalink: /
 layout: home
 title: Home
-description: "Md Selim Sarowar — M.Sc. student in Computer Vision & AI at Yeungnam University (GKS Scholar). Research in 3D computer vision, 6D pose estimation, vision-language-action models, world models, and agentic robotics toward physical AGI."
+description: "Md Selim Sarowar: M.Sc. student in Computer Vision & AI at Yeungnam University (GKS Scholar). Research in 3D computer vision, 6D pose estimation, vision-language-action models, world models, and agentic robotics toward physical AGI."
 redirect_from:
   - /about/
   - /about.html
@@ -16,7 +16,7 @@ redirect_from:
     <span class="hero__eyebrow">GKS Scholar · Yeungnam University</span>
     <h1 class="hero__name">{{ p.name }}</h1>
     <span class="hero__role">M.Sc. Student · 3D Computer Vision &amp; Physical AI · Advanced Visual Intelligence Lab</span>
-    <p class="hero__bio">Building embodied agents that perceive, reason, and act in the physical world — with first-author papers at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong> across 3D vision, VLAs, and world models, working toward <strong>physical AGI</strong>.</p>
+    <p class="hero__bio">Building embodied agents that perceive, reason, and act in the physical world, with first-author papers at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong> across 3D vision, VLAs, and world models, working toward <strong>physical AGI</strong>.</p>
     <p class="hero__availability"><a class="chip chip--open" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Research%20collaboration%20%2F%20PhD%20opportunity" target="_blank" rel="noopener" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
     <div class="hero__chips">
       <span class="chip">3D Computer Vision</span>
@@ -44,7 +44,7 @@ redirect_from:
 <div class="reveal">
 <p>I am pursuing an <strong>M.Sc. in Computer Vision &amp; AI</strong> at <a href="http://www.ynu.kr/_english/main/index.php" target="_blank" rel="noopener">Yeungnam University (YU)</a> as a <a href="https://www.studyinkorea.go.kr/" target="_blank" rel="noopener">Global Korea Scholarship (GKS)</a> scholar funded by NIIED, with additional support from the <strong>RLRC &amp; RISE</strong> industry-collaboration projects. I am a member of the <a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, supervised by <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>.</p>
 
-<p>My research centers on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation — working toward embodied agents that perceive, reason, and act in the physical world.</p>
+<p>My research centers on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation, working toward embodied agents that perceive, reason, and act in the physical world.</p>
 
 <p>Before joining YU, I completed a one-year Korean Language &amp; Literature program at KLI under the GKS program, and spent a year as a full-time Research Assistant in the <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">WCSP Lab at National Tsing Hua University</a>, Taiwan. I earned my B.Tech (Electronics &amp; Electrical Engineering) as an <a href="https://studyinindia.gov.in/" target="_blank" rel="noopener">SII Scholar</a> from the <a href="https://kiit.ac.in/" target="_blank" rel="noopener">Kalinga Institute of Industrial Technology (KIIT)</a>, and interned at <a href="https://www.iitr.ac.in/" target="_blank" rel="noopener">IIT Roorkee</a> on image processing for biomedical signals.</p>
 </div>
@@ -55,7 +55,7 @@ redirect_from:
     <div class="highlight-card__media"><img src="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
-      <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation — bridging perception, reasoning, and control toward physical AGI.</p>
+      <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
       <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Robot Learning</span></div>
     </div>
   </article>
@@ -71,7 +71,7 @@ redirect_from:
     <div class="highlight-card__media"><img src="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" alt="Point cloud representation learning" loading="lazy"></div>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Perception &amp; Representation Learning</h3>
-      <p class="highlight-card__desc">Learning transferable visual representations — from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks.</p>
+      <p class="highlight-card__desc">Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks.</p>
       <div class="tag-list"><span class="tag">Point Clouds</span><span class="tag">Representation Learning</span><span class="tag">Denoising</span></div>
     </div>
   </article>
