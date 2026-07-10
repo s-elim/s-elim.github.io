@@ -41,7 +41,9 @@ $bp-xl: 1280px;
   --robotics:      #ea7317; // flagship — robotics
   --good:          #16a34a;
   --red:       #dc2626; // flagship
-  --rank-gold: #b45309; // CORE rank badge
+  --rank:      #7c3aed; // CORE rank badge
+  --rank-gold: #b45309; // gold — venue short-name pill
+  --impact:    #059669; // journal impact pill (SCIE-Q1 / IF)
   --img-dim: none;      // media dimming (dark mode only)
 
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
@@ -92,7 +94,9 @@ $bp-xl: 1280px;
     --robotics:      #fb923c;
     --good:          #4ade80;
   --red:       #f87171; // flagship
-  --rank-gold: #fbbf24; // CORE rank badge
+  --rank:      #a78bfa; // CORE rank badge
+  --rank-gold: #fbbf24; // gold — venue short-name pill
+  --impact:    #34d399; // journal impact pill (SCIE-Q1 / IF)
   --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
@@ -127,7 +131,9 @@ $bp-xl: 1280px;
   --robotics:      #fb923c;
   --good:          #4ade80;
   --red:       #f87171; // flagship
-  --rank-gold: #fbbf24; // CORE rank badge
+  --rank:      #a78bfa; // CORE rank badge
+  --rank-gold: #fbbf24; // gold — venue short-name pill
+  --impact:    #34d399; // journal impact pill (SCIE-Q1 / IF)
   --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
@@ -160,7 +166,9 @@ $bp-xl: 1280px;
   --robotics:      #ea7317;
   --good:          #16a34a;
   --red:       #dc2626; // flagship
-  --rank-gold: #b45309; // CORE rank badge
+  --rank:      #7c3aed; // CORE rank badge
+  --rank-gold: #b45309; // gold — venue short-name pill
+  --impact:    #059669; // journal impact pill (SCIE-Q1 / IF)
   --img-dim: none;      // media dimming (dark mode only)
 
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);

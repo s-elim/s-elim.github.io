@@ -6,6 +6,8 @@
 # `venue`: full venue name (shown on the Venue line and in BibTeX).
 # `venue_short`: abbreviation (e.g. "IROS'27") — rendered as a pill beside the
 # Rank box; add it for conferences/workshops.
+# `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") — rendered as a pill
+# beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim'
@@ -73,7 +75,8 @@
 
 - title: 'C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data'
   authors: 'Md Selim Sarowar, Manar Alnaasan and Sungho Kim'
-  venue: 'IEEE Access (SCIE-Q1, IF: 4.2)'
+  venue: 'IEEE Access'
+  impact: 'SCIE-Q1, IF: 4.2'
   year: 2026
   type: 'journal'
   featured: true
@@ -85,7 +88,8 @@
 
 - title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
   authors: '*Md Selim Sarowar'
-  venue: 'Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)'
+  venue: 'Artificial Intelligence Review'
+  impact: 'SCIE-Q1/Top 3%, IF: 19'
   year: 2026
   type: 'preprint'
   image: '/images/what_matters_figure.webp'
@@ -97,7 +101,8 @@
 
 - title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
   authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim'
-  venue: 'Scientific Reports (SCIE-Q1, IF: 3.9)'
+  venue: 'Scientific Reports'
+  impact: 'SCIE-Q1, IF: 3.9'
   year: 2026
   type: 'journal'
   thumb: 'Sci. Reports'
@@ -108,7 +113,8 @@
 
 - title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
   authors: 'Md Selim Sarowar and Sungho Kim'
-  venue: 'PeerJ Computer Science (SCIE-Q1, IF: 3)'
+  venue: 'PeerJ Computer Science'
+  impact: 'SCIE-Q1, IF: 3'
   year: 2026
   type: 'journal'
   image: '/images/10-years-robotics-taxonomy.webp'

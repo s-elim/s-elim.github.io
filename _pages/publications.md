@@ -11,7 +11,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 {% assign total = pubs | size %}
 {% assign prepcount = prep | size %}
 {% assign published = total | minus: prepcount %}
-{% assign scie = 0 %}{% for pub in pubs %}{% if pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
+{% assign scie = 0 %}{% for pub in pubs %}{% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
 {% assign ranked = 0 %}{% for pub in pubs %}{% if pub.rank %}{% assign ranked = ranked | plus: 1 %}{% endif %}{% endfor %}
 {% assign years = pubs | map: "year" | uniq %}
 

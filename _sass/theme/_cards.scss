@@ -128,7 +128,21 @@
 .pub-tag--preprint   { color: var(--badge-pdf); border-color: currentColor; background: color-mix(in srgb, var(--badge-pdf) 10%, transparent); }
 .pub-tag--workshop   { color: var(--vision); border-color: currentColor; background: color-mix(in srgb, var(--vision) 10%, transparent); }
 .pub-tag--prep       { font-style: italic; }
-.pub-tag--venue      { font-weight: 600; color: var(--text); }
+.pub-tag--impact     { color: var(--impact); border-color: currentColor; background: color-mix(in srgb, var(--impact) 10%, transparent); }
+
+// Venue short-name pill — interactive like the rank box
+.pub-tag--venue {
+  font-weight: 700;
+  color: var(--rank-gold);
+  border-color: var(--rank-gold);
+  background: color-mix(in srgb, var(--rank-gold) 10%, transparent);
+  cursor: default;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.pub-tag--venue:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--rank-gold) 65%, transparent);
+}
 
 .pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0 0 .45rem; }
 .pub-card__title a { color: var(--text-strong); }
@@ -206,23 +220,23 @@
   font-style: normal;
   letter-spacing: .02em;
   border-radius: 6px;
-  border: 1px solid var(--rank-gold);
+  border: 1px solid var(--rank);
   display: inline-block;
   vertical-align: middle;
-  color: var(--rank-gold);
-  background: color-mix(in srgb, var(--rank-gold) 10%, transparent);
+  color: var(--rank);
+  background: color-mix(in srgb, var(--rank) 10%, transparent);
   cursor: default;
   animation: rank-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 .rank-box:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--rank-gold) 65%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--rank) 65%, transparent);
   animation-play-state: paused;
 }
 @keyframes rank-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--rank-gold) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--rank-gold) 55%, transparent); }
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--rank) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--rank) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .rank-box { animation: none; }
