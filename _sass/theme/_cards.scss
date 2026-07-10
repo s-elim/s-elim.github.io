@@ -339,7 +339,8 @@ button.pub-card__media:hover {
 .project-cat-card--research, .stat--research { --cat: var(--badge-project); }
 .project-cat-card--industry, .stat--industry { --cat: var(--robotics); }
 .project-cat-card--skills,   .stat--skills   { --cat: var(--rank); }
-.project-cat-card--certs                     { --cat: var(--good); }
+.project-cat-card--certs,
+.project-cat-card--teaching                  { --cat: var(--good); }
 .project-cat-card {
   background: var(--surface);
   border: 1px solid var(--border);

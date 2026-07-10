@@ -1,22 +1,23 @@
-# Research & Work experience (Experience page). `lines` and `points` are raw HTML.
+# Research & Work experience (Experience page). `org`, `extra`, `points` are raw HTML.
+# `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
 - role: 'Graduate Research Assistant'
-  lines:
-    - '<i class="fas fa-building" aria-hidden="true"></i> <a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> | Yeungnam University, South Korea'
-    - '<i class="fas fa-calendar" aria-hidden="true"></i> Aug 2025 - Aug 2027'
+  org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea'
+  date: 'Aug 2025 - Aug 2027'
+  current: true
   points:
     - '<strong>Vision-Language-Action(VLAs) & World Models</strong>: Developed GST-VLA: Structured Gaussian Spatial Tokens for 3D-Aware Vision-Language-Action Models and Outperformed baseline SOTAs.'
     - '<strong>6D Pose Estimation & Vision Foundation Model</strong>: Authored "C3G-VM6D" (IEEE Access), a real-time 6D pose estimation system using DINOv2 and 3D Gaussian mixture models. As well, achieved the state-of-the-art performance (80.9% accuracy) on the LineMOD-Occluded dataset, improving robustness in heavy occlusion scenarios by over 30%.'
     - '3D Computer Vision, Spatial Reasoning & Depth Sensing, VLA, Diffusion Transformers, 5D Robot Manipulation'
+
 - role: 'Research Assistant'
-  lines:
-    - '<i class="fas fa-building" aria-hidden="true"></i> <a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications & Signal Processing Lab (WCSP)</a> | National Tsing Hua University, Hsinchu, Taiwan'
-    - '<i class="fas fa-calendar" aria-hidden="true"></i> Sep 2023 - Aug 2024'
+  org: '<a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications &amp; Signal Processing Lab (WCSP)</a> · National Tsing Hua University, Hsinchu, Taiwan'
+  date: 'Sep 2023 - Aug 2024'
   points:
     - 'Conducted research on Convex Optimization'
+
 - role: 'Machine Learning Intern'
-  lines:
-    - '<i class="fas fa-building" aria-hidden="true"></i> <a href="https://diginique.com/" target="_blank" rel="noopener">Diginique Tech. lab, IIT Roorkee, India</a>'
-    - '<i class="fas fa-calendar" aria-hidden="true"></i> Jul 2022 - Aug 2022'
-    - '<i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Mentor: <a href="https://in.linkedin.com/in/sudhirchaudharyy" target="_blank" rel="noopener">Sudhir Chaudhary (IIT Roorkee)</a>'
+  org: '<a href="https://diginique.com/" target="_blank" rel="noopener">Diginique Tech. lab</a> · IIT Roorkee, India'
+  date: 'Jul 2022 - Aug 2022'
+  extra: 'Mentor: <a href="https://in.linkedin.com/in/sudhirchaudharyy" target="_blank" rel="noopener">Sudhir Chaudhary (IIT Roorkee)</a>'
   points:
     - 'Collected finger motion data using wearable devices and developed feature extraction algorithms; conducted experiments, performed statistical analysis, and improved the accuracy'

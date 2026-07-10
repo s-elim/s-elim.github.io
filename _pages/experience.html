@@ -5,44 +5,93 @@ permalink: /experience/
 description: "Education, research, work, and teaching experience of Md Selim Sarowar across Yeungnam University, National Tsing Hua University, KIIT, and IIT Roorkee."
 ---
 
-<h2 class="section-title reveal"><i class="fas fa-user-graduate" aria-hidden="true"></i> Education</h2>
-{% for edu in site.data.education %}
-<div class="entry-card reveal">
-  <h3 class="entry-card__title"><i class="fas fa-university" aria-hidden="true"></i> {{ edu.institution }}</h3>
-  <ul class="entry-meta">
-    {% for line in edu.lines %}<li>{{ line }}</li>{% endfor %}
-  </ul>
-</div>
-{% endfor %}
-
-<h2 class="section-title reveal"><i class="fas fa-flask" aria-hidden="true"></i> Research &amp; Work Experience</h2>
-{% for ex in site.data.experience %}
-<div class="entry-card reveal">
-  <h3 class="entry-card__title"><i class="fas fa-briefcase" aria-hidden="true"></i> {{ ex.role }}</h3>
-  <ul class="entry-meta">
-    {% for line in ex.lines %}<li>{{ line }}</li>{% endfor %}
-  </ul>
-  {% if ex.points %}
-  <ul class="entry-points">
-    {% for pt in ex.points %}<li>{{ pt }}</li>{% endfor %}
-  </ul>
-  {% endif %}
-</div>
-{% endfor %}
-
-<h2 class="section-title reveal"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> Teaching Experience</h2>
-<div class="teaching-grid">
-  {% for t in site.data.teaching %}
-  <div class="teaching-card card reveal">
-    <h3 class="teaching-card__title">
-      <i class="fas {% if t.role == 'Instructor' %}fa-user-tie{% else %}fa-chalkboard-teacher{% endif %}" aria-hidden="true"></i>
-      <span>{{ t.course }}</span>
-      <span class="tag teaching-card__role{% if t.role == 'Instructor' %} teaching-card__role--instructor{% endif %}">{{ t.role }}</span>
-    </h3>
-    <ul class="entry-meta">
-      <li><i class="fas fa-university" aria-hidden="true"></i> <span>{{ t.university }}</span></li>
-      <li><i class="fas fa-calendar" aria-hidden="true"></i> {{ t.date }}</li>
+<section class="project-cat-card reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-user-graduate" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Education</h2>
+      <p class="project-cat-card__sub">Academic background &amp; advisors</p>
+    </div>
+    <span class="project-cat-card__count">{{ site.data.education | size }} institutions</span>
+  </header>
+  <div class="project-cat-card__body">
+    <ul class="timeline xp-timeline">
+      {% for edu in site.data.education %}
+      <li class="timeline-item">
+        <div class="xp-head">
+          <h3 class="xp-title">{{ edu.institution }}</h3>
+          <span class="xp-pills">
+            {% if edu.current %}<span class="xp-pill xp-pill--current">Current</span>{% endif %}
+            {% if edu.date %}<span class="xp-pill">{{ edu.date }}</span>{% endif %}
+          </span>
+        </div>
+        {% for d in edu.degrees %}
+        <p class="xp-line"><i class="fas fa-graduation-cap" aria-hidden="true"></i> <span>{{ d }}</span></p>
+        {% endfor %}
+        {% if edu.extra %}<p class="xp-line xp-line--muted"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> <span>{{ edu.extra }}</span></p>{% endif %}
+      </li>
+      {% endfor %}
     </ul>
   </div>
-  {% endfor %}
-</div>
+</section>
+
+<section class="project-cat-card project-cat-card--research reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-flask" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Research &amp; Work Experience</h2>
+      <p class="project-cat-card__sub">Research positions &amp; internships</p>
+    </div>
+    <span class="project-cat-card__count">{{ site.data.experience | size }} positions</span>
+  </header>
+  <div class="project-cat-card__body">
+    <ul class="timeline xp-timeline">
+      {% for ex in site.data.experience %}
+      <li class="timeline-item">
+        <div class="xp-head">
+          <h3 class="xp-title">{{ ex.role }}</h3>
+          <span class="xp-pills">
+            {% if ex.current %}<span class="xp-pill xp-pill--current">Current</span>{% endif %}
+            {% if ex.date %}<span class="xp-pill">{{ ex.date }}</span>{% endif %}
+          </span>
+        </div>
+        {% if ex.org %}<p class="xp-line"><i class="fas fa-building" aria-hidden="true"></i> <span>{{ ex.org }}</span></p>{% endif %}
+        {% if ex.extra %}<p class="xp-line xp-line--muted"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> <span>{{ ex.extra }}</span></p>{% endif %}
+        {% if ex.points %}
+        <ul class="entry-points">
+          {% for pt in ex.points %}<li>{{ pt }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="project-cat-card project-cat-card--teaching reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Teaching Experience</h2>
+      <p class="project-cat-card__sub">Courses taught &amp; assisted</p>
+    </div>
+    <span class="project-cat-card__count">{{ site.data.teaching | size }} courses</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="teaching-grid">
+      {% for t in site.data.teaching %}
+      <div class="teaching-card card">
+        <h3 class="teaching-card__title">
+          <i class="fas {% if t.role == 'Instructor' %}fa-user-tie{% else %}fa-chalkboard-teacher{% endif %}" aria-hidden="true"></i>
+          <span>{{ t.course }}</span>
+          <span class="tag teaching-card__role{% if t.role == 'Instructor' %} teaching-card__role--instructor{% endif %}">{{ t.role }}</span>
+        </h3>
+        <ul class="entry-meta">
+          <li><i class="fas fa-university" aria-hidden="true"></i> <span>{{ t.university }}</span></li>
+          <li><i class="fas fa-calendar" aria-hidden="true"></i> {{ t.date }}</li>
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
