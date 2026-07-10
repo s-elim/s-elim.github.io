@@ -67,45 +67,9 @@ $bp-xl: 1280px;
   --ease:      cubic-bezier(.22, .61, .36, 1);
 }
 
-// --- Dark theme: system preference ---
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:            #0f172a;
-    --surface:       #1b2942;
-    --surface-2:     #0c1626;
-    --nav-bg:        rgba(15, 23, 42, 0.80);
-    --text:          #dbe4f0;
-    --text-strong:   #f8fafc;
-    --muted:         #94a3b8;
-    --border:        #2b3b57;
-    --border-strong: #3b4f70;
-
-    --accent:          #56b6f2; // bright cyan-blue on dark
-    --accent-hover:    #8ccff7;
-    --accent-soft:     rgba(86, 182, 242, 0.15);
-    --accent-contrast: #071120;
-    --focus-ring:      rgba(86, 182, 242, 0.5);
-
-    --badge-pdf:     #fb7c68;
-    --badge-code:    #cbd5e1;
-    --badge-project: #2dd4bf;
-    --badge-link:    #56b6f2;
-    --vision:        #38bdf8;
-    --robotics:      #fb923c;
-    --good:          #4ade80;
-  --red:       #f87171; // flagship
-  --rank:      #a78bfa; // CORE rank badge
-  --venue:     #e879f9; // magenta - venue short-name pill
-  --impact:    #34d399; // journal impact pill (SCIE-Q1 / IF)
-  --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
-    --shadow-md: 0 6px 20px rgba(0, 0, 0, .45);
-    --shadow-lg: 0 16px 40px rgba(0, 0, 0, .55);
-  }
-}
-
-// --- Explicit overrides win over the media query in BOTH directions ---
+// --- Dark theme: applied ONLY via the toggle (data-theme attribute). ---
+// The site deliberately defaults to LIGHT for all visitors regardless of OS
+// preference; no prefers-color-scheme media query here.
 :root[data-theme="dark"] {
   --bg:            #0f172a;
   --surface:       #1b2942;

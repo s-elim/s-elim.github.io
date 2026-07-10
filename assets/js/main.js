@@ -11,7 +11,7 @@
   function currentTheme() {
     var attr = root.getAttribute("data-theme");
     if (attr === "light" || attr === "dark") return attr;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "light"; // site defaults to light; dark is opt-in via the toggle
   }
   function initTheme() {
     var btn = document.getElementById("theme-toggle");
