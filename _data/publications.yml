@@ -45,7 +45,7 @@
   type: 'conference'
   flagship: 'vision'
   rank: 'A'
-  thumb: "BMVC '26"
+  image: '/images/hnh40k_model.webp'
   url: 'https://github.com/s-elim/RWFL-HNH40K'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
