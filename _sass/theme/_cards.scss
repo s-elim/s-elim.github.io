@@ -38,46 +38,57 @@
   border-radius: 6px;
 }
 
-// ---- Publication card (APRL-style: body left, thumbnail right) ----
+// ---- Publication card (APRL-style: two-up grid, body left + framed figure right) ----
+.pub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
 .pub-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.4rem;
-  padding: 1.15rem 1.25rem;
-  margin-bottom: 1.1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 166px;
+  gap: 12px;
+  align-items: start;
+  min-height: 204px;
+  padding: 12px 14px;
+  font-size: .88rem;
 }
-.pub-card__body { flex: 1 1 auto; min-width: 0; }
-.pub-card__media { flex: 0 0 196px; max-width: 196px; }
-.pub-card__media img {
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  filter: var(--img-dim);
-}
+.pub-card__body { min-width: 0; }
 
-// Placeholder thumbnail when the paper has no figure yet
-.pub-thumb-ph {
+// Framed figure column (real image or placeholder label)
+.pub-card__media {
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 3 / 2;
-  border-radius: 10px;
-  border: 1px dashed var(--border-strong);
+  align-self: start;
+  min-height: 152px;
+  padding: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.pub-card__media img {
+  display: block;
+  width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 4px;
+  filter: var(--img-dim);
+}
+.pub-card__media--ph {
   background:
     radial-gradient(120% 120% at 100% 0%, var(--accent-soft), transparent 60%),
     var(--surface-2);
 }
-.pub-thumb-ph span {
+.pub-card__media--ph span {
   font-family: var(--font-head);
-  font-size: .95rem;
+  font-size: .9rem;
   font-weight: 700;
   letter-spacing: .04em;
   color: var(--muted);
   text-align: center;
-  padding: 0 .6rem;
+  padding: 0 .5rem;
 }
 
 // Badge strip above the title (year · type · rank · flagship · status)
@@ -85,43 +96,64 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .4rem;
-  margin-bottom: .5rem;
+  gap: .35rem;
+  margin-bottom: .45rem;
 }
 .pub-card__tags .rank-box,
-.pub-card__tags .flagship-box { margin-left: 0; }
+.pub-card__tags .flagship-box { margin-left: 0; border-radius: var(--radius-pill); }
 .pub-tag {
-  display: inline-block;
-  padding: 2px 9px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 9px;
   font-family: var(--font-head);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .02em;
-  border-radius: 6px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--border-strong);
   color: var(--muted);
   background: var(--surface-2);
 }
+.pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
 .pub-tag--conference { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
 .pub-tag--journal    { color: var(--badge-project); border-color: currentColor; background: color-mix(in srgb, var(--badge-project) 10%, transparent); }
 .pub-tag--preprint   { color: var(--badge-pdf); border-color: currentColor; background: color-mix(in srgb, var(--badge-pdf) 10%, transparent); }
 .pub-tag--workshop   { color: var(--vision); border-color: currentColor; background: color-mix(in srgb, var(--vision) 10%, transparent); }
 .pub-tag--prep       { font-style: italic; }
 
-.pub-card__title { font-size: 1.02rem; line-height: 1.35; margin: 0 0 .35rem; }
+.pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0 0 .45rem; }
 .pub-card__title a { color: var(--text-strong); }
 .pub-card__title a:hover { color: var(--accent); }
-.pub-card__authors { font-size: var(--fs-sm); margin: 0 0 .7rem; color: var(--text); }
+
+// Labeled meta lines (Venue / Authors), APRL-style
+.pub-card__meta {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 .7rem;
+  font-size: .84rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+.pub-card__meta > span { display: block; }
+.pub-card__meta span span { display: inline; }
+.pub-card__meta b {
+  margin-right: 6px;
+  font-family: var(--font-head);
+  font-weight: 800;
+  color: var(--text-strong);
+}
 .pub-card__authors .me { font-weight: 700; color: var(--text-strong); }
-.pub-card__venue { font-size: .82rem; color: var(--muted); font-style: italic; margin: 0 0 .2rem; }
-.pub-card__venue-name { color: var(--red); font-weight: 600; }
-@media (max-width: $bp-md) {
-  .pub-card__media { flex-basis: 150px; max-width: 150px; }
+.pub-card__venue { color: var(--muted); }
+.pub-card__venue-name { color: var(--red); font-weight: 600; font-style: italic; }
+
+@media (max-width: 900px) {
+  .pub-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: $bp-sm) {
-  .pub-card { flex-direction: column; gap: .8rem; }
-  .pub-card__media { flex-basis: auto; max-width: 260px; }
-  .pub-thumb-ph { display: none; }
+  .pub-card { grid-template-columns: 1fr; min-height: 0; }
+  .pub-card__media { min-height: 0; max-width: 260px; }
+  .pub-card__media--ph { display: none; }
 }
 
 // Venue / flagship badges

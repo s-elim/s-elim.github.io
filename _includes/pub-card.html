@@ -20,8 +20,10 @@
     </h3>
     {% assign vparts = pub.venue | split: "(" %}
     {% assign vrest = pub.venue | remove_first: vparts[0] %}
-    <p class="pub-card__venue"><span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status and pub.status != "To be submitted" %} · {{ pub.status }}{% endif %}</p>
-    <p class="pub-card__authors">{{ authors }}</p>
+    <div class="pub-card__meta">
+      <span class="pub-card__venue"><b>Venue</b> <span class="pub-card__venue-name">{{ vparts[0] | strip }}</span>{% if vrest != "" %} {{ vrest }}{% endif %}{% if pub.status and pub.status != "To be submitted" %} · {{ pub.status }}{% endif %}</span>
+      <span class="pub-card__authors"><b>Authors</b> {{ authors }}</span>
+    </div>
     <div class="pub-badges">
       {% for l in pub.links %}
         {% case l.kind %}
@@ -47,14 +49,12 @@
     </div>
     {% endunless %}
   </div>
-  <div class="pub-card__media">
-    {% if pub.image %}
-      {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener" tabindex="-1">{% endif %}
-      <img src="{{ pub.image | relative_url }}" alt="Figure from “{{ pub.title | escape }}”" loading="lazy">
-      {% if pub.url %}</a>{% endif %}
-    {% else %}
-      {% assign phlabel = pub.thumb | default: vparts[0] | strip | truncate: 14 %}
-      <div class="pub-thumb-ph pub-thumb-ph--{{ pub.type }}" aria-hidden="true"><span>{{ phlabel }}</span></div>
-    {% endif %}
-  </div>
+  {% if pub.image %}
+  {% if pub.url %}<a class="pub-card__media" href="{{ pub.url }}" target="_blank" rel="noopener" tabindex="-1">{% else %}<div class="pub-card__media">{% endif %}
+    <img src="{{ pub.image | relative_url }}" alt="Figure from “{{ pub.title | escape }}”" loading="lazy">
+  {% if pub.url %}</a>{% else %}</div>{% endif %}
+  {% else %}
+  {% assign phlabel = pub.thumb | default: vparts[0] | strip | truncate: 14 %}
+  <div class="pub-card__media pub-card__media--ph" aria-hidden="true"><span>{{ phlabel }}</span></div>
+  {% endif %}
 </article>

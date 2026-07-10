@@ -81,7 +81,12 @@
   color: var(--accent-contrast);
 }
 
-.pub-year { font-family: var(--font-head); font-size: var(--fs-xl); font-weight: 700; margin: 1.75rem 0 1rem; color: var(--text-strong); }
+.pub-year-section + .pub-year-section {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.pub-year { font-family: var(--font-head); font-size: var(--fs-xl); font-weight: 700; margin: 1.25rem 0 1rem; color: var(--text-strong); }
 .pub-year__count {
   display: inline-block;
   min-width: 1.9em;
