@@ -210,15 +210,9 @@ button.pub-card__media:hover {
 }
 .pub-card__meta > span { display: block; }
 .pub-card__meta span span { display: inline; }
-.pub-card__meta b {
-  margin-right: 6px;
-  font-family: var(--font-head);
-  font-weight: 800;
-  color: var(--text-strong);
-}
 .pub-card__authors .me { font-weight: 700; color: var(--text-strong); }
 .pub-card__venue { color: var(--muted); }
-.pub-card__venue-name { color: var(--red); font-weight: 600; font-style: italic; }
+.pub-card__venue-name { color: var(--red); font-weight: 700; font-style: italic; }
 
 @media (max-width: 900px) {
   .pub-grid { grid-template-columns: 1fr; }
