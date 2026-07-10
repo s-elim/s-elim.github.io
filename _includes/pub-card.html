@@ -1,7 +1,7 @@
 {% assign pub = include.pub %}
 {% assign pid = pub.title | slugify | truncate: 40, "" %}
 {% assign authors = pub.authors | replace: "Md Selim Sarowar", '<strong class="me">Md Selim Sarowar</strong>' %}
-{% assign search = pub.title | append: " " | append: pub.authors | append: " " | append: pub.venue | downcase %}
+{% assign search = pub.title | append: " " | append: pub.authors | append: " " | append: pub.venue | append: " " | append: pub.venue_short | downcase %}
 {% if pub.type == "journal" %}{% assign bibtype = "@article" %}{% assign container = "journal" %}{% assign typelabel = "Journal" %}
 {% elsif pub.type == "preprint" %}{% assign bibtype = "@misc" %}{% assign container = "howpublished" %}{% assign typelabel = "Preprint" %}
 {% elsif pub.type == "workshop" %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% assign typelabel = "Workshop" %}
@@ -10,7 +10,7 @@
   <div class="pub-card__tags">
     <span class="pub-tag pub-tag--year">{{ pub.year }}</span>
     <span class="pub-tag pub-tag--{{ pub.type }}">{{ typelabel }}</span>
-    {% if pub.venue_full %}<span class="pub-tag pub-tag--venue" title="Venue">{{ pub.venue_full }}</span>{% endif %}
+    {% if pub.venue_short %}<span class="pub-tag pub-tag--venue" title="{{ pub.venue | split: '(' | first | strip | escape }}">{{ pub.venue_short }}</span>{% endif %}
     {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
     {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
     {% if pub.status == "To be submitted" %}<span class="pub-tag pub-tag--prep">In Preparation</span>{% endif %}

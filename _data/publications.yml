@@ -3,13 +3,14 @@
 # `links[].kind`: pdf | code | project | link. abstract/bibtex intentionally omitted (TODO).
 # `image`: paper figure thumbnail (WebP ≤250KB). `thumb`: short label for the
 # placeholder thumbnail when no figure is available yet.
-# `venue_full`: "Full Venue Name (SHORT)" — rendered as a pill beside the Rank
-# box; add it for conferences/workshops whose `venue` is an abbreviation.
+# `venue`: full venue name (shown on the Venue line and in BibTeX).
+# `venue_short`: abbreviation (e.g. "IROS'27") — rendered as a pill beside the
+# Rank box; add it for conferences/workshops.
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim'
-  venue: "IROS'27"
-  venue_full: 'IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)'
+  venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
+  venue_short: "IROS'27"
   year: 2027
   type: 'conference'
   flagship: 'robotics'
@@ -19,8 +20,8 @@
 
 - title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
-  venue: "ICRA'27"
-  venue_full: 'IEEE International Conference on Robotics and Automation (ICRA)'
+  venue: 'IEEE International Conference on Robotics and Automation'
+  venue_short: "ICRA'27"
   year: 2027
   type: 'conference'
   flagship: 'robotics'
@@ -30,8 +31,8 @@
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
-  venue: "BMVC'26 (Accepted)"
-  venue_full: 'British Machine Vision Conference (BMVC)'
+  venue: 'British Machine Vision Conference (Accepted)'
+  venue_short: "BMVC'26"
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -45,8 +46,8 @@
 
 - title: 'Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition'
   authors: 'Ashikuzzaman, Md Selim Sarowar, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
-  venue: "BMVC'26 (Accepted)"
-  venue_full: 'British Machine Vision Conference (BMVC)'
+  venue: 'British Machine Vision Conference (Accepted)'
+  venue_short: "BMVC'26"
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -59,8 +60,8 @@
 
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
   authors: 'Md Selim Sarowar, and Sungho Kim'
-  venue: "ICML'26 Workshop (Accepted)"
-  venue_full: 'International Conference on Machine Learning (ICML) Workshop'
+  venue: 'International Conference on Machine Learning Workshop (Accepted)'
+  venue_short: "ICML'26 Workshop"
   year: 2026
   type: 'workshop'
   image: '/images/gstvla_arch.webp'
@@ -118,8 +119,8 @@
 
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
   authors: 'Md Selim Sarowar and Sungho Kim'
-  venue: "IEIE'26 Conference, South Korea"
-  venue_full: 'Institute of Electronics and Information Engineers (IEIE)'
+  venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
+  venue_short: "IEIE'26"
   year: 2025
   type: 'conference'
   thumb: "IEIE '26"
@@ -130,8 +131,8 @@
 
 - title: 'VLM6D: VLM based 6DoF Pose Estimation based on RGB-D Images'
   authors: 'Md Selim Sarowar and Sungho Kim'
-  venue: "IEIE'25 Conference, South Korea"
-  venue_full: 'Institute of Electronics and Information Engineers (IEIE)'
+  venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
+  venue_short: "IEIE'25"
   year: 2025
   type: 'conference'
   image: '/images/VLM6D_arch.png'
@@ -154,6 +155,7 @@
 - title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
   authors: 'Md Selim Sarowar, Kaustav Dutta, and *Rasmita Lenka'
   venue: 'IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021'
+  venue_short: "AESPC'21"
   year: 2022
   type: 'conference'
   thumb: 'IEEE AESPC'
