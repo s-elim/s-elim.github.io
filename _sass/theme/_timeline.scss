@@ -99,21 +99,16 @@
 
 // ---- CV entry card (education/experience blocks) ----
 // ---- Experience page: timeline entries inside category cards ----
-// Education + Research & Work sit side by side (like the publications grid)
-.xp-columns {
+// Research & Work positions as side-by-side cards (like the teaching grid)
+.xp-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.6rem;
-  margin-bottom: 1.6rem;
+  gap: 1.15rem;
+  align-items: start;
 }
-.xp-columns .project-cat-card {
-  margin-bottom: 0;
-  display: flex;
-  flex-direction: column;
-}
-.xp-columns .project-cat-card__body { flex: 1; }
+.xp-card { padding: 1.15rem 1.25rem; }
 @media (max-width: 900px) {
-  .xp-columns { grid-template-columns: 1fr; }
+  .xp-grid { grid-template-columns: 1fr; }
 }
 
 .xp-timeline { margin: .35rem 0 0 .6rem; }
@@ -195,8 +190,12 @@
 // ---- Awards grid ----
 .awards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.15rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .awards-grid { grid-template-columns: 1fr; }
 }
 .award-card {
   background: var(--surface);
@@ -206,9 +205,11 @@
   padding: 1.2rem 1.3rem;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
-.award-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+.award-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--cat, var(--accent)); }
 .award-card__title { font-size: var(--fs-lg); margin: 0 0 .55rem; display: flex; gap: .55rem; align-items: baseline; }
-.award-card__medal { color: #eab308; flex-shrink: 0; }
+.award-card .xp-head { margin-bottom: .55rem; }
+.award-card .xp-head .award-card__title { margin: 0; }
+.award-card__medal { color: var(--cat, #eab308); flex-shrink: 0; }
 
 // ---- Activity (fun-time) interactive cards - award-card style ----
 .activity-grid {

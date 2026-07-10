@@ -80,10 +80,11 @@
       where: 'ITM Edutech Training Private Limited (Aug. 2022)'
 - year: '2021'
   events:
-    - type: 'In person'
-      cat: 'in-person'
-      title: 'Winner of Mr. Halloween Award'
-      where: 'KIIT International Student Society, Halloween Event (2021)'
+    # Archived 2026-07-10 (user: irrelevant for a research portfolio)
+    # - type: 'In person'
+    #   cat: 'in-person'
+    #   title: 'Winner of Mr. Halloween Award'
+    #   where: 'KIIT International Student Society, Halloween Event (2021)'
     - type: 'In person'
       cat: 'in-person'
       title: 'International Conference on Applied Electromagnetics, Signal Processing & Communication By IEEE'

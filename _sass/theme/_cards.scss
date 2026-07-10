@@ -357,6 +357,8 @@ button.pub-card__media:hover {
 .project-cat-card--skills,   .stat--skills   { --cat: var(--rank); }
 .project-cat-card--certs,
 .project-cat-card--teaching                  { --cat: var(--good); }
+.project-cat-card--awards                    { --cat: var(--gold); }
+.project-cat-card--honors                    { --cat: var(--venue); }
 .project-cat-card {
   background: var(--surface);
   border: 1px solid var(--border);

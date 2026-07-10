@@ -1,36 +1,45 @@
 # Awards & Honors (Awards page). `org`, `date` optional; `points` are plain text.
+# `category`: fellowship (Fellowships & Scholarships) | honor (Honors & Recognition).
 - title: 'Global Korea Scholarship (GKS/KGSP)'
+  category: 'fellowship'
   date: 'Sept 2024 - Aug 2027'
   points:
     - 'The most prestigious fellowship offered to GKS Scholars to pursue a 1-year language program & 2-year research-based M.Sc.'
     - 'Includes full tuition & credit fee waiver, monthly allowance of 1750 USD, Korean language training fee, round trip airfare, health insurance, and research incentives.'
-- title: 'Appointed as Honorary Young Diplomat'
-  org: 'Jeju Special Governance Province'
-  points:
-    - 'Awarded for promoting Korean cultures and simultaneously engaging with international professionals for the social well-being of Jeju Island.'
 - title: 'Bangladesh Sweden Trust Fund (BSTF) Travel Grant - 2024'
+  category: 'fellowship'
   points:
     - 'Awarded for higher studies in Taiwan (one-way flight ticket).'
 - title: 'NTHU International Graduate Students Assistantship'
+  category: 'fellowship'
   points:
     - 'The highest award offered to National Tsing Hua University (NTHU) international students.'
 - title: 'Study In India Government Scholarship'
+  category: 'fellowship'
   org: 'Ministry Of Education, India'
   date: 'June 2019 - June 2023'
   points:
     - 'Awarded for Undergraduate (B.Tech) degree in India with full funding.'
 - title: 'KIIT University International Scholarship Program (KUISP)'
+  category: 'fellowship'
   org: 'Kalinga Institute Of Industrial Technology'
   date: 'Aug 2019 - June 2023'
   points:
     - 'Awarded for Academic Excellence.'
-- title: 'National Youth Inspiration Award - 2017'
-  org: 'Citizens Open Forum (COF)'
-  date: 'Nov 2017'
-  points:
-    - 'Awarded in the Youth Leadership and Connectivity Category.'
 - title: 'Meritorious Scholarship in Secondary School Certificate'
+  category: 'fellowship'
   org: 'Bangladesh Ministry Of Education'
   date: 'Nov 2016 - June 2018'
   points:
     - 'Awarded for Academic Excellence.'
+- title: 'Appointed as Honorary Young Diplomat'
+  category: 'honor'
+  org: 'Jeju Special Governance Province'
+  points:
+    - 'Awarded for promoting Korean cultures and simultaneously engaging with international professionals for the social well-being of Jeju Island.'
+- title: 'National Youth Inspiration Award - 2017'
+  category: 'honor'
+  org: 'Citizens Open Forum (COF)'
+  date: 'Nov 2017'
+  points:
+    - 'Awarded in the Youth Leadership and Connectivity Category.'
