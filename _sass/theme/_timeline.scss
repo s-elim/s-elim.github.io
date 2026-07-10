@@ -99,6 +99,23 @@
 
 // ---- CV entry card (education/experience blocks) ----
 // ---- Experience page: timeline entries inside category cards ----
+// Education + Research & Work sit side by side (like the publications grid)
+.xp-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+.xp-columns .project-cat-card {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+.xp-columns .project-cat-card__body { flex: 1; }
+@media (max-width: 900px) {
+  .xp-columns { grid-template-columns: 1fr; }
+}
+
 .xp-timeline { margin: .35rem 0 0 .6rem; }
 .xp-timeline .timeline-item { padding-bottom: 1.35rem; }
 .xp-timeline .timeline-item:last-child { padding-bottom: .2rem; }
@@ -229,8 +246,11 @@
 // ---- Teaching cards ----
 .teaching-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.15rem;
+}
+@media (max-width: 700px) {
+  .teaching-grid { grid-template-columns: 1fr; }
 }
 .teaching-card { padding: 1.2rem 1.3rem; }
 .teaching-card__title {
