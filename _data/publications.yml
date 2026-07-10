@@ -3,10 +3,13 @@
 # `links[].kind`: pdf | code | project | link. abstract/bibtex intentionally omitted (TODO).
 # `image`: paper figure thumbnail (WebP ≤250KB). `thumb`: short label for the
 # placeholder thumbnail when no figure is available yet.
+# `venue_full`: "Full Venue Name (SHORT)" — rendered as a pill beside the Rank
+# box; add it for conferences/workshops whose `venue` is an abbreviation.
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim'
   venue: "IROS'27"
+  venue_full: 'IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)'
   year: 2027
   type: 'conference'
   flagship: 'robotics'
@@ -17,6 +20,7 @@
 - title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
   venue: "ICRA'27"
+  venue_full: 'IEEE International Conference on Robotics and Automation (ICRA)'
   year: 2027
   type: 'conference'
   flagship: 'robotics'
@@ -27,6 +31,7 @@
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim, and Sangtae Ahn'
   venue: "BMVC'26 (Accepted)"
+  venue_full: 'British Machine Vision Conference (BMVC)'
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -41,6 +46,7 @@
 - title: 'Hands or Not? Building a Robust Dataset for Dynamic Gesture Recognition'
   authors: 'Ashikuzzaman, Md Selim Sarowar, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
   venue: "BMVC'26 (Accepted)"
+  venue_full: 'British Machine Vision Conference (BMVC)'
   year: 2026
   type: 'conference'
   flagship: 'vision'
@@ -54,8 +60,10 @@
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
   authors: 'Md Selim Sarowar, and Sungho Kim'
   venue: "ICML'26 Workshop (Accepted)"
+  venue_full: 'International Conference on Machine Learning (ICML) Workshop'
   year: 2026
   type: 'workshop'
+  image: '/images/gstvla_arch.webp'
   thumb: "ICML-W '26"
   url: 'https://openreview.net/forum?id=J57nR3hyAd'
   links:
@@ -79,6 +87,7 @@
   venue: 'Artificial Intelligence Review (SCIE-Q1/Top 3%, IF: 19)'
   year: 2026
   type: 'preprint'
+  image: '/images/what_matters_figure.webp'
   thumb: 'Preprint'
   url: 'https://www.preprints.org/manuscript/202606.1149'
   links:
@@ -110,6 +119,7 @@
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
   authors: 'Md Selim Sarowar and Sungho Kim'
   venue: "IEIE'26 Conference, South Korea"
+  venue_full: 'Institute of Electronics and Information Engineers (IEIE)'
   year: 2025
   type: 'conference'
   thumb: "IEIE '26"
@@ -121,6 +131,7 @@
 - title: 'VLM6D: VLM based 6DoF Pose Estimation based on RGB-D Images'
   authors: 'Md Selim Sarowar and Sungho Kim'
   venue: "IEIE'25 Conference, South Korea"
+  venue_full: 'Institute of Electronics and Information Engineers (IEIE)'
   year: 2025
   type: 'conference'
   image: '/images/VLM6D_arch.png'

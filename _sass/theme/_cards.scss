@@ -128,6 +128,7 @@
 .pub-tag--preprint   { color: var(--badge-pdf); border-color: currentColor; background: color-mix(in srgb, var(--badge-pdf) 10%, transparent); }
 .pub-tag--workshop   { color: var(--vision); border-color: currentColor; background: color-mix(in srgb, var(--vision) 10%, transparent); }
 .pub-tag--prep       { font-style: italic; }
+.pub-tag--venue      { font-weight: 600; color: var(--text); }
 
 .pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0 0 .45rem; }
 .pub-card__title a { color: var(--text-strong); }

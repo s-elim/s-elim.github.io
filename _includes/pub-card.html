@@ -10,6 +10,7 @@
   <div class="pub-card__tags">
     <span class="pub-tag pub-tag--year">{{ pub.year }}</span>
     <span class="pub-tag pub-tag--{{ pub.type }}">{{ typelabel }}</span>
+    {% if pub.venue_full %}<span class="pub-tag pub-tag--venue" title="Venue">{{ pub.venue_full }}</span>{% endif %}
     {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
     {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
     {% if pub.status == "To be submitted" %}<span class="pub-tag pub-tag--prep">In Preparation</span>{% endif %}
