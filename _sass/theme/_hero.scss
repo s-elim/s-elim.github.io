@@ -57,16 +57,16 @@
   margin-bottom: 1rem;
 }
 .hero__availability { margin: 0 0 1rem; }
-.chip--open {
+.chip.chip--open {
   color: var(--good, #16a34a);
   background: color-mix(in srgb, var(--good, #16a34a) 10%, transparent);
   border-color: color-mix(in srgb, var(--good, #16a34a) 45%, transparent);
 }
-a.chip--open {
+a.chip.chip--open {
   cursor: pointer;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
-a.chip--open:hover, a.chip--open:focus-visible {
+a.chip.chip--open:hover, a.chip.chip--open:focus-visible {
   color: var(--good, #16a34a);
   border-color: var(--good, #16a34a);
   transform: translateY(-2px);
@@ -82,7 +82,7 @@ a.chip--open:hover, a.chip--open:focus-visible {
   font-weight: 700;
   transition: max-width .35s var(--ease), opacity .25s var(--ease), margin .35s var(--ease);
 }
-a.chip--open:hover .chip__cta, a.chip--open:focus-visible .chip__cta {
+a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   max-width: 12em;
   opacity: 1;
   margin-left: .5em;
