@@ -98,8 +98,7 @@
 .updates-card.is-at-end .updates-card__hint i { animation: none; }
 
 // ---- CV entry card (education/experience blocks) ----
-// ---- Experience page: timeline entries inside category cards ----
-// Research & Work positions as side-by-side cards (like the teaching grid)
+// ---- Experience page: entries as side-by-side cards (like the teaching grid) ----
 .xp-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -111,13 +110,6 @@
   .xp-grid { grid-template-columns: 1fr; }
 }
 
-.xp-timeline { margin: .35rem 0 0 .6rem; }
-.xp-timeline .timeline-item { padding-bottom: 1.35rem; }
-.xp-timeline .timeline-item:last-child { padding-bottom: .2rem; }
-.xp-timeline .timeline-item::before {
-  background: var(--cat, var(--accent));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cat, var(--accent)) 15%, transparent);
-}
 .xp-head {
   display: flex;
   flex-wrap: wrap;
