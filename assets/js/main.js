@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Modern Academic theme — interactions (vanilla, no dependencies)
+   Modern Academic theme - interactions (vanilla, no dependencies)
    ========================================================================== */
 (function () {
   "use strict";

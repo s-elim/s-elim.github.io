@@ -4,9 +4,9 @@
 # `image`: paper figure thumbnail (WebP ≤250KB). `thumb`: short label for the
 # placeholder thumbnail when no figure is available yet.
 # `venue`: full venue name (shown on the Venue line and in BibTeX).
-# `venue_short`: abbreviation (e.g. "IROS'27") — rendered as a pill beside the
+# `venue_short`: abbreviation (e.g. "IROS'27") - rendered as a pill beside the
 # Rank box; add it for conferences/workshops.
-# `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") — rendered as a pill
+# `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'

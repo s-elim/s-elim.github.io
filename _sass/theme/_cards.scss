@@ -1,5 +1,5 @@
 // ==========================================================================
-//  Cards — highlights, publications, projects, skills, stats
+//  Cards - highlights, publications, projects, skills, stats
 // ==========================================================================
 
 .card {
@@ -98,7 +98,7 @@ button.pub-card__media:hover {
     var(--surface-2);
 }
 
-// Figure lightbox — click a publication thumbnail to zoom (closes on click/Esc)
+// Figure lightbox - click a publication thumbnail to zoom (closes on click/Esc)
 .lightbox {
   position: fixed;
   inset: 0;
@@ -181,7 +181,7 @@ button.pub-card__media:hover {
 .pub-tag--prep       { font-style: italic; }
 .pub-tag--impact     { color: var(--impact); border-color: currentColor; background: color-mix(in srgb, var(--impact) 10%, transparent); }
 
-// Venue short-name pill — interactive like the rank box
+// Venue short-name pill - interactive like the rank box
 .pub-tag--venue {
   font-weight: 700;
   color: var(--rank-gold);
@@ -261,7 +261,7 @@ button.pub-card__media:hover {
   background: color-mix(in srgb, var(--red) 10%, transparent);
 }
 
-// CORE conference rank badge — glowing, interactive
+// CORE conference rank badge - glowing, interactive
 .rank-box {
   margin-left: 6px;
   padding: 2px 9px;
