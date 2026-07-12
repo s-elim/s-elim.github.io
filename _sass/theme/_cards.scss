@@ -174,59 +174,38 @@ button.pub-card__media:hover {
   background: var(--surface-2);
 }
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
+.pub-tag--prep       { font-style: italic; }
+// Type / impact / venue pills - gray, bold, glowing, interactive like the rank box
 .pub-tag--conference,
 .pub-tag--preprint,
 .pub-tag--workshop,
-.pub-tag--journal    { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
-.pub-tag--prep       { font-style: italic; }
-// Journal / impact / venue pills - interactive like the rank box
 .pub-tag--journal,
 .pub-tag--impact,
 .pub-tag--venue {
   font-weight: 700;
+  color: var(--muted);
+  border-color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 10%, transparent);
   cursor: default;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
+.pub-tag--conference:hover,
+.pub-tag--preprint:hover,
+.pub-tag--workshop:hover,
 .pub-tag--journal:hover,
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);
-}
-.pub-tag--impact {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-// Journal + SCIE-Q1 pills glow continuously, matching the rank box
-.pub-tag--journal,
-.pub-tag--impact {
-  animation: pubtag-glow 2.4s ease-in-out infinite;
-}
-.pub-tag--journal:hover,
-.pub-tag--impact:hover {
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 65%, transparent);
-  animation-play-state: paused;
-}
-@keyframes pubtag-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--accent) 55%, transparent); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pub-tag--journal,
-  .pub-tag--impact { animation: none; }
-}
-.pub-tag--venue {
-  color: var(--muted);
-  border-color: var(--muted);
-  background: color-mix(in srgb, var(--muted) 10%, transparent);
-  animation: flagship-glow 2.4s ease-in-out infinite;
-}
-.pub-tag--venue:hover {
   box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
   animation-play-state: paused;
 }
+@keyframes tag-glow {
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--muted) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--muted) 55%, transparent); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .pub-tag--venue { animation: none; }
+  .pub-tag { animation: none; }
 }
 
 .pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0 0 .45rem; }
@@ -288,7 +267,7 @@ button.pub-card__media:hover {
   border-color: var(--muted);
   background: color-mix(in srgb, var(--muted) 10%, transparent);
   cursor: default;
-  animation: flagship-glow 2.4s ease-in-out infinite;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 .flagship-box.robotics:hover,
@@ -296,10 +275,6 @@ button.pub-card__media:hover {
   transform: translateY(-2px) scale(1.08);
   box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
   animation-play-state: paused;
-}
-@keyframes flagship-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--muted) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--muted) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .flagship-box { animation: none; }
@@ -315,23 +290,19 @@ button.pub-card__media:hover {
   font-style: normal;
   letter-spacing: .02em;
   border-radius: 6px;
-  border: 1px solid var(--rank);
+  border: 1px solid var(--muted);
   display: inline-block;
   vertical-align: middle;
-  color: var(--rank);
-  background: color-mix(in srgb, var(--rank) 10%, transparent);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 10%, transparent);
   cursor: default;
-  animation: rank-glow 2.4s ease-in-out infinite;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 .rank-box:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--rank) 65%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
   animation-play-state: paused;
-}
-@keyframes rank-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--rank) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--rank) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .rank-box { animation: none; }
