@@ -176,27 +176,44 @@ button.pub-card__media:hover {
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
 .pub-tag--conference,
 .pub-tag--preprint,
-.pub-tag--workshop   { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
-.pub-tag--journal    { color: var(--badge-project); border-color: currentColor; background: color-mix(in srgb, var(--badge-project) 10%, transparent); }
+.pub-tag--workshop,
+.pub-tag--journal    { color: var(--accent); border-color: currentColor; background: var(--accent-soft); }
 .pub-tag--prep       { font-style: italic; }
-// Impact + venue short-name pills - interactive like the rank box
+// Journal / impact / venue pills - interactive like the rank box
+.pub-tag--journal,
 .pub-tag--impact,
 .pub-tag--venue {
   font-weight: 700;
   cursor: default;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
+.pub-tag--journal:hover,
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);
 }
 .pub-tag--impact {
-  color: var(--impact);
-  border-color: var(--impact);
-  background: color-mix(in srgb, var(--impact) 10%, transparent);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
+// Journal + SCIE-Q1 pills glow continuously, matching the rank box
+.pub-tag--journal,
+.pub-tag--impact {
+  animation: pubtag-glow 2.4s ease-in-out infinite;
+}
+.pub-tag--journal:hover,
 .pub-tag--impact:hover {
-  box-shadow: 0 0 16px color-mix(in srgb, var(--impact) 65%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 65%, transparent);
+  animation-play-state: paused;
+}
+@keyframes pubtag-glow {
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--accent) 55%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pub-tag--journal,
+  .pub-tag--impact { animation: none; }
 }
 .pub-tag--venue {
   color: var(--venue);
