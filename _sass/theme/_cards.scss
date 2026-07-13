@@ -357,6 +357,23 @@ button.pub-card__media:hover {
 .project-cat-card--awards,   .project-cat-card--honors {
   --cat: var(--accent);
 }
+.project-double-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem;
+  align-items: start;
+  margin-bottom: 1.6rem;
+}
+.project-double-grid .project-cat-card {
+  margin-bottom: 0;
+}
+@media (max-width: 900px) {
+  .project-double-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
 .project-cat-card {
   background: var(--card-bg);
   border: 1px solid var(--border);

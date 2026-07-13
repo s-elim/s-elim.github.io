@@ -19,6 +19,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="stat stat--skills"><div class="stat__num">{{ skill_count }}</div><div class="stat__label">Skills</div></div>
 </div>
 
+<div class="project-double-grid">
 {% assign bootcamps = pj.latest | where: "category", "Bootcamp" %}
 {% if bootcamps.size > 0 %}
 <section class="project-cat-card reveal">
@@ -83,6 +84,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     </div>
   </div>
 </section>
+</div>
 
 <section class="project-cat-card project-cat-card--industry reveal">
   <header class="project-cat-card__header">
