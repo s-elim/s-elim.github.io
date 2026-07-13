@@ -94,7 +94,7 @@ redirect_from:
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-star" aria-hidden="true"></i> Featured Publications</h2>
-<div id="featured-pubs">
+<div id="featured-pubs" class="pub-grid">
 {% assign featured = site.data.publications | where: "featured", true %}
 {% for pub in featured %}{% include pub-card.html pub=pub %}{% endfor %}
 </div>
