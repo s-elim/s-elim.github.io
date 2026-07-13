@@ -115,6 +115,17 @@
   image: '/images/what_matters_figure.webp'
   thumb: 'Preprint'
   url: 'https://www.preprints.org/manuscript/202606.1149'
+  bibtex: |
+    @article{202606.1149,
+    	doi = {10.20944/preprints202606.1149.v1},
+    	url = {https://doi.org/10.20944/preprints202606.1149.v1},
+    	year = 2026,
+    	month = {June},
+    	publisher = {Preprints},
+    	author = {Md Selim Sarowar},
+    	title = {What Matters: Datasets or Robust Frameworks in Modern Robot Learning?},
+    	journal = {Preprints}
+    }
   links:
     - { label: 'Preprint', url: 'https://www.preprints.org/manuscript/202606.1149', kind: 'link' }
     - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub', kind: 'pdf' }
