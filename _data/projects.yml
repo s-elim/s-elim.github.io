@@ -38,21 +38,21 @@ industry:
   - name: 'YUJINMS Co. Ltd., Korea'
     timeline: 'During M.Sc.'
     points:
-      - 'Multimodal AI Sensing + World Model for Manufacturing Robots (<strong>Project</strong>)'
+      - 'Multimodal AI Sensing + World Model for Manufacturing Robots'
       - 'Fusing RGB-D vision, point clouds, and multi-modal sensory inputs for high-precision robot perception on dynamic assembly lines'
       - 'Developing action-conditioned latent world models to predict physical interaction outcomes and plan robust manipulation trajectories'
   - name: 'Future Drive Ltd., Korea'
     timeline: 'During M.Sc.'
     points:
-      - 'Building VLA models for autonomous mobile robots (<strong>Project-1</strong>)'
+      - 'Building VLA models for autonomous mobile robots'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
     points:
-      - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)'
+      - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation'
   - name: 'RLRC (Regional Leading Research Center), South Korea'
     timeline: 'During M.Sc.'
     points:
-      - '3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)'
+      - '3D Human Pose Estimation with VLM integration for Healthcare'
 
 skills:
   - group: 'Frameworks & Libraries'
