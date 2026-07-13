@@ -9,7 +9,6 @@
 <article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-search="{{ search | escape }}">
   <div class="pub-card__tags">
     <span class="pub-tag pub-tag--year">{{ pub.year }}</span>
-    <span class="pub-tag pub-tag--{{ pub.type }}">{{ typelabel }}</span>
     {% if pub.impact %}<span class="pub-tag pub-tag--impact" title="Journal impact">{{ pub.impact }}</span>{% endif %}
     {% if pub.venue_short %}<span class="pub-tag pub-tag--venue" title="{{ pub.venue | split: '(' | first | strip | escape }}">{{ pub.venue_short }}</span>{% endif %}
     {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
