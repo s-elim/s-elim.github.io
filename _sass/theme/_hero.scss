@@ -60,7 +60,7 @@
 .chip.chip--open {
   color: var(--muted, #64748b);
   font-weight: 700;
-  background: color-mix(in srgb, var(--muted, #64748b) 10%, transparent);
+  background: var(--surface);
   border-color: var(--muted, #64748b);
   animation: chip-glow 2.2s ease-in-out infinite;
 }
