@@ -129,6 +129,7 @@
   venue_short: "IEIE'26"
   year: 2025
   type: 'conference'
+  image: '/images/VFM-VLM figure.png'
   thumb: "IEIE '26"
   url: 'https://arxiv.org/abs/2512.07215'
   links:
@@ -152,6 +153,7 @@
   venue: 'International Journal of Computer Applications'
   year: 2025
   type: 'journal'
+  image: '/images/hand gesture figure.png'
   thumb: 'IJCA'
   url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/'
   links:
