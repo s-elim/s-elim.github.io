@@ -91,6 +91,17 @@
   featured: true
   image: '/images/C3G_VM6D_Architecture.webp'
   url: 'https://ieeexplore.ieee.org/document/11400555'
+  bibtex: |
+    @ARTICLE{11400555,
+      author={Sarowar, Md Selim and Alnaasan, Manar and Kim, Sungho},
+      journal={IEEE Access}, 
+      title={C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation Based on RGB-D Data}, 
+      year={2026},
+      volume={14},
+      number={},
+      pages={34223-34238},
+      keywords={Pose estimation;Transformers;Point cloud compression;Three-dimensional displays;Probabilistic logic;Training;Visualization;Uncertainty;Foundation models;Feature extraction;Vision foundation model;cross-modal fusion;compact 3D Gaussian (C3G);vision transformer (ViT);6D object pose estimation;3D point cloud},
+      doi={10.1109/ACCESS.2026.3666439}}
   links:
     - { label: 'IEEE Access', url: 'https://ieeexplore.ieee.org/document/11400555', kind: 'link' }
     - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555', kind: 'pdf' }
