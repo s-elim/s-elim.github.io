@@ -3,7 +3,7 @@
 // ==========================================================================
 
 .card {
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
@@ -357,7 +357,7 @@ button.pub-card__media:hover {
 .project-cat-card--awards,
 .project-cat-card--honors                    { --cat: var(--accent); }
 .project-cat-card {
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
@@ -409,7 +409,7 @@ button.pub-card__media:hover {
 // ---- Project accordion cards ----
 .accordion { display: flex; flex-direction: column; gap: .75rem; }
 .accordion__item {
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -446,7 +446,7 @@ button.pub-card__media:hover {
   gap: 1.15rem;
 }
 .skill-group {
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 1.1rem 1.2rem;
@@ -479,7 +479,7 @@ button.pub-card__media:hover {
 .stat-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
 .stat {
   flex: 1 1 130px;
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);

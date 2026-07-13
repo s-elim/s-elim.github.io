@@ -117,7 +117,7 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 
 // ---- Sidebar profile card (interior pages) ----
 .profile-card {
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
