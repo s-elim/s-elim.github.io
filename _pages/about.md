@@ -23,8 +23,8 @@ redirect_from:
       <span class="chip">Vision-Language-Action</span>
       <span class="chip">World Models</span>
       <span class="chip">Agentic Robotics</span>
-      <span class="chip">Physical AI</span>
       <span class="chip">5D AI Robotics</span>
+      <span class="chip">Physical AI</span>
     </div>
     <div style="margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center;">
       <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
