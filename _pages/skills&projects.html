@@ -99,6 +99,9 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
       <div class="accordion__item">
         <button class="accordion__header" type="button" aria-expanded="false">
           <span>{{ col.name }}</span>
+          {% if col.timeline %}
+            <span class="timeline-badge" style="font-size: var(--fs-xs); font-weight: 700; color: var(--muted); background: var(--surface-2); border: 1px solid var(--border); padding: 0.18rem 0.55rem; border-radius: var(--radius-pill); white-space: nowrap;">{{ col.timeline }}</span>
+          {% endif %}
           <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
         </button>
         <div class="accordion__panel">
