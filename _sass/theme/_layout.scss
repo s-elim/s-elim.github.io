@@ -65,3 +65,31 @@
 }
 .section-title > i { color: var(--accent); font-size: .85em; }
 .section-title:first-child { margin-top: 0; }
+
+// Clickable section heading (opens a modal, e.g. About on the home page)
+.section-title__btn {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: .55rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: color .2s var(--ease);
+}
+.section-title__btn > i { color: var(--accent); font-size: .85em; }
+.section-title__btn:hover, .section-title__btn:focus-visible { color: var(--accent); }
+.section-title__hint {
+  margin-left: auto;
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.section-title__hint > i { color: inherit; font-size: 1em; }

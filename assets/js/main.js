@@ -279,6 +279,51 @@
     });
   }
 
+  /* ---- Modal popups (About on the home page) -------------------------- */
+  function initModals() {
+    var openers = Array.prototype.slice.call(document.querySelectorAll(".js-modal-open"));
+    if (!openers.length) return;
+
+    openers.forEach(function (btn) {
+      var modal = document.querySelector(btn.getAttribute("data-modal-target"));
+      if (!modal) return;
+      var lastFocused = null;
+
+      function focusable() {
+        return modal.querySelectorAll('a[href], button:not([disabled])');
+      }
+      function open() {
+        lastFocused = document.activeElement;
+        modal.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        var closeBtn = modal.querySelector(".js-modal-close");
+        if (closeBtn) closeBtn.focus();
+        document.addEventListener("keydown", onKey);
+      }
+      function close() {
+        modal.classList.remove("is-open");
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKey);
+        if (lastFocused) { lastFocused.focus(); lastFocused = null; }
+      }
+      function onKey(e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key === "Tab") {
+          var f = focusable();
+          if (!f.length) return;
+          var first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
+
+      btn.addEventListener("click", open);
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal || e.target.closest(".js-modal-close")) close();
+      });
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -293,6 +338,7 @@
     safe(initActivityFilter);
     safe(initUpdatesScroll);
     safe(initLightbox);
+    safe(initModals);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

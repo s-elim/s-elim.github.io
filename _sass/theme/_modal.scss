@@ -1,0 +1,72 @@
+// ==========================================================================
+//  Modal popup (About section on the home page)
+// ==========================================================================
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 4vmin;
+  background: rgba(7, 11, 20, .6);
+  backdrop-filter: blur(6px);
+}
+.modal.is-open { display: flex; }
+
+.modal__dialog {
+  width: min(680px, 100%);
+  max-height: 84vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem 1.6rem;
+  animation: modal-in .22s var(--ease);
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .9rem;
+  padding-bottom: .6rem;
+  border-bottom: 2px solid var(--border);
+}
+.modal__title {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: var(--fs-xl);
+  margin: 0;
+}
+.modal__title > i { color: var(--accent); font-size: .85em; }
+
+.modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.modal__close:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+
+.modal__body p:last-child { margin-bottom: 0; }
+
+@keyframes modal-in {
+  from { transform: translateY(10px) scale(.98); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal__dialog { animation: none; }
+}

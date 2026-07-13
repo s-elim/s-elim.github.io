@@ -40,13 +40,29 @@ redirect_from:
   </div>
 </section>
 
-<h2 class="section-title reveal"><i class="fas fa-user" aria-hidden="true"></i> About</h2>
-<div class="reveal">
+<h2 class="section-title reveal">
+  <button type="button" class="section-title__btn js-modal-open" data-modal-target="#about-modal" aria-haspopup="dialog" aria-controls="about-modal">
+    <i class="fas fa-user" aria-hidden="true"></i> About
+    <span class="section-title__hint">Click to read <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+  </button>
+</h2>
+
+<div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
+  <div class="modal__dialog">
+    <div class="modal__head">
+      <h3 class="modal__title" id="about-modal-title"><i class="fas fa-user" aria-hidden="true"></i> About</h3>
+      <button type="button" class="modal__close js-modal-close" aria-label="Close about popup">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="modal__body">
 <p>I am pursuing an <strong>M.Sc. in Computer Vision &amp; AI</strong> at <a href="http://www.ynu.kr/_english/main/index.php" target="_blank" rel="noopener">Yeungnam University (YU)</a> as a <a href="https://www.studyinkorea.go.kr/" target="_blank" rel="noopener">Global Korea Scholarship (GKS)</a> scholar funded by NIIED, with additional support from the <strong>RLRC &amp; RISE</strong> industry-collaboration projects. I am a member of the <a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, supervised by <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>.</p>
 
 <p>My research centers on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation, working toward embodied agents that perceive, reason, and act in the physical world.</p>
 
 <p>Before joining YU, I completed a one-year Korean Language &amp; Literature program at KLI under the GKS program, and spent a year as a full-time Research Assistant in the <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">WCSP Lab at National Tsing Hua University</a>, Taiwan. I earned my B.Tech (Electronics &amp; Electrical Engineering) as an <a href="https://studyinindia.gov.in/" target="_blank" rel="noopener">SII Scholar</a> from the <a href="https://kiit.ac.in/" target="_blank" rel="noopener">Kalinga Institute of Industrial Technology (KIIT)</a>, and interned at <a href="https://www.iitr.ac.in/" target="_blank" rel="noopener">IIT Roorkee</a> on image processing for biomedical signals.</p>
+    </div>
+  </div>
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>

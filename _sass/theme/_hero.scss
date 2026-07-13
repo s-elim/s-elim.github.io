@@ -100,6 +100,7 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   .chip__cta { transition: opacity .2s var(--ease); }
 }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.15rem; }
+.hero__chips .chip { color: var(--text-strong); }
 @media (max-width: $bp-sm) { .hero__chips { justify-content: center; } }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
 @media (max-width: $bp-sm) { .hero__actions { justify-content: center; } }
