@@ -40,13 +40,13 @@
     {% unless pub.status == "To be submitted" %}
     <div class="bibtex-block" id="bib-{{ pid }}">
       <button class="pub-badge pub-badge--bibtex js-copy" data-copy="#bibpre-{{ pid }}" type="button" style="margin-bottom:.5rem"><i class="fas fa-copy" aria-hidden="true"></i> <span class="js-copy-label">Copy</span></button>
-<pre id="bibpre-{{ pid }}">{{ bibtype }}{% raw %}{{% endraw %}{{ pid | replace: "-", "" | truncate: 24, "" }}{{ pub.year }},
+<pre id="bibpre-{{ pid }}">{% if pub.bibtex %}{{ pub.bibtex | strip }}{% else %}{{ bibtype }}{% raw %}{{% endraw %}{{ pid | replace: "-", "" | truncate: 24, "" }}{{ pub.year }},
   title     = {% raw %}{{% endraw %}{{ pub.title }}},
   author    = {% raw %}{{% endraw %}{{ pub.authors | remove: "*" | remove: "†" }}},
   {{ container }} = {% raw %}{{% endraw %}{{ pub.venue }}},
   year      = {% raw %}{{% endraw %}{{ pub.year }}}
   % TODO: verify entry type, add volume/pages/doi
-}</pre>
+}{% endif %}</pre>
     </div>
     {% endunless %}
   </div>

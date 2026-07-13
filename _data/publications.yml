@@ -69,6 +69,15 @@
   image: '/images/gstvla_arch.webp'
   thumb: "ICML-W '26"
   url: 'https://openreview.net/forum?id=J57nR3hyAd'
+  bibtex: |
+    @inproceedings{
+    sarowar2026gstvla,
+    title={{GSTVLA}: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models},
+    author={Md Selim Sarowar and Sungho Kim},
+    booktitle={The 6th Muslims in ML (MusIML) Workshop at ICML 2026},
+    year={2026},
+    url={https://openreview.net/forum?id=J57nR3hyAd}
+    }
   links:
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=J57nR3hyAd', kind: 'link' }
     - { label: 'PDF', url: 'https://openreview.net/pdf?id=J57nR3hyAd', kind: 'pdf' }
