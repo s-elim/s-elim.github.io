@@ -14,11 +14,6 @@ latest:
     category: 'Bootcamp'
     meta: '3-Month Intensive Bootcamp · Vizuara AI Lab'
     desc: 'Implemented and coded from scratch models like ViT, DeiT, Swin, DETR, Mask2Former, SAM, TimeSformer, VideoMAE, CLIP, BLIP, Flamingo, LLaVA, and Stable Diffusion. As well, projects on object detection and segmentation to multimodal chat systems and generative image pipelines.'
-  - title: 'C3G-VM6D: Data-Efficient C3G Vision Foundation Model Aided 6D Pose Estimation based on RGB-D Data'
-    category: 'Research'
-    images: ['C3G_VM6D_Architecture.webp', 'Picture2.webp']
-    repo: 'https://github.com/s-elim/C3G-VM6D'
-    desc: 'The estimation of 6D pose from RGB-D data remains challenging due to occlusions, textureless objects, and depth noise. In this work, we introduce a novel architecture for precisely estimating the 6DoF object pose from a single RGB-D image. Unlike existing structures that rely on direct regression & convolution based pose estimation as well as heavily depend on large model training, our vision based dual stream approach addresses this challenging task using hybrid multi modal fusion architecture combining self-supervised vision transformers (DINOv2) and attention based point cloud processing using C3G (Compact 3D Gaussian representations integrated with Point Transformer V3). The DINOv2 approach provides robust semantic understanding without requiring fine-tuning of visual backbone, while Point Transformer V3 employs vector attention mechanisms to model complex 3D geometric patterns from depth point clouds. Moreover, we present a mask guided point cloud extraction approach that concentrates processing on object relevant regions while filtering out background noise. The model’s efficacy is demonstrated by the experimental results on the LineMOD-Occluded dataset over RDPN SOTA benchmark, which show that our network requires substantially fewer trainable parameters than fully-supervised alternatives while achieving competitive performance and notable improvements with ADD, ADD(S) metric, rotation error, and translation error. Self-supervised learning and attention based geometric reasoning together provide new era for data efficient 6D pose estimation.'
   - title: 'Building Personal AI News Aggregator with Agentic AI (Claude Code)'
     category: 'Research'
     images: ['Screenshot 2026-02-27 083432.jpg', 'chatbot.webp']
@@ -34,10 +29,6 @@ latest:
     images: ['Screenshot 2026-02-27 083432.jpg', 'email_spam.webp']
     repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
     desc: 'we run the LLM fine-tuning loop on the email spam or not spam(ham) dataset. We demonstrate how fine-tuning can improve LLM performance in the classification tasks.'
-  - title: 'VLM6D: VLM based 6DoF Pose Estimation based on RGB-D Images'
-    category: 'Research'
-    images: ['VLM6D_arch.png', 'Picture01.png']
-    desc: 'VLM6D, a novel dual-stream architecture that leverages the distinct strengths of visual and geometric data from RGB-D input for robust and precise pose estimation. Our framework uniquely integrates two specialized encoders: a powerful, self-supervised Vision Transformer (DINOv2) processes the RGB modality, harnessing its rich, pre-trained understanding of visual grammar to achieve remarkable resilience against texture and lighting variations. Concurrently, a PointNet++ encoder processes the 3D point cloud derived from depth data, enabling robust geometric reasoning that excels even with the sparse, fragmented data typical of severe occlusion.'
   - title: 'My Research Proposal for RISE Project: 2026 (2nd year)'
     category: 'Research'
     images: ['2026_Proposal - Copy.gif', 'https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b']

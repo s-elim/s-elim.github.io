@@ -19,35 +19,20 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="stat stat--skills"><div class="stat__num">{{ skill_count }}</div><div class="stat__label">Skills</div></div>
 </div>
 
-{% assign cats = "Bootcamp,Research" | split: "," %}
-{% for cat in cats %}
-  {% assign group = pj.latest | where: "category", cat %}
-  {% if group.size > 0 %}
-    {% if cat == "Bootcamp" %}
-      {% assign cat_title = "Bootcamps" %}
-      {% assign cat_icon = "fa-laptop-code" %}
-      {% assign cat_sub = "Intensive hands-on training programs" %}
-      {% assign cat_unit = "programs" %}
-      {% assign cat_mod = "" %}
-    {% else %}
-      {% assign cat_title = "Research & Applied" %}
-      {% assign cat_icon = "fa-flask" %}
-      {% assign cat_sub = "Research prototypes and applied AI systems" %}
-      {% assign cat_unit = "projects" %}
-      {% assign cat_mod = "project-cat-card--research" %}
-    {% endif %}
-<section class="project-cat-card {{ cat_mod }} reveal">
+{% assign bootcamps = pj.latest | where: "category", "Bootcamp" %}
+{% if bootcamps.size > 0 %}
+<section class="project-cat-card reveal">
   <header class="project-cat-card__header">
-    <div class="project-cat-card__icon"><i class="fas {{ cat_icon }}" aria-hidden="true"></i></div>
+    <div class="project-cat-card__icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
-      <h2 class="project-cat-card__title">{{ cat_title }}</h2>
-      <p class="project-cat-card__sub">{{ cat_sub }}</p>
+      <h2 class="project-cat-card__title">Bootcamps</h2>
+      <p class="project-cat-card__sub">Intensive hands-on training programs</p>
     </div>
-    <span class="project-cat-card__count">{{ group.size }} {{ cat_unit }}</span>
+    <span class="project-cat-card__count">{{ bootcamps.size }} programs</span>
   </header>
   <div class="project-cat-card__body">
     <div class="accordion">
-      {% for proj in group %}
+      {% for proj in bootcamps %}
       <div class="accordion__item">
         <button class="accordion__header" type="button" aria-expanded="false">
           <span>{{ proj.title }}</span>
@@ -74,8 +59,8 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     </div>
   </div>
 </section>
-  {% endif %}
-  {% if cat == "Bootcamp" %}
+{% endif %}
+
 <section class="project-cat-card project-cat-card--skills reveal">
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas fa-pencil-ruler" aria-hidden="true"></i></div>
@@ -98,8 +83,6 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     </div>
   </div>
 </section>
-  {% endif %}
-{% endfor %}
 
 <section class="project-cat-card project-cat-card--industry reveal">
   <header class="project-cat-card__header">
@@ -130,6 +113,48 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     </div>
   </div>
 </section>
+
+{% assign research = pj.latest | where: "category", "Research" %}
+{% if research.size > 0 %}
+<section class="project-cat-card project-cat-card--research reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-flask" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Research &amp; Applied</h2>
+      <p class="project-cat-card__sub">Research prototypes and applied AI systems</p>
+    </div>
+    <span class="project-cat-card__count">{{ research.size }} projects</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="accordion">
+      {% for proj in research %}
+      <div class="accordion__item">
+        <button class="accordion__header" type="button" aria-expanded="false">
+          <span>{{ proj.title }}</span>
+          <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
+        </button>
+        <div class="accordion__panel">
+          <div class="accordion__panel-inner">
+            {% if proj.meta %}<p class="text-muted" style="font-size:.85rem;margin:0 0 .6rem"><i class="fas fa-clock" aria-hidden="true"></i> {{ proj.meta }}</p>{% endif %}
+            {% for img in proj.images %}
+              {% if img contains "://" %}
+                <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+              {% else %}
+                <p style="text-align:center"><img src="{{ '/images/' | append: img | relative_url }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+              {% endif %}
+            {% endfor %}
+            <div>{{ proj.desc }}</div>
+            {% if proj.repo %}
+              <p style="margin-top:.8rem"><a class="pub-badge pub-badge--code" href="{{ proj.repo }}" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> Repository</a></p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <section class="project-cat-card project-cat-card--certs reveal">
   <header class="project-cat-card__header">
