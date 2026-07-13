@@ -95,7 +95,9 @@ redirect_from:
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
 <div class="highlight-grid">
   <article class="highlight-card card reveal" data-delay="1">
-    <div class="highlight-card__media"><img src="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy"></div>
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI." aria-label="Zoom figure">
+      <img src="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy">
+    </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
@@ -103,7 +105,9 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
-    <div class="highlight-card__media"><img src="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" alt="6D pose estimation architecture" loading="lazy"></div>
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
+      <img src="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" alt="6D pose estimation architecture" loading="lazy">
+    </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">3D Vision &amp; 6D Pose Estimation</h3>
       <p class="highlight-card__desc">Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding.</p>
@@ -111,7 +115,9 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="3">
-    <div class="highlight-card__media"><img src="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" alt="Point cloud representation learning" loading="lazy"></div>
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
+      <img src="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" alt="Point cloud representation learning" loading="lazy">
+    </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Perception &amp; Representation Learning</h3>
       <p class="highlight-card__desc">Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks.</p>

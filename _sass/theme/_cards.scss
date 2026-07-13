@@ -18,10 +18,19 @@
   gap: 1.15rem;
 }
 .highlight-card { display: flex; flex-direction: column; overflow: hidden; }
-.highlight-card__media { aspect-ratio: 16 / 9; overflow: hidden; background: var(--surface-2); }
+.highlight-card__media {
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: var(--surface-2);
+  aspect-ratio: 2.25 / 1;
+  overflow: hidden;
+  cursor: pointer;
+}
 .highlight-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s var(--ease); filter: var(--img-dim, none); }
 .highlight-card:hover .highlight-card__media img { transform: scale(1.05); }
-.highlight-card__body { padding: 1rem 1.15rem 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+.highlight-card__body { padding: 0.85rem 1.1rem 0.95rem; display: flex; flex-direction: column; gap: .4rem; }
 .highlight-card__title { font-size: var(--fs-lg); margin: 0; }
 .highlight-card__desc { color: var(--muted); font-size: var(--fs-sm); margin: 0; }
 
