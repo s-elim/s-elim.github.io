@@ -238,7 +238,7 @@ button.pub-card__media:hover {
 .pub-card__meta span span { display: inline; }
 .pub-card__authors .me { font-weight: 700; color: var(--text-strong); }
 .pub-card__venue { color: var(--text); }
-.pub-card__venue-name { color: var(--text-strong); font-weight: 400; font-style: italic; }
+.pub-card__venue-name { color: var(--text-strong); font-weight: 400; }
 
 @media (max-width: 900px) {
   .pub-grid { grid-template-columns: 1fr; }
