@@ -202,7 +202,8 @@ button.pub-card__media:hover {
   box-shadow: 0 0 16px color-mix(in srgb, var(--tag-c) 65%, transparent);
   animation-play-state: paused;
 }
-.pub-tag--venue { --tag-c: var(--text-strong); }
+.pub-tag--venue,
+.pub-tag--impact { --tag-c: var(--text-strong); }
 @keyframes tag-glow {
   0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--muted)) 25%, transparent); }
   50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--tag-c, var(--muted)) 55%, transparent); }
