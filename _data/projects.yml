@@ -45,14 +45,20 @@ industry:
     timeline: 'During M.Sc.'
     points:
       - 'Building VLA models for autonomous mobile robots'
+      - 'Designing visual-language-action (VLA) architectures for end-to-end semantic navigation and room-to-room task planning'
+      - 'Implementing action-chunking and policy deployment on low-power edge accelerators for real-time obstacle avoidance'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
     points:
       - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation'
+      - 'Developing multi-sensor fusion pipelines (RGB-D, LiDAR, and RADAR) to estimate 3D object poses and segment dynamic safety boundaries'
+      - 'Integrating vision-language models (VLMs) to semantically analyze industrial scenes and identify hazardous worker-robot proximity events'
   - name: 'RLRC (Regional Leading Research Center), South Korea'
     timeline: 'During M.Sc.'
     points:
       - '3D Human Pose Estimation with VLM integration for Healthcare'
+      - 'Implementing 3D human skeleton and mesh recovery models from monocular RGB-D video streams to track patient rehabilitation progress'
+      - 'Fusing spatial joint trajectories with vision-language models (VLMs) to generate clinical reports on mobility and gait analysis'
 
 skills:
   - group: 'Frameworks & Libraries'
