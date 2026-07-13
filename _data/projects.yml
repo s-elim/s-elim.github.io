@@ -41,8 +41,6 @@ industry:
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     points:
       - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation (<strong>Project-1</strong>)'
-      - '3D Object Pose Estimation and Object Tracking using VLMs to manipulate Mobile Robot (<strong>Project-2</strong>)'
-      - '3D Human & Object Pose Estimation and Tracking using VLMs to manipulate Mobile Robot (<strong>Project-3</strong>)'
   - name: 'RLRC (Regional Leading Research Center), South Korea'
     points:
       - '3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)'
