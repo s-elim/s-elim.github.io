@@ -29,6 +29,9 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
         {% for d in edu.degrees %}
         <p class="xp-line"><i class="fas fa-graduation-cap" aria-hidden="true"></i> <span>{{ d }}</span></p>
         {% endfor %}
+        {% if edu.thesis %}
+        <p class="xp-line"><i class="fas fa-book" aria-hidden="true"></i> <span><strong>Thesis:</strong> {{ edu.thesis }}</span></p>
+        {% endif %}
         {% if edu.extra %}<p class="xp-line xp-line--muted"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> <span>{{ edu.extra }}</span></p>{% endif %}
       </div>
       {% endfor %}

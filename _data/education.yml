@@ -1,20 +1,22 @@
 # Education entries (Experience page). `degrees` and `extra` are raw HTML.
 # `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
-- institution: 'Yeungnam University, South Korea'
+- institution: 'Yeungnam University, South Korea 🇰🇷'
   date: 'Sep 2024 - Aug 2027'
   current: true
   degrees:
-    - 'M.Sc. (Research) in Electronics Engineering (AI &amp; Computer Vision Track)<br><strong>CGPA 4.5/4.5</strong><br><strong>Thesis:</strong> Towards Physical AI: A Unified Framework for Perception, World Models, and Agentic Intelligence'
+    - 'M.Sc. (Research) in Electronics Engineering (AI &amp; Computer Vision Track)<br><strong>CGPA 4.5/4.5</strong>'
     - 'Korean Language &amp; Literature · Sep 2024 - Aug 2025'
+  thesis: 'Towards Physical AI: A Unified Framework for Perception, World Models, and Agentic Intelligence'
   extra: 'Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>'
 
-- institution: 'Kalinga Institute Of Industrial Technology (KIIT), India'
+- institution: 'Kalinga Institute Of Industrial Technology (KIIT), India 🇮🇳'
   date: 'Jul 2019 - Jul 2023'
   degrees:
-    - 'Bachelor of Technology (B.Tech) in Electrical &amp; Electronics Engineering<br><strong>CGPA 8.65/10</strong> (3.75/4 Scholaro)<br><strong>Thesis:</strong> Early Detection of Alzheimer''s Disease using Machine Learning Algorithm'
+    - 'Bachelor of Technology (B.Tech) in Electrical &amp; Electronics Engineering<br><strong>CGPA 8.65/10</strong> (3.75/4 Scholaro)'
+  thesis: 'Early Detection of Alzheimer''s Disease using Machine Learning Algorithm'
   extra: 'Advisor: <a href="https://scholar.google.com/citations?user=L8xPWy8AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Jitendra Kumar Das</a> &amp; <a href="https://www.researchgate.net/profile/Tejaswini-Kar" target="_blank" rel="noopener">Prof. Tejaswini Kar</a>'
 
-- institution: 'Saint Joseph Higher Secondary School, Dhaka, Bangladesh'
+- institution: 'Saint Joseph Higher Secondary School, Dhaka, Bangladesh 🇧🇩'
   degrees:
     - 'Higher Secondary Certificate'
   extra: 'Mentor: <a href="https://sjs.edu.bd/new/faculty_details.php?id=132" target="_blank" rel="noopener">Dr. Dipak Kumar Sarkar</a>'
