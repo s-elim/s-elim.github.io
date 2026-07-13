@@ -9,7 +9,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 {% assign bootcamp_count = pj.latest | where: "category", "Bootcamp" | size %}
 {% assign research_count = pj.latest | where: "category", "Research" | size %}
 {% assign partner_count = pj.industry | size %}
-{% assign collab_count = 0 %}{% for col in pj.industry %}{% assign collab_count = collab_count | plus: col.points.size %}{% endfor %}
+{% assign collab_count = pj.industry | size %}
 {% assign skill_count = 0 %}{% for grp in pj.skills %}{% assign skill_count = skill_count | plus: grp.items.size %}{% endfor %}
 
 <div class="stat-row reveal">
