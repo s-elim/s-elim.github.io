@@ -56,6 +56,11 @@ industry:
   - name: 'RLRC (Regional Leading Research Center), South Korea'
     points:
       - '3D Human Pose Estimation with VLM integration for Healthcare (<strong>Project</strong>)'
+  - name: 'YUJINMS Co. Ltd., Korea'
+    points:
+      - 'Multimodal AI Sensing + World Model for Manufacturing Robots (<strong>Project</strong>)'
+      - 'Fusing RGB-D vision, point clouds, and multi-modal sensory inputs for high-precision robot perception on dynamic assembly lines'
+      - 'Developing action-conditioned latent world models to predict physical interaction outcomes and plan robust manipulation trajectories'
 
 skills:
   - group: 'Frameworks & Libraries'
