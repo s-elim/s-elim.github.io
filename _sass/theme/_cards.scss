@@ -349,13 +349,14 @@ button.pub-card__media:hover {
 // ---- Project category cards (Bootcamps / Research & Applied / Industry) ----
 // Per-section accent: modifiers set --cat, consumed by icon tile, count pill,
 // stat numbers, skill-group icons and chip hovers (fallback = accent blue).
-.project-cat-card--research, .stat--research { --cat: var(--badge-project); }
-.project-cat-card--industry, .stat--industry { --cat: var(--robotics); }
-.project-cat-card--skills,   .stat--skills   { --cat: var(--rank); }
-.project-cat-card--certs,
-.project-cat-card--teaching                  { --cat: var(--good); }
-.project-cat-card--awards,
-.project-cat-card--honors                    { --cat: var(--accent); }
+// Consistent category color (uses the main accent blue)
+.project-cat-card--research, .stat--research,
+.project-cat-card--industry, .stat--industry,
+.project-cat-card--skills,   .stat--skills,
+.project-cat-card--certs,    .project-cat-card--teaching,
+.project-cat-card--awards,   .project-cat-card--honors {
+  --cat: var(--accent);
+}
 .project-cat-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -363,6 +364,12 @@ button.pub-card__media:hover {
   box-shadow: var(--shadow-sm);
   margin-bottom: 1.6rem;
   overflow: hidden;
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
+}
+.project-cat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), 0 0 14px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 .project-cat-card__header {
   display: flex;
@@ -413,7 +420,12 @@ button.pub-card__media:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+  transition: transform .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease);
+}
+.accordion__item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm), 0 0 10px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 .accordion__item.is-open { border-color: var(--accent); box-shadow: var(--shadow-sm); }
 .accordion__header {
@@ -450,9 +462,13 @@ button.pub-card__media:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 1.1rem 1.2rem;
-  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+  transition: transform .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease);
 }
-.skill-group:hover { border-color: var(--cat, var(--accent)); box-shadow: var(--shadow-sm); }
+.skill-group:hover {
+  transform: translateY(-2px);
+  border-color: var(--cat, var(--accent));
+  box-shadow: var(--shadow-sm), 0 0 10px color-mix(in srgb, var(--accent) 12%, transparent);
+}
 .skill-group__title { font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
 .skill-group__title > i { color: var(--cat, var(--accent)); margin-right: .35rem; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
@@ -484,6 +500,12 @@ button.pub-card__media:hover {
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   padding: 1rem 1.15rem;
+  transition: transform .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease);
+}
+.stat:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm), 0 0 10px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 .stat__num { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-2xl); color: var(--cat, var(--accent)); line-height: 1; font-variant-numeric: tabular-nums; }
 .stat__label { font-size: var(--fs-xs); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }
