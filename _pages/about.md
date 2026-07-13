@@ -24,6 +24,7 @@ redirect_from:
       <span class="chip">World Models</span>
       <span class="chip">Agentic Robotics</span>
       <span class="chip">Physical AI</span>
+      <span class="chip">5D AI Robotics</span>
     </div>
     <div style="margin-bottom: 1.15rem;">
       <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
@@ -68,7 +69,7 @@ redirect_from:
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
-      <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Robot Learning</span></div>
+      <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Robot Learning</span><span class="tag">5D AI Robotics</span></div>
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
