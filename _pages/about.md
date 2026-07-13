@@ -26,9 +26,13 @@ redirect_from:
       <span class="chip">Physical AI</span>
       <span class="chip">5D AI Robotics</span>
     </div>
-    <div style="margin-bottom: 1.15rem;">
+    <div style="margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center;">
       <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
         <i class="fas fa-user-circle" aria-hidden="true"></i> Click to read about me <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      </button>
+      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
+      <button type="button" class="js-modal-open" data-modal-target="#updates-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
+        <i class="fas fa-bullhorn" aria-hidden="true"></i> Click to see updates <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
       </button>
     </div>
     <div class="hero__actions">
@@ -58,6 +62,32 @@ redirect_from:
 <p>My research focuses on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation. I aim to build embodied agents capable of perceiving, reasoning, and acting within the physical world, working toward <strong>physical AGI</strong>. My contributions in these areas include first-author publications at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong>.</p>
 
 <p>Before joining YU, I completed a one-year Korean Language &amp; Literature program at KLI under the GKS program, and spent a year as a full-time Research Assistant in the <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">WCSP Lab at National Tsing Hua University</a>, Taiwan. I earned my B.Tech (Electronics &amp; Electrical Engineering) as an <a href="https://studyinindia.gov.in/" target="_blank" rel="noopener">SII Scholar</a> from the <a href="https://kiit.ac.in/" target="_blank" rel="noopener">Kalinga Institute of Industrial Technology (KIIT)</a>, and interned at <a href="https://www.iitr.ac.in/" target="_blank" rel="noopener">IIT Roorkee</a> on image processing for biomedical signals.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="updates-modal" role="dialog" aria-modal="true" aria-labelledby="updates-modal-title">
+  <div class="modal__dialog">
+    <div class="modal__head">
+      <h3 class="modal__title" id="updates-modal-title"><i class="fas fa-bullhorn" aria-hidden="true"></i> Updates</h3>
+      <button type="button" class="modal__close js-modal-close" aria-label="Close updates popup">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="modal__body">
+      <div class="updates-card card" style="border: 0; box-shadow: none; padding: 0; background: transparent;">
+        <div class="updates-card__scroll" id="updates-scroll" tabindex="0" aria-label="Updates timeline, scroll for older news" style="max-height: 28rem;">
+          <ul class="timeline">
+            {% for item in site.data.news %}
+            <li class="timeline-item">
+              <span class="timeline-item__date">{{ item.date }}</span>
+              <p class="timeline-item__body">{{ item.text }}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="updates-card__hint" aria-hidden="true"><i class="fas fa-chevron-down"></i> Scroll for older updates</div>
+      </div>
     </div>
   </div>
 </div>
@@ -97,17 +127,4 @@ redirect_from:
 </div>
 <p class="reveal" style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="text-muted" style="font-size:.82rem">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
-<h2 class="section-title reveal"><i class="fas fa-bullhorn" aria-hidden="true"></i> Updates</h2>
-<div class="updates-card card reveal">
-  <div class="updates-card__scroll" id="updates-scroll" tabindex="0" aria-label="Updates timeline, scroll for older news">
-    <ul class="timeline">
-      {% for item in site.data.news %}
-      <li class="timeline-item">
-        <span class="timeline-item__date">{{ item.date }}</span>
-        <p class="timeline-item__body">{{ item.text }}</p>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="updates-card__hint" aria-hidden="true"><i class="fas fa-chevron-down"></i> Scroll for older updates</div>
-</div>
+
