@@ -25,8 +25,13 @@ redirect_from:
       <span class="chip">Agentic Robotics</span>
       <span class="chip">Physical AI</span>
     </div>
+    <div style="margin-bottom: 1.15rem;">
+      <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
+        <i class="fas fa-user-circle" aria-hidden="true"></i> Click to read about me <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      </button>
+    </div>
     <div class="hero__actions">
-      <a class="btn btn--primary" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
+      <a class="btn btn--strong" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
       <a class="btn btn--ghost" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Contact%20via%20portfolio" target="_blank" rel="noopener"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
       <a class="btn btn--ghost" href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a>
       <span class="hero__social">
@@ -37,13 +42,6 @@ redirect_from:
     </div>
   </div>
 </section>
-
-<h2 class="section-title reveal">
-  <button type="button" class="section-title__btn js-modal-open" data-modal-target="#about-modal" aria-haspopup="dialog" aria-controls="about-modal">
-    <i class="fas fa-user" aria-hidden="true"></i> About
-    <span class="section-title__hint">Click to read <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-  </button>
-</h2>
 
 <div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
   <div class="modal__dialog">

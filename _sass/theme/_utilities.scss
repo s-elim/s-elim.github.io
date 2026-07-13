@@ -29,6 +29,12 @@
   color: var(--text);
 }
 .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn--strong {
+  background: transparent;
+  border-color: var(--text-strong);
+  color: var(--text-strong);
+}
+.btn--strong:hover { border-color: var(--accent); color: var(--accent); }
 
 // Pills / chips
 .chip {
