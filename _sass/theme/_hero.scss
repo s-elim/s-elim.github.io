@@ -58,27 +58,32 @@
 }
 .hero__availability { margin: 0 0 1rem; }
 .chip.chip--open {
-  color: var(--muted, #64748b);
+  color: #0f172a !important;
   font-weight: 700;
-  background: var(--surface);
-  border-color: var(--muted, #64748b);
-  animation: chip-glow 2.2s ease-in-out infinite;
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  animation: chip-glow-light 2.2s ease-in-out infinite;
 }
 .chip.chip--open > i { margin-right: .15em; }
 a.chip.chip--open {
   cursor: pointer;
-  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
 }
 a.chip.chip--open:hover, a.chip.chip--open:focus-visible {
-  color: var(--muted, #64748b);
-  border-color: var(--muted, #64748b);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
   transform: translateY(-2px);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--muted, #64748b) 55%, transparent);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
   animation-play-state: paused;
 }
-@keyframes chip-glow {
-  0%, 100% { box-shadow: 0 0 4px color-mix(in srgb, var(--muted, #64748b) 25%, transparent); }
-  50%      { box-shadow: 0 0 15px color-mix(in srgb, var(--muted, #64748b) 60%, transparent); }
+@keyframes chip-glow-light {
+  0%, 100% { box-shadow: 0 0 4px rgba(15, 23, 42, 0.08); }
+  50%      { box-shadow: 0 0 14px rgba(37, 99, 235, 0.22); }
+}
+@keyframes chip-glow-dark {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 255, 255, 0.05); }
+  50%      { box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) { .chip.chip--open { animation: none; } }
 .chip__cta {
