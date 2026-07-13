@@ -175,17 +175,19 @@ button.pub-card__media:hover {
 }
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
 .pub-tag--prep       { font-style: italic; }
-// Type / impact / venue pills - gray, bold, glowing, interactive like the rank box
+// Type / impact / venue pills - bold, glowing, interactive like the rank box.
+// --tag-c sets each pill's color; defaults to gray.
 .pub-tag--conference,
 .pub-tag--preprint,
 .pub-tag--workshop,
 .pub-tag--journal,
 .pub-tag--impact,
 .pub-tag--venue {
+  --tag-c: var(--muted);
   font-weight: 700;
-  color: var(--muted);
-  border-color: var(--muted);
-  background: color-mix(in srgb, var(--muted) 10%, transparent);
+  color: var(--tag-c);
+  border-color: var(--tag-c);
+  background: color-mix(in srgb, var(--tag-c) 10%, transparent);
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
@@ -197,12 +199,13 @@ button.pub-card__media:hover {
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--tag-c) 65%, transparent);
   animation-play-state: paused;
 }
+.pub-tag--venue { --tag-c: var(--text-strong); }
 @keyframes tag-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--muted) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--muted) 55%, transparent); }
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--muted)) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--tag-c, var(--muted)) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .pub-tag { animation: none; }
@@ -290,18 +293,19 @@ button.pub-card__media:hover {
   font-style: normal;
   letter-spacing: .02em;
   border-radius: 6px;
-  border: 1px solid var(--muted);
+  --tag-c: var(--text-strong);
+  border: 1px solid var(--tag-c);
   display: inline-block;
   vertical-align: middle;
-  color: var(--muted);
-  background: color-mix(in srgb, var(--muted) 10%, transparent);
+  color: var(--tag-c);
+  background: color-mix(in srgb, var(--tag-c) 10%, transparent);
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 .rank-box:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--tag-c) 65%, transparent);
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -350,8 +354,8 @@ button.pub-card__media:hover {
 .project-cat-card--skills,   .stat--skills   { --cat: var(--rank); }
 .project-cat-card--certs,
 .project-cat-card--teaching                  { --cat: var(--good); }
-.project-cat-card--awards                    { --cat: var(--gold); }
-.project-cat-card--honors                    { --cat: var(--venue); }
+.project-cat-card--awards,
+.project-cat-card--honors                    { --cat: var(--accent); }
 .project-cat-card {
   background: var(--surface);
   border: 1px solid var(--border);
