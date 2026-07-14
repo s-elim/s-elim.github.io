@@ -67,18 +67,25 @@
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--muted);
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: all .18s var(--ease);
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
 }
-.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6 !important;
+  color: #1e3a8a !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
+}
 .filter-chip.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-contrast);
+  background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 80%, #000) 100%) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent) !important;
 }
 
 .pub-year-section + .pub-year-section {

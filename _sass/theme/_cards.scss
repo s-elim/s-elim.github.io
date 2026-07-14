@@ -180,7 +180,7 @@ button.pub-card__media:hover {
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-strong);
   color: var(--muted);
-  background: var(--surface-2);
+  background: #ffffff !important;
 }
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
 .pub-tag--prep       { font-style: italic; }
@@ -196,10 +196,10 @@ button.pub-card__media:hover {
   font-weight: 700;
   color: var(--tag-c);
   border-color: var(--tag-c);
-  background: color-mix(in srgb, var(--tag-c) 10%, transparent);
+  background: #ffffff !important;
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
-  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .pub-tag--conference:hover,
 .pub-tag--preprint:hover,
@@ -208,7 +208,10 @@ button.pub-card__media:hover {
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--tag-c) 65%, transparent);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
   animation-play-state: paused;
 }
 .pub-tag--venue,
@@ -278,15 +281,18 @@ button.pub-card__media:hover {
 .flagship-box.vision {
   color: var(--muted);
   border-color: var(--muted);
-  background: color-mix(in srgb, var(--muted) 10%, transparent);
+  background: #ffffff !important;
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
-  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .flagship-box.robotics:hover,
 .flagship-box.vision:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--muted) 65%, transparent);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -308,14 +314,17 @@ button.pub-card__media:hover {
   display: inline-block;
   vertical-align: middle;
   color: var(--tag-c);
-  background: color-mix(in srgb, var(--tag-c) 10%, transparent);
+  background: #ffffff !important;
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
-  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .rank-box:hover {
   transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--tag-c) 65%, transparent);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -334,13 +343,19 @@ button.pub-card__media:hover {
   font-size: var(--fs-xs);
   font-weight: 600;
   border-radius: 7px;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border-strong);
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
   cursor: pointer;
-  transition: transform .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease);
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
 }
-.pub-badge:hover { transform: translateY(-2px); border-color: var(--accent); color: var(--accent); }
+.pub-badge:hover {
+  transform: translateY(-2px);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
+}
 
 .pub-extra { margin-top: .7rem; }
 .pub-abstract, .bibtex-block {
