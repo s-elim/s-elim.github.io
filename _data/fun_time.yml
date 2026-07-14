@@ -1,6 +1,6 @@
 # Fun Time & Activities (grouped by year, newest first).
 # `type` is the visible label (kept verbatim); `cat` is the filter slug:
-#   bootcamp | summer-school | oral | delegate | in-person | virtual
+#   bootcamp | summer-school | oral | delegate | in-person | virtual | reviewer
 # `url` optional; `org` / `where` hold the verbatim organizer / location+date text.
 - year: '2026'
   events:
@@ -27,6 +27,16 @@
       title: '2026 IEEE RAS Summer School on Multi-Robot Systems'
       url: 'https://www.summerschoolprague.com/'
       where: 'Prague, Czech Republic (29 July - 04 Aug. 2026)'
+    - type: 'Reviewer'
+      cat: 'reviewer'
+      title: '37th British Machine Vision Conference (BMVC 2026)'
+      detail: 'Conference Reviewer'
+      org: 'British Machine Vision Association'
+    - type: 'Reviewer'
+      cat: 'reviewer'
+      title: '43rd International Conference on Machine Learning (ICML Workshop 2026)'
+      detail: 'Workshop Reviewer'
+      org: 'International Machine Learning Society'
 - year: '2025'
   events:
     - type: 'In person (Oral)'

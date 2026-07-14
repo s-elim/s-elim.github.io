@@ -11,10 +11,8 @@ description: "Bootcamps, summer schools, conferences, oral presentations, and de
   <button class="filter-chip is-active" data-value="all" type="button">All</button>
   <button class="filter-chip" data-value="bootcamp" type="button">Bootcamps</button>
   <button class="filter-chip" data-value="summer-school" type="button">Summer Schools</button>
-  <button class="filter-chip" data-value="oral" type="button">Oral Talks</button>
-  <button class="filter-chip" data-value="delegate" type="button">Delegate</button>
-  <button class="filter-chip" data-value="in-person" type="button">In Person</button>
-  <button class="filter-chip" data-value="virtual" type="button">Virtual</button>
+  <button class="filter-chip" data-value="oral" type="button">Invited Talks</button>
+  <button class="filter-chip" data-value="reviewer" type="button">Reviewing Services</button>
 </div>
 
 <div id="activity-list">
@@ -29,6 +27,7 @@ description: "Bootcamps, summer schools, conferences, oral presentations, and de
       {% when 'oral' %}{% assign ic = 'fa-microphone-alt' %}
       {% when 'delegate' %}{% assign ic = 'fa-users' %}
       {% when 'virtual' %}{% assign ic = 'fa-video' %}
+      {% when 'reviewer' %}{% assign ic = 'fa-clipboard-check' %}
       {% else %}{% assign ic = 'fa-globe' %}
     {% endcase %}
     <article class="activity-card" data-cat="{{ ev.cat }}">
