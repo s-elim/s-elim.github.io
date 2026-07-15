@@ -11,6 +11,13 @@
     <div class="site-footer__meta">
       &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>
       Last updated {{ site.time | date: '%B %Y' }} · Built with <a href="https://jekyllrb.com" rel="nofollow noopener" target="_blank">Jekyll</a>.
+      {% if site.flag_counter_id and site.flag_counter_id != "" %}
+      <div class="footer-visitor-counter" style="margin-top: 0.85rem; display: flex; justify-content: center;">
+        <a href="https://info.flagcounter.com/{{ site.flag_counter_id }}" target="_blank" rel="noopener">
+          <img src="https://s11.flagcounter.com/count2/{{ site.flag_counter_id }}/bg_FFFFFF/txt_0F172A/border_CBD5E1/columns_3/maxflags_9/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0" style="max-width: 100%; border-radius: 4px;">
+        </a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </footer>
