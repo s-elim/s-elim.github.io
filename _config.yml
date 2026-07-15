@@ -14,7 +14,7 @@ description              :  &description "M.Sc. researcher in 3D computer vision
 site_theme: air
 minimal_mistakes_skin: air
 enable_darkmode: false
-flag_counter_id: "" # Optional: Add your 4-character flagcounter.com ID here to enable the footer visitor counter (e.g. "yc4u")
+flag_counter_id: "5sFJ" # Optional: Add your 4-character flagcounter.com ID here to enable the footer visitor counter (e.g. "yc4u")
 url                      : https://s-elim.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "s-elim.github.io"
