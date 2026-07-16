@@ -179,6 +179,7 @@
   venue_short: "IEIE'26"
   year: 2025
   type: 'conference'
+  custom_tag: 'IEEE'
   image: '/images/VFM-VLM figure.png'
   thumb: "IEIE '26"
   url: 'https://arxiv.org/abs/2512.07215'
@@ -192,6 +193,7 @@
   venue_short: "IEIE'25"
   year: 2025
   type: 'conference'
+  custom_tag: 'IEEE'
   image: '/images/VLM6D_arch.png'
   url: 'https://arxiv.org/abs/2511.00120'
   links:
@@ -234,6 +236,7 @@
   venue_short: "AESPC'21"
   year: 2022
   type: 'conference'
+  custom_tag: 'IEEE'
   thumb: 'IEEE AESPC'
   url: 'https://ieeexplore.ieee.org/document/9708513'
   links:

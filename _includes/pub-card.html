@@ -15,6 +15,7 @@
     <div class="pub-card__tags">
       {% if pub.impact %}<span class="pub-tag pub-tag--impact" title="Journal impact">{{ pub.impact }}</span>{% endif %}
       {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
+      {% if pub.custom_tag %}<span class="pub-tag pub-tag--custom" title="Affiliation/Publisher">{{ pub.custom_tag }}</span>{% endif %}
     </div>
   </div>
   <div class="pub-card__body">

@@ -204,6 +204,7 @@ button.pub-card__media:hover {
 .pub-tag--workshop,
 .pub-tag--journal,
 .pub-tag--patent,
+.pub-tag--custom,
 .pub-tag--impact,
 .pub-tag--venue {
   --tag-c: var(--muted);
@@ -220,6 +221,7 @@ button.pub-card__media:hover {
 .pub-tag--workshop:hover,
 .pub-tag--journal:hover,
 .pub-tag--patent:hover,
+.pub-tag--custom:hover,
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);
@@ -230,6 +232,7 @@ button.pub-card__media:hover {
   animation-play-state: paused;
 }
 .pub-tag--venue,
+.pub-tag--custom,
 .pub-tag--impact { --tag-c: var(--text-strong); }
 @keyframes tag-glow {
   0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--muted)) 25%, transparent); }
