@@ -17,7 +17,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 <div class="stat-row reveal">
   <div class="stat"><div class="stat__num">{{ published }}</div><div class="stat__label">Publications</div></div>
-  <div class="stat"><div class="stat__num">{{ ranked }}</div><div class="stat__label">Flagship Conf. (A* &amp; A)</div></div>
+  <div class="stat"><div class="stat__num">{{ ranked }}</div><div class="stat__label">Flagship Conference (A* &amp; A Rank)</div></div>
   <div class="stat"><div class="stat__num">{{ scie }}</div><div class="stat__label">SCIE-Q1 Journals</div></div>
   <div class="stat"><div class="stat__num">{{ prep | size }}</div><div class="stat__label">In Preparation</div></div>
 </div>

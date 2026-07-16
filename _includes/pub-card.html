@@ -10,10 +10,7 @@
 <article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-search="{{ search | escape }}">
   <div class="pub-card__tags">
     {% if pub.impact %}<span class="pub-tag pub-tag--impact" title="Journal impact">{{ pub.impact }}</span>{% endif %}
-    {% if pub.venue_short %}<span class="pub-tag pub-tag--venue" title="{{ pub.venue | split: '(' | first | strip | escape }}">{{ pub.venue_short }}</span>{% endif %}
     {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
-    {% if pub.flagship == "robotics" %}<span class="flagship-box robotics">Flagship · Robotics</span>{% elsif pub.flagship == "vision" %}<span class="flagship-box vision">Flagship · Vision</span>{% endif %}
-    {% if pub.status == "To be submitted" %}<span class="pub-tag pub-tag--prep">In Preparation</span>{% endif %}
   </div>
   <h3 class="pub-card__title">
     {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
