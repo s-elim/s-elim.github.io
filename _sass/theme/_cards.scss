@@ -190,6 +190,7 @@ button.pub-card__media:hover {
 .pub-tag--preprint,
 .pub-tag--workshop,
 .pub-tag--journal,
+.pub-tag--patent,
 .pub-tag--impact,
 .pub-tag--venue {
   --tag-c: var(--muted);
@@ -205,6 +206,7 @@ button.pub-card__media:hover {
 .pub-tag--preprint:hover,
 .pub-tag--workshop:hover,
 .pub-tag--journal:hover,
+.pub-tag--patent:hover,
 .pub-tag--impact:hover,
 .pub-tag--venue:hover {
   transform: translateY(-2px) scale(1.08);

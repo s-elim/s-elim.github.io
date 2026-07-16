@@ -36,6 +36,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
     <button class="filter-chip" data-value="journal" type="button">Journal</button>
     <button class="filter-chip" data-value="preprint" type="button">Preprint</button>
     <button class="filter-chip" data-value="workshop" type="button">Workshop</button>
+    <button class="filter-chip" data-value="patent" type="button">Patent</button>
   </div>
   <div class="filter-chips" data-group="year" role="group" aria-label="Filter by year" style="margin-top:.5rem">
     <button class="filter-chip is-active" data-value="all" type="button">All Years</button>

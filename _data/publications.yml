@@ -164,6 +164,15 @@
     - { label: 'PeerJ Computer Science', url: 'https://www.preprints.org/manuscript/202606.0400', kind: 'link' }
     - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/271cac1669e8fbdcaba01f102d4045db/download_pub', kind: 'pdf' }
 
+- title: 'Compact 3D-Gaussian-Based 6D Object Pose Estimation Method for Physical AI'
+  authors: 'Md Selim Sarowar, and Sungho Kim*'
+  venue: 'Korean Patent'
+  venue_short: 'KR Patent'
+  year: 2026
+  type: 'patent'
+  status: 'Granted, Jan. 2026'
+  thumb: 'KR Patent'
+
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
@@ -201,6 +210,24 @@
     - { label: 'IJCA Journal', url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/', kind: 'link' }
     - { label: 'PDF', url: 'https://www.ijcaonline.org/archives/volume187/number2/sarowar-2025-ijca-924776.pdf', kind: 'pdf' }
 
+- title: 'AI-Enabled Coding and Algorithm Simulation Device'
+  authors: 'Md Selim Sarowar et al.'
+  venue: 'UK Design Patent'
+  venue_short: 'UK Patent'
+  year: 2025
+  type: 'patent'
+  status: 'Granted, Nov. 2025'
+  thumb: 'UK Patent'
+
+- title: 'IoT-Based System and Design Approach for Health Monitoring of Wearable Devices'
+  authors: 'Md Selim Sarowar et al.'
+  venue: 'India Patent'
+  venue_short: 'India Patent'
+  year: 2023
+  type: 'patent'
+  status: 'Granted, Feb. 2023'
+  thumb: 'India Patent'
+
 - title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
   authors: 'Md Selim Sarowar, Kaustav Dutta, and *Rasmita Lenka'
   venue: 'IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021'
@@ -212,3 +239,12 @@
   links:
     - { label: 'IEEE Xplore', url: 'https://ieeexplore.ieee.org/document/9708513', kind: 'link' }
     - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9708513', kind: 'pdf' }
+
+- title: 'An Experimental Special Technology in Emergency Management and Disaster Response'
+  authors: 'Md Selim Sarowar et al.'
+  venue: 'India Patent'
+  venue_short: 'India Patent'
+  year: 2022
+  type: 'patent'
+  status: 'Granted, Sept. 2022'
+  thumb: 'India Patent'
