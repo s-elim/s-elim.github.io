@@ -57,17 +57,29 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 150px;
   grid-template-areas:
-    "tags  tags"
-    "title title"
-    "body  media";
+    "header media"
+    "body   media";
   column-gap: 12px;
   align-items: start;
   min-height: 204px;
   padding: 12px 14px;
   font-size: .88rem;
 }
-.pub-card__tags  { grid-area: tags; }
-.pub-card__title { grid-area: title; }
+.pub-card__header {
+  grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: .45rem;
+}
+.pub-card__tags  {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+  flex-shrink: 0;
+}
 .pub-card__body  { grid-area: body; min-width: 0; }
 .pub-card__media { grid-area: media; }
 
@@ -227,7 +239,7 @@ button.pub-card__media:hover {
   .pub-tag { animation: none; }
 }
 
-.pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0 0 .45rem; }
+.pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0; flex: 1; }
 .pub-card__title a { color: var(--text-strong); }
 .pub-card__title a:hover { color: var(--accent); }
 
@@ -252,7 +264,7 @@ button.pub-card__media:hover {
 @media (max-width: $bp-sm) {
   .pub-card {
     grid-template-columns: 1fr;
-    grid-template-areas: "tags" "title" "body" "media";
+    grid-template-areas: "header" "body" "media";
     min-height: 0;
   }
   .pub-card__media { min-height: 0; max-width: 260px; }
