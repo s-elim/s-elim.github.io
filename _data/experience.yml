@@ -1,7 +1,7 @@
 # Research & Work experience (Experience page). `org`, `extra`, `points` are raw HTML.
 # `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
 - role: 'Graduate Research Assistant'
-  org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea'
+  org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea <span class="fi fi-kr"></span>'
   date: 'Aug 2025 - Aug 2027'
   current: true
   points:
@@ -10,13 +10,13 @@
     - '3D Computer Vision, Spatial Reasoning & Depth Sensing, VLA, Diffusion Transformers, 5D Robot Manipulation'
 
 - role: 'Research Assistant'
-  org: '<a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications &amp; Signal Processing Lab (WCSP)</a> · National Tsing Hua University, Hsinchu, Taiwan'
+  org: '<a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications &amp; Signal Processing Lab (WCSP)</a> · National Tsing Hua University, Hsinchu, Taiwan <span class="fi fi-tw"></span>'
   date: 'Sep 2023 - Aug 2024'
   points:
     - 'Conducted research on Convex Optimization'
 
 - role: 'Machine Learning Intern'
-  org: '<a href="https://diginique.com/" target="_blank" rel="noopener">Diginique Tech. lab</a> · IIT Roorkee, India'
+  org: '<a href="https://diginique.com/" target="_blank" rel="noopener">Diginique Tech. lab</a> · IIT Roorkee, India <span class="fi fi-in"></span>'
   date: 'Jul 2022 - Aug 2022'
   extra: 'Mentor: <a href="https://in.linkedin.com/in/sudhirchaudharyy" target="_blank" rel="noopener">Sudhir Chaudhary (IIT Roorkee)</a>'
   points:
