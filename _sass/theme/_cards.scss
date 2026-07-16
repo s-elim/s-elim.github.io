@@ -57,7 +57,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 150px;
   grid-template-areas:
-    "header media"
+    "header header"
     "body   media";
   column-gap: 12px;
   align-items: start;
