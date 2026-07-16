@@ -4,8 +4,13 @@
 
 .site-footer {
   margin-top: 3rem;
-  background: var(--surface);
+  background: var(--surface-2);
   border-top: 1px solid var(--border);
+  transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.site-footer:hover {
+  border-top-color: var(--accent);
+  box-shadow: 0 -5px 24px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 .site-footer__inner {
   display: flex;
