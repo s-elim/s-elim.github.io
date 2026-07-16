@@ -163,6 +163,7 @@ button.pub-card__media:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: .35rem;
   margin-bottom: .45rem;
 }
