@@ -228,6 +228,7 @@
   year: 2023
   type: 'patent'
   status: 'Granted, Feb. 2023'
+  image: '/images/IOT_Healthcare_Patent_Figure.png'
   thumb: 'India Patent'
 
 - title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
@@ -237,6 +238,7 @@
   year: 2022
   type: 'conference'
   custom_tag: 'IEEE'
+  image: '/images/AESPC_Figure.jpg'
   thumb: 'IEEE AESPC'
   url: 'https://ieeexplore.ieee.org/document/9708513'
   links:
@@ -250,4 +252,5 @@
   year: 2022
   type: 'patent'
   status: 'Granted, Sept. 2022'
+  image: '/images/Emergency_Patent_Figure.png'
   thumb: 'India Patent'
