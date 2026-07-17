@@ -40,6 +40,18 @@
   status: 'To be submitted'
   thumb: "ICRA '27"
 
+- title: 'PRAXIS: Capability-Factored Evaluation of Vision-Language-Action Policies and World Models with Counterfactually Paired Episodes'
+  authors: 'Md Selim Sarowar, and Sungho Kim*'
+  venue: 'Neural Information Processing Systems'
+  venue_short: "NeurIPS'27"
+  year: 2027
+  type: 'conference'
+  rank: 'A*'
+  status: 'To be submitted'
+  thumb: "PRAXIS"
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/Physical-AI', kind: 'code' }
+
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
   venue: 'British Machine Vision Conference (Accepted)'
