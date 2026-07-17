@@ -9,10 +9,9 @@
 # `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
-- title: 'Perception as Sufficiency, not Accuracy: Estimating the Manipulation-Indistinguishability Class for Grasp Planning'
+- title: 'Perception as Sufficiency, Not Accuracy: A Minimal-Rate, Certifiable Grasping Interface for the Network Edge'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
-  venue: 'IEEE Internet of Things Journal'
-  venue_short: "IEEE IoT Journal"
+  venue: 'IEEE IoT Journal'
   year: 2027
   type: 'journal'
   impact: 'SCIE-Q1, Top 10% · IF: 8.9'

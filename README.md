@@ -1,37 +1,79 @@
+# 🌌 Md Selim Sarowar · Personal & Research Portfolio
 
+[![Live Portfolio](https://img.shields.io/badge/Live_Portfolio-00C853?style=for-the-badge&logo=google-chrome&logoColor=white)](https://s-elim.github.io/)
+[![Google Scholar](https://img.shields.io/badge/Google_Scholar-4285F4?style=for-the-badge&logo=google-scholar&logoColor=white)](https://scholar.google.com/citations?user=dE-Jp50AAAAJ&hl=en)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/selimsarowar)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:selim.sarowar.cve@gmail.com)
 
+Welcome to the official repository for my academic and research portfolio website. This site is built using **Jekyll**, styled with customized **SASS**, and deployed automatically via **GitHub Pages**.
 
+---
 
+## 🎓 Academic Profile & Research Focus
 
+I am an **M.Sc. (Research) Student** in Computer Vision & AI at the **Advanced Visual Intelligence Lab (AVI)**, Yeungnam University, South Korea, funded by the prestigious **Global Korea Scholarship (GKS)**.
 
-A Github Pages template for academic websites. This was forked (then detached) by [Stuart Geiger](https://github.com/staeiou) from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/), which is © 2016 Michael Rose and released under the MIT License. See LICENSE.md.
+*   🏆 **Academic Standing**: Ranked 1st / Top 1 (Perfect CGPA **4.5 / 4.5**)
+*   🤖 **Primary Focus**: Embodied AI & Agentic Robotics (VLA Models, Latent World Models)
+*   👁️ **Core Competencies**: 3D Computer Vision (6D Pose Estimation, 3D Gaussian Splatting)
 
-I think I've got things running smoothly and fixed some major bugs, but feel free to file issues or make pull requests if you want to improve the generic template / theme.
+---
 
-### Note: if you are using this repo and now get a notification about a security vulnerability, delete the Gemfile.lock file. 
+## 📂 Repository Directory Structure
 
-# Instructions
+```bash
+├── _data/                 # Core site database (YML)
+│   ├── publications.yml   # Papers, Patents, Preprints, and Workshops
+│   ├── experience.yml     # Research & Professional work experience
+│   ├── fun_time.yml       # Activities, Bootcamps, and Invited Talks
+│   ├── projects.yml       # Highlighted projects
+│   └── profiles.yml       # Social links, sidebar credentials, and email
+├── _includes/             # Jekyll HTML templates
+│   ├── pub-card.html      # Renders individual publication items
+│   └── footer.html        # Site footer (includes visitor counter widget)
+├── _pages/                # Layout structures for main subpages
+│   ├── about.md           # Biography introduction popup
+│   ├── publications.md    # Publications page with search & filters
+│   └── experience.html    # Work experience & education timelines
+├── _sass/                 # Styling architecture (SCSS)
+│   └── theme/
+│       ├── _cards.scss    # Publication card layouts
+│       └── _footer.scss   # Footer styling & glow animations
+└── scripts/               # Developer automation scripts
+    └── manage.py          # Interactive CLI helper for managing content
+```
 
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Fork [this repository](https://github.com/academicpages/academicpages.github.io) by clicking the "fork" button in the top right. 
-1. Go to the repository's settings (rightmost item in the tabs that start with "Code", should be below "Unwatch"). Rename the repository "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and create content & metadata (see below -- also see [this set of diffs](http://archive.is/3TPas) showing what files were changed to set up [an example site](https://getorg-testacct.github.io) for a user with the username "getorg-testacct")
-1. Upload any files (like PDFs, .zip files, etc.) to the files/ directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.  
-1. Check status by going to the repository settings, in the "GitHub pages" section
-1. (Optional) Use the Jupyter notebooks or python scripts in the `markdown_generator` folder to generate markdown files for publications and talks from a TSV file.
+---
 
-See more info at https://academicpages.github.io/
+## 🛠️ Developer Cookbook (Local Setup & Management)
 
-## To run locally (not on GitHub Pages, to serve on your own computer)
+### 1. Run the Portfolio Locally
+Make sure you have Ruby, Bundler, and NodeJS installed, then run:
+```bash
+# Clean previous builds
+bundle clean
 
-1. Clone the repository and made updates as detailed above
-1. Make sure you have ruby-dev, bundler, and nodejs installed: `sudo apt install ruby-dev ruby-bundler nodejs`
-1. Run `bundle clean` to clean up the directory (no need to run `--force`)
-1. Run `bundle install` to install ruby dependencies. If you get errors, delete Gemfile.lock and try again.
-1. Run `bundle exec jekyll liveserve` to generate the HTML and serve it from `localhost:4000` the local server will automatically rebuild and refresh the pages on change.
+# Install dependencies
+bundle install
 
-# Changelog -- bugfixes and enhancements
+# Start local server with live reloading
+bundle exec jekyll serve
+```
+Your site will be served locally at `http://localhost:4000`.
 
-There is one logistical issue with a ready-to-fork template theme like academic pages that makes it a little tricky to get bug fixes and updates to the core theme. If you fork this repository, customize it, then pull again, you'll probably get merge conflicts. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch. 
+### 2. Add New Content via CLI
+Use the interactive Python CLI helper to add new items to the portfolio easily without manual YAML editing:
+```bash
+# Launch the manager CLI
+python scripts/manage.py
+```
+Options available:
+*   `1`: Add a Publication (Conference, Journal, Patent, Preprint)
+*   `2`: Add a Project
+*   `3`: Add an Activity (Invited Talk, Bootcamp, Reviewing Services)
 
+---
 
+## 🗺️ Repo Visitors
+
+[![Flag Counter](https://s05.flagcounter.com/count2/AbBN/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_100/viewers_0/labels_0/pageviews_1/flags_0/percent_0/)](https://info.flagcounter.com/AbBN)
