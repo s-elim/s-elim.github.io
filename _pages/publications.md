@@ -37,14 +37,11 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
     <button class="filter-chip" data-value="preprint" type="button">Preprint</button>
     <button class="filter-chip" data-value="workshop" type="button">Workshop</button>
     <button class="filter-chip" data-value="patent" type="button">Patent</button>
+    <button class="filter-chip" data-value="lead" type="button">Lead Author</button>
   </div>
   <div class="filter-chips" data-group="year" role="group" aria-label="Filter by year" style="margin-top:.5rem">
     <button class="filter-chip is-active" data-value="all" type="button">All Years</button>
     {% for y in years %}<button class="filter-chip" data-value="{{ y }}" type="button">{{ y }}</button>{% endfor %}
-  </div>
-  <div class="filter-chips" data-group="author" role="group" aria-label="Filter by authorship" style="margin-top:.5rem">
-    <button class="filter-chip is-active" data-value="all" type="button">All Authorship</button>
-    <button class="filter-chip" data-value="lead" type="button">Lead Author</button>
   </div>
 </div>
 

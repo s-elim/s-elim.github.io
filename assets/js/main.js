@@ -203,10 +203,21 @@
         for (var key in groups) {
           var selectedVals = groups[key];
           if (selectedVals.length > 0) {
-            var cardVal = card.getAttribute("data-" + key);
-            if (selectedVals.indexOf(cardVal) === -1) {
-              ok = false;
-              break;
+            if (key === "type") {
+              var cardType = card.getAttribute("data-type");
+              var cardAuthor = card.getAttribute("data-author");
+              var typeMatch = selectedVals.indexOf(cardType) !== -1;
+              var leadMatch = selectedVals.indexOf("lead") !== -1 && cardAuthor === "lead";
+              if (!typeMatch && !leadMatch) {
+                ok = false;
+                break;
+              }
+            } else {
+              var cardVal = card.getAttribute("data-" + key);
+              if (selectedVals.indexOf(cardVal) === -1) {
+                ok = false;
+                break;
+              }
             }
           }
         }
