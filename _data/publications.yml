@@ -181,7 +181,7 @@
   venue_short: 'KR Patent'
   year: 2026
   type: 'patent'
-  status: 'Granted, Jan. 2026'
+  status: 'Granted'
   thumb: 'KR Patent'
 
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
@@ -229,7 +229,7 @@
   venue_short: 'UK Patent'
   year: 2025
   type: 'patent'
-  status: 'Granted, Nov. 2025'
+  status: 'Granted'
   thumb: 'UK Patent'
 
 - title: 'IoT-Based System and Design Approach for Health Monitoring of Wearable Devices'
@@ -238,7 +238,7 @@
   venue_short: 'India Patent'
   year: 2023
   type: 'patent'
-  status: 'Granted, Feb. 2023'
+  status: 'Granted'
   image: '/images/IOT_Healthcare_Patent_Figure.png'
   thumb: 'India Patent'
 
@@ -262,6 +262,6 @@
   venue_short: 'India Patent'
   year: 2022
   type: 'patent'
-  status: 'Granted, Sept. 2022'
+  status: 'Granted'
   image: '/images/Emergency_Patent_Figure.png'
   thumb: 'India Patent'
