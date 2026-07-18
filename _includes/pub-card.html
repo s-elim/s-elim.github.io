@@ -41,9 +41,13 @@
         {% endcase %}
         <a class="pub-badge pub-badge--{{ l.kind }}" href="{{ l.url }}" target="_blank" rel="noopener"><i class="{{ ic }}" aria-hidden="true"></i> {{ l.label }}</a>
       {% endfor %}
-      {% unless pub.status == "To be submitted" %}<button class="pub-badge pub-badge--bibtex js-toggle" data-target="#bib-{{ pid }}" type="button" aria-label="Show BibTeX"><i class="fas fa-quote-right" aria-hidden="true"></i> BibTeX</button>{% endunless %}
+      {% if pub.type == "patent" %}
+        <span class="pub-badge pub-badge--patent-label"><i class="fas fa-certificate" aria-hidden="true"></i> Patent</span>
+      {% elsif pub.status != "To be submitted" %}
+        <button class="pub-badge pub-badge--bibtex js-toggle" data-target="#bib-{{ pid }}" type="button" aria-label="Show BibTeX"><i class="fas fa-quote-right" aria-hidden="true"></i> BibTeX</button>
+      {% endif %}
     </div>
-    {% unless pub.status == "To be submitted" %}
+    {% if pub.type != "patent" and pub.status != "To be submitted" %}
     <div class="bibtex-block" id="bib-{{ pid }}">
       <button class="pub-badge pub-badge--bibtex js-copy" data-copy="#bibpre-{{ pid }}" type="button" style="margin-bottom:.5rem"><i class="fas fa-copy" aria-hidden="true"></i> <span class="js-copy-label">Copy</span></button>
 <pre id="bibpre-{{ pid }}">{% if pub.bibtex %}{{ pub.bibtex | strip }}{% else %}{{ bibtype }}{% raw %}{{% endraw %}{{ pid | replace: "-", "" | truncate: 24, "" }}{{ pub.year }},
@@ -54,7 +58,7 @@
   % TODO: verify entry type, add volume/pages/doi
 }{% endif %}</pre>
     </div>
-    {% endunless %}
+    {% endif %}
   </div>
   {% if pub.image %}
   <button class="pub-card__media js-lightbox" type="button" data-full="{{ pub.image | relative_url }}" data-caption="{{ pub.title | escape }}" aria-label="Zoom figure from “{{ pub.title | escape }}”">
