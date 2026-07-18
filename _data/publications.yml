@@ -40,7 +40,7 @@
   status: 'To be submitted'
   thumb: "ICRA '27"
 
-- title: 'PRAXIS: Capability-Factored Evaluation of Vision-Language-Action Policies and World Models with Counterfactually Paired Episodes'
+- title: 'PRAXIS: Capability-Factored Evaluation of VLA & World Model Policies for Modern Robot Learning'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'Neural Information Processing Systems'
   venue_short: "NeurIPS'27"
