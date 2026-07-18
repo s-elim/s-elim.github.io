@@ -156,13 +156,40 @@
     var search = document.getElementById("pub-search");
     var empty = document.getElementById("pub-empty");
     var groups = {};
+
     document.querySelectorAll(".filter-chips[data-group]").forEach(function (g) {
-      groups[g.getAttribute("data-group")] = "all";
+      var groupName = g.getAttribute("data-group");
+      groups[groupName] = []; // Empty array means "All" (no restriction)
+      
+      var allChip = g.querySelector('.filter-chip[data-value="all"]');
+      var otherChips = g.querySelectorAll('.filter-chip:not([data-value="all"])');
+
       g.querySelectorAll(".filter-chip").forEach(function (chip) {
         chip.addEventListener("click", function () {
-          g.querySelectorAll(".filter-chip").forEach(function (c) { c.classList.remove("is-active"); });
-          chip.classList.add("is-active");
-          groups[g.getAttribute("data-group")] = chip.getAttribute("data-value");
+          var val = chip.getAttribute("data-value");
+          
+          if (val === "all") {
+            otherChips.forEach(function (c) { c.classList.remove("is-active"); });
+            allChip.classList.add("is-active");
+            groups[groupName] = [];
+          } else {
+            chip.classList.toggle("is-active");
+            
+            var selected = [];
+            otherChips.forEach(function (c) {
+              if (c.classList.contains("is-active")) {
+                selected.push(c.getAttribute("data-value"));
+              }
+            });
+            
+            if (selected.length === 0) {
+              allChip.classList.add("is-active");
+              groups[groupName] = [];
+            } else {
+              allChip.classList.remove("is-active");
+              groups[groupName] = selected;
+            }
+          }
           apply();
         });
       });
@@ -174,7 +201,14 @@
       cards.forEach(function (card) {
         var ok = true;
         for (var key in groups) {
-          if (groups[key] !== "all" && card.getAttribute("data-" + key) !== groups[key]) { ok = false; break; }
+          var selectedVals = groups[key];
+          if (selectedVals.length > 0) {
+            var cardVal = card.getAttribute("data-" + key);
+            if (selectedVals.indexOf(cardVal) === -1) {
+              ok = false;
+              break;
+            }
+          }
         }
         if (ok && term) {
           ok = (card.getAttribute("data-search") || "").indexOf(term) !== -1;
@@ -206,10 +240,14 @@
     var sections = Array.prototype.slice.call(list.querySelectorAll(".activity-year"));
     var empty = document.getElementById("activity-empty");
 
-    function apply(value) {
+    var allChip = chipsWrap.querySelector('.filter-chip[data-value="all"]');
+    var otherChips = chipsWrap.querySelectorAll('.filter-chip:not([data-value="all"])');
+    var selectedVals = [];
+
+    function apply() {
       var anyVisible = false;
       cards.forEach(function (card) {
-        var ok = value === "all" || card.getAttribute("data-cat") === value;
+        var ok = selectedVals.length === 0 || selectedVals.indexOf(card.getAttribute("data-cat")) !== -1;
         card.hidden = !ok;
         if (ok) anyVisible = true;
       });
@@ -221,9 +259,28 @@
 
     chipsWrap.querySelectorAll(".filter-chip").forEach(function (chip) {
       chip.addEventListener("click", function () {
-        chipsWrap.querySelectorAll(".filter-chip").forEach(function (c) { c.classList.remove("is-active"); });
-        chip.classList.add("is-active");
-        apply(chip.getAttribute("data-value"));
+        var val = chip.getAttribute("data-value");
+        if (val === "all") {
+          otherChips.forEach(function (c) { c.classList.remove("is-active"); });
+          allChip.classList.add("is-active");
+          selectedVals = [];
+        } else {
+          chip.classList.toggle("is-active");
+          var selected = [];
+          otherChips.forEach(function (c) {
+            if (c.classList.contains("is-active")) {
+              selected.push(c.getAttribute("data-value"));
+            }
+          });
+          if (selected.length === 0) {
+            allChip.classList.add("is-active");
+            selectedVals = [];
+          } else {
+            allChip.classList.remove("is-active");
+            selectedVals = selected;
+          }
+        }
+        apply();
       });
     });
   }
