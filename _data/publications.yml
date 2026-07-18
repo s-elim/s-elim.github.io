@@ -40,7 +40,7 @@
   status: 'To be submitted'
   thumb: "ICRA '27"
 
-- title: 'PRAXIS: A Capability-Factored Benchmark for Physical AI'
+- title: 'A Capability-Factored and Physically Grounded Benchmark for Modern Robot Learning'
   authors: 'Md Selim Sarowar'
   venue: 'Neural Information Processing Systems'
   venue_short: "NeurIPS'27"
