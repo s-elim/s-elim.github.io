@@ -7,7 +7,13 @@
 {% elsif pub.type == "preprint" %}{% assign bibtype = "@misc" %}{% assign container = "howpublished" %}{% assign typelabel = "Preprint" %}
 {% elsif pub.type == "workshop" %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% assign typelabel = "Workshop" %}
 {% else %}{% assign bibtype = "@inproceedings" %}{% assign container = "booktitle" %}{% assign typelabel = "Conference" %}{% endif %}
-<article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-search="{{ search | escape }}">
+{% assign is_lead = false %}
+{% assign prefix1 = pub.authors | slice: 0, 16 %}
+{% assign prefix2 = pub.authors | slice: 0, 17 %}
+{% if prefix1 == "Md Selim Sarowar" or prefix2 == "*Md Selim Sarowar" or pub.authors contains "Md Selim Sarowar†" or pub.lead == true %}
+  {% assign is_lead = true %}
+{% endif %}
+<article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-author="{% if is_lead %}lead{% else %}coauthor{% endif %}" data-search="{{ search | escape }}">
   <div class="pub-card__header">
     <h3 class="pub-card__title">
       {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
