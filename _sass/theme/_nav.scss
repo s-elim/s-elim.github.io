@@ -14,7 +14,6 @@
 .nav-inner {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 1rem;
   min-height: 64px;
 }
@@ -32,7 +31,6 @@
   display: flex;
   align-items: center;
   gap: .35rem;
-  margin-left: auto;
 }
 .nav-link {
   position: relative;
@@ -63,6 +61,7 @@
   display: flex;
   align-items: center;
   gap: .5rem;
+  margin-left: auto;
 }
 @media (max-width: $bp-md) {
   .nav-links { display: none; }
