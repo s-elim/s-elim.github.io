@@ -33,6 +33,10 @@ redirect_from:
       <button type="button" class="js-modal-open" data-modal-target="#updates-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
         <i class="fas fa-bullhorn" aria-hidden="true"></i> Click to see updates <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
       </button>
+      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
+      <button type="button" class="js-modal-open" data-modal-target="#deadlines-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      </button>
     </div>
     <div class="hero__actions">
       <a class="btn btn--strong" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
@@ -86,6 +90,77 @@ redirect_from:
           </ul>
         </div>
         <div class="updates-card__hint" aria-hidden="true"><i class="fas fa-chevron-down"></i> Scroll for older updates</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deadlines-modal" role="dialog" aria-modal="true" aria-labelledby="deadlines-modal-title">
+  <div class="modal__dialog" style="max-width: 42rem;">
+    <div class="modal__head">
+      <h3 class="modal__title" id="deadlines-modal-title"><i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines</h3>
+      <button type="button" class="modal__close js-modal-close" aria-label="Close deadlines popup">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="modal__body" style="padding-top: 0.5rem;">
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); color: var(--text-strong);">
+              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Conference</th>
+              <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Rank</th>
+              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Deadline, Venue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">NeurIPS</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">May (Mid), Neural Information Processing Systems</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICLR</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">September (Late), International Conference on Learning Representations</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICML</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">January (Late), International Conference on Machine Learning</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CVPR</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">November (Mid), IEEE/CVF Conference on Computer Vision and Pattern Recognition</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ECCV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March (Early), European Conference on Computer Vision</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICCV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March (Mid), IEEE/CVF International Conference on Computer Vision</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">May (Late), British Machine Vision Conference</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">July (Mid), IEEE/CVF Winter Conference on Applications of Computer Vision</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACCV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">B</span></td>
+              <td style="padding: 0.75rem 0.5rem;">July (Early), Asian Conference on Computer Vision</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
