@@ -165,14 +165,14 @@
 
 - title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
   authors: 'Md Selim Sarowar and Sungho Kim*'
-  venue: 'PeerJ Computer Science'
-  impact: 'SCIE-Q1, IF: 3'
+  venue: 'ACM Computing Surveys'
+  impact: 'SCIE-Q1, IF: 30.4, Top 1%'
   year: 2026
   type: 'journal'
   image: '/images/10-years-robotics-taxonomy.webp'
   url: 'https://www.preprints.org/manuscript/202606.0400'
   links:
-    - { label: 'PeerJ Computer Science', url: 'https://www.preprints.org/manuscript/202606.0400', kind: 'link' }
+    - { label: 'ACM Computing Surveys', url: 'https://www.preprints.org/manuscript/202606.0400', kind: 'link' }
     - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/271cac1669e8fbdcaba01f102d4045db/download_pub', kind: 'pdf' }
 
 - title: 'Compact 3D-Gaussian-Based 6D Object Pose Estimation Method for Physical AI'
