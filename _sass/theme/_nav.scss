@@ -20,19 +20,32 @@
 .nav-brand {
   display: flex;
   align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
 }
-.nav-logo {
-  height: 28px;
-  width: auto;
-  mix-blend-mode: multiply;
-  transition: transform .2s var(--ease);
-  &:hover {
-    transform: scale(1.03);
+.nav-avatar {
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--accent);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s var(--ease), border-color 0.2s var(--ease);
+  .nav-brand:hover & {
+    transform: scale(1.08) rotate(5deg);
+    border-color: var(--accent-hover);
   }
 }
-:root[data-theme="dark"] .nav-logo {
-  filter: invert(1);
-  mix-blend-mode: screen;
+.nav-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -.02em;
+  color: var(--text-strong);
+  transition: color 0.2s var(--ease);
+  .nav-brand:hover & {
+    color: var(--accent);
+  }
 }
 
 .nav-links {
