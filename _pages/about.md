@@ -252,6 +252,43 @@ redirect_from:
   </article>
 </div>
 
+<h2 class="section-title reveal"><i class="fas fa-award" aria-hidden="true"></i> Awards &amp; Honors</h2>
+<div class="awards-carousel-container reveal">
+  <button class="carousel-btn prev" aria-label="Previous Award" onclick="document.getElementById('awards-carousel').scrollBy({left: -370, behavior: 'smooth'})">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+  
+  <div class="awards-carousel" id="awards-carousel">
+    {% for a in site.data.awards %}
+    <div class="award-card carousel-card">
+      <div class="xp-head">
+        <h3 class="award-card__title">
+          <i class="fas fa-medal award-card__medal" aria-hidden="true"></i> 
+          <span>{{ a.title }}</span>
+        </h3>
+        {% if a.date %}<span class="xp-pills"><span class="xp-pill">{{ a.date }}</span></span>{% endif %}
+      </div>
+      {% if a.org %}
+      <ul class="entry-meta">
+        <li><i class="fas fa-building" aria-hidden="true"></i> {{ a.org }}</li>
+      </ul>
+      {% endif %}
+      {% if a.points %}
+      <ul class="entry-points">
+        {% for pt in a.points %}
+        <li>{{ pt }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <button class="carousel-btn next" aria-label="Next Award" onclick="document.getElementById('awards-carousel').scrollBy({left: 370, behavior: 'smooth'})">
+    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+  </button>
+</div>
+
 <h2 class="section-title reveal"><i class="fas fa-star" aria-hidden="true"></i> Featured Publications</h2>
 <div id="featured-pubs" class="pub-grid">
 {% assign featured = site.data.publications | where: "featured", true %}

@@ -284,3 +284,77 @@
 }
 .cv-panel h2 { margin-top: 0; }
 .cv-panel p { color: var(--muted); margin-bottom: 1.25rem; }
+
+// ---- Awards Carousel for Homepage ----
+.awards-carousel-container {
+  position: relative;
+  margin-bottom: 2.2rem;
+}
+.awards-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 0.25rem 1.5rem;
+  scrollbar-width: none; // Firefox
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Edge
+  }
+}
+.awards-carousel .carousel-card {
+  flex: 0 0 350px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: auto;
+}
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease);
+  outline: none;
+  &:hover {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-color: var(--accent);
+    transform: translateY(-50%) scale(1.1);
+  }
+  &.prev {
+    left: -21px;
+  }
+  &.next {
+    right: -21px;
+  }
+}
+@media (max-width: 768px) {
+  .carousel-btn {
+    display: none !important;
+  }
+  .awards-carousel-container {
+    padding: 0 1rem;
+  }
+  .awards-carousel {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .awards-carousel .carousel-card {
+    flex: 0 0 300px;
+  }
+}
