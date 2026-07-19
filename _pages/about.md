@@ -114,95 +114,102 @@ redirect_from:
             </tr>
           </thead>
           <tbody>
+            <!-- A* Conferences -->
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">NeurIPS</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May (Mid), Vancouver, Canada</td>
+              <td style="padding: 0.75rem 0.5rem;">May 6, 2026, Vancouver, Canada</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICLR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September (Late), New Orleans, USA</td>
+              <td style="padding: 0.75rem 0.5rem;">September 30, 2026, New Orleans, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICML</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January (Late), Honolulu, USA</td>
+              <td style="padding: 0.75rem 0.5rem;">January 27, 2027, Honolulu, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CVPR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">November (Mid), Nashville, USA</td>
+              <td style="padding: 0.75rem 0.5rem;">November 11, 2026, Nashville, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ECCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Early), Munich, Germany</td>
+              <td style="padding: 0.75rem 0.5rem;">March 5, 2026, Munich, Germany</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Mid), Sydney, Australia</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May (Late), London, UK</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July (Mid), Waikoloa, Hawaii, USA</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACCV</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">B</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July (Early), Taipei, Taiwan</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICRA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September (Mid), Seoul, South Korea</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Early), Pittsburgh, USA</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CoRL</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May (Late), Austin, USA</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">RSS</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January (Late), Sydney, Australia</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Interspeech</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">February (Late), São Paulo, Brazil</td>
+              <td style="padding: 0.75rem 0.5rem;">March 11, 2027, Sydney, Australia</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CHI</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September (Mid), Pittsburgh, USA</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">MICCAI</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Early), Strasbourg, France</td>
+              <td style="padding: 0.75rem 0.5rem;">September 10, 2026, Pittsburgh, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">AAAI</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July (Late), Montréal, Canada</td>
+              <td style="padding: 0.75rem 0.5rem;">July 29, 2026, Montréal, Canada</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WWW</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">October (Mid), Dublin, Ireland</td>
+              <td style="padding: 0.75rem 0.5rem;">October 13, 2026, Dublin, Ireland</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICRA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">September 15, 2026, Seoul, South Korea</td>
+            </tr>
+
+            <!-- A Conferences -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">May 30, 2026, London, UK</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">June 27, 2026, Waikoloa, Hawaii, USA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Pittsburgh, USA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Interspeech</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Sydney, Australia</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">MICCAI</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March 10, 2026, Strasbourg, France</td>
+            </tr>
+
+            <!-- B Conferences -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACCV</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">B</span></td>
+              <td style="padding: 0.75rem 0.5rem;">July 3, 2026, Taipei, Taiwan</td>
+            </tr>
+
+            <!-- No Rank Conferences -->
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CoRL</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
+              <td style="padding: 0.75rem 0.5rem;">May 28, 2026, Austin, USA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">RSS</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March 6, 2026, Sydney, Australia</td>
             </tr>
           </tbody>
         </table>
