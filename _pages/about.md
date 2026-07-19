@@ -110,54 +110,74 @@ redirect_from:
             <tr style="border-bottom: 2px solid var(--border); color: var(--text-strong);">
               <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Conference</th>
               <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Rank</th>
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Deadline, Venue</th>
+              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Deadline, Location</th>
             </tr>
           </thead>
           <tbody>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">NeurIPS</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May (Mid), Neural Information Processing Systems</td>
+              <td style="padding: 0.75rem 0.5rem;">May (Mid), Vancouver, Canada</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICLR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September (Late), International Conference on Learning Representations</td>
+              <td style="padding: 0.75rem 0.5rem;">September (Late), New Orleans, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICML</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January (Late), International Conference on Machine Learning</td>
+              <td style="padding: 0.75rem 0.5rem;">January (Late), Honolulu, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CVPR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">November (Mid), IEEE/CVF Conference on Computer Vision and Pattern Recognition</td>
+              <td style="padding: 0.75rem 0.5rem;">November (Mid), Nashville, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ECCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Early), European Conference on Computer Vision</td>
+              <td style="padding: 0.75rem 0.5rem;">March (Early), Munich, Germany</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March (Mid), IEEE/CVF International Conference on Computer Vision</td>
+              <td style="padding: 0.75rem 0.5rem;">March (Mid), Sydney, Australia</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May (Late), British Machine Vision Conference</td>
+              <td style="padding: 0.75rem 0.5rem;">May (Late), London, UK</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July (Mid), IEEE/CVF Winter Conference on Applications of Computer Vision</td>
+              <td style="padding: 0.75rem 0.5rem;">July (Mid), Waikoloa, Hawaii, USA</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">B</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July (Early), Asian Conference on Computer Vision</td>
+              <td style="padding: 0.75rem 0.5rem;">July (Early), Taipei, Taiwan</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICRA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">September (Mid), Seoul, South Korea</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem;">March (Early), Pittsburgh, USA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CoRL</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">May (Late), Austin, USA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">RSS</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">January (Late), Sydney, Australia</td>
             </tr>
           </tbody>
         </table>
