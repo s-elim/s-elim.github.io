@@ -1,7 +1,5 @@
 <header class="site-nav">
   <div class="container nav-inner">
-    <a class="nav-brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
-
     <nav class="nav-links" aria-label="Primary navigation">
       {% for link in site.data.navigation.main %}
         {% assign target = link.url | relative_url %}
