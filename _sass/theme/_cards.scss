@@ -191,14 +191,13 @@ button.pub-card__media:hover {
   font-weight: 700;
   letter-spacing: .02em;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border-strong);
-  color: var(--muted);
-  background: #ffffff !important;
+  border: 1px solid var(--accent) !important;
+  color: var(--accent) !important;
+  background: var(--surface-2) !important;
 }
 .pub-tag--year       { color: var(--accent-contrast); border-color: var(--accent); background: var(--accent); }
 .pub-tag--prep       { font-style: italic; }
 // Type / impact / venue pills - bold, glowing, interactive like the rank box.
-// --tag-c sets each pill's color; defaults to gray.
 .pub-tag--conference,
 .pub-tag--preprint,
 .pub-tag--workshop,
@@ -207,11 +206,11 @@ button.pub-card__media:hover {
 .pub-tag--custom,
 .pub-tag--impact,
 .pub-tag--venue {
-  --tag-c: var(--muted);
+  --tag-c: var(--accent);
   font-weight: 700;
-  color: var(--tag-c);
-  border-color: var(--tag-c);
-  background: #ffffff !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  background: var(--surface-2) !important;
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
@@ -233,10 +232,10 @@ button.pub-card__media:hover {
 }
 .pub-tag--venue,
 .pub-tag--custom,
-.pub-tag--impact { --tag-c: var(--text-strong); }
+.pub-tag--impact { --tag-c: var(--accent); }
 @keyframes tag-glow {
-  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--muted)) 25%, transparent); }
-  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--tag-c, var(--muted)) 55%, transparent); }
+  0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--accent)) 25%, transparent); }
+  50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--tag-c, var(--accent)) 55%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .pub-tag { animation: none; }
@@ -341,12 +340,12 @@ button.pub-card__media:hover {
   font-style: normal;
   letter-spacing: .02em;
   border-radius: 6px;
-  --tag-c: var(--text-strong);
-  border: 1px solid var(--tag-c);
+  --tag-c: var(--accent);
+  border: 1px solid var(--tag-c) !important;
   display: inline-block;
   vertical-align: middle;
-  color: var(--tag-c);
-  background: #ffffff !important;
+  color: var(--tag-c) !important;
+  background: var(--surface-2) !important;
   cursor: default;
   animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
