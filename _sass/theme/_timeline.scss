@@ -284,13 +284,14 @@
 }
 .cv-panel h2 { margin-top: 0; }
 .cv-panel p { color: var(--muted); margin-bottom: 1.25rem; }
-
-// ---- Awards Carousel for Homepage ----
-.awards-carousel-container {
+// ---- Carousels (Awards & Activities) for Homepage ----
+.awards-carousel-container,
+.activities-carousel-container {
   position: relative;
   margin-bottom: 2.2rem;
 }
-.awards-carousel {
+.awards-carousel,
+.activities-carousel {
   display: flex;
   gap: 1.25rem;
   overflow-x: auto;
@@ -302,7 +303,8 @@
     display: none; // Chrome, Safari, Edge
   }
 }
-.awards-carousel .carousel-card {
+.awards-carousel .carousel-card,
+.activities-carousel .carousel-card {
   flex: 0 0 350px;
   scroll-snap-align: start;
   display: flex;
@@ -345,16 +347,19 @@
   .carousel-btn {
     display: none !important;
   }
-  .awards-carousel-container {
+  .awards-carousel-container,
+  .activities-carousel-container {
     padding: 0 1rem;
   }
-  .awards-carousel {
+  .awards-carousel,
+  .activities-carousel {
     margin-left: -1rem;
     margin-right: -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  .awards-carousel .carousel-card {
+  .awards-carousel .carousel-card,
+  .activities-carousel .carousel-card {
     flex: 0 0 300px;
   }
 }

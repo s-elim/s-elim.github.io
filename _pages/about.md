@@ -289,6 +289,45 @@ redirect_from:
   </button>
 </div>
 
+<h2 class="section-title reveal"><i class="fas fa-tasks" aria-hidden="true"></i> Professional Activities</h2>
+<div class="activities-carousel-container reveal">
+  <button class="carousel-btn prev" aria-label="Previous Activity" onclick="document.getElementById('activities-carousel').scrollBy({left: -370, behavior: 'smooth'})">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+  
+  <div class="activities-carousel" id="activities-carousel">
+    {% for group in site.data.fun_time %}
+      {% for ev in group.events %}
+      {% case ev.cat %}
+        {% when 'bootcamp' %}{% assign ic = 'fa-laptop-code' %}
+        {% when 'summer-school' %}{% assign ic = 'fa-sun' %}
+        {% when 'oral' %}{% assign ic = 'fa-microphone-alt' %}
+        {% when 'delegate' %}{% assign ic = 'fa-users' %}
+        {% when 'virtual' %}{% assign ic = 'fa-video' %}
+        {% when 'reviewer' %}{% assign ic = 'fa-clipboard-check' %}
+        {% else %}{% assign ic = 'fa-globe' %}
+      {% endcase %}
+      <div class="activity-card carousel-card" data-cat="{{ ev.cat }}">
+        <h3 class="activity-card__title">
+          <i class="fas {{ ic }} activity-card__icon activity-card__icon--{{ ev.cat }}" aria-hidden="true"></i>
+          <span>{% if ev.url %}<a href="{{ ev.url }}" target="_blank" rel="noopener">{{ ev.title }}</a>{% else %}{{ ev.title }}{% endif %}</span>
+        </h3>
+        <ul class="entry-meta">
+          <li><i class="fas fa-tag" aria-hidden="true"></i> {{ ev.type }} · {{ group.year }}</li>
+          {% if ev.detail %}<li><i class="fas fa-clock" aria-hidden="true"></i> {{ ev.detail }}</li>{% endif %}
+          {% if ev.org %}<li><i class="fas fa-building" aria-hidden="true"></i> {{ ev.org }}</li>{% endif %}
+          {% if ev.where %}<li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ ev.where }}</li>{% endif %}
+        </ul>
+      </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  <button class="carousel-btn next" aria-label="Next Activity" onclick="document.getElementById('activities-carousel').scrollBy({left: 370, behavior: 'smooth'})">
+    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+  </button>
+</div>
+
 <h2 class="section-title reveal"><i class="fas fa-star" aria-hidden="true"></i> Featured Publications</h2>
 <div id="featured-pubs" class="pub-grid">
 {% assign featured = site.data.publications | where: "featured", true %}
