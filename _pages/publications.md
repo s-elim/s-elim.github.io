@@ -8,9 +8,11 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 {% assign pubs = site.data.publications %}
 {% assign prep = pubs | where: "status", "To be submitted" %}
+{% assign patents = pubs | where: "type", "patent" %}
 {% assign total = pubs | size %}
 {% assign prepcount = prep | size %}
-{% assign published = total | minus: prepcount %}
+{% assign patentcount = patents | size %}
+{% assign published = total | minus: prepcount | minus: patentcount %}
 {% assign scie = 0 %}{% for pub in pubs %}{% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
 {% assign ranked = 0 %}{% for pub in pubs %}{% if pub.rank %}{% assign ranked = ranked | plus: 1 %}{% endif %}{% endfor %}
 {% assign years = pubs | map: "year" | uniq %}
