@@ -18,14 +18,22 @@
   min-height: 64px;
 }
 .nav-brand {
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 1.15rem;
-  letter-spacing: -.02em;
-  color: var(--text-strong);
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
-.nav-brand:hover { color: var(--accent); }
+.nav-logo {
+  height: 28px;
+  width: auto;
+  mix-blend-mode: multiply;
+  transition: transform .2s var(--ease);
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+:root[data-theme="dark"] .nav-logo {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
 
 .nav-links {
   display: flex;
