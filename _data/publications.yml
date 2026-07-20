@@ -31,6 +31,9 @@
   rank: 'A'
   status: 'To be submitted'
   thumb: "IROS '27"
+  url: 'https://github.com/s-elim/AFFORD-X'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
 
 - title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
