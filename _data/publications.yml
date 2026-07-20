@@ -17,6 +17,9 @@
   impact: 'SCIE-Q1, Top 10% · IF: 8.9'
   status: 'To be submitted'
   thumb: "MSP Framework"
+  url: 'https://github.com/s-elim/msp-framework'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
@@ -49,6 +52,7 @@
   rank: 'A*'
   status: 'To be submitted'
   thumb: "PRAXIS"
+  url: 'https://github.com/s-elim/Physical-AI'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/Physical-AI', kind: 'code' }
 
