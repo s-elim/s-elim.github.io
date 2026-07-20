@@ -45,6 +45,27 @@ $bp-xl: 1280px;
   --rank:      #7c3aed; // CORE rank badge
   --img-dim: none;      // media dimming (dark mode only)
 
+  // Publication Card tag variables (Light Theme)
+  --tag-venue-bg:      #f0f5ff;
+  --tag-venue-border:  #d9e2fc;
+  --tag-venue-text:    #3b5bdb;
+  --tag-venue-hover-bg: #e8f0fe;
+  
+  --tag-impact-bg:     #e6fcf5;
+  --tag-impact-border: #c3fae8;
+  --tag-impact-text:   #0ca678;
+  --tag-impact-hover-bg: #d3f9ed;
+  
+  --tag-rank-bg:       #f3f0ff;
+  --tag-rank-border:   #e5dbff;
+  --tag-rank-text:     #7048e8;
+  --tag-rank-hover-bg: #ebe4ff;
+
+  --tag-custom-bg:     #f1f3f5;
+  --tag-custom-border: #e9ecef;
+  --tag-custom-text:   #495057;
+  --tag-custom-hover-bg: #e9ecef;
+
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
   --shadow-md: 0 6px 20px rgba(15, 23, 42, .08);
   --shadow-lg: 0 16px 40px rgba(15, 23, 42, .14);
@@ -97,6 +118,27 @@ $bp-xl: 1280px;
   --red:       #f87171; // flagship
   --rank:      #a78bfa; // CORE rank badge
   --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
+
+  // Publication Card tag variables (Dark Theme)
+  --tag-venue-bg:      rgba(92, 124, 250, 0.1);
+  --tag-venue-border:  rgba(92, 124, 250, 0.3);
+  --tag-venue-text:    #9cb0f9;
+  --tag-venue-hover-bg: rgba(92, 124, 250, 0.2);
+  
+  --tag-impact-bg:     rgba(12, 166, 120, 0.1);
+  --tag-impact-border: rgba(12, 166, 120, 0.3);
+  --tag-impact-text:   #63e6be;
+  --tag-impact-hover-bg: rgba(12, 166, 120, 0.2);
+  
+  --tag-rank-bg:       rgba(112, 72, 232, 0.1);
+  --tag-rank-border:   rgba(112, 72, 232, 0.3);
+  --tag-rank-text:     #b39ef7;
+  --tag-rank-hover-bg: rgba(112, 72, 232, 0.2);
+
+  --tag-custom-bg:     rgba(206, 212, 218, 0.1);
+  --tag-custom-border: rgba(206, 212, 218, 0.25);
+  --tag-custom-text:   #ced4da;
+  --tag-custom-hover-bg: rgba(206, 212, 218, 0.2);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, .45);
