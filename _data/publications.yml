@@ -167,6 +167,7 @@
   impact: 'SCIE-Q1, IF: 3.9'
   year: 2026
   type: 'journal'
+  image: '/images/Parkinsos_gait_framework.jpg'
   thumb: 'Sci. Reports'
   url: 'https://arxiv.org/abs/2512.04425'
   links:
@@ -240,6 +241,7 @@
   year: 2025
   type: 'patent'
   status: 'Granted'
+  image: '/images/Computer Device for Coding and Algorithm Simulation(UK_Patent).jpg'
   thumb: 'UK Patent'
 
 - title: 'IoT-Based System and Design Approach for Health Monitoring of Wearable Devices'
