@@ -45,6 +45,9 @@
   rank: 'A*'
   status: 'To be submitted'
   thumb: "ICRA '27"
+  url: 'https://github.com/s-elim/AGI'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
 - title: 'Quantifying the Robustness Gap: A Capability-Factored Dataset and Benchmark for Robot Learning'
   authors: 'Md Selim Sarowar'
