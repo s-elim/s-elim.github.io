@@ -45,6 +45,12 @@ $bp-xl: 1280px;
   --rank:      #7c3aed; // CORE rank badge
   --img-dim: none;      // media dimming (dark mode only)
 
+  // Red hover/default theme variables for Rank/Impact/Custom boxes (Light Theme)
+  --tag-red-hover-text:   #991b1b;
+  --tag-red-hover-border: #f87171;
+  --tag-red-hover-bg:     linear-gradient(135deg, #ffffff 15%, #fecaca 75%, #f87171 100%);
+  --tag-red-hover-shadow: rgba(239, 68, 68, 0.3);
+
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
   --shadow-md: 0 6px 20px rgba(15, 23, 42, .08);
   --shadow-lg: 0 16px 40px rgba(15, 23, 42, .14);
@@ -97,6 +103,12 @@ $bp-xl: 1280px;
   --red:       #f87171; // flagship
   --rank:      #a78bfa; // CORE rank badge
   --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
+
+  // Red hover/default theme variables for Rank/Impact/Custom boxes (Dark Theme)
+  --tag-red-hover-text:   #ffffff;
+  --tag-red-hover-border: #ef4444;
+  --tag-red-hover-bg:     linear-gradient(135deg, #7f1d1d 15%, #b91c1c 75%, #dc2626 100%);
+  --tag-red-hover-shadow: rgba(239, 68, 68, 0.5);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, .45);
