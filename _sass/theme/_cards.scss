@@ -36,15 +36,27 @@
 
 .tag-list { display: flex; flex-wrap: wrap; gap: .4rem; }
 .tag {
+  --tag-c: var(--accent);
   display: inline-block;
   padding: .22em .6em;
   font-family: var(--font-head);
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--muted);
-  background: var(--accent-soft);
-  border: 1px solid var(--border);
+  font-weight: 700;
+  color: var(--text-strong) !important;
+  border: 1px solid var(--border-strong) !important;
+  background: var(--surface) !important;
   border-radius: 6px;
+  cursor: default;
+  animation: tag-glow 2.4s ease-in-out infinite;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
+}
+.tag:hover {
+  transform: translateY(-2px) scale(1.06);
+  color: #1e3a8a !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
+  animation-play-state: paused;
 }
 
 // ---- Publication card (APRL-style: two-up grid, body left + framed figure right) ----

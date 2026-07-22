@@ -23,6 +23,7 @@ redirect_from:
       <span class="chip">Vision-Language-Action</span>
       <span class="chip">World Models</span>
       <span class="chip">Agentic Robotics</span>
+      <span class="chip">Robot Learning</span>
       <span class="chip">5D AI Robotics</span>
     </div>
     <div style="margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center;">
