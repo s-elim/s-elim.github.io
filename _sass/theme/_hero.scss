@@ -107,16 +107,15 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.15rem; }
 .hero__chips .chip {
-  --tag-c: var(--accent);
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 700;
-  color: var(--text-strong) !important;
-  border: 1px solid var(--border-strong) !important;
-  background: var(--surface) !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
   border-radius: var(--radius-pill);
   cursor: default;
-  animation: tag-glow 2.4s ease-in-out infinite;
+  animation: chip-glow-light 2.2s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .hero__chips .chip:hover {

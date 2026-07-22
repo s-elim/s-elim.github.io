@@ -36,18 +36,17 @@
 
 .tag-list { display: flex; flex-wrap: wrap; gap: .4rem; }
 .tag {
-  --tag-c: var(--accent);
   display: inline-block;
   padding: .22em .6em;
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 700;
-  color: var(--text-strong) !important;
-  border: 1px solid var(--border-strong) !important;
-  background: var(--surface) !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
   border-radius: 6px;
   cursor: default;
-  animation: tag-glow 2.4s ease-in-out infinite;
+  animation: chip-glow-light 2.2s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .tag:hover {
