@@ -1,6 +1,6 @@
 # Home page "Updates" timeline (most recent first). HTML allowed in `text`.
 - date: 'July 2026'
-  text: 'Two papers accepted at <strong>BMVC''26</strong> (CORE Rank A): <a href="https://gaussvla.github.io/GaussVLA/" target="_blank" rel="noopener">GaussVLA</a>, geometry-aware spatial reasoning for VLA models (first author), and <a href="https://github.com/s-elim/RWFL-HNH40K" target="_blank" rel="noopener">Hands or Not?</a>, a robust dataset for dynamic gesture recognition.'
+  text: 'Two papers accepted at <strong>BMVC''26</strong> (CORE Rank A): <a href="https://gaussvla.github.io/GaussVLA/" target="_blank" rel="noopener">GaussVLA</a>, geometry-aware spatial reasoning for VLA models (first author), and <a href="https://github.com/s-elim/RWFL-HNH40K" target="_blank" rel="noopener">HNH40K</a>, a robust dataset and risk-weighted learning for hand filtering.'
 - date: 'June 2026'
   text: '<strong>GST-VLA</strong> (Structured Gaussian Spatial Tokens for 3D depth-aware VLA models) accepted at an <a href="https://openreview.net/forum?id=J57nR3hyAd" target="_blank" rel="noopener">ICML''26 workshop</a>.'
 - date: '2026'
