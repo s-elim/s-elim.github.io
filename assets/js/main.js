@@ -457,18 +457,76 @@
     }
   }
 
-  /* ---- Journal Search Filter ----------------------------------------- */
+  /* ---- Journal Search & Category Filter ------------------------------ */
   function initJournalSearch() {
     var searchInput = document.getElementById("journal-search");
+    var filterContainer = document.querySelector(".journal-filters");
     var table = document.getElementById("journals-table");
-    if (!searchInput || !table) return;
+    if (!table) return;
+
+    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+    var currentFilter = "all";
+
+    function updateVisibility() {
+      var q = searchInput ? (searchInput.value || "").trim().toLowerCase() : "";
+      rows.forEach(function (row) {
+        var cat = row.getAttribute("data-category");
+        var headerCat = row.getAttribute("data-category-header");
+
+        var matchesCat = (currentFilter === "all") || (cat === currentFilter) || (headerCat === currentFilter);
+        var text = row.textContent.toLowerCase();
+        var matchesQuery = !q || (text.indexOf(q) !== -1);
+
+        if (matchesCat && matchesQuery) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    if (filterContainer) {
+      var buttons = filterContainer.querySelectorAll(".journal-filter-btn");
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          buttons.forEach(function (b) { b.classList.remove("active"); });
+          btn.classList.add("active");
+          currentFilter = btn.getAttribute("data-filter");
+          updateVisibility();
+        });
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", updateVisibility);
+    }
+  }
+
+  /* ---- Deadline Category Filter -------------------------------------- */
+  function initDeadlineFilters() {
+    var filterContainer = document.querySelector(".deadline-filters");
+    var table = document.getElementById("deadlines-table");
+    if (!filterContainer || !table) return;
+    var buttons = filterContainer.querySelectorAll(".deadline-filter-btn");
     var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
 
-    searchInput.addEventListener("input", function () {
-      var q = (searchInput.value || "").trim().toLowerCase();
-      rows.forEach(function (row) {
-        var text = row.textContent.toLowerCase();
-        row.style.display = text.indexOf(q) !== -1 ? "" : "none";
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        buttons.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        var filter = btn.getAttribute("data-filter");
+
+        rows.forEach(function (row) {
+          var cat = row.getAttribute("data-category");
+          var headerCat = row.getAttribute("data-category-header");
+          if (filter === "all") {
+            row.style.display = "";
+          } else if (cat === filter || headerCat === filter) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
       });
     });
   }
@@ -489,6 +547,7 @@
     safe(initLightbox);
     safe(initModals);
     safe(initDeadlinesCountdown);
+    safe(initDeadlineFilters);
     safe(initJournalSearch);
   }
   if (document.readyState === "loading") {
