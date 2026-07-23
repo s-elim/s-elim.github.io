@@ -292,6 +292,34 @@
 }
 .teaching-card .entry-meta li { font-size: var(--fs-sm); }
 
+// ---- Reviewing cards ----
+.reviewing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+@media (max-width: 700px) {
+  .reviewing-grid { grid-template-columns: 1fr; }
+}
+.reviewing-card { padding: 1.2rem 1.3rem; }
+.reviewing-card__title {
+  font-size: var(--fs-lg);
+  margin: 0 0 .6rem;
+  display: flex;
+  gap: .55rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  line-height: 1.35;
+}
+.reviewing-card__title > i { color: var(--cat, var(--accent)); flex-shrink: 0; }
+.reviewing-card__role {
+  font-size: var(--fs-xs);
+  align-self: center;
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.reviewing-card .entry-meta li { font-size: var(--fs-sm); }
+
 // ---- CV download panel ----
 .cv-panel {
   background: var(--card-bg);

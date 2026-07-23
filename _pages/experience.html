@@ -99,3 +99,32 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     </div>
   </div>
 </section>
+
+<section class="project-cat-card project-cat-card--reviewing reveal">
+  <header class="project-cat-card__header">
+    <div class="project-cat-card__icon"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
+    <div class="project-cat-card__titles">
+      <h2 class="project-cat-card__title">Reviewing Experience</h2>
+      <p class="project-cat-card__sub">Peer review service for international conferences &amp; journals</p>
+    </div>
+    <span class="project-cat-card__count">{{ site.data.reviewing | size }} venues</span>
+  </header>
+  <div class="project-cat-card__body">
+    <div class="reviewing-grid">
+      {% for r in site.data.reviewing %}
+      <div class="reviewing-card card">
+        <h3 class="reviewing-card__title">
+          <i class="fas {% if r.type == 'Journal' %}fa-book-open{% elsif r.type == 'Workshop' %}fa-tools{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
+          <span>{{ r.venue }}</span>
+          <span class="tag reviewing-card__role">{{ r.role }}</span>
+        </h3>
+        <ul class="entry-meta">
+          {% if r.full_name %}<li><i class="fas fa-certificate" aria-hidden="true"></i> <span>{{ r.full_name }}</span></li>{% endif %}
+          {% if r.org %}<li><i class="fas fa-building" aria-hidden="true"></i> <span>{{ r.org }}</span></li>{% endif %}
+          {% if r.date %}<li><i class="fas fa-calendar" aria-hidden="true"></i> {{ r.date }}</li>{% endif %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
