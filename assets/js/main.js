@@ -457,6 +457,22 @@
     }
   }
 
+  /* ---- Journal Search Filter ----------------------------------------- */
+  function initJournalSearch() {
+    var searchInput = document.getElementById("journal-search");
+    var table = document.getElementById("journals-table");
+    if (!searchInput || !table) return;
+    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
+
+    searchInput.addEventListener("input", function () {
+      var q = (searchInput.value || "").trim().toLowerCase();
+      rows.forEach(function (row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.indexOf(q) !== -1 ? "" : "none";
+      });
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -473,6 +489,7 @@
     safe(initLightbox);
     safe(initModals);
     safe(initDeadlinesCountdown);
+    safe(initJournalSearch);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
