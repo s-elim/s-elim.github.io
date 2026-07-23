@@ -392,6 +392,71 @@
     });
   }
 
+  /* ---- Real-time AI Conference Deadlines Countdown ------------------- */
+  function initDeadlinesCountdown() {
+    var table = document.getElementById("deadlines-table");
+    if (!table) return;
+    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr[data-deadline]"));
+    if (!rows.length) return;
+
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var upcoming = [];
+
+    rows.forEach(function (row) {
+      var dStr = row.getAttribute("data-deadline");
+      if (!dStr) return;
+      var parts = dStr.split("-");
+      if (parts.length !== 3) return;
+
+      var targetDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      var diffMs = targetDate.getTime() - today.getTime();
+      var diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      var cell = row.querySelector(".deadline-countdown");
+      if (!cell) return;
+
+      var badgeClass = "deadline-pill";
+      var text = "";
+      var confName = row.cells[0] ? row.cells[0].textContent.trim() : "Conf";
+
+      if (diffDays < 0) {
+        badgeClass += " deadline-pill--passed";
+        text = "Passed";
+      } else if (diffDays === 0) {
+        badgeClass += " deadline-pill--urgent";
+        text = "🔥 Today!";
+        upcoming.push({ conf: confName, days: diffDays });
+      } else if (diffDays <= 7) {
+        badgeClass += " deadline-pill--urgent";
+        text = "🔥 " + diffDays + "d left";
+        upcoming.push({ conf: confName, days: diffDays });
+      } else if (diffDays <= 30) {
+        badgeClass += " deadline-pill--soon";
+        text = "⚡ " + diffDays + "d left";
+        upcoming.push({ conf: confName, days: diffDays });
+      } else if (diffDays <= 90) {
+        badgeClass += " deadline-pill--upcoming";
+        text = diffDays + "d left";
+        upcoming.push({ conf: confName, days: diffDays });
+      } else {
+        badgeClass += " deadline-pill--future";
+        text = diffDays + "d left";
+        upcoming.push({ conf: confName, days: diffDays });
+      }
+
+      cell.innerHTML = '<span class="' + badgeClass + '">' + text + '</span>';
+    });
+
+    upcoming.sort(function (a, b) { return a.days - b.days; });
+    var nextBadge = document.getElementById("deadlines-next-badge");
+    if (nextBadge && upcoming.length > 0) {
+      var n = upcoming[0];
+      var label = n.days === 0 ? "Today!" : n.days + "d left";
+      nextBadge.innerHTML = '<span class="deadline-pill deadline-pill--urgent" style="font-size: 0.72rem; padding: 1px 7px;">Next: ' + n.conf + ' (' + label + ')</span>';
+    }
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -407,6 +472,7 @@
     safe(initUpdatesScroll);
     safe(initLightbox);
     safe(initModals);
+    safe(initDeadlinesCountdown);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

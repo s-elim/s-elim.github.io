@@ -383,3 +383,75 @@
     flex: 0 0 300px;
   }
 }
+
+// ---- Deadline countdown pills ----
+.deadline-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: 2px 9px;
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+
+  &--urgent {
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    animation: tag-glow 1.8s ease-in-out infinite;
+  }
+  &--soon {
+    color: #c2410c;
+    background: #ffedd5;
+    border: 1px solid #fdba74;
+  }
+  &--upcoming {
+    color: #0369a1;
+    background: #e0f2fe;
+    border: 1px solid #7dd3fc;
+  }
+  &--future {
+    color: #6b21a8;
+    background: #f3f0ff;
+    border: 1px solid #d8b4fe;
+  }
+  &--passed {
+    color: var(--muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-weight: 500;
+    opacity: 0.75;
+  }
+}
+
+:root[data-theme="dark"] {
+  .deadline-pill--urgent {
+    color: #fca5a5;
+    background: rgba(185, 28, 28, 0.25);
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+  .deadline-pill--soon {
+    color: #fdba74;
+    background: rgba(194, 65, 12, 0.25);
+    border-color: rgba(249, 115, 22, 0.5);
+  }
+  .deadline-pill--upcoming {
+    color: #7dd3fc;
+    background: rgba(3, 105, 161, 0.25);
+    border-color: rgba(56, 189, 248, 0.5);
+  }
+  .deadline-pill--future {
+    color: #d8b4fe;
+    background: rgba(107, 33, 168, 0.25);
+    border-color: rgba(192, 132, 252, 0.5);
+  }
+  .deadline-pill--passed {
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}

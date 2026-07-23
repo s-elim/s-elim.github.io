@@ -36,7 +36,7 @@ redirect_from:
       </button>
       <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
       <button type="button" class="js-modal-open" data-modal-target="#deadlines-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines <span id="deadlines-next-badge"></span> <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
       </button>
     </div>
     <div class="hero__actions">
@@ -106,111 +106,130 @@ redirect_from:
     </div>
     <div class="modal__body" style="padding-top: 0.5rem;">
       <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;" id="deadlines-table">
           <thead>
             <tr style="border-bottom: 2px solid var(--border); color: var(--text-strong);">
               <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Conference</th>
               <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Rank</th>
               <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Deadline, Location</th>
+              <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Countdown</th>
             </tr>
           </thead>
           <tbody>
             <!-- A* Conferences -->
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-06">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">NeurIPS</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">May 6, 2026, Vancouver, Canada</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-30">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICLR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">September 30, 2026, New Orleans, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-01-27">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICML</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">January 27, 2027, Honolulu, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-11-11">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CVPR</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">November 11, 2026, Nashville, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-05">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ECCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 5, 2026, Munich, Germany</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-03-11">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 11, 2027, Sydney, Australia</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-10">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CHI</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">September 10, 2026, Pittsburgh, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-07-29">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">AAAI</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">July 29, 2026, Montréal, Canada</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-10-13">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WWW</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">October 13, 2026, Dublin, Ireland</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-15">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICRA</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">September 15, 2026, Seoul, South Korea</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
 
             <!-- A Conferences -->
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-30">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">May 30, 2026, London, UK</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-06-27">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">June 27, 2026, Waikoloa, Hawaii, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-02">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Pittsburgh, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-02">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Interspeech</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Sydney, Australia</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-10">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">MICCAI</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 10, 2026, Strasbourg, France</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
 
             <!-- B Conferences -->
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-07-03">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACCV</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #334155; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">B</span></td>
               <td style="padding: 0.75rem 0.5rem;">July 3, 2026, Taipei, Taiwan</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
 
             <!-- No Rank Conferences -->
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-28">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CoRL</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
               <td style="padding: 0.75rem 0.5rem;">May 28, 2026, Austin, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-06">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">RSS</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 6, 2026, Sydney, Australia</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
           </tbody>
         </table>
