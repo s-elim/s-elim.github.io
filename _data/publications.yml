@@ -195,6 +195,18 @@
   status: 'Granted'
   thumb: 'KR Patent'
 
+- title: 'Dependency-Aware Reliable Orchestration for Smart-IoT Control with Reasoning-Aligned LLMs'
+  authors: 'Md Selim Sarowar, and Md Tanvir Ahmed'
+  venue: 'IEEE International Conference on Electrical, Computer and Energy Technologies (Accepted)'
+  venue_short: "ICECET'26"
+  year: 2026
+  type: 'conference'
+  custom_tag: 'IEEE'
+  thumb: "ICECET '26"
+  url: 'https://github.com/s-elim/Smart-IOT-AI-Agent'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/Smart-IOT-AI-Agent', kind: 'code' }
+
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
