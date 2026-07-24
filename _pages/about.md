@@ -26,6 +26,11 @@ redirect_from:
       <span class="chip">Robot Learning</span>
       <span class="chip">5D AI Robotics</span>
     </div>
+    <div style="margin-bottom: 0.95rem; display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; font-size: 0.8rem; font-weight: 600;">
+      <span style="background: var(--surface-2); border: 1px solid var(--border); padding: 0.2rem 0.65rem; border-radius: var(--radius-pill); color: var(--text-strong);"><i class="fas fa-graduation-cap" aria-hidden="true" style="color: var(--accent);"></i> CGPA: 4.5 / 4.5 (Rank 1st / Top 1)</span>
+      <span style="background: var(--surface-2); border: 1px solid var(--border); padding: 0.2rem 0.65rem; border-radius: var(--radius-pill); color: var(--text-strong);"><i class="fas fa-award" aria-hidden="true" style="color: var(--accent);"></i> GKS Scholar (NIIED)</span>
+      <span style="background: var(--surface-2); border: 1px solid var(--border); padding: 0.2rem 0.65rem; border-radius: var(--radius-pill); color: var(--text-strong);"><i class="fas fa-paper-plane" aria-hidden="true" style="color: var(--accent);"></i> Author @ BMVC'26 &amp; SCIE-Q1 (IEEE Access)</span>
+    </div>
     <div style="margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center;">
       <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
         <i class="fas fa-user-circle" aria-hidden="true"></i> Click to read about me <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
