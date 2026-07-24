@@ -45,6 +45,7 @@ redirect_from:
     </div>
     <div class="hero__actions">
       <a class="btn btn--strong" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
+      <button class="btn btn--ghost js-copy-email" type="button" data-email="{{ p.email }}" title="Copy email address to clipboard"><i class="fas fa-copy" aria-hidden="true"></i> Copy Email</button>
       <a class="btn btn--ghost" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Contact%20via%20portfolio" target="_blank" rel="noopener"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
       <a class="btn btn--ghost" href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a>
       <span class="hero__social">

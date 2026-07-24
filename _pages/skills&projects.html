@@ -19,6 +19,11 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="stat stat--skills"><div class="stat__num">{{ skill_count }}</div><div class="stat__label">Skills</div></div>
 </div>
 
+<div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1rem;" class="reveal">
+  <button id="accordion-expand-all" class="btn btn--ghost" type="button" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;"><i class="fas fa-angles-down" aria-hidden="true"></i> Expand All</button>
+  <button id="accordion-collapse-all" class="btn btn--ghost" type="button" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;"><i class="fas fa-angles-up" aria-hidden="true"></i> Collapse All</button>
+</div>
+
 <div class="project-double-grid">
 {% assign bootcamps = pj.latest | where: "category", "Bootcamp" %}
 {% if bootcamps.size > 0 %}

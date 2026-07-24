@@ -588,6 +588,54 @@
     });
   }
 
+  /* ---- Copy Email ---------------------------------------------------- */
+  function initCopyEmail() {
+    document.querySelectorAll(".js-copy-email").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var email = btn.getAttribute("data-email");
+        if (!email) return;
+        var done = function () {
+          showCopyToast(email + " copied to clipboard!");
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).then(done).catch(function () {});
+        } else {
+          var ta = document.createElement("textarea");
+          ta.value = email; document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); done(); } catch (err) {}
+          document.body.removeChild(ta);
+        }
+      });
+    });
+  }
+
+  /* ---- Accordion Controls (Expand All / Collapse All) ----------------- */
+  function initAccordionControls() {
+    var expandBtn = document.getElementById("accordion-expand-all");
+    var collapseBtn = document.getElementById("accordion-collapse-all");
+    if (!expandBtn && !collapseBtn) return;
+
+    if (expandBtn) {
+      expandBtn.addEventListener("click", function () {
+        document.querySelectorAll(".accordion__item").forEach(function (item) {
+          item.classList.add("is-open");
+          var header = item.querySelector(".accordion__header");
+          if (header) header.setAttribute("aria-expanded", "true");
+        });
+      });
+    }
+    if (collapseBtn) {
+      collapseBtn.addEventListener("click", function () {
+        document.querySelectorAll(".accordion__item").forEach(function (item) {
+          item.classList.remove("is-open");
+          var header = item.querySelector(".accordion__header");
+          if (header) header.setAttribute("aria-expanded", "false");
+        });
+      });
+    }
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -598,6 +646,8 @@
     safe(initAccordions);
     safe(initToggles);
     safe(initCopy);
+    safe(initCopyEmail);
+    safe(initAccordionControls);
     safe(initPubFilter);
     safe(initActivityFilter);
     safe(initUpdatesScroll);
