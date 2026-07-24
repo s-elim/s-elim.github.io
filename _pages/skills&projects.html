@@ -72,6 +72,9 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
     <span class="project-cat-card__count">{{ skill_count }} skills</span>
   </header>
   <div class="project-cat-card__body">
+    <div style="margin-bottom: 0.85rem;">
+      <input type="text" id="skill-search" placeholder="Search skills (e.g. PyTorch, ROS2, SAM, OpenVLA, 6D Pose)..." style="width: 100%; padding: 0.45rem 0.85rem; font-size: 0.84rem; font-family: var(--font-head); border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text-strong); outline: none;">
+    </div>
     <div class="skills-grid">
       {% for grp in pj.skills %}
       <div class="skill-group">

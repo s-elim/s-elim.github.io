@@ -117,6 +117,16 @@
     });
   }
 
+  /* ---- Toast Notification ------------------------------------------- */
+  function showCopyToast(msg) {
+    var toast = document.getElementById("copy-toast");
+    var msgSpan = document.getElementById("copy-toast-msg");
+    if (!toast) return;
+    if (msgSpan) msgSpan.textContent = msg || "Copied to clipboard!";
+    toast.classList.add("show");
+    window.setTimeout(function () { toast.classList.remove("show"); }, 2400);
+  }
+
   /* ---- Copy BibTeX --------------------------------------------------- */
   function initCopy() {
     document.querySelectorAll(".js-copy").forEach(function (btn) {
@@ -130,6 +140,7 @@
           var original = label ? label.textContent : null;
           btn.classList.add("copied");
           if (label) label.textContent = "Copied!";
+          showCopyToast("BibTeX copied to clipboard!");
           window.setTimeout(function () {
             btn.classList.remove("copied");
             if (label && original !== null) label.textContent = original;
@@ -531,6 +542,52 @@
     });
   }
 
+  /* ---- Floating Back to Top Button ----------------------------------- */
+  function initBackToTop() {
+    var btn = document.getElementById("back-to-top");
+    if (!btn) return;
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 350) {
+        btn.classList.add("is-visible");
+      } else {
+        btn.classList.remove("is-visible");
+      }
+    });
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  /* ---- Interactive Skill Search -------------------------------------- */
+  function initSkillSearch() {
+    var input = document.getElementById("skill-search");
+    var chips = document.querySelectorAll(".skill-chip");
+    if (!input || !chips.length) return;
+
+    input.addEventListener("input", function () {
+      var q = (input.value || "").trim().toLowerCase();
+      chips.forEach(function (chip) {
+        var text = chip.textContent.toLowerCase();
+        if (!q) {
+          chip.style.opacity = "";
+          chip.style.borderColor = "";
+          chip.style.background = "";
+          chip.style.color = "";
+        } else if (text.indexOf(q) !== -1) {
+          chip.style.opacity = "1";
+          chip.style.borderColor = "var(--accent)";
+          chip.style.background = "var(--accent)";
+          chip.style.color = "#ffffff";
+        } else {
+          chip.style.opacity = "0.35";
+          chip.style.borderColor = "";
+          chip.style.background = "";
+          chip.style.color = "";
+        }
+      });
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -549,6 +606,8 @@
     safe(initDeadlinesCountdown);
     safe(initDeadlineFilters);
     safe(initJournalSearch);
+    safe(initBackToTop);
+    safe(initSkillSearch);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
