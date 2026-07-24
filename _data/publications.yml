@@ -16,6 +16,7 @@
   type: 'journal'
   impact: 'SCIE-Q1, Top 10% · IF: 8.9'
   status: 'Under Review'
+  image: '/images/msp_framework.png'
   thumb: "MSP Framework"
   url: 'https://github.com/s-elim/msp-framework'
   links:
