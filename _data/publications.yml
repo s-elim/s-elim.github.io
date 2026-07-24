@@ -92,6 +92,30 @@
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=C23KZbQblz', kind: 'link' }
 
+- title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
+  authors: '*Md Selim Sarowar'
+  venue: 'Artificial Intelligence Review'
+  impact: 'SCIE-Q1/Top 3%, IF: 19'
+  year: 2026
+  type: 'preprint'
+  image: '/images/what_matters_figure.webp'
+  thumb: 'Preprint'
+  url: 'https://www.preprints.org/manuscript/202606.1149'
+  bibtex: |
+    @article{202606.1149,
+    	doi = {10.20944/preprints202606.1149.v1},
+    	url = {https://doi.org/10.20944/preprints202606.1149.v1},
+    	year = 2026,
+    	month = {June},
+    	publisher = {Preprints},
+    	author = {Md Selim Sarowar},
+    	title = {What Matters: Datasets or Robust Frameworks in Modern Robot Learning?},
+    	journal = {Preprints}
+    }
+  links:
+    - { label: 'Preprint', url: 'https://www.preprints.org/manuscript/202606.1149', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub', kind: 'pdf' }
+
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'International Conference on Machine Learning Workshop (Accepted)'
@@ -137,30 +161,6 @@
   links:
     - { label: 'IEEE Access', url: 'https://ieeexplore.ieee.org/document/11400555', kind: 'link' }
     - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555', kind: 'pdf' }
-
-- title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
-  authors: '*Md Selim Sarowar'
-  venue: 'Artificial Intelligence Review'
-  impact: 'SCIE-Q1/Top 3%, IF: 19'
-  year: 2026
-  type: 'preprint'
-  image: '/images/what_matters_figure.webp'
-  thumb: 'Preprint'
-  url: 'https://www.preprints.org/manuscript/202606.1149'
-  bibtex: |
-    @article{202606.1149,
-    	doi = {10.20944/preprints202606.1149.v1},
-    	url = {https://doi.org/10.20944/preprints202606.1149.v1},
-    	year = 2026,
-    	month = {June},
-    	publisher = {Preprints},
-    	author = {Md Selim Sarowar},
-    	title = {What Matters: Datasets or Robust Frameworks in Modern Robot Learning?},
-    	journal = {Preprints}
-    }
-  links:
-    - { label: 'Preprint', url: 'https://www.preprints.org/manuscript/202606.1149', kind: 'link' }
-    - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub', kind: 'pdf' }
 
 - title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
   authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim*'
