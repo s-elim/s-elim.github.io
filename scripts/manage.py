@@ -205,7 +205,7 @@ def add_project_interactive():
     else:
         # Bootcamp or Research goes into 'latest' list with a category field
         title = input("Project Title: ").strip()
-        meta = input("Meta / Duration (e.g. '3-Month Intensive Bootcamp · Vizuara AI Lab'): ").strip()
+        meta = input("Meta / Duration (e.g. '3-Month Extensive Bootcamp · Vizuara AI Lab'): ").strip()
         desc = input("Short Description (Korean/English): ").strip()
         
         proj_item = {
