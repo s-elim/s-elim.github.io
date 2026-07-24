@@ -140,11 +140,20 @@
 button.pub-card__media {
   font: inherit;
   cursor: zoom-in;
+  overflow: hidden;
   transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+
+  img {
+    transition: transform .3s var(--ease);
+  }
 }
 button.pub-card__media:hover {
   border-color: var(--accent);
   box-shadow: var(--shadow-sm);
+
+  img {
+    transform: scale(1.03);
+  }
 }
 .pub-card__media--ph {
   background:
