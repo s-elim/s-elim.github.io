@@ -20,22 +20,22 @@ latest:
     desc: 'Implemented and coded from scratch models like ViT, DeiT, Swin, DETR, Mask2Former, SAM, TimeSformer, VideoMAE, CLIP, BLIP, Flamingo, LLaVA, and Stable Diffusion. As well, projects on object detection and segmentation to multimodal chat systems and generative image pipelines.'
   - title: 'Building Personal AI News Aggregator with Agentic AI (Claude Code)'
     category: 'Research'
-    images: ['Screenshot 2026-02-27 083432.jpg', 'chatbot.webp']
+    images: ['screenshot-2026-02-27.webp', 'chatbot.webp']
     repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
     desc: '<ul><li>Aggregates AI updates from curated high-quality sources</li><li>Filters noise</li><li>Adapts to personal preferences</li><li>Summarizes intelligently</li><li>Allows feedback (thumbs up / thumbs down style)</li><li>Improves over time using an agent-based backend</li></ul>'
   - title: 'Personal Chatbot by instructions fine-tuning LLM with open-source dataset'
     category: 'Research'
-    images: ['Screenshot 2026-02-27 083432.jpg', 'chatbot.webp']
+    images: ['screenshot-2026-02-27.webp', 'chatbot.webp']
     repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
     desc: 'we run the LLM fine-tuning loop on the instruction dataset. We demonstrate how fine-tuning can improve LLM performance while following instructions.'
   - title: 'Fine-tuning LLM for Classification task, email Spam or ham, with UC Irvine dataset'
     category: 'Research'
-    images: ['Screenshot 2026-02-27 083432.jpg', 'email_spam.webp']
+    images: ['screenshot-2026-02-27.webp', 'email-spam.webp']
     repo: 'https://github.com/s-elim/Chatbot-LLM_Fine-Tuning'
     desc: 'we run the LLM fine-tuning loop on the email spam or not spam(ham) dataset. We demonstrate how fine-tuning can improve LLM performance in the classification tasks.'
   - title: 'My Research Proposal for RISE Project: 2026 (2nd year)'
     category: 'Research'
-    images: ['2026_Proposal - Copy.gif', 'https://github.com/user-attachments/assets/c5e7f99e-2860-445f-b4f1-5ae17aa69f8b']
+    images: ['2026-proposal.webp', 'rise-proposal-2026.webp']
     desc: 'OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.'
 
 industry:

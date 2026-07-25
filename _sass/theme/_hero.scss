@@ -17,6 +17,12 @@
     text-align: center;
     gap: 1.25rem;
   }
+  // justify-items: center sizes items to their content rather than the track, so
+  // the intro column grew past the viewport and the page scrolled sideways.
+  .hero__intro {
+    min-width: 0;
+    width: 100%;
+  }
 }
 .hero__avatar {
   width: 200px; height: 200px;
@@ -64,6 +70,10 @@
   border-color: #cbd5e1 !important;
   font-size: var(--fs-sm);
   animation: chip-glow-light 2.2s ease-in-out infinite;
+  // Unlike the short interest chips, this one carries a full sentence plus a CTA.
+  // Inheriting .chip's white-space: nowrap made it 435px wide and scrolled phones sideways.
+  white-space: normal;
+  max-width: 100%;
 }
 .chip.chip--open > i { margin-right: .15em; }
 a.chip.chip--open {

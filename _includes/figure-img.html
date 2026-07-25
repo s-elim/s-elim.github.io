@@ -1,0 +1,17 @@
+{%- comment -%}
+Responsive figure image.
+
+  src   - site path to the 960w display image, e.g. "/images/msp-framework.webp"
+  alt   - alt text (required)
+  sizes - CSS sizes hint; defaults to the ~380px card figures used across the site
+  class - optional class on the <img>
+  eager - set to true for above-the-fold images to skip lazy loading
+
+Emits srcset against the -sm (480w) variant plus intrinsic width/height from
+_data/image_sizes.yml, so the browser picks the right file and reserves the box
+before the image decodes.
+{%- endcomment -%}
+{%- assign _stem = include.src | split: "/" | last | split: "." | first -%}
+{%- assign _meta = site.data.image_sizes[_stem] -%}
+{%- assign _sm = "/images/" | append: _stem | append: "-sm.webp" -%}
+<img{% if include.class %} class="{{ include.class }}"{% endif %} src="{{ include.src | relative_url }}"{% if _meta.sm %} srcset="{{ _sm | relative_url }} 480w, {{ include.src | relative_url }} {{ _meta.w }}w" sizes="{{ include.sizes | default: '(max-width: 700px) 92vw, 380px' }}"{% endif %}{% if _meta %} width="{{ _meta.w }}" height="{{ _meta.h }}"{% endif %} alt="{{ include.alt }}"{% unless include.eager %} loading="lazy"{% endunless %} decoding="async">

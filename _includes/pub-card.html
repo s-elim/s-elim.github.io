@@ -70,8 +70,9 @@
     {% endif %}
   </div>
   {% if pub.image %}
+  {% assign pubfigalt = pub.title | escape | prepend: "Figure from “" | append: "”" %}
   <button class="pub-card__media js-lightbox" type="button" data-full="{{ pub.image | relative_url }}" data-caption="{{ pub.title | escape }}" aria-label="Zoom figure from “{{ pub.title | escape }}”">
-    <img src="{{ pub.image | relative_url }}" alt="Figure from “{{ pub.title | escape }}”" loading="lazy">
+    {% include figure-img.html src=pub.image alt=pubfigalt sizes="150px" %}
   </button>
   {% else %}
   {% assign phlabel = pub.thumb | default: vparts[0] | strip | truncate: 14 %}

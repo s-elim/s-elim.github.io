@@ -51,7 +51,8 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
               {% if img contains "://" %}
                 <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
               {% else %}
-                <p style="text-align:center"><img src="{{ '/images/' | append: img | relative_url }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+                {% capture _projsrc %}/images/{{ img }}{% endcapture %}
+                <p style="text-align:center">{% include figure-img.html src=_projsrc alt=proj.title class="proj-img" sizes="(max-width: 700px) 88vw, 372px" %}</p>
               {% endif %}
             {% endfor %}
             <div>{{ proj.desc }}</div>
@@ -164,7 +165,8 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
               {% if img contains "://" %}
                 <p style="text-align:center"><img src="{{ img }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
               {% else %}
-                <p style="text-align:center"><img src="{{ '/images/' | append: img | relative_url }}" alt="{{ proj.title }}" loading="lazy" style="max-width:600px;width:100%"></p>
+                {% capture _projsrc %}/images/{{ img }}{% endcapture %}
+                <p style="text-align:center">{% include figure-img.html src=_projsrc alt=proj.title class="proj-img" sizes="(max-width: 700px) 88vw, 372px" %}</p>
               {% endif %}
             {% endfor %}
             <div>{{ proj.desc }}</div>

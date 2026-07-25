@@ -637,6 +637,12 @@
   }
 
   /* ---- World University Rankings (THE / QS tabs + search) ------------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
   function initRankings() {
     var modal = document.getElementById("rankings-modal");
     if (!modal) return;
@@ -669,15 +675,10 @@
       if (!table) return;
 
       var empty = table.querySelector(".rank-empty");
-      var rows = Array.prototype.slice.call(
-        table.querySelectorAll("tbody tr:not(.rank-empty)")
-      );
-      // Cache each row's searchable text and country once: filtering 400 rows per
-      // keystroke should not re-read the DOM every time.
-      var haystack = rows.map(function (r) { return r.textContent.toLowerCase(); });
-      var countries = rows.map(function (r) { return r.getAttribute("data-c") || ""; });
-      var total = rows.length;
+      var loading = table.querySelector(".rank-loading");
+      var body = table.querySelector("tbody");
       var scroll = panel.querySelector(".rank-scroll");
+      var rows = [], haystack = [], countries = [], total = 0;
       var country = "";
 
       function apply() {
@@ -693,6 +694,33 @@
         if (counter) counter.innerHTML = "Showing <b>" + shown + "</b> / " + total;
         if (scroll) scroll.scrollTop = 0;
       }
+
+      // Build the 400 rows from the JSON payload. One innerHTML write beats
+      // appending 400 nodes one at a time.
+      panel.rankRender = function (entries) {
+        var html = "", medals = { "1": " rank-pos--gold", "2": " rank-pos--silver", "3": " rank-pos--bronze" };
+        for (var i = 0; i < entries.length; i++) {
+          var rank = entries[i][0], name = entries[i][1], loc = entries[i][2];
+          var medal = medals[rank.replace("=", "")] || "";
+          html += '<tr data-c="' + esc(loc) + '"><td class="rank-pos' + medal + '"><span>' +
+                  esc(rank) + '</span></td><td class="rank-uni">' + esc(name) +
+                  '</td><td class="rank-loc">' + esc(loc) + "</td></tr>";
+        }
+        if (loading) loading.remove();
+        body.insertAdjacentHTML("beforeend", html);
+        rows = Array.prototype.slice.call(body.querySelectorAll("tr:not(.rank-empty)"));
+        haystack = rows.map(function (r) { return r.textContent.toLowerCase(); });
+        countries = rows.map(function (r) { return r.getAttribute("data-c") || ""; });
+        total = rows.length;
+        apply();
+      };
+
+      panel.rankFail = function () {
+        if (loading) {
+          loading.querySelector("td").textContent =
+            "Could not load the rankings. Please refresh the page.";
+        }
+      };
 
       if (input) input.addEventListener("input", apply);
 
@@ -721,6 +749,39 @@
         });
         moreBtn.setAttribute("data-label", moreBtn.textContent);
       }
+    });
+
+    // Fetch the row data the first time the modal is opened, so the homepage
+    // never pays for it on load.
+    var loaded = false;
+    function loadRows() {
+      if (loaded) return;
+      loaded = true;
+      var url = modal.getAttribute("data-rank-src");
+      fetch(url, { credentials: "same-origin" })
+        .then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          panels.forEach(function (p) {
+            var rows = data[p.getAttribute("data-rank-panel")];
+            if (rows && p.rankRender) p.rankRender(rows);
+          });
+        })
+        .catch(function (e) {
+          if (window.console) console.error("rankings load failed", e);
+          panels.forEach(function (p) { if (p.rankFail) p.rankFail(); });
+        });
+    }
+
+    Array.prototype.slice.call(
+      document.querySelectorAll('[data-modal-target="#rankings-modal"]')
+    ).forEach(function (btn) {
+      // Warm the data on hover/focus so the table is usually ready by the click.
+      btn.addEventListener("mouseenter", loadRows);
+      btn.addEventListener("focus", loadRows);
+      btn.addEventListener("click", loadRows);
     });
   }
 

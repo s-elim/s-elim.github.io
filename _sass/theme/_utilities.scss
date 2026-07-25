@@ -126,3 +126,12 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
     transform: translateX(-50%) translateY(0);
   }
 }
+
+/* Project accordion figures (was an inline style before the shared image include) */
+.proj-img {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+  border-radius: 6px;
+}

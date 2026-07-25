@@ -815,7 +815,7 @@ redirect_from:
   </div>
 </div>
 
-<div class="modal" id="rankings-modal" role="dialog" aria-modal="true" aria-labelledby="rankings-modal-title">
+<div class="modal" id="rankings-modal" role="dialog" aria-modal="true" aria-labelledby="rankings-modal-title" data-rank-src="{{ '/assets/data/university-rankings.json' | relative_url }}">
   <div class="modal__dialog" style="max-width: 54rem;">
     <div class="modal__head">
       <h3 class="modal__title" id="rankings-modal-title"><i class="fas fa-trophy" aria-hidden="true"></i> World University Rankings &mdash; Top 400</h3>
@@ -866,11 +866,11 @@ redirect_from:
                 <th>Country<span class="rank-th-full"> / Territory</span></th>
               </tr>
             </thead>
+            <!-- Rows are fetched from assets/data/university-rankings.json on first
+                 open: inlining 800 of them tripled the homepage DOM. -->
             <tbody>
-              {% for e in src.entries %}{% assign rnum = e.rank | remove: "=" %}{% if rnum == "1" %}{% assign medal = " rank-pos--gold" %}{% elsif rnum == "2" %}{% assign medal = " rank-pos--silver" %}{% elsif rnum == "3" %}{% assign medal = " rank-pos--bronze" %}{% else %}{% assign medal = "" %}{% endif %}
-              <tr data-c="{{ e.country }}"><td class="rank-pos{{ medal }}"><span>{{ e.rank }}</span></td><td class="rank-uni">{{ e.name }}</td><td class="rank-loc">{{ e.country }}</td></tr>
-              {% endfor %}
               <tr class="rank-empty" hidden><td colspan="3">No university matches that filter.</td></tr>
+              <tr class="rank-loading"><td colspan="3">Loading the {{ src.short }} {{ src.edition }} top {{ src.count }}&hellip;</td></tr>
             </tbody>
           </table>
         </div>
@@ -887,7 +887,7 @@ redirect_from:
 <div class="highlight-grid">
   <article class="highlight-card card reveal" data-delay="1">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI." aria-label="Zoom figure">
-      <img src="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" loading="lazy">
+      {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
@@ -896,8 +896,8 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
-      <img src="{{ '/images/C3G_VM6D_Architecture.webp' | relative_url }}" alt="6D pose estimation architecture" loading="lazy">
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/c3g-vm6d-architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
+      {% include figure-img.html src="/images/c3g-vm6d-architecture.webp" alt="6D pose estimation architecture" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">3D Vision &amp; 6D Pose Estimation</h3>
@@ -906,8 +906,8 @@ redirect_from:
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="3">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
-      <img src="{{ '/images/3d_point_cloud_visualization.webp' | relative_url }}" alt="Point cloud representation learning" loading="lazy">
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d-point-cloud-visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
+      {% include figure-img.html src="/images/3d-point-cloud-visualization.webp" alt="Point cloud representation learning" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Perception &amp; Representation Learning</h3>

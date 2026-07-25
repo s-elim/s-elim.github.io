@@ -1,7 +1,8 @@
 /* ==========================================================================
    World University Rankings modal (THE + QS, top 400 each)
-   Rows are rendered from _data/university_rankings.yml, so the markup stays
-   class-driven rather than inline-styled: 800 rows makes per-row bytes matter.
+   The chrome here is server-rendered; the 800 table rows are fetched from
+   assets/data/university-rankings.json on first open and built by initRankings,
+   which keeps them out of the homepage DOM.
    ========================================================================== */
 
 .rank-tags {
@@ -378,4 +379,11 @@
     background: rgba(154, 52, 18, 0.3);
     border-color: rgba(251, 146, 60, 0.45);
   }
+}
+
+.rank-loading td {
+  padding: 1.6rem 0.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
 }

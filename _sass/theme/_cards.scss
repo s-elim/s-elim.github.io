@@ -637,3 +637,21 @@ button.pub-card__media:hover {
 }
 .stat__num { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-2xl); color: var(--cat, var(--accent)); line-height: 1; font-variant-numeric: tabular-nums; }
 .stat__label { font-size: var(--fs-xs); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }
+
+// On very narrow phones a long impact pill ("SCIE-Q1, IF: 30.4, Top 1%") cannot
+// shrink, so the header's flex row overflowed the card and scrolled the page
+// sideways. Let the badges drop to their own line and wrap their text.
+@media (max-width: 400px) {
+  .pub-card__header {
+    flex-wrap: wrap;
+    gap: .35rem;
+  }
+  .pub-card__tags {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+  .pub-card__tags .pub-tag {
+    white-space: normal;
+    max-width: 100%;
+  }
+}

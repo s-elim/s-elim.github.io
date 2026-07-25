@@ -16,7 +16,7 @@
   type: 'journal'
   impact: 'SCIE-Q1, Top 10% · IF: 8.9'
   status: 'Under Review'
-  image: '/images/msp_framework.png'
+  image: '/images/msp-framework.webp'
   thumb: "MSP Framework"
   url: 'https://github.com/s-elim/msp-framework'
   links:
@@ -72,7 +72,7 @@
   flagship: 'vision'
   rank: 'A'
   featured: true
-  image: '/images/gaussvla_model.webp'
+  image: '/images/gaussvla-model.webp'
   url: 'https://gaussvla.github.io/GaussVLA/'
   links:
     - { label: 'Project Page', url: 'https://gaussvla.github.io/GaussVLA/', kind: 'project' }
@@ -86,7 +86,7 @@
   type: 'conference'
   flagship: 'vision'
   rank: 'A'
-  image: '/images/hnh40k_model.webp'
+  image: '/images/hnh40k-model.webp'
   url: 'https://github.com/s-elim/RWFL-HNH40K'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
@@ -98,7 +98,7 @@
   impact: 'SCIE-Q1/Top 3%, IF: 19'
   year: 2026
   type: 'preprint'
-  image: '/images/what_matters_figure.webp'
+  image: '/images/what-matters-figure.webp'
   thumb: 'Preprint'
   url: 'https://www.preprints.org/manuscript/202606.1149'
   bibtex: |
@@ -122,7 +122,7 @@
   venue_short: "ICML'26 Workshop"
   year: 2026
   type: 'workshop'
-  image: '/images/gstvla_arch.webp'
+  image: '/images/gstvla-arch.webp'
   thumb: "ICML-W '26"
   url: 'https://openreview.net/forum?id=J57nR3hyAd'
   bibtex: |
@@ -145,7 +145,7 @@
   year: 2026
   type: 'journal'
   featured: true
-  image: '/images/C3G_VM6D_Architecture.webp'
+  image: '/images/c3g-vm6d-architecture.webp'
   url: 'https://ieeexplore.ieee.org/document/11400555'
   bibtex: |
     @ARTICLE{11400555,
@@ -168,7 +168,7 @@
   impact: 'SCIE-Q1, IF: 3.9'
   year: 2026
   type: 'journal'
-  image: '/images/Parkinsos_gait_framework.jpg'
+  image: '/images/parkinsons-gait-framework.webp'
   thumb: 'Sci. Reports'
   url: 'https://arxiv.org/abs/2512.04425'
   links:
@@ -215,7 +215,7 @@
   year: 2025
   type: 'conference'
   custom_tag: 'IEEE'
-  image: '/images/VFM-VLM figure.png'
+  image: '/images/vfm-vlm-figure.webp'
   thumb: "IEIE '26"
   url: 'https://arxiv.org/abs/2512.07215'
   links:
@@ -229,7 +229,7 @@
   year: 2025
   type: 'conference'
   custom_tag: 'IEEE'
-  image: '/images/VLM6D_arch.png'
+  image: '/images/vlm6d-arch.webp'
   url: 'https://arxiv.org/abs/2511.00120'
   links:
     - { label: 'IEIE', url: 'https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12551231', kind: 'link' }
@@ -240,7 +240,7 @@
   venue: 'International Journal of Computer Applications'
   year: 2025
   type: 'journal'
-  image: '/images/hand gesture figure.png'
+  image: '/images/hand-gesture-figure.webp'
   thumb: 'IJCA'
   url: 'https://www.ijcaonline.org/archives/volume187/number2/hand-gesture-recognition-systems-a-review-of-methods-datasets-and-emerging-trends/'
   links:
@@ -254,7 +254,7 @@
   year: 2025
   type: 'patent'
   status: 'Granted'
-  image: '/images/Computer Device for Coding and Algorithm Simulation(UK_Patent).jpg'
+  image: '/images/uk-patent-coding-algorithm-simulation.webp'
   thumb: 'UK Patent'
 
 - title: 'IoT-Based System and Design Approach for Health Monitoring of Wearable Devices'
@@ -264,7 +264,7 @@
   year: 2023
   type: 'patent'
   status: 'Granted'
-  image: '/images/IOT_Healthcare_Patent_Figure.png'
+  image: '/images/iot-healthcare-patent-figure.webp'
   thumb: 'India Patent'
 
 - title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
@@ -274,7 +274,7 @@
   year: 2022
   type: 'conference'
   custom_tag: 'IEEE'
-  image: '/images/AESPC_Figure.jpg'
+  image: '/images/aespc-figure.webp'
   thumb: 'IEEE AESPC'
   url: 'https://ieeexplore.ieee.org/document/9708513'
   links:
@@ -288,5 +288,5 @@
   year: 2022
   type: 'patent'
   status: 'Granted'
-  image: '/images/Emergency_Patent_Figure.png'
+  image: '/images/emergency-patent-figure.webp'
   thumb: 'India Patent'
