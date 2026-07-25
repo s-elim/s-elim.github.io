@@ -159,6 +159,37 @@
   }
 
   /* ---- Publications filter + search ---------------------------------- */
+  /* ---- Shareable filter state in the URL ------------------------------ */
+  // Filters live in the query string so a filtered view can be linked, bookmarked
+  // and navigated back to, e.g. /publications/?type=journal,lead&year=2026
+  function readQuery() {
+    var out = {};
+    var qs = window.location.search.replace(/^\?/, "");
+    if (!qs) return out;
+    qs.split("&").forEach(function (pair) {
+      if (!pair) return;
+      var kv = pair.split("=");
+      var k = decodeURIComponent(kv[0]);
+      var v = decodeURIComponent((kv[1] || "").replace(/\+/g, " "));
+      if (k) out[k] = v;
+    });
+    return out;
+  }
+
+  function writeQuery(params) {
+    if (!window.history || !window.history.replaceState) return;
+    var parts = [];
+    for (var k in params) {
+      var v = params[k];
+      if (v !== null && v !== undefined && v !== "") {
+        parts.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      }
+    }
+    var url = window.location.pathname + (parts.length ? "?" + parts.join("&") : "") +
+              window.location.hash;
+    window.history.replaceState(null, "", url);
+  }
+
   function initPubFilter() {
     var list = document.getElementById("pub-list");
     if (!list) return;
@@ -247,10 +278,39 @@
       var shown = document.getElementById("pub-shown");
       if (shown) shown.textContent = shownTotal;
       if (empty) empty.classList.toggle("show", shownTotal === 0);
+      if (syncUrl) {
+        var params = { q: term };
+        for (var g in groups) params[g] = groups[g].join(",");
+        writeQuery(params);
+      }
     }
+
+    // Restore any state carried in the URL before the first render.
+    var syncUrl = false;
+    var initial = readQuery();
+    if (initial.q && search) search.value = initial.q;
+    Object.keys(groups).forEach(function (groupName) {
+      var raw = initial[groupName];
+      if (!raw) return;
+      var wanted = raw.split(",").filter(Boolean);
+      var container = document.querySelector('.filter-chips[data-group="' + groupName + '"]');
+      if (!container || !wanted.length) return;
+      var matched = [];
+      container.querySelectorAll('.filter-chip:not([data-value="all"])').forEach(function (c) {
+        var on = wanted.indexOf(c.getAttribute("data-value")) !== -1;
+        c.classList.toggle("is-active", on);
+        if (on) matched.push(c.getAttribute("data-value"));
+      });
+      if (matched.length) {
+        groups[groupName] = matched;
+        var allChip = container.querySelector('.filter-chip[data-value="all"]');
+        if (allChip) allChip.classList.remove("is-active");
+      }
+    });
 
     if (search) search.addEventListener("input", apply);
     apply();
+    syncUrl = true; // only mirror to the URL once the user drives it
   }
 
   /* ---- Activities filter (fun-time) ----------------------------------- */
@@ -651,17 +711,42 @@
     var panels = Array.prototype.slice.call(modal.querySelectorAll(".rank-panel"));
     if (!tabs.length || !panels.length) return;
 
+    // Deep-link support: /?rank=qs&country=Japan&q=tokyo opens the modal already
+    // filtered, which is what the command palette links to.
+    var urlState = readQuery();
+    var deepLinked = !!(urlState.rank || urlState.country || urlState.q);
+    var activeKey = urlState.rank === "qs" ? "qs" : "the";
+    var syncUrl = false;
+
+    function pushState() {
+      if (!syncUrl) return;
+      var panel = panels.filter(function (p) { return !p.hidden; })[0];
+      if (!panel) return;
+      var key = panel.getAttribute("data-rank-panel");
+      var input = panel.querySelector(".rank-search");
+      writeQuery({
+        rank: key,
+        country: panel.rankCountry || "",
+        q: input ? input.value.trim() : ""
+      });
+    }
+    modal.rankPushState = pushState;
+
+    function selectTab(key) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("data-rank-tab") === key;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      panels.forEach(function (p) {
+        p.hidden = p.getAttribute("data-rank-panel") !== key;
+      });
+    }
+
     tabs.forEach(function (tab) {
       tab.addEventListener("click", function () {
-        var key = tab.getAttribute("data-rank-tab");
-        tabs.forEach(function (t) {
-          var on = t === tab;
-          t.classList.toggle("active", on);
-          t.setAttribute("aria-selected", on ? "true" : "false");
-        });
-        panels.forEach(function (p) {
-          p.hidden = p.getAttribute("data-rank-panel") !== key;
-        });
+        selectTab(tab.getAttribute("data-rank-tab"));
+        pushState();
       });
     });
 
@@ -680,6 +765,7 @@
       var scroll = panel.querySelector(".rank-scroll");
       var rows = [], haystack = [], countries = [], total = 0;
       var country = "";
+      panel.rankCountry = "";
 
       function apply() {
         var q = input ? (input.value || "").trim().toLowerCase() : "";
@@ -694,16 +780,33 @@
         if (counter) counter.innerHTML = "Showing <b>" + shown + "</b> / " + total;
         if (scroll) scroll.scrollTop = 0;
       }
+      panel.rankApply = apply;
+
+      // Seed this panel from the URL before any rows exist; apply() runs after render.
+      if (deepLinked && key === activeKey) {
+        if (urlState.q && input) input.value = urlState.q;
+        if (urlState.country) {
+          country = panel.rankCountry = urlState.country;
+        }
+      }
 
       // Build the 400 rows from the JSON payload. One innerHTML write beats
       // appending 400 nodes one at a time.
       panel.rankRender = function (entries) {
         var html = "", medals = { "1": " rank-pos--gold", "2": " rank-pos--silver", "3": " rank-pos--bronze" };
+        var otherName = panel.getAttribute("data-rank-other") || "";
+        var otherTitle = panel.getAttribute("data-rank-other-title") || "";
         for (var i = 0; i < entries.length; i++) {
-          var rank = entries[i][0], name = entries[i][1], loc = entries[i][2];
+          var rank = entries[i][0], name = entries[i][1], loc = entries[i][2], cross = entries[i][3];
           var medal = medals[rank.replace("=", "")] || "";
+          // Blank cross means no confident match between the two tables, which is
+          // not the same as "absent from the other ranking" - so say nothing.
+          var crossHtml = cross
+            ? ' <span class="rank-cross" title="' + esc(otherTitle) + '">' +
+              esc(otherName) + " " + esc(cross) + "</span>"
+            : "";
           html += '<tr data-c="' + esc(loc) + '"><td class="rank-pos' + medal + '"><span>' +
-                  esc(rank) + '</span></td><td class="rank-uni">' + esc(name) +
+                  esc(rank) + '</span></td><td class="rank-uni">' + esc(name) + crossHtml +
                   '</td><td class="rank-loc">' + esc(loc) + "</td></tr>";
         }
         if (loading) loading.remove();
@@ -722,20 +825,28 @@
         }
       };
 
-      if (input) input.addEventListener("input", apply);
+      if (input) {
+        input.addEventListener("input", function () { apply(); pushState(); });
+      }
 
       if (chipBox) {
         var chips = Array.prototype.slice.call(chipBox.querySelectorAll(".rank-chip"));
+        var syncChips = function () {
+          chips.forEach(function (c) {
+            c.classList.toggle("active", (c.getAttribute("data-country") || "") === country);
+          });
+        };
+        if (country) syncChips();
         chipBox.addEventListener("click", function (e) {
           var chip = e.target.closest(".rank-chip");
           if (!chip) return;
           // Clicking the active country again clears it, so the chips double as a toggle.
           var next = chip.getAttribute("data-country");
           country = (next && next === country) ? "" : next;
-          chips.forEach(function (c) {
-            c.classList.toggle("active", (c.getAttribute("data-country") || "") === country);
-          });
+          panel.rankCountry = country;
+          syncChips();
           apply();
+          pushState();
         });
       }
 
@@ -775,6 +886,7 @@
         });
     }
 
+    var trigger = document.querySelector('[data-modal-target="#rankings-modal"]');
     Array.prototype.slice.call(
       document.querySelectorAll('[data-modal-target="#rankings-modal"]')
     ).forEach(function (btn) {
@@ -783,6 +895,199 @@
       btn.addEventListener("focus", loadRows);
       btn.addEventListener("click", loadRows);
     });
+
+    // Open a shared/deep link straight into the right tab and filters.
+    modal.rankOpen = function (opts) {
+      opts = opts || {};
+      var key = opts.rank === "qs" ? "qs" : "the";
+      selectTab(key);
+      var panel = modal.querySelector('[data-rank-panel="' + key + '"]');
+      if (panel) {
+        var input = panel.querySelector(".rank-search");
+        if (input && typeof opts.q === "string") input.value = opts.q;
+        if (panel.rankApply) panel.rankApply();
+      }
+      loadRows();
+      if (trigger) trigger.click();
+      pushState();
+    };
+
+    if (deepLinked) {
+      selectTab(activeKey);
+      loadRows();
+      if (trigger) trigger.click();
+    }
+    syncUrl = true;
+  }
+
+  /* ---- Command palette (Cmd/Ctrl-K) ----------------------------------- */
+  function initPalette() {
+    var box = document.getElementById("palette");
+    var input = document.getElementById("palette-input");
+    var results = document.getElementById("palette-results");
+    if (!box || !input || !results) return;
+
+    var openBtn = document.getElementById("palette-open");
+    var closeBtn = document.getElementById("palette-close");
+    var home = box.getAttribute("data-home") || "/";
+    var items = null, loading = false, active = 0, shown = [], lastFocus = null;
+
+    function load() {
+      if (items || loading) return;
+      loading = true;
+      fetch(box.getAttribute("data-palette-src"), { credentials: "same-origin" })
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (data) { items = data; render(); })
+        .catch(function () { items = []; render(); });
+    }
+
+    // Subsequence match, so "vla" finds "Vision-Language-Action" and typos in the
+    // middle of a long title do not kill the result.
+    function score(item, q) {
+      var hay = (item.t + " " + (item.s || "") + " " + (item.k || "")).toLowerCase();
+      var idx = hay.indexOf(q);
+      if (idx !== -1) return idx === 0 ? 0 : 1 + idx / 200;
+      var ti = 0;
+      for (var i = 0; i < q.length; i++) {
+        ti = hay.indexOf(q[i], ti);
+        if (ti === -1) return -1;
+        ti++;
+      }
+      return 50;
+    }
+
+    function render() {
+      var q = input.value.trim().toLowerCase();
+      var list = [];
+      if (items && q) {
+        list = items
+          .map(function (it) { return { it: it, sc: score(it, q) }; })
+          .filter(function (r) { return r.sc >= 0; })
+          .sort(function (a, b) { return a.sc - b.sc; })
+          .slice(0, 12)
+          .map(function (r) { return r.it; });
+      } else if (items) {
+        list = items.filter(function (it) { return it.k === "Page"; }).slice(0, 5);
+      }
+      // Always offer the rankings lookup: 800 universities stay out of this index.
+      if (q) {
+        list = list.concat([{
+          t: "Search “" + input.value.trim() + "” in the university rankings",
+          k: "Rankings",
+          u: home + "?q=" + encodeURIComponent(input.value.trim())
+        }]);
+      }
+      shown = list;
+      active = 0;
+      if (!items && loading) {
+        results.innerHTML = '<li class="palette__empty">Loading&hellip;</li>';
+        return;
+      }
+      if (!list.length) {
+        results.innerHTML = '<li class="palette__empty">No matches</li>';
+        return;
+      }
+      results.innerHTML = list.map(function (it, i) {
+        return '<li class="palette__item' + (i === 0 ? " is-active" : "") +
+          '" role="option" aria-selected="' + (i === 0) + '" data-i="' + i + '">' +
+          '<span class="palette__kind">' + esc(it.k) + "</span>" +
+          '<span class="palette__title">' + esc(it.t) + "</span>" +
+          (it.m ? '<span class="palette__meta">' + esc(it.m) + "</span>" : "") +
+          "</li>";
+      }).join("");
+    }
+
+    function move(step) {
+      if (!shown.length) return;
+      active = (active + step + shown.length) % shown.length;
+      Array.prototype.slice.call(results.children).forEach(function (li, i) {
+        li.classList.toggle("is-active", i === active);
+        li.setAttribute("aria-selected", i === active);
+      });
+      var el = results.children[active];
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: "nearest" });
+    }
+
+    function go(i) {
+      var it = shown[i];
+      if (!it) return;
+      close();
+      window.location.href = it.u;
+    }
+
+    function open() {
+      lastFocus = document.activeElement;
+      box.hidden = false;
+      document.body.style.overflow = "hidden";
+      load();
+      render();
+      input.focus();
+      input.select();
+    }
+    function close() {
+      box.hidden = true;
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    if (openBtn) openBtn.addEventListener("click", open);
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    box.addEventListener("click", function (e) { if (e.target === box) close(); });
+    input.addEventListener("input", render);
+    if (openBtn) {
+      openBtn.addEventListener("mouseenter", load);
+      openBtn.addEventListener("focus", load);
+    }
+
+    results.addEventListener("click", function (e) {
+      var li = e.target.closest(".palette__item");
+      if (li) go(parseInt(li.getAttribute("data-i"), 10));
+    });
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); move(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
+      else if (e.key === "Enter") { e.preventDefault(); go(active); }
+      else if (e.key === "Escape") { e.preventDefault(); close(); }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      var k = (e.key || "").toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && k === "k") {
+        e.preventDefault();
+        box.hidden ? open() : close();
+        return;
+      }
+      // "/" opens search the way it does on GitHub, unless the user is typing.
+      var tag = (document.activeElement && document.activeElement.tagName) || "";
+      if (k === "/" && box.hidden && tag !== "INPUT" && tag !== "TEXTAREA") {
+        e.preventDefault();
+        open();
+      }
+    });
+  }
+
+  /* ---- Deep links: open an accordion / prefill skill search ----------- */
+  function initDeepLinks() {
+    var hash = window.location.hash;
+    if (hash && hash.indexOf("#p-") === 0) {
+      var item = document.getElementById(hash.slice(1));
+      if (item && item.classList.contains("accordion__item")) {
+        item.classList.add("is-open");
+        var head = item.querySelector(".accordion__header");
+        if (head) head.setAttribute("aria-expanded", "true");
+        window.setTimeout(function () {
+          item.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+        }, 120);
+      }
+    }
+    var skill = readQuery().skill;
+    var skillInput = document.getElementById("skill-search");
+    if (skill && skillInput) {
+      skillInput.value = skill;
+      skillInput.dispatchEvent(new Event("input"));
+      skillInput.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+    }
   }
 
   /* ---- Boot ---------------------------------------------------------- */
@@ -806,8 +1111,11 @@
     safe(initDeadlineFilters);
     safe(initJournalSearch);
     safe(initRankings);
+    safe(initPalette);
     safe(initBackToTop);
     safe(initSkillSearch);
+    // Last: it fires input events at widgets above, so they must be listening.
+    safe(initDeepLinks);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

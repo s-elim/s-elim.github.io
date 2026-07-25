@@ -1,0 +1,182 @@
+// ==========================================================================
+//  Command palette (Cmd/Ctrl-K) + its nav trigger
+//  The index is fetched on first open, so nothing here costs anything on load.
+// ==========================================================================
+
+.nav-search {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3rem .6rem .3rem .55rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+
+  svg { width: 15px; height: 15px; flex: 0 0 auto; }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text-strong);
+    border-color: var(--accent);
+  }
+}
+
+.nav-search__kbd,
+.palette kbd {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 5px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+@media (max-width: 860px) {
+  .nav-search__label,
+  .nav-search__kbd { display: none; }
+  .nav-search { padding: .35rem; }
+}
+
+// ---- Overlay ----
+.palette {
+  position: fixed;
+  inset: 0;
+  z-index: 400; // above modals (300) so Cmd-K always wins
+  background: rgba(15, 23, 42, .45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12vh 1rem 1rem;
+
+  &[hidden] { display: none; }
+}
+
+.palette__dialog {
+  width: 100%;
+  max-width: 40rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: palette-in .16s var(--ease);
+}
+
+@keyframes palette-in {
+  from { opacity: 0; transform: translateY(-8px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palette__dialog { animation: none; }
+}
+
+.palette__field {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem .9rem;
+  border-bottom: 1px solid var(--border);
+
+  svg { width: 17px; height: 17px; color: var(--muted); flex: 0 0 auto; }
+
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text-strong);
+    font-family: var(--font-head);
+    font-size: 1rem;
+  }
+}
+
+.palette__close {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.palette__results {
+  list-style: none;
+  margin: 0;
+  padding: .35rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.palette__item {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .5rem .6rem;
+  border-radius: 7px;
+  cursor: pointer;
+
+  &.is-active { background: var(--accent-soft); }
+}
+
+.palette__kind {
+  flex: 0 0 auto;
+  min-width: 5.2rem;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.palette__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette__meta {
+  flex: 0 0 auto;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.palette__empty {
+  padding: 1.4rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.palette__foot {
+  display: flex;
+  gap: 1rem;
+  padding: .5rem .9rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-head);
+  font-size: 11px;
+  color: var(--muted);
+
+  span { display: inline-flex; align-items: center; gap: .3rem; }
+}
+
+@media (max-width: 560px) {
+  .palette { padding-top: 6vh; }
+  .palette__foot { display: none; }
+  .palette__kind { min-width: 4rem; }
+  .palette__meta { display: none; }
+}

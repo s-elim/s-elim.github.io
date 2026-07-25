@@ -1,0 +1,38 @@
+---
+# Index for the command palette (Cmd/Ctrl-K). Built from the same _data files the
+# pages render, so it cannot drift from what is actually on the site.
+layout: none
+---
+{% assign pj = site.data.projects %}
+{% capture nl %}
+{% endcapture %}
+[
+{%- assign first = true -%}
+{%- comment -%} Pages {%- endcomment -%}
+{%- for link in site.data.navigation.main -%}
+{%- unless first %},{% endunless %}{% assign first = false %}
+{"t":{{ link.title | jsonify }},"k":"Page","u":{{ link.url | relative_url | jsonify }},"s":""}
+{%- endfor -%}
+,{"t":"Home","k":"Page","u":{{ "/" | relative_url | jsonify }},"s":"about updates deadlines journals rankings"}
+
+{%- comment -%} Publications: deep-link into the page's own search filter {%- endcomment -%}
+{%- for pub in site.data.publications -%}
+{%- assign purl = pub.title | url_encode | prepend: "/publications/?q=" | relative_url -%}
+,{"t":{{ pub.title | jsonify }},"k":"Publication","u":{{ purl | jsonify }},"s":{{ pub.authors | append: " " | append: pub.venue | append: " " | append: pub.venue_short | append: " " | append: pub.year | jsonify }},"m":{{ pub.venue_short | default: pub.venue | append: " · " | append: pub.year | jsonify }}}
+{%- endfor -%}
+
+{%- comment -%} Projects: deep-link to the accordion item, which opens on hash {%- endcomment -%}
+{%- for proj in pj.latest -%}
+,{"t":{{ proj.title | jsonify }},"k":"Project","u":{{ proj.title | slugify | prepend: "/projects/#p-" | relative_url | jsonify }},"s":{{ proj.category | default: "" | jsonify }},"m":{{ proj.category | default: "Project" | jsonify }}}
+{%- endfor -%}
+{%- for col in pj.industry -%}
+,{"t":{{ col.name | jsonify }},"k":"Project","u":{{ col.name | slugify | prepend: "/projects/#p-" | relative_url | jsonify }},"s":"industry collaboration","m":"Industry"}
+{%- endfor -%}
+
+{%- comment -%} Skills: deep-link to the skills search on the projects page {%- endcomment -%}
+{%- for group in pj.skills -%}
+{%- for item in group.items -%}
+,{"t":{{ item | jsonify }},"k":"Skill","u":{{ item | url_encode | prepend: "/projects/?skill=" | relative_url | jsonify }},"s":{{ group.group | default: "" | jsonify }},"m":{{ group.group | default: "Skill" | jsonify }}}
+{%- endfor -%}
+{%- endfor -%}
+]

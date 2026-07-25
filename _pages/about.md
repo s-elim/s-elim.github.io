@@ -836,7 +836,8 @@ redirect_from:
       </div>
 
       {% for k in rk_keys %}{% assign src = rk[k] %}
-      <div class="rank-panel" id="rank-panel-{{ k }}" data-rank-panel="{{ k }}" role="tabpanel"{% unless forloop.first %} hidden{% endunless %}>
+      {% if k == "the" %}{% assign other = rk.qs %}{% else %}{% assign other = rk.the %}{% endif %}
+      <div class="rank-panel" id="rank-panel-{{ k }}" data-rank-panel="{{ k }}" role="tabpanel" data-rank-other="{{ other.short }}" data-rank-other-title="Position in the {{ other.name }} {{ other.edition }}"{% unless forloop.first %} hidden{% endunless %}>
         <p class="rank-meta">
           <strong>{{ src.name }} {{ src.edition }}</strong> &middot; published {{ src.published }} &middot; full table covers {{ src.total_ranked }}. Showing the top {{ src.count }} positions.
         </p>

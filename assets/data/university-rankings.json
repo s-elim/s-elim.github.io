@@ -8,7 +8,7 @@ layout: none
 {
 {% for k in keys %}{% assign src = rk[k] %}"{{ k }}":[
 {%- for e in src.entries -%}
-["{{ e.rank }}","{{ e.name | replace: '\', '\\' | replace: '"', '\"' }}","{{ e.country | replace: '"', '\"' }}"]{% unless forloop.last %},{% endunless %}
+["{{ e.rank }}","{{ e.name | replace: '\', '\\' | replace: '"', '\"' }}","{{ e.country | replace: '"', '\"' }}","{{ e.cross }}"]{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ]{% unless forloop.last %},{% endunless %}
 {% endfor %}

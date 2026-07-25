@@ -39,7 +39,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="project-cat-card__body">
     <div class="accordion">
       {% for proj in bootcamps %}
-      <div class="accordion__item">
+      <div class="accordion__item" id="p-{{ proj.title | slugify }}">
         <button class="accordion__header" type="button" aria-expanded="false">
           <span>{{ proj.title }}</span>
           <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>
@@ -108,7 +108,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="project-cat-card__body">
     <div class="accordion">
       {% for col in pj.industry %}
-      <div class="accordion__item">
+      <div class="accordion__item" id="p-{{ col.name | slugify }}">
         <button class="accordion__header" type="button" aria-expanded="false">
           <span>{{ col.name }}</span>
           {% if col.timeline %}
@@ -153,7 +153,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <div class="project-cat-card__body">
     <div class="accordion">
       {% for proj in research %}
-      <div class="accordion__item">
+      <div class="accordion__item" id="p-{{ proj.title | slugify }}">
         <button class="accordion__header" type="button" aria-expanded="false">
           <span>{{ proj.title }}</span>
           <i class="fas fa-plus accordion__icon" aria-hidden="true"></i>

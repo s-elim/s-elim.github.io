@@ -288,6 +288,28 @@
   line-height: 1.35;
 }
 
+// The same institution's position in the other ranking, computed at build time
+// and only shown when the pairing is unambiguous (see build_university_rankings.py).
+.rank-cross {
+  display: inline-block;
+  margin-left: 0.3rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-head);
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: help;
+}
+
+tr:hover .rank-cross {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .rank-loc {
   color: var(--muted);
   font-size: 0.82rem;

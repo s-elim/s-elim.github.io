@@ -13,6 +13,12 @@
     </nav>
 
     <div class="nav-actions">
+      <button class="nav-search" id="palette-open" type="button" aria-label="Search the site" title="Search (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.65" y2="16.65"></line></svg>
+        <span class="nav-search__label">Search</span>
+        <kbd class="nav-search__kbd">⌘K</kbd>
+      </button>
+
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -37,3 +43,20 @@
     <a class="{% if page.url == link.url %}is-active{% endif %}" href="{{ link.url | relative_url }}">{{ link.title }}</a>
   {% endfor %}
 </aside>
+
+{% comment %} Command palette: index is fetched on first open, never on page load {% endcomment %}
+<div class="palette" id="palette" hidden data-palette-src="{{ '/assets/data/search-index.json' | relative_url }}" data-home="{{ '/' | relative_url }}">
+  <div class="palette__dialog" role="dialog" aria-modal="true" aria-label="Search the site">
+    <div class="palette__field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="20" y1="20" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="palette-input" autocomplete="off" spellcheck="false" placeholder="Search publications, projects, skills, universities&hellip;" aria-label="Search query" aria-controls="palette-results" aria-expanded="true">
+      <button type="button" class="palette__close" id="palette-close" aria-label="Close search"><kbd>Esc</kbd></button>
+    </div>
+    <ul class="palette__results" id="palette-results" role="listbox" aria-label="Search results"></ul>
+    <div class="palette__foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>Esc</kbd> close</span>
+    </div>
+  </div>
+</div>

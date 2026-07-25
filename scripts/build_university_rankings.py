@@ -126,6 +126,67 @@ def load_qs(raw):
     return rows
 
 
+def match_key(name):
+    """Normalise a university name enough to pair THE and QS spellings.
+
+    THE says "Massachusetts Institute of Technology", QS says the same plus
+    "(MIT)"; dropping parentheticals, stop words and punctuation lines them up.
+    """
+    n = re.sub(r"\([^)]*\)", " ", name.lower())
+    n = re.sub(r"\b(the|university|universities|univ|of|and|for|at)\b", " ", n)
+    return re.sub(r"[^a-z0-9]", "", n)
+
+
+# The two publishers spell some countries differently; these are the same place.
+COUNTRY_ALIASES = [
+    {"China", "China (Mainland)"},
+    {"Hong Kong", "Hong Kong SAR"},
+    {"Macao", "Macau SAR", "Macau"},
+    {"Russia", "Russian Federation"},
+    {"Turkey", "Türkiye"},
+    {"Iran", "Iran, Islamic Republic of"},
+    {"Brunei", "Brunei Darussalam"},
+    {"Ireland", "Republic of Ireland"},
+]
+
+
+def same_country(a, b):
+    if a == b:
+        return True
+    return any(a in group and b in group for group in COUNTRY_ALIASES)
+
+
+def add_cross_ranks(the_rows, qs_rows):
+    """Annotate each row with the other table's position for the same institution.
+
+    Two gates keep this honest. A normalised name must be unique within both
+    tables, and the countries must agree: without the country check THE's
+    "University of Newcastle" (Australia) pairs with QS's "Newcastle University"
+    (United Kingdom), which are different institutions. A blank means "no
+    confident match", never "absent from the other ranking".
+    """
+    def unique_index(rows):
+        idx = {}
+        for r in rows:
+            idx.setdefault(match_key(r["name"]), []).append(r)
+        return {k: v[0] for k, v in idx.items() if len(v) == 1}
+
+    the_idx, qs_idx = unique_index(the_rows), unique_index(qs_rows)
+    matched = 0
+    for rows, own, other in ((the_rows, the_idx, qs_idx), (qs_rows, qs_idx, the_idx)):
+        for r in rows:
+            k = match_key(r["name"])
+            # The name must be unambiguous on both sides, otherwise the pair is
+            # only resolvable in one direction and the two tables disagree.
+            hit = other.get(k) if k in own else None
+            if hit and not same_country(r["country"], hit["country"]):
+                hit = None
+            r["cross"] = hit["rank"] if hit else ""
+            if hit:
+                matched += 1
+    return matched // 2
+
+
 def qs_data_url():
     page = get(QS_PAGE)
     urls = [u.replace("\\/", "/")
@@ -152,6 +213,9 @@ def main():
     qs_rows = load_qs(
         Path(args.qs).read_text("utf-8") if args.qs else get(qs_data_url()))
 
+    pairs = add_cross_ranks(the_rows, qs_rows)
+    print("cross-linked %d institutions across both tables" % pairs)
+
     for label, rows in (("THE", the_rows), ("QS", qs_rows)):
         if len(rows) != TOP_N:
             raise SystemExit("%s: expected %d rows, got %d" % (label, TOP_N, len(rows)))
@@ -174,8 +238,8 @@ def main():
         lines.append("  count: %d" % len(rows))
         lines.append("  entries:")
         lines += [
-            "    - { rank: %s, name: %s, country: %s }"
-            % (yq(r["rank"]), yq(r["name"]), yq(r["country"]))
+            "    - { rank: %s, name: %s, country: %s, cross: %s }"
+            % (yq(r["rank"]), yq(r["name"]), yq(r["country"]), yq(r.get("cross", "")))
             for r in rows
         ]
         lines.append("")
