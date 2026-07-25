@@ -1,0 +1,381 @@
+/* ==========================================================================
+   World University Rankings modal (THE + QS, top 400 each)
+   Rows are rendered from _data/university_rankings.yml, so the markup stays
+   class-driven rather than inline-styled: 800 rows makes per-row bytes matter.
+   ========================================================================== */
+
+.rank-tags {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+
+  &--country {
+    align-items: flex-start;
+    margin-bottom: 0.7rem;
+  }
+}
+
+.rank-tags__label {
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: 0 0 auto;
+  padding-top: 0.3rem;
+}
+
+.rank-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.95rem;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+
+  &:hover {
+    color: var(--text-strong);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+
+  .rank-tab__year {
+    font-size: 0.74rem;
+    font-weight: 700;
+    opacity: 0.75;
+  }
+}
+
+.rank-panel[hidden] {
+  display: none;
+}
+
+/* Country filter chips -------------------------------------------------- */
+.rank-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  // Exactly two rows of chips by default; the toggle below reveals the long tail.
+  // Sized to clear two 1.55rem chips plus one gap, so no third row peeks through.
+  max-height: 3.5rem;
+  overflow: hidden;
+  flex: 1 1 18rem;
+  min-width: 0;
+
+  &.is-expanded {
+    max-height: 11rem;
+    overflow-y: auto;
+  }
+}
+
+.rank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--surface-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 0.16rem 0.6rem;
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s var(--ease);
+
+  &:hover {
+    color: var(--text-strong);
+    border-color: var(--accent);
+  }
+
+  &.active {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+  }
+}
+
+.rank-chip__n {
+  font-size: 0.68rem;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+.rank-more {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 0.2rem 0;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.rank-meta {
+  margin: 0 0 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+
+  strong {
+    color: var(--text-strong);
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--accent);
+  }
+}
+
+.rank-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+
+.rank-search {
+  flex: 1 1 16rem;
+  min-width: 0;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.88rem;
+  font-family: var(--font-head);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text-strong);
+  outline: none;
+  transition: border-color 0.2s var(--ease);
+
+  &:focus {
+    border-color: var(--accent);
+  }
+}
+
+.rank-count {
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+
+  b {
+    color: var(--accent);
+  }
+}
+
+.rank-scroll {
+  max-height: 27rem;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.rank-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 0.6rem 0.5rem;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--text-strong);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s var(--ease);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      background: var(--surface-2);
+    }
+  }
+
+  td {
+    padding: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .rank-empty td {
+    padding: 1.6rem 0.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+}
+
+/* Position cell ---------------------------------------------------------- */
+.rank-pos {
+  width: 4.6rem;
+  text-align: center;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--muted);
+  white-space: nowrap;
+
+  span {
+    display: inline-block;
+    min-width: 2rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 5px;
+  }
+
+  &--gold span {
+    color: #92400e;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+  }
+  &--silver span {
+    color: #475569;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+  }
+  &--bronze span {
+    color: #9a3412;
+    background: #ffedd5;
+    border: 1px solid #fdba74;
+  }
+}
+
+/* University + country --------------------------------------------------- */
+.rank-uni {
+  font-weight: 600;
+  color: var(--text-strong);
+  line-height: 1.35;
+}
+
+.rank-loc {
+  color: var(--muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+/* Footnote --------------------------------------------------------------- */
+.rank-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--muted);
+
+  a {
+    color: var(--accent);
+  }
+}
+
+@media (max-width: 640px) {
+  .rank-table {
+    font-size: 0.76rem;
+    // Keep the table inside the phone instead of forcing a sideways swipe. With
+    // table-layout: fixed the column widths come from the header row, so they
+    // must be set on the th cells - widths on the body td cells are ignored.
+    table-layout: fixed;
+
+    td,
+    th {
+      padding: 0.45rem 0.28rem;
+    }
+
+    th:nth-child(1) {
+      width: 2.8rem;
+    }
+    th:nth-child(3) {
+      width: 5.2rem;
+    }
+  }
+
+  .rank-pos {
+    width: auto;
+    font-size: 0.74rem;
+
+    span {
+      min-width: 0;
+      padding: 0.1rem 0.3rem;
+    }
+  }
+
+  .rank-uni {
+    // break inside a word only when it genuinely cannot fit, never mid-word by default
+    overflow-wrap: break-word;
+  }
+
+  .rank-loc {
+    white-space: normal;
+    width: auto;
+    font-size: 0.72rem;
+    overflow-wrap: break-word;
+  }
+
+  .rank-th-full {
+    display: none; // "Country / Territory" -> "Country" on phones
+  }
+
+  .rank-tags__label {
+    padding-top: 0;
+  }
+
+  .rank-chips {
+    max-height: 5.3rem; // three chip rows on a phone
+    flex-basis: 100%;
+  }
+}
+
+:root[data-theme="dark"] {
+  .rank-pos--gold span {
+    color: #fcd34d;
+    background: rgba(146, 64, 14, 0.3);
+    border-color: rgba(252, 211, 77, 0.45);
+  }
+  .rank-pos--silver span {
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(203, 213, 225, 0.35);
+  }
+  .rank-pos--bronze span {
+    color: #fdba74;
+    background: rgba(154, 52, 18, 0.3);
+    border-color: rgba(251, 146, 60, 0.45);
+  }
+}

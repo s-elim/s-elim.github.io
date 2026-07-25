@@ -42,6 +42,10 @@ redirect_from:
       <button type="button" class="js-modal-open" data-modal-target="#journals-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
         <i class="fas fa-book-open" aria-hidden="true"></i> Top Journals (Robotics &amp; Vision) <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
       </button>
+      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
+      <button type="button" class="js-modal-open" data-modal-target="#rankings-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
+        <i class="fas fa-trophy" aria-hidden="true"></i> World University Rankings (THE &amp; QS Top 400) <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      </button>
     </div>
     <div class="hero__actions">
       <a class="btn btn--strong" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
@@ -807,6 +811,74 @@ redirect_from:
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="rankings-modal" role="dialog" aria-modal="true" aria-labelledby="rankings-modal-title">
+  <div class="modal__dialog" style="max-width: 54rem;">
+    <div class="modal__head">
+      <h3 class="modal__title" id="rankings-modal-title"><i class="fas fa-trophy" aria-hidden="true"></i> World University Rankings &mdash; Top 400</h3>
+      <button type="button" class="modal__close js-modal-close" aria-label="Close university rankings popup">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="modal__body" style="padding-top: 0.5rem;">
+      {% assign rk = site.data.university_rankings %}
+      {% assign rk_keys = "the,qs" | split: "," %}
+      <div class="rank-tags" role="tablist" aria-label="Ranking system">
+        <span class="rank-tags__label">Ranking</span>
+        {% for k in rk_keys %}{% assign src = rk[k] %}
+        <button type="button" class="rank-tab{% if forloop.first %} active{% endif %}" data-rank-tab="{{ k }}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="rank-panel-{{ k }}">
+          <i class="fas {% if k == 'the' %}fa-landmark{% else %}fa-globe-americas{% endif %}" aria-hidden="true"></i> {{ src.short }} <span class="rank-tab__year">&rsquo;{{ src.edition | slice: 2, 2 }}</span>
+        </button>
+        {% endfor %}
+      </div>
+
+      {% for k in rk_keys %}{% assign src = rk[k] %}
+      <div class="rank-panel" id="rank-panel-{{ k }}" data-rank-panel="{{ k }}" role="tabpanel"{% unless forloop.first %} hidden{% endunless %}>
+        <p class="rank-meta">
+          <strong>{{ src.name }} {{ src.edition }}</strong> &middot; published {{ src.published }} &middot; full table covers {{ src.total_ranked }}. Showing the top {{ src.count }} positions.
+        </p>
+
+        {% assign countries = src.entries | group_by: "country" | sort: "size" | reverse %}
+        <div class="rank-tags rank-tags--country">
+          <span class="rank-tags__label">Country</span>
+          <div class="rank-chips" data-rank-countries="{{ k }}">
+            <button type="button" class="rank-chip active" data-country="">All <span class="rank-chip__n">{{ src.count }}</span></button>
+            {% for c in countries %}
+            <button type="button" class="rank-chip" data-country="{{ c.name }}">{{ c.name }} <span class="rank-chip__n">{{ c.size }}</span></button>
+            {% endfor %}
+          </div>
+          <button type="button" class="rank-more" data-rank-more="{{ k }}" aria-expanded="false">Show all {{ countries | size }} countries</button>
+        </div>
+
+        <div class="rank-toolbar">
+          <input type="text" class="rank-search" data-rank-search="{{ k }}" placeholder="Search university or country&hellip;" aria-label="Search the {{ src.short }} {{ src.edition }} top 400">
+          <span class="rank-count" data-rank-count="{{ k }}">Showing <b>{{ src.count }}</b> / {{ src.count }}</span>
+        </div>
+        <div class="rank-scroll">
+          <table class="rank-table" data-rank-table="{{ k }}">
+            <thead>
+              <tr>
+                <th style="text-align:center;">Rank</th>
+                <th>University</th>
+                <th>Country<span class="rank-th-full"> / Territory</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in src.entries %}{% assign rnum = e.rank | remove: "=" %}{% if rnum == "1" %}{% assign medal = " rank-pos--gold" %}{% elsif rnum == "2" %}{% assign medal = " rank-pos--silver" %}{% elsif rnum == "3" %}{% assign medal = " rank-pos--bronze" %}{% else %}{% assign medal = "" %}{% endif %}
+              <tr data-c="{{ e.country }}"><td class="rank-pos{{ medal }}"><span>{{ e.rank }}</span></td><td class="rank-uni">{{ e.name }}</td><td class="rank-loc">{{ e.country }}</td></tr>
+              {% endfor %}
+              <tr class="rank-empty" hidden><td colspan="3">No university matches that filter.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="rank-note">
+          {{ src.note }} As published by <a href="{{ src.url }}" target="_blank" rel="noopener">{{ src.short }} {{ src.edition }}</a> &mdash; reproduced for reference; rankings remain the property of their publisher.
+        </p>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </div>

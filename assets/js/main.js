@@ -636,6 +636,94 @@
     }
   }
 
+  /* ---- World University Rankings (THE / QS tabs + search) ------------- */
+  function initRankings() {
+    var modal = document.getElementById("rankings-modal");
+    if (!modal) return;
+
+    var tabs = Array.prototype.slice.call(modal.querySelectorAll(".rank-tab"));
+    var panels = Array.prototype.slice.call(modal.querySelectorAll(".rank-panel"));
+    if (!tabs.length || !panels.length) return;
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var key = tab.getAttribute("data-rank-tab");
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.classList.toggle("active", on);
+          t.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        panels.forEach(function (p) {
+          p.hidden = p.getAttribute("data-rank-panel") !== key;
+        });
+      });
+    });
+
+    panels.forEach(function (panel) {
+      var key = panel.getAttribute("data-rank-panel");
+      var input = panel.querySelector('[data-rank-search="' + key + '"]');
+      var counter = panel.querySelector('[data-rank-count="' + key + '"]');
+      var table = panel.querySelector('[data-rank-table="' + key + '"]');
+      var chipBox = panel.querySelector('[data-rank-countries="' + key + '"]');
+      var moreBtn = panel.querySelector('[data-rank-more="' + key + '"]');
+      if (!table) return;
+
+      var empty = table.querySelector(".rank-empty");
+      var rows = Array.prototype.slice.call(
+        table.querySelectorAll("tbody tr:not(.rank-empty)")
+      );
+      // Cache each row's searchable text and country once: filtering 400 rows per
+      // keystroke should not re-read the DOM every time.
+      var haystack = rows.map(function (r) { return r.textContent.toLowerCase(); });
+      var countries = rows.map(function (r) { return r.getAttribute("data-c") || ""; });
+      var total = rows.length;
+      var scroll = panel.querySelector(".rank-scroll");
+      var country = "";
+
+      function apply() {
+        var q = input ? (input.value || "").trim().toLowerCase() : "";
+        var shown = 0;
+        for (var i = 0; i < rows.length; i++) {
+          var hit = (!country || countries[i] === country) &&
+                    (!q || haystack[i].indexOf(q) !== -1);
+          rows[i].style.display = hit ? "" : "none";
+          if (hit) shown++;
+        }
+        if (empty) empty.hidden = shown !== 0;
+        if (counter) counter.innerHTML = "Showing <b>" + shown + "</b> / " + total;
+        if (scroll) scroll.scrollTop = 0;
+      }
+
+      if (input) input.addEventListener("input", apply);
+
+      if (chipBox) {
+        var chips = Array.prototype.slice.call(chipBox.querySelectorAll(".rank-chip"));
+        chipBox.addEventListener("click", function (e) {
+          var chip = e.target.closest(".rank-chip");
+          if (!chip) return;
+          // Clicking the active country again clears it, so the chips double as a toggle.
+          var next = chip.getAttribute("data-country");
+          country = (next && next === country) ? "" : next;
+          chips.forEach(function (c) {
+            c.classList.toggle("active", (c.getAttribute("data-country") || "") === country);
+          });
+          apply();
+        });
+      }
+
+      if (moreBtn && chipBox) {
+        moreBtn.addEventListener("click", function () {
+          var open = chipBox.classList.toggle("is-expanded");
+          moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          moreBtn.textContent = open
+            ? "Show fewer countries"
+            : moreBtn.getAttribute("data-label");
+        });
+        moreBtn.setAttribute("data-label", moreBtn.textContent);
+      }
+    });
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -656,6 +744,7 @@
     safe(initDeadlinesCountdown);
     safe(initDeadlineFilters);
     safe(initJournalSearch);
+    safe(initRankings);
     safe(initBackToTop);
     safe(initSkillSearch);
   }
