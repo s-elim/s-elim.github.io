@@ -564,3 +564,10 @@
     border-color: rgba(251, 146, 60, 0.4);
   }
 }
+
+// The journal table gained longer titles, which squeezed the last two columns
+// enough to break "SCIE-Q1" across lines. Keep the badges on one line.
+#journals-table td:nth-child(5) span,
+#journals-table td:nth-child(6) span {
+  white-space: nowrap;
+}
