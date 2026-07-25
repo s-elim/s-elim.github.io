@@ -203,7 +203,7 @@
 .rank-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.73rem;
   text-align: left;
 
   thead th {
@@ -215,7 +215,7 @@
     padding: 0.6rem 0.5rem;
     font-family: var(--font-head);
     font-weight: 600;
-    font-size: 0.78rem;
+    font-size: 0.70rem;
     color: var(--text-strong);
     letter-spacing: 0.02em;
     white-space: nowrap;
@@ -243,7 +243,7 @@
     padding: 1.6rem 0.5rem;
     text-align: center;
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -253,7 +253,7 @@
   text-align: center;
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   color: var(--muted);
   white-space: nowrap;
 
@@ -297,7 +297,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
   font-family: var(--font-head);
-  font-size: 0.66rem;
+  font-size: 0.60rem;
   font-weight: 700;
   color: var(--muted);
   white-space: nowrap;
@@ -312,7 +312,7 @@ tr:hover .rank-cross {
 
 .rank-loc {
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   white-space: nowrap;
 }
 
@@ -330,7 +330,7 @@ tr:hover .rank-cross {
 
 @media (max-width: 640px) {
   .rank-table {
-    font-size: 0.76rem;
+    font-size: 0.68rem;
     // Keep the table inside the phone instead of forcing a sideways swipe. With
     // table-layout: fixed the column widths come from the header row, so they
     // must be set on the th cells - widths on the body td cells are ignored.
@@ -351,7 +351,7 @@ tr:hover .rank-cross {
 
   .rank-pos {
     width: auto;
-    font-size: 0.74rem;
+    font-size: 0.68rem;
 
     span {
       min-width: 0;
@@ -367,7 +367,7 @@ tr:hover .rank-cross {
   .rank-loc {
     white-space: normal;
     width: auto;
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     overflow-wrap: break-word;
   }
 
