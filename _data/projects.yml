@@ -10,7 +10,7 @@ latest:
     category: 'Bootcamp'
     meta: '3-Month Extensive Bootcamp · Vizuara AI Lab'
     desc: 'Gained hands-on experience with large language models, context foundations, instructional prompting, and building dynamic personal and voice agents. And so, Implemented Retrieval-Augmented Generation (WRITE & SELECT), tool use and MCP-based workflows, and advanced memory architectures for production-grade AI agents.'
-  - title: 'Harness Engineering'
+  - title: 'Harness & Graph Engineering'
     category: 'Bootcamp'
     meta: '3-Month Extensive Bootcamp · Vizuara AI Lab'
     desc: 'Gained hands-on experience in building the critical infrastructure required to transform LLMs into production-grade autonomous agents. Implemented custom agent loops (ReAct pattern), sandboxed tool execution systems with permission gates, memory/context engines, and control planes for error-resilient execution (checkpoints and replay).'
