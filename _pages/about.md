@@ -116,10 +116,10 @@ redirect_from:
     <div class="modal__body" style="padding-top: 0.5rem;">
       <div class="deadline-filters" style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.85rem; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-right: 0.2rem;">Filter:</span>
-        <button type="button" class="deadline-filter-btn active" data-filter="all">All (28)</button>
+        <button type="button" class="deadline-filter-btn active" data-filter="all">All (35)</button>
         <button type="button" class="deadline-filter-btn" data-filter="robotics">🤖 Robotics (6)</button>
-        <button type="button" class="deadline-filter-btn" data-filter="vision">👁️ Vision &amp; Graphics (10)</button>
-        <button type="button" class="deadline-filter-btn" data-filter="aiml">🧠 AI/ML &amp; NLP (12)</button>
+        <button type="button" class="deadline-filter-btn" data-filter="vision">👁️ Vision &amp; Graphics (18)</button>
+        <button type="button" class="deadline-filter-btn" data-filter="aiml">🧠 AI/ML &amp; NLP (17)</button>
       </div>
       <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;" id="deadlines-table">
@@ -156,14 +156,14 @@ redirect_from:
             <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-20" data-category="robotics">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Humanoids</td>
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 20, 2026, Munich, Germany</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-10-01" data-category="robotics">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">HRI</td>
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
               <td style="padding: 0.75rem 0.5rem;">October 1, 2026, Boulder, USA</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
@@ -233,7 +233,7 @@ redirect_from:
             <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-18" data-category="vision">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">3DV</td>
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.78rem;">—</span></td>
               <td style="padding: 0.75rem 0.5rem;">September 18, 2026, Singapore</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
@@ -259,6 +259,20 @@ redirect_from:
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
 
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-08-31" data-category="vision">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE VR</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">August 31, 2026, Melbourne, Australia</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="vision">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ISMAR</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; next edition after Bari, Italy (Oct 2026)</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
             <!-- AI/ML Conferences (Third) -->
             <tr class="category-header-row" data-category-header="aiml" style="background: var(--surface-2);">
               <td colspan="5" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
@@ -338,7 +352,7 @@ redirect_from:
             <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-02-20" data-category="aiml">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">UAI</td>
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">February 20, 2027, Toronto, Canada</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
@@ -347,6 +361,41 @@ redirect_from:
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A</span></td>
               <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Sydney, Australia</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="aiml">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICAPS</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; conference June 30 &ndash; July 2, 2027, Columbia, SC, USA</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="aiml">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">COLT</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; conference June 28 &ndash; July 2, 2027, Tokyo, Japan</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="aiml">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">KR</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; next edition after Lisbon, Portugal (July 2026)</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="aiml">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">UIST</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; next edition after Detroit, USA (Nov 2026)</td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="tba" data-category="aiml">
+              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">PerCom</td>
+              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.78rem;">A*</span></td>
+              <td style="padding: 0.75rem 0.5rem;">TBA &middot; next edition after Pisa, Italy (March 2026)</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
           </tbody>
@@ -367,10 +416,10 @@ redirect_from:
     <div class="modal__body" style="padding-top: 0.5rem;">
       <div class="journal-filters" style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem; align-items: center;">
         <span style="font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-right: 0.2rem;">Filter by Domain:</span>
-        <button type="button" class="journal-filter-btn active" data-filter="all">All (50)</button>
-        <button type="button" class="journal-filter-btn" data-filter="robotics">🤖 Robotics (15)</button>
-        <button type="button" class="journal-filter-btn" data-filter="vision">👁️ Vision &amp; Graphics (12)</button>
-        <button type="button" class="journal-filter-btn" data-filter="aiml">🧠 AI &amp; Machine Learning (23)</button>
+        <button type="button" class="journal-filter-btn active" data-filter="all">All (79)</button>
+        <button type="button" class="journal-filter-btn" data-filter="robotics">🤖 Robotics (27)</button>
+        <button type="button" class="journal-filter-btn" data-filter="vision">👁️ Vision &amp; Graphics (18)</button>
+        <button type="button" class="journal-filter-btn" data-filter="aiml">🧠 AI &amp; Machine Learning (34)</button>
       </div>
       <div style="margin-bottom: 0.85rem;">
         <input type="text" id="journal-search" placeholder="Search journal name, abbreviation, or rank..." style="width: 100%; padding: 0.45rem 0.85rem; font-size: 0.88rem; font-family: var(--font-head); border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text-strong); outline: none;">
@@ -515,6 +564,102 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
 
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">16</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Journal of Manufacturing Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(JMS)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">14.9</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">17</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Advanced Engineering Informatics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(AEI)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.5</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">18</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Mechanical Systems and Signal Processing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(MSSP)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.2</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">19</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Journal of Intelligent Manufacturing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(JIM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.7</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">20</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Automatic Control <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TAC)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.0</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">21</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Instrumentation and Measurement <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TIM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.0</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">22</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Advanced Intelligent Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(Adv. Intell. Syst.)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.7</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">23</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Automatica</td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.2</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">24</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Control Engineering Practice <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(CEP)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">5.3</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">25</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Cognitive and Developmental Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TCDS)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">4.7</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">26</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Human-Machine Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE THMS)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">4.4</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="robotics">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">27</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Control Systems Technology <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TCST)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">4.4</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
             <!-- Vision & Graphics SCIE-Q1 Journals (Middle Group) -->
             <tr class="category-header-row" data-category-header="vision" style="background: var(--surface-2);">
               <td colspan="6" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
@@ -522,7 +667,7 @@ redirect_from:
               </td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">16</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">28</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Pattern Analysis and Machine Intelligence <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TPAMI)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">20.8</td>
@@ -530,7 +675,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">17</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">29</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">International Journal of Computer Vision <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IJCV)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.6</td>
@@ -538,7 +683,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">18</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">30</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Image Processing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TIP)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.8</td>
@@ -546,7 +691,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">19</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">31</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Medical Image Analysis <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(MedIA)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.7</td>
@@ -554,7 +699,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">20</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">32</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Medical Imaging <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TMI)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.9</td>
@@ -562,7 +707,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">21</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">33</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Circuits and Systems for Video Technology <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TCSVT)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.3</td>
@@ -570,7 +715,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">22</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">34</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Pattern Recognition <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(PR)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.5</td>
@@ -578,7 +723,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">23</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">35</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACM Transactions on Graphics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(ACM TOG)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.2</td>
@@ -586,7 +731,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">24</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">36</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Visualization and Computer Graphics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TVCG)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">5.2</td>
@@ -594,7 +739,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">25</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">37</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Computer Vision and Image Understanding <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(CVIU)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">4.3</td>
@@ -602,7 +747,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">26</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">38</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Image and Vision Computing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IVC)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">4.2</td>
@@ -610,7 +755,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">27</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">39</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Signal Processing: Image Communication <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(SPIC)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">3.8</td>
@@ -618,6 +763,54 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
 
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">40</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">ISPRS Journal of Photogrammetry and Remote Sensing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(ISPRS J. P&RS)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">12.9</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">41</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Signal Processing Magazine <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE SPM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.8</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">42</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Multimedia <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TMM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">9.9</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">43</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Geoscience and Remote Sensing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TGRS)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">9.4</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">44</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Journal of Selected Topics in Signal Processing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE JSTSP)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.5</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="vision">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">45</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE/ACM Transactions on Audio, Speech, and Language Processing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE/ACM TASLP)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">5.2</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
             <!-- AI & Machine Learning SCIE-Q1 Journals (Third Group) -->
             <tr class="category-header-row" data-category-header="aiml" style="background: var(--surface-2);">
               <td colspan="6" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
@@ -625,7 +818,7 @@ redirect_from:
               </td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">28</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">46</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACM Computing Surveys <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(ACM CSUR)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">30.4</td>
@@ -633,7 +826,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">29</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">47</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Computational Intelligence Magazine <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE CIM)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">19.3</td>
@@ -641,7 +834,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">30</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">48</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Artificial Intelligence Review <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(AIRE)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">19.0</td>
@@ -649,7 +842,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">31</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">49</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Nature Machine Intelligence <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(Nat. Mach. Intell.)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">18.8</td>
@@ -657,7 +850,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">32</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">50</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Information Fusion <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(INFUS)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">14.7</td>
@@ -665,7 +858,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">33</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">51</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Artificial Intelligence <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(AIJ)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">14.0</td>
@@ -673,7 +866,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">34</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">52</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Evolutionary Computation <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TEVC)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.7</td>
@@ -681,7 +874,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">35</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">53</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Industrial Informatics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TII)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.7</td>
@@ -689,7 +882,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">36</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">54</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Fuzzy Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TFS)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.7</td>
@@ -697,7 +890,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">37</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">55</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Neural Networks and Learning Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TNNLS)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.4</td>
@@ -705,7 +898,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">38</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">56</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Cybernetics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE T-CYB)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">9.6</td>
@@ -713,7 +906,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">39</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">57</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Internet of Things Journal <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE IoT-J)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.9</td>
@@ -721,7 +914,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">40</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">58</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Systems, Man, and Cybernetics: Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TSMC-S)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.6</td>
@@ -729,7 +922,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">41</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">59</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Information Sciences <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(INS)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.1</td>
@@ -737,7 +930,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">42</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">60</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Swarm and Evolutionary Computation <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(SWEVO)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.2</td>
@@ -745,7 +938,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">43</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">61</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Expert Systems with Applications <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(ESWA)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.5</td>
@@ -753,7 +946,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">44</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">62</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Engineering Applications of Artificial Intelligence <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(EAAI)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.5</td>
@@ -761,7 +954,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">45</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">63</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Knowledge-Based Systems <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(KBS)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.2</td>
@@ -769,7 +962,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">46</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">64</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Applied Soft Computing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(ASOC)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.2</td>
@@ -777,7 +970,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">47</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">65</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Industrial Electronics <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TIE)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.7</td>
@@ -785,7 +978,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">48</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">66</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Neural Networks</td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.0</td>
@@ -793,7 +986,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">49</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">67</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Signal Processing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TSP)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">5.7</td>
@@ -801,11 +994,99 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
-              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">50</td>
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">68</td>
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Neurocomputing</td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">5.5</td>
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 10%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">69</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Proceedings of the IEEE <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(Proc. IEEE)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">30.9</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">70</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Knowledge and Data Engineering <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TKDE)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.6</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">71</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Affective Computing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TAFFC)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">11.3</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">72</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Computers in Industry <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(COMIND)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">10.0</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">73</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Mobile Computing <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TMC)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.8</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">74</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Transportation Research Part C: Emerging Technologies <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(TR-C)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.4</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">75</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Information Processing & Management <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IPM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.1</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">76</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Big Data <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TBD)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.1</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">77</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Artificial Intelligence in Medicine <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(AIIM)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.8</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">78</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">Cognitive Computation <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(Cogn. Comput.)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">7.4</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
+              <td style="padding: 0.55rem 0.4rem; text-align: center; font-weight: 600; color: var(--muted);">79</td>
+              <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Transactions on Emerging Topics in Computational Intelligence <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE TETCI)</span></td>
+              <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">6.0</td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">Top 25%</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.76rem;">SCIE-Q1</span></td>
             </tr>
           </tbody>

@@ -477,6 +477,15 @@
     rows.forEach(function (row) {
       var dStr = row.getAttribute("data-deadline");
       if (!dStr) return;
+      // Venues whose next call is not out yet: show TBA rather than count down to
+      // a guessed date or leave the cell blank.
+      if (dStr === "tba") {
+        var tbaCell = row.querySelector(".deadline-countdown");
+        if (tbaCell) {
+          tbaCell.innerHTML = '<span class="deadline-pill deadline-pill--tba">TBA</span>';
+        }
+        return;
+      }
       var parts = dStr.split("-");
       if (parts.length !== 3) return;
 

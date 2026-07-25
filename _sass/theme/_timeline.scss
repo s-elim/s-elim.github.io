@@ -485,6 +485,12 @@
   }
 }
 
+.deadline-pill--tba {
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
 .deadline-filter-btn,
 .journal-filter-btn {
   background: var(--surface-2);
@@ -535,6 +541,11 @@
     color: #94a3b8;
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
+  }
+  .deadline-pill--tba {
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .conf-tag--robotics {
