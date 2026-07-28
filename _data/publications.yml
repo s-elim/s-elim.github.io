@@ -22,7 +22,7 @@
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
-- title: 'Zero-Shot Functional Affordances and Skill Recall for Robust Robot Manipulation'
+- title: 'Grasp What You Can Reach: Embodiment-Feasible Functional Affordances for Training-Free Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
   venue_short: "IROS'27"
