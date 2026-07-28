@@ -146,11 +146,11 @@ redirect_from:
               <td style="padding: 0.75rem 0.5rem;">September 15, 2026, South Korea</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-02" data-category="robotics">
+            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-03-02" data-category="robotics">
               <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
               <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 2, 2026, USA</td>
+              <td style="padding: 0.75rem 0.5rem;">March 2, 2027, Florence, Italy</td>
               <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-20" data-category="robotics">
