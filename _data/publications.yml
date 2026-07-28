@@ -176,7 +176,7 @@
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2512.04425', kind: 'pdf' }
 
 - title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
-  authors: 'Md Selim Sarowar and Sungho Kim*'
+  authors: 'Md Selim Sarowar, Md Tanvir Islam, and Khan Muhammad*'
   venue: 'ACM Computing Surveys'
   impact: 'SCIE-Q1, IF: 30.4, Top 1%'
   year: 2026
