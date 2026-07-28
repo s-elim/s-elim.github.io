@@ -22,7 +22,7 @@
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
-- title: 'Grasp What You Can Reach: Embodiment-Feasible Functional Affordances for Training-Free Manipulation'
+- title: 'Affordance-Grounded Coding Agents are Robust Where Vision-Language-Action Policies Fail'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
   venue_short: "IROS'27"
