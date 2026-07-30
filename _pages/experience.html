@@ -82,20 +82,28 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <span class="project-cat-card__count">{{ site.data.teaching | size }} courses</span>
   </header>
   <div class="project-cat-card__body">
-    <div class="teaching-grid">
-      {% for t in site.data.teaching %}
-      <div class="teaching-card card">
-        <h3 class="teaching-card__title">
-          <i class="fas {% if t.role == 'Instructor' %}fa-user-tie{% else %}fa-chalkboard-teacher{% endif %}" aria-hidden="true"></i>
-          <span>{{ t.course }}</span>
-          <span class="tag teaching-card__role{% if t.role == 'Instructor' %} teaching-card__role--instructor{% endif %}">{{ t.role }}</span>
-        </h3>
-        <ul class="entry-meta">
-          <li><i class="fas fa-university" aria-hidden="true"></i> <span>{{ t.university }}</span></li>
-          <li><i class="fas fa-calendar" aria-hidden="true"></i> {{ t.date }}</li>
-        </ul>
+    <div class="teaching-carousel-container">
+      <button class="carousel-btn prev" aria-label="Previous Course" onclick="document.getElementById('teaching-carousel').scrollBy({left: -330, behavior: 'smooth'})">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <div class="teaching-carousel" id="teaching-carousel">
+        {% for t in site.data.teaching %}
+        <div class="teaching-card card carousel-card">
+          <h3 class="teaching-card__title">
+            <i class="fas {% if t.role == 'Instructor' %}fa-user-tie{% else %}fa-chalkboard-teacher{% endif %}" aria-hidden="true"></i>
+            <span>{{ t.course }}</span>
+            <span class="tag teaching-card__role{% if t.role == 'Instructor' %} teaching-card__role--instructor{% endif %}">{{ t.role }}</span>
+          </h3>
+          <ul class="entry-meta">
+            <li><i class="fas fa-university" aria-hidden="true"></i> <span>{{ t.university }}</span></li>
+            <li><i class="fas fa-calendar" aria-hidden="true"></i> {{ t.date }}</li>
+          </ul>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <button class="carousel-btn next" aria-label="Next Course" onclick="document.getElementById('teaching-carousel').scrollBy({left: 330, behavior: 'smooth'})">
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </section>
@@ -110,21 +118,29 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <span class="project-cat-card__count">{{ site.data.reviewing | size }} venues</span>
   </header>
   <div class="project-cat-card__body">
-    <div class="reviewing-grid">
-      {% for r in site.data.reviewing %}
-      <div class="reviewing-card card">
-        <h3 class="reviewing-card__title">
-          <i class="fas {% if r.type == 'Journal' %}fa-book-open{% elsif r.type == 'Workshop' %}fa-tools{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
-          <span>{{ r.venue }}</span>
-          <span class="tag reviewing-card__role">{{ r.role }}</span>
-        </h3>
-        <ul class="entry-meta">
-          {% if r.full_name %}<li><i class="fas fa-certificate" aria-hidden="true"></i> <span>{{ r.full_name }}</span></li>{% endif %}
-          {% if r.org %}<li><i class="fas fa-building" aria-hidden="true"></i> <span>{{ r.org }}</span></li>{% endif %}
-          {% if r.date %}<li><i class="fas fa-calendar" aria-hidden="true"></i> {{ r.date }}</li>{% endif %}
-        </ul>
+    <div class="reviewing-carousel-container">
+      <button class="carousel-btn prev" aria-label="Previous Venue" onclick="document.getElementById('reviewing-carousel').scrollBy({left: -330, behavior: 'smooth'})">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <div class="reviewing-carousel" id="reviewing-carousel">
+        {% for r in site.data.reviewing %}
+        <div class="reviewing-card card carousel-card">
+          <h3 class="reviewing-card__title">
+            <i class="fas {% if r.type == 'Journal' %}fa-book-open{% elsif r.type == 'Workshop' %}fa-tools{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
+            <span>{{ r.venue }}</span>
+            <span class="tag reviewing-card__role">{{ r.role }}</span>
+          </h3>
+          <ul class="entry-meta">
+            {% if r.full_name %}<li><i class="fas fa-certificate" aria-hidden="true"></i> <span>{{ r.full_name }}</span></li>{% endif %}
+            {% if r.org %}<li><i class="fas fa-building" aria-hidden="true"></i> <span>{{ r.org }}</span></li>{% endif %}
+            {% if r.date %}<li><i class="fas fa-calendar" aria-hidden="true"></i> {{ r.date }}</li>{% endif %}
+          </ul>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <button class="carousel-btn next" aria-label="Next Venue" onclick="document.getElementById('reviewing-carousel').scrollBy({left: 330, behavior: 'smooth'})">
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </section>
