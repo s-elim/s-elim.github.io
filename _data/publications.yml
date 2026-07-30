@@ -52,8 +52,8 @@
 
 - title: 'Quantifying the Robustness Gap: A Capability-Factored Dataset and Benchmark for Robot Learning'
   authors: 'Md Selim Sarowar'
-  venue: 'Neural Information Processing Systems'
-  venue_short: "NeurIPS'27"
+  venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition / ICLR'
+  venue_short: "CVPR'27 / ICLR'27"
   year: 2027
   type: 'conference'
   rank: 'A*'
