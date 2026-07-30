@@ -582,31 +582,58 @@
     }
   }
 
-  /* ---- Deadline Category Filter -------------------------------------- */
+  /* ---- Deadline Category & Rank Filter ------------------------------- */
   function initDeadlineFilters() {
     var filterContainer = document.querySelector(".deadline-filters");
+    var rankContainer = document.querySelector(".deadline-rank-filters");
     var table = document.getElementById("deadlines-table");
-    if (!filterContainer || !table) return;
-    var buttons = filterContainer.querySelectorAll(".deadline-filter-btn");
+    if (!table) return;
+
+    var categoryBtns = filterContainer ? filterContainer.querySelectorAll(".deadline-filter-btn") : [];
+    var rankBtns = rankContainer ? rankContainer.querySelectorAll(".deadline-rank-btn") : [];
     var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
 
-    buttons.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        buttons.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        var filter = btn.getAttribute("data-filter");
+    var currentCategory = "all";
+    var currentRank = "all";
 
-        rows.forEach(function (row) {
-          var cat = row.getAttribute("data-category");
-          var headerCat = row.getAttribute("data-category-header");
-          if (filter === "all") {
-            row.style.display = "";
-          } else if (cat === filter || headerCat === filter) {
+    function updateVisibility() {
+      rows.forEach(function (row) {
+        var isHeader = row.classList.contains("category-header-row");
+        var cat = row.getAttribute("data-category");
+        var headerCat = row.getAttribute("data-category-header");
+        var rank = row.getAttribute("data-rank");
+
+        if (isHeader) {
+          var headerMatches = (currentCategory === "all") || (headerCat === currentCategory);
+          row.style.display = headerMatches ? "" : "none";
+        } else {
+          var matchesCat = (currentCategory === "all") || (cat === currentCategory);
+          var matchesRank = (currentRank === "all") || (rank === currentRank);
+
+          if (matchesCat && matchesRank) {
             row.style.display = "";
           } else {
             row.style.display = "none";
           }
-        });
+        }
+      });
+    }
+
+    categoryBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        categoryBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentCategory = btn.getAttribute("data-filter");
+        updateVisibility();
+      });
+    });
+
+    rankBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        rankBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentRank = btn.getAttribute("data-rank");
+        updateVisibility();
       });
     });
   }
