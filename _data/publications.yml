@@ -36,7 +36,7 @@
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
 
-- title: 'AGI: Agentic Intelligence in Latent World Model for Robot Manipulation'
+- title: 'Cheap Foresight: Agentic Intelligence with Latent Verification for Robust Manipulation'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
