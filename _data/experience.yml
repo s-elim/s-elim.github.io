@@ -2,12 +2,14 @@
 # `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
 - role: 'Graduate Research Assistant'
   org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea <span class="fi fi-kr"></span>'
-  date: 'Aug 2025 - Aug 2027'
+  date: 'Sep 2024 - Present'
   current: true
+  extra: 'Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>'
   points:
-    - '<strong>Vision-Language-Action(VLAs) & World Models</strong>: Developed GST-VLA: Structured Gaussian Spatial Tokens for 3D-Aware Vision-Language-Action Models and Outperformed baseline SOTAs.'
-    - '<strong>6D Pose Estimation & Vision Foundation Model</strong>: Authored "C3G-VM6D" (IEEE Access), a real-time 6D pose estimation system using DINOv2 and 3D Gaussian mixture models. As well, achieved the state-of-the-art performance (80.9% accuracy) on the LineMOD-Occluded dataset, improving robustness in heavy occlusion scenarios by over 30%.'
-    - '3D Computer Vision, Spatial Reasoning & Depth Sensing, VLA, Diffusion Transformers, 5D Robot Manipulation'
+    - '<strong>Vision-Language-Action (VLA) &amp; Spatial Reasoning</strong>: Developed <strong>GaussVLA</strong> (accepted at <em>BMVC’26</em>, CORE Rank A) for geometry-aware spatial reasoning, <strong>GST-VLA</strong> (accepted at <em>ICML’26 Workshop</em>) for 3D depth-aware VLAs, and <strong>AFFORD-X</strong> (<em>IROS’27</em>) for affordance-grounded coding agents.'
+    - '<strong>6D Pose Estimation &amp; Vision Foundation Models</strong>: Authored <strong>C3G-VM6D</strong> (published in <em>IEEE Access</em>, SCIE-Q1), a data-efficient 6D pose estimation system combining DINOv2 with 3D Gaussian representations, improving occlusion robustness significantly on LineMOD-Occluded.'
+    - '<strong>Agentic Intelligence &amp; World Models</strong>: Developed <strong>Cheap Foresight</strong> (<em>ICRA’27</em>), integrating executable code generation, latent world-model imagination, and verification for robust physical AI robot manipulation.'
+    - '<strong>Core Domains</strong>: 3D Computer Vision, Spatial Intelligence, 6D Pose Estimation, Vision-Language-Action Models, World Models, and Agentic Robotics.'
 
 - role: 'Research Assistant'
   org: '<a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications &amp; Signal Processing Lab (WCSP)</a> · National Tsing Hua University, Hsinchu, Taiwan <span class="fi fi-tw"></span>'
