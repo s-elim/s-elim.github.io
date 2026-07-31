@@ -7,6 +7,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 ---
 
 {% assign pubs = site.data.publications %}
+{% assign total = pubs | size %}
 {% assign prep = pubs | where: "status", "To be submitted" %}
 {% assign prepcount = prep | size %}
 {% assign published = 0 %}
