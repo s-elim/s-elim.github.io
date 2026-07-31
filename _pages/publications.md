@@ -66,10 +66,9 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 <div id="pub-list">
 {% for y in years %}
-  {% assign y_prep = prep | where: "year", y | size %}
   {% assign y_total = pubs | where: "year", y | size %}
   <section class="pub-year-section" data-year="{{ y }}">
-    <h2 class="pub-year">{{ y }} <span class="pub-year__count">{{ y_total }}</span>{% if y_prep > 0 %} <span class="pub-year__note">In Preparation</span>{% endif %}</h2>
+    <h2 class="pub-year">{{ y }} <span class="pub-year__count">{{ y_total }}</span></h2>
     <div class="pub-grid">
     {% for pub in pubs %}{% if pub.year == y %}{% include pub-card.html pub=pub %}{% endif %}{% endfor %}
     </div>
