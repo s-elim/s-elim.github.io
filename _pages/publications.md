@@ -8,11 +8,9 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 {% assign pubs = site.data.publications %}
 {% assign prep = pubs | where: "status", "To be submitted" %}
-{% assign patents = pubs | where: "type", "patent" %}
-{% assign total = pubs | size %}
 {% assign prepcount = prep | size %}
-{% assign patentcount = patents | size %}
-{% assign published = total | minus: prepcount | minus: patentcount %}
+{% assign accepted_published = pubs | where_exp: "item", "item.status != 'To be submitted' and item.type != 'patent'" %}
+{% assign published = accepted_published | size %}
 {% assign scie = 0 %}{% for pub in pubs %}{% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
 {% assign ranked = 0 %}{% for pub in pubs %}{% if pub.rank %}{% assign ranked = ranked | plus: 1 %}{% endif %}{% endfor %}
 {% assign years = pubs | map: "year" | uniq %}
@@ -21,7 +19,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
   <div class="stat"><div class="stat__num">{{ published }}</div><div class="stat__label">Publications</div></div>
   <div class="stat"><div class="stat__num">{{ ranked }}</div><div class="stat__label">Flagship Conference (A* &amp; A Rank)</div></div>
   <div class="stat"><div class="stat__num">{{ scie }}</div><div class="stat__label">SCIE-Q1 Journals</div></div>
-  <div class="stat"><div class="stat__num">{{ prep | size }}</div><div class="stat__label">In Preparation</div></div>
+  <div class="stat"><div class="stat__num">{{ prepcount }}</div><div class="stat__label">In Preparation</div></div>
 </div>
 
 <div class="pub-toolbar">
