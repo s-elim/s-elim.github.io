@@ -37,7 +37,7 @@
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
 
 - title: 'Cheap Foresight: Agentic Intelligence with Latent Verification for Robust Manipulation'
-  authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
   year: 2027
@@ -197,7 +197,7 @@
   thumb: 'KR Patent'
 
 - title: 'Dependency-Aware Reliable Orchestration for Smart-IoT Control with Reasoning-Aligned LLMs'
-  authors: 'Md Selim Sarowar, and Md Tanvir Ahmed'
+  authors: 'Md Selim Sarowar and Md Tanvir Islam'
   venue: 'IEEE International Conference on Electrical, Computer and Energy Technologies (Accepted)'
   venue_short: "ICECET'26"
   year: 2026
