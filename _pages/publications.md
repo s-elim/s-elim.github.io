@@ -9,10 +9,28 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 {% assign pubs = site.data.publications %}
 {% assign prep = pubs | where: "status", "To be submitted" %}
 {% assign prepcount = prep | size %}
-{% assign accepted_published = pubs | where_exp: "item", "item.status != 'To be submitted' and item.type != 'patent'" %}
-{% assign published = accepted_published | size %}
-{% assign scie = 0 %}{% for pub in pubs %}{% if pub.status != "To be submitted" and (pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1") %}{% assign scie = scie | plus: 1 %}{% endif %}{% endfor %}
-{% assign ranked = 0 %}{% for pub in pubs %}{% if pub.rank and pub.status != "To be submitted" %}{% assign ranked = ranked | plus: 1 %}{% endif %}{% endfor %}
+{% assign published = 0 %}
+{% for pub in pubs %}
+  {% if pub.status != "To be submitted" and pub.type != "patent" %}
+    {% assign published = published | plus: 1 %}
+  {% endif %}
+{% endfor %}
+{% assign scie = 0 %}
+{% for pub in pubs %}
+  {% if pub.status != "To be submitted" %}
+    {% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}
+      {% assign scie = scie | plus: 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% assign ranked = 0 %}
+{% for pub in pubs %}
+  {% if pub.status != "To be submitted" %}
+    {% if pub.rank %}
+      {% assign ranked = ranked | plus: 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
 {% assign years = pubs | map: "year" | uniq %}
 
 <div class="stat-row reveal">
