@@ -8,7 +8,7 @@
   points:
     - '<strong>Vision-Language-Action (VLA) &amp; Spatial Reasoning</strong>: Developed <strong>GaussVLA</strong> (accepted at <em>BMVC’26</em>, CORE Rank A) for geometry-aware spatial reasoning, <strong>GST-VLA</strong> (accepted at <em>ICML’26 Workshop</em>) for 3D depth-aware VLAs, and <strong>AFFORD-X</strong> (<em>IROS’27</em>) for affordance-grounded coding agents.'
     - '<strong>6D Pose Estimation &amp; Vision Foundation Models</strong>: Authored <strong>C3G-VM6D</strong> (published in <em>IEEE Access</em>, SCIE-Q1), a data-efficient 6D pose estimation system combining DINOv2 with 3D Gaussian representations, improving occlusion robustness significantly on LineMOD-Occluded.'
-    - '<strong>Agentic Intelligence &amp; World Models</strong>: Developed <strong>Cheap Foresight</strong> (<em>ICRA’27</em>), integrating executable code generation, latent world-model imagination, and verification for robust physical AI robot manipulation.'
+    - '<strong>Agentic Intelligence &amp; World Models</strong>: Developed <strong>Agentic Intelligence and Latent Lookahead for Robust Manipulation</strong> (<em>ICRA’27</em>), integrating executable code generation, latent world-model imagination, and verification for robust physical AI robot manipulation.'
     - '<strong>Core Domains</strong>: 3D Computer Vision, Spatial Intelligence, 6D Pose Estimation, Vision-Language-Action Models, World Models, and Agentic Robotics.'
 
 - role: 'Research Assistant'

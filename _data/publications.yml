@@ -36,7 +36,7 @@
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
 
-- title: 'Cheap Foresight: Agentic Intelligence with Latent Verification for Robust Manipulation'
+- title: 'Agentic Intelligence and Latent Lookahead for Robust Manipulation'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
