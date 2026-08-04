@@ -68,21 +68,11 @@ redirect_from:
       <span class="quote-banner__badge"><i class="fas fa-compass" aria-hidden="true"></i> Research Philosophy</span>
     </div>
     <blockquote class="quote-banner__quote">
-      <p class="quote-banner__text" id="quote-text">&ldquo;There is no free lunch: be genius or step down.&rdquo;</p>
+      <p class="quote-banner__text">&ldquo;In research, there is no free lunch&mdash;<span class="quote-banner__highlight">achieve brilliance or step aside.</span>&rdquo;</p>
       <footer class="quote-banner__author">
         &mdash; <span class="quote-banner__author-name">Md Selim Sarowar</span>
       </footer>
     </blockquote>
-    <div class="quote-banner__controls">
-      <div class="quote-banner__modes" role="group" aria-label="Quote variation">
-        <button type="button" class="quote-mode-btn is-active" data-quote="0" title="Original raw motto">⚡ Raw</button>
-        <button type="button" class="quote-mode-btn" data-quote="1" title="Polished philosophical phrasing">✨ Polished</button>
-        <button type="button" class="quote-mode-btn" data-quote="2" title="Empirical scientific phrasing">🔬 Scientific</button>
-      </div>
-      <button type="button" class="btn btn--ghost btn--sm js-copy-quote" id="copy-quote-btn" title="Copy quote to clipboard" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;">
-        <i class="fas fa-copy" aria-hidden="true"></i> <span id="copy-quote-label">Copy Quote</span>
-      </button>
-    </div>
   </div>
 </div>
 

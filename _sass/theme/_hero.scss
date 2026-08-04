@@ -202,18 +202,49 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 .quote-banner {
   position: relative;
   margin-block: 1.75rem 2rem;
-  padding: 1.35rem 1.6rem;
+  padding: 1.4rem 1.75rem;
   border-radius: var(--radius-lg, 16px);
-  background: var(--surface-card, rgba(255, 255, 255, 0.85));
+  background: var(--surface-card, rgba(255, 255, 255, 0.9));
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
   box-shadow: var(--shadow-md), 0 4px 20px rgba(37, 99, 235, 0.06);
   overflow: hidden;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+  cursor: default;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.08), transparent);
+    transition: left 0.75s ease;
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg), 0 8px 30px rgba(37, 99, 235, 0.12);
+    transform: translateY(-3px) scale(1.005);
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    border-left-color: var(--accent);
+    box-shadow: 0 10px 36px rgba(37, 99, 235, 0.18), 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+
+    &::before {
+      left: 100%;
+    }
+
+    .quote-banner__bg-icon {
+      opacity: 0.14;
+      transform: scale(1.1) rotate(-5deg);
+      color: var(--accent);
+    }
+
+    .quote-banner__highlight {
+      background-position: 100% 0;
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 45%, transparent));
+    }
+
+    .quote-banner__badge {
+      box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
   }
 
   &__bg-icon {
@@ -225,6 +256,7 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
     opacity: 0.06;
     pointer-events: none;
     user-select: none;
+    transition: transform 0.4s var(--ease), opacity 0.4s var(--ease), color 0.4s var(--ease);
   }
 
   &__content {
@@ -238,7 +270,6 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
     justify-content: space-between;
     gap: 0.75rem;
     margin-bottom: 0.65rem;
-    flex-wrap: wrap;
   }
 
   &__badge {
@@ -252,9 +283,10 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
     text-transform: uppercase;
     color: var(--accent);
     background: color-mix(in srgb, var(--accent) 10%, transparent);
-    padding: 0.2rem 0.65rem;
+    padding: 0.22rem 0.7rem;
     border-radius: 20px;
-    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    transition: box-shadow 0.3s var(--ease);
   }
 
   &__quote {
@@ -265,20 +297,28 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 
   &__text {
     font-family: var(--font-head);
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-size: clamp(1.08rem, 1.8vw, 1.3rem);
     font-weight: 700;
     line-height: 1.5;
     color: var(--text-strong);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.4rem 0;
     letter-spacing: -0.01em;
-    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  &__highlight {
+    background: linear-gradient(90deg, var(--text-strong) 0%, var(--accent) 50%, #8b5cf6 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0.6s var(--ease), filter 0.3s var(--ease);
   }
 
   &__author {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     color: var(--muted);
     font-style: normal;
   }
@@ -287,56 +327,11 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
     font-weight: 700;
     color: var(--text);
   }
-
-  &__controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-top: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
-    flex-wrap: wrap;
-  }
-
-  &__modes {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    background: var(--surface, #f1f5f9);
-    padding: 0.2rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-}
-
-.quote-mode-btn {
-  background: transparent;
-  border: none;
-  font-family: var(--font-head);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--muted);
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-
-  &:hover {
-    color: var(--text-strong);
-  }
-
-  &.is-active {
-    background: var(--surface-card, #ffffff);
-    color: var(--accent);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-weight: 700;
-  }
 }
 
 [data-theme="dark"] {
   .quote-banner {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.25) 100%);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 58, 138, 0.3) 100%);
     border-color: rgba(59, 130, 246, 0.25);
     border-left-color: #60a5fa;
 
@@ -344,12 +339,23 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
       color: #60a5fa;
       opacity: 0.08;
     }
-  }
 
-  .quote-mode-btn {
-    &.is-active {
-      background: rgba(30, 58, 138, 0.8);
-      color: #93c5fd;
+    &__highlight {
+      background: linear-gradient(90deg, #f8fafc 0%, #60a5fa 50%, #c084fc 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    &:hover {
+      border-color: rgba(96, 165, 250, 0.5);
+      border-left-color: #93c5fd;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.25), 0 0 24px rgba(147, 197, 253, 0.2);
+
+      .quote-banner__highlight {
+        filter: drop-shadow(0 0 12px rgba(96, 165, 250, 0.6));
+      }
     }
   }
 }
