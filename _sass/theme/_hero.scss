@@ -197,3 +197,159 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 .profile-cred:last-child { margin-bottom: 0; }
 .profile-cred i { color: var(--accent); width: 16px; text-align: center; flex-shrink: 0; margin-top: .15rem; }
 .profile-cred span { color: var(--muted); }
+
+// ---- Personal Quote Banner ----
+.quote-banner {
+  position: relative;
+  margin-block: 1.75rem 2rem;
+  padding: 1.35rem 1.6rem;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--surface-card, rgba(255, 255, 255, 0.85));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-md), 0 4px 20px rgba(37, 99, 235, 0.06);
+  overflow: hidden;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 8px 30px rgba(37, 99, 235, 0.12);
+  }
+
+  &__bg-icon {
+    position: absolute;
+    right: 1.25rem;
+    bottom: -0.5rem;
+    font-size: 5.5rem;
+    color: var(--accent);
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.65rem;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  &__quote {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  &__text {
+    font-family: var(--font-head);
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--text-strong);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.01em;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: normal;
+  }
+
+  &__author-name {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    flex-wrap: wrap;
+  }
+
+  &__modes {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--surface, #f1f5f9);
+    padding: 0.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+}
+
+.quote-mode-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+
+  &:hover {
+    color: var(--text-strong);
+  }
+
+  &.is-active {
+    background: var(--surface-card, #ffffff);
+    color: var(--accent);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+  }
+}
+
+[data-theme="dark"] {
+  .quote-banner {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.25) 100%);
+    border-color: rgba(59, 130, 246, 0.25);
+    border-left-color: #60a5fa;
+
+    &__bg-icon {
+      color: #60a5fa;
+      opacity: 0.08;
+    }
+  }
+
+  .quote-mode-btn {
+    &.is-active {
+      background: rgba(30, 58, 138, 0.8);
+      color: #93c5fd;
+    }
+  }
+}

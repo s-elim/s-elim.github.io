@@ -61,6 +61,31 @@ redirect_from:
   </div>
 </section>
 
+<div class="quote-banner card reveal" id="quote-banner">
+  <i class="fas fa-quote-right quote-banner__bg-icon" aria-hidden="true"></i>
+  <div class="quote-banner__content">
+    <div class="quote-banner__header">
+      <span class="quote-banner__badge"><i class="fas fa-compass" aria-hidden="true"></i> Research Philosophy</span>
+    </div>
+    <blockquote class="quote-banner__quote">
+      <p class="quote-banner__text" id="quote-text">&ldquo;There is no free lunch: be genius or step down.&rdquo;</p>
+      <footer class="quote-banner__author">
+        &mdash; <span class="quote-banner__author-name">Md Selim Sarowar</span>
+      </footer>
+    </blockquote>
+    <div class="quote-banner__controls">
+      <div class="quote-banner__modes" role="group" aria-label="Quote variation">
+        <button type="button" class="quote-mode-btn is-active" data-quote="0" title="Original raw motto">⚡ Raw</button>
+        <button type="button" class="quote-mode-btn" data-quote="1" title="Polished philosophical phrasing">✨ Polished</button>
+        <button type="button" class="quote-mode-btn" data-quote="2" title="Empirical scientific phrasing">🔬 Scientific</button>
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm js-copy-quote" id="copy-quote-btn" title="Copy quote to clipboard" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;">
+        <i class="fas fa-copy" aria-hidden="true"></i> <span id="copy-quote-label">Copy Quote</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
   <div class="modal__dialog">
     <div class="modal__head">

@@ -1126,6 +1126,66 @@
     }
   }
 
+  /* ---- Personal Quote Banner switcher & copy ------------------------- */
+  function initQuoteBanner() {
+    var banner = document.getElementById("quote-banner");
+    if (!banner) return;
+    var textEl = document.getElementById("quote-text");
+    var copyBtn = document.getElementById("copy-quote-btn");
+    var copyLabel = document.getElementById("copy-quote-label");
+    var btns = banner.querySelectorAll(".quote-mode-btn");
+
+    var quotes = [
+      '“There is no free lunch: be genius or step down.”',
+      '“In research, there is no free lunch—achieve brilliance or step aside.”',
+      '“No shortcuts exist in science: demonstrate mastery or make way.”'
+    ];
+
+    btns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var idx = parseInt(btn.getAttribute("data-quote"), 10);
+        if (isNaN(idx) || !quotes[idx]) return;
+        btns.forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+
+        if (textEl) {
+          textEl.style.opacity = "0";
+          textEl.style.transform = "translateY(4px)";
+          setTimeout(function () {
+            textEl.textContent = quotes[idx];
+            textEl.style.opacity = "1";
+            textEl.style.transform = "translateY(0)";
+          }, 150);
+        }
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var currentQuote = textEl ? textEl.textContent : quotes[0];
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(currentQuote);
+        } else {
+          var area = document.createElement("textarea");
+          area.value = currentQuote;
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand("copy");
+          document.body.removeChild(area);
+        }
+        if (copyLabel) {
+          var originalText = copyLabel.textContent;
+          copyLabel.textContent = "Copied!";
+          copyBtn.style.color = "#10b981";
+          setTimeout(function () {
+            copyLabel.textContent = originalText;
+            copyBtn.style.color = "";
+          }, 2000);
+        }
+      });
+    }
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -1150,6 +1210,7 @@
     safe(initPalette);
     safe(initBackToTop);
     safe(initSkillSearch);
+    safe(initQuoteBanner);
     // Last: it fires input events at widgets above, so they must be listening.
     safe(initDeepLinks);
   }
