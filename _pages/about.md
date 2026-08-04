@@ -17,9 +17,9 @@ redirect_from:
     <span class="hero__role">M.Sc. Student · 3D Computer Vision &amp; Physical AI · Advanced Visual Intelligence Lab</span>
     <p class="hero__availability"><a class="chip chip--open" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Research%20collaboration%20%2F%20PhD%20opportunity" target="_blank" rel="noopener" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
     <div class="hero__chips">
-      <span class="chip">3D Computer Vision</span>
+      <span class="chip">Causal Learning</span>
       <span class="chip">Spatial Intelligence</span>
-      <span class="chip">6D Pose Estimation</span>
+      <span class="chip">Self Modeling</span>
       <span class="chip">Vision-Language-Action</span>
       <span class="chip">World Models</span>
       <span class="chip">Agentic Robotics</span>
