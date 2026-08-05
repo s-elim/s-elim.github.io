@@ -77,6 +77,13 @@ Research and professional work experience.
   * `current`: Set to `true` to highlight as a current role.
   * `points`: Detailed bullets outlining achievements and projects.
 
+### 🌐 `collaborations.yml`
+Academic collaborations rendered on the **Experience** page (interactive shimmer-on-hover cards).
+* **Fields**:
+  * `lab`: Lab/group name.
+  * `institution`: Institution name with country flag element (same format as `education.yml`).
+  * `type`: Short badge text (e.g. `Joint Research`).
+
 ### 🎓 `teaching.yml`
 Courses taught or assisted.
 * **Fields**:

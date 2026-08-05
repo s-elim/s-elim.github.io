@@ -1,0 +1,8 @@
+# Academic collaborations - external labs Selim actively collaborates with on joint research.
+# Rendered on the Experience page (project-cat-card--collab section).
+- lab: "Brain AI Lab"
+  institution: 'Kyungpook National University (KNU), South Korea <span class="fi fi-kr"></span>'
+  type: "Joint Research"
+- lab: "Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)"
+  institution: 'Abu Dhabi, United Arab Emirates <span class="fi fi-ae"></span>'
+  type: "Joint Research"

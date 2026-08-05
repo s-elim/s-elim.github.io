@@ -29,6 +29,11 @@ layout: none
 ,{"t":{{ col.name | jsonify }},"k":"Project","u":{{ col.name | slugify | prepend: "/projects/#p-" | relative_url | jsonify }},"s":"industry collaboration","m":"Industry"}
 {%- endfor -%}
 
+{%- comment -%} Academic collaborations: deep-link to the Experience page {%- endcomment -%}
+{%- for c in site.data.collaborations -%}
+,{"t":{{ c.lab | jsonify }},"k":"Experience","u":{{ "/experience/" | relative_url | jsonify }},"s":{{ c.institution | strip_html | append: " " | append: c.type | jsonify }},"m":"Collaboration"}
+{%- endfor -%}
+
 {%- comment -%} Skills: deep-link to the skills search on the projects page {%- endcomment -%}
 {%- for group in pj.skills -%}
 {%- for item in group.items -%}
