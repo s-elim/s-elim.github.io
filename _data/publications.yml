@@ -122,6 +122,7 @@
   venue_short: "ICML'26 Workshop"
   year: 2026
   type: 'workshop'
+  rank: 'A*'
   image: '/images/gstvla-arch.webp'
   thumb: "ICML-W '26"
   url: 'https://openreview.net/forum?id=J57nR3hyAd'
