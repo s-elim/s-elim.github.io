@@ -39,6 +39,13 @@ latest:
     desc: 'OpenVLA 모델을 파인튜닝하고, 추론 속도 향상, 스케일링 특성 개선, 제로샷 일반화 성능 및 장기 시퀀스(장시간 작업) 수행 능력을 강화하기 위한 고성능·경량화 아키텍처를 설계한다. 모델 기반 및 시뮬레이션 기반 접근을 결합한 SOTA 수준의 Efficient-VLA 네트워크를 구축하고, 벤치마크 평가를 수행하여 ACCV 2026(일본 오사카)에 논문을 제출한다. 또한, Sim-to-Real 및 Real-to-Sim 전이 학습 기법을 활용하여 5지(5-finger) 로봇 그리퍼와 NVIDIA Jetson AGX Orin 플랫폼에 비전-언어-행동(VLA) 모델을 적용한다. 다중 센서 융합을 통해 로봇 인지 및 조작 데이터를 대규모로 확장하고, 이를 기반으로 CVPR, ICCV, ECCV 등 최상위 국제학회 및 저널에 연구 성과를 발표한다.'
 
 industry:
+  - name: 'IITP (Institute of Information & Communications Technology Planning & Evaluation), Korea'
+    timeline: 'During M.Sc.'
+    points:
+      - 'Towards General-Purpose Physical AI: Infrastructure, World Models, Spatial Reasoning, and Robot Manipulation'
+      - 'PI: Prof. Sungho Kim'
+      - 'Building shared infrastructure and benchmarks for general-purpose physical AI, spanning perception, world-model learning, and spatial reasoning for robot manipulation'
+      - 'Integrating action-conditioned world models with spatial reasoning modules to enable robust, generalizable manipulation policies across diverse robotic platforms'
   - name: 'YUJINMS Co. Ltd., Korea'
     timeline: 'During M.Sc.'
     points:
