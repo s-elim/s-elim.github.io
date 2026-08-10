@@ -24,8 +24,8 @@
 
 - title: 'Affordance-Grounded Coding Agents are Robust Where Vision-Language-Action Policies Fail'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
-  venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
-  venue_short: "IROS'27"
+  venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition'
+  venue_short: "CVPR'27"
   year: 2027
   type: 'conference'
   flagship: 'robotics'
@@ -52,8 +52,8 @@
 
 - title: 'Quantifying the Robustness Gap: A Capability-Factored Dataset and Benchmark for Robot Learning'
   authors: 'Md Selim Sarowar'
-  venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition / ICLR'
-  venue_short: "CVPR'27 / ICLR'27"
+  venue: 'International Conference on Learning Representations'
+  venue_short: "ICLR'27"
   year: 2027
   type: 'conference'
   rank: 'A*'
