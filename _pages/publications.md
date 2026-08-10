@@ -57,6 +57,8 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
     <button class="filter-chip" data-value="workshop" type="button">Workshop</button>
     <button class="filter-chip" data-value="patent" type="button">Patent</button>
     <button class="filter-chip" data-value="lead" type="button"><i class="fas fa-star" aria-hidden="true" style="color: #f59e0b; margin-right: 0.2rem;"></i> First / Lead Author</button>
+    <button class="filter-chip" data-value="q1" type="button">Q1</button>
+    <button class="filter-chip" data-value="toprank" type="button">A*/A</button>
   </div>
   <div class="filter-chips" data-group="year" role="group" aria-label="Filter by year" style="margin-top:.5rem">
     <button class="filter-chip is-active" data-value="all" type="button">All Years</button>

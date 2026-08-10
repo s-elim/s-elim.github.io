@@ -250,7 +250,9 @@
               var cardAuthor = card.getAttribute("data-author");
               var typeMatch = selectedVals.indexOf(cardType) !== -1;
               var leadMatch = selectedVals.indexOf("lead") !== -1 && cardAuthor === "lead";
-              if (!typeMatch && !leadMatch) {
+              var q1Match = selectedVals.indexOf("q1") !== -1 && card.getAttribute("data-q1") === "true";
+              var toprankMatch = selectedVals.indexOf("toprank") !== -1 && card.getAttribute("data-toprank") === "true";
+              if (!typeMatch && !leadMatch && !q1Match && !toprankMatch) {
                 ok = false;
                 break;
               }

@@ -13,7 +13,15 @@
 {% if prefix1 == "Md Selim Sarowar" or prefix2 == "*Md Selim Sarowar" or pub.authors contains "Md Selim Sarowar†" or pub.lead == true %}
   {% assign is_lead = true %}
 {% endif %}
-<article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-author="{% if is_lead %}lead{% else %}coauthor{% endif %}" data-search="{{ search | escape }}">
+{% assign is_q1 = false %}
+{% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}
+  {% assign is_q1 = true %}
+{% endif %}
+{% assign is_toprank = false %}
+{% if pub.rank == "A*" or pub.rank == "A" %}
+  {% assign is_toprank = true %}
+{% endif %}
+<article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-author="{% if is_lead %}lead{% else %}coauthor{% endif %}" data-q1="{{ is_q1 }}" data-toprank="{{ is_toprank }}" data-search="{{ search | escape }}">
   <div class="pub-card__header">
     <h3 class="pub-card__title">
       {% if pub.url %}<a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>{% else %}{{ pub.title }}{% endif %}
