@@ -98,12 +98,11 @@
   background: linear-gradient(135deg, #1b2942 15%, #1e3a8a 65%, #2563eb 100%) !important;
   box-shadow: 0 8px 26px rgba(37, 99, 235, 0.35) !important;
 }
+// Tags sit on their own row so the title below can use the card's full width
+// (the header spans both grid columns, figure column included).
 .pub-card__header {
   grid-area: header;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  display: block;
   margin-bottom: .45rem;
 }
 .pub-card__tags  {
@@ -111,7 +110,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: .35rem;
-  flex-shrink: 0;
 }
 .pub-card__body  { grid-area: body; min-width: 0; }
 .pub-card__media { grid-area: media; }
@@ -217,9 +215,9 @@ button.pub-card__media:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: .35rem;
-  margin-bottom: .45rem;
+  margin-bottom: .4rem;
 }
 .pub-card__tags .rank-box,
 .pub-card__tags .flagship-box { margin-left: 0; border-radius: var(--radius-pill); }
@@ -295,7 +293,7 @@ button.pub-card__media:hover {
   .pub-tag { animation: none; }
 }
 
-.pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0; flex: 1; }
+.pub-card__title { font-size: .98rem; line-height: 1.35; margin: 0; }
 .pub-card__title a { color: var(--text-strong); }
 .pub-card__title a:hover { color: var(--accent); }
 
@@ -651,16 +649,11 @@ button.pub-card__media:hover {
 .stat__label { font-size: var(--fs-xs); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .3rem; }
 
 // On very narrow phones a long impact pill ("SCIE-Q1, IF: 30.4, Top 1%") cannot
-// shrink, so the header's flex row overflowed the card and scrolled the page
-// sideways. Let the badges drop to their own line and wrap their text.
+// shrink, so it overflowed the card and scrolled the page sideways. Let the
+// badge text wrap instead.
 @media (max-width: 400px) {
-  .pub-card__header {
-    flex-wrap: wrap;
-    gap: .35rem;
-  }
   .pub-card__tags {
     min-width: 0;
-    justify-content: flex-start;
   }
   .pub-card__tags .pub-tag {
     white-space: normal;
