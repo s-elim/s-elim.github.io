@@ -247,6 +247,7 @@ button.pub-card__media:hover {
 .pub-tag--patent,
 .pub-tag--custom,
 .pub-tag--impact,
+.pub-tag--published,
 .pub-tag--venue {
   --tag-c: var(--accent);
   font-weight: 700;
@@ -275,6 +276,31 @@ button.pub-card__media:hover {
 .pub-tag--venue,
 .pub-tag--custom,
 .pub-tag--impact { --tag-c: var(--accent); }
+// "Published" pill - green, to read apart from the blue accent tags.
+.pub-tag--published {
+  --tag-c: #16a34a;
+  color: #166534 !important;
+  border-color: #16a34a !important;
+  background: color-mix(in srgb, #16a34a 12%, var(--surface)) !important;
+  i { margin-right: .25rem; font-size: 10px; }
+}
+.pub-tag--published:hover {
+  color: #052e16 !important;
+  border-color: #22c55e !important;
+  background: linear-gradient(135deg, #ffffff 15%, #bbf7d0 75%, #4ade80 100%) !important;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, .3) !important;
+}
+:root[data-theme="dark"] .pub-tag--published {
+  --tag-c: #4ade80;
+  color: #86efac !important;
+  border-color: #4ade80 !important;
+  background: color-mix(in srgb, #16a34a 18%, var(--surface)) !important;
+}
+:root[data-theme="dark"] .pub-tag--published:hover {
+  color: #dcfce7 !important;
+  border-color: #4ade80 !important;
+  background: linear-gradient(135deg, #14532d 15%, #166534 65%, #22c55e 100%) !important;
+}
 @keyframes tag-glow {
   0%, 100% { box-shadow: 0 0 3px color-mix(in srgb, var(--tag-c, var(--accent)) 25%, transparent); }
   50%      { box-shadow: 0 0 11px color-mix(in srgb, var(--tag-c, var(--accent)) 55%, transparent); }
