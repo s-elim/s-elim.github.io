@@ -119,7 +119,7 @@
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'International Conference on Machine Learning Workshop (Accepted)'
-  venue_short: "ICML'26 Workshop"
+  venue_short: "ICMLw'26"
   year: 2026
   type: 'workshop'
   rank: 'A*'

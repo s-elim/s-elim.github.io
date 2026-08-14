@@ -21,6 +21,14 @@
 {% if pub.rank == "A*" or pub.rank == "A" %}
   {% assign is_toprank = true %}
 {% endif %}
+{% assign is_accepted = false %}
+{% if pub.type != "journal" and pub.type != "patent" and pub.venue contains "(Accepted)" %}
+  {% assign is_accepted = true %}
+{% endif %}
+{% assign is_granted = false %}
+{% if pub.type == "patent" and pub.status == "Granted" %}
+  {% assign is_granted = true %}
+{% endif %}
 <article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-author="{% if is_lead %}lead{% else %}coauthor{% endif %}" data-q1="{{ is_q1 }}" data-toprank="{{ is_toprank }}" data-search="{{ search | escape }}">
   <div class="pub-card__header">
     <h3 class="pub-card__title">
@@ -30,6 +38,8 @@
       {% if pub.venue_short and pub.type != "patent" %}<span class="pub-tag pub-tag--venue" title="Venue abbreviation">{{ pub.venue_short }}</span>{% endif %}
       {% if pub.impact %}<span class="pub-tag pub-tag--impact" title="Journal impact">{{ pub.impact }}</span>{% endif %}
       {% if pub.type == "journal" and pub.status == nil %}<span class="pub-tag pub-tag--published" title="Published in a peer-reviewed journal"><i class="fas fa-check-circle" aria-hidden="true"></i> Published</span>{% endif %}
+      {% if is_accepted %}<span class="pub-tag pub-tag--accepted" title="Accepted for publication"><i class="fas fa-check-circle" aria-hidden="true"></i> Accepted</span>{% endif %}
+      {% if is_granted %}<span class="pub-tag pub-tag--granted" title="Patent granted"><i class="fas fa-check-circle" aria-hidden="true"></i> Granted</span>{% endif %}
       {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
       {% if pub.custom_tag %}<span class="pub-tag pub-tag--custom" title="Affiliation/Publisher">{{ pub.custom_tag }}</span>{% endif %}
     </div>
@@ -37,6 +47,9 @@
   <div class="pub-card__body">
     {% assign vparts = pub.venue | split: "(" %}
     {% assign vrest = pub.venue | remove_first: vparts[0] %}
+    {% comment %}the Accepted pill already says this, so drop the duplicate "(Accepted)" suffix{% endcomment %}
+    {% assign vrest_strip = vrest | strip %}
+    {% if vrest_strip == "(Accepted)" %}{% assign vrest = "" %}{% endif %}
     <div class="pub-card__meta">
       <span class="pub-card__venue">
         {%- if pub.status == "To be submitted" -%}
@@ -44,7 +57,8 @@
         {%- else -%}
           <span class="pub-card__venue-name">{{ vparts[0] | strip }}{% if pub.venue_short and pub.type != "patent" %} ({{ pub.venue_short }}){% endif %}</span>
           {%- if vrest != "" %} <span class="pub-venue-accepted">{{ vrest }}</span>{% endif -%}
-          {%- if pub.status %} · <span class="pub-venue-accepted">{{ pub.status }}</span>{% endif -%}
+          {%- comment -%}the Granted pill already says this{%- endcomment -%}
+          {%- if pub.status and is_granted != true %} · <span class="pub-venue-accepted">{{ pub.status }}</span>{% endif -%}
         {%- endif -%}
       </span>
       <span class="pub-card__authors">{{ authors }}</span>
