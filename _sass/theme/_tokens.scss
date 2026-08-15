@@ -45,6 +45,15 @@ $bp-xl: 1280px;
   --rank:      #7c3aed; // CORE rank badge
   --img-dim: none;      // media dimming (dark mode only)
 
+  // Publication pills (venue / impact / status / rank): very light blue at rest,
+  // deeper blue gradient on hover.
+  --tag-bg:         linear-gradient(135deg, #f5faff 0%, #e2efff 100%);
+  --tag-fg:         #1d4ed8;
+  --tag-bd:         #bfdbfe;
+  --tag-bg-hover:   linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%);
+  --tag-fg-hover:   #1e3a8a;
+  --tag-bd-hover:   #3b82f6;
+  --tag-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
 
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
   --shadow-md: 0 6px 20px rgba(15, 23, 42, .08);
@@ -99,7 +108,14 @@ $bp-xl: 1280px;
   --rank:      #a78bfa; // CORE rank badge
   --img-dim: brightness(.86) contrast(1.02); // soften white diagrams on dark
 
-
+  // Publication pills - same idea, tuned for the dark ground.
+  --tag-bg:         linear-gradient(135deg, rgba(86, 182, 242, .14) 0%, rgba(86, 182, 242, .24) 100%);
+  --tag-fg:         #cfe8fb;
+  --tag-bd:         rgba(86, 182, 242, .40);
+  --tag-bg-hover:   linear-gradient(135deg, #8ccff7 15%, #56b6f2 75%, #2a8ecb 100%);
+  --tag-fg-hover:   #071120;
+  --tag-bd-hover:   #8ccff7;
+  --tag-shadow-hover: 0 4px 14px rgba(86, 182, 242, .35);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, .45);
