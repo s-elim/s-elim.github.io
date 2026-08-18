@@ -51,9 +51,9 @@
     - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
 - title: 'Quantifying the Robustness Gap: A Capability-Factored Dataset and Benchmark for Robot Learning'
-  authors: 'Md Selim Sarowar'
-  venue: 'International Conference on Learning Representations'
-  venue_short: "ICLR'27"
+  authors: 'Md Selim Sarowar and Sungho Kim*'
+  venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
+  venue_short: "IROS'27"
   year: 2027
   type: 'conference'
   rank: 'A*'
