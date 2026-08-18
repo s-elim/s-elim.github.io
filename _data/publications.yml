@@ -204,6 +204,7 @@
   year: 2026
   type: 'conference'
   custom_tag: 'IEEE'
+  image: '/images/dario-framework.webp'
   thumb: "ICECET '26"
   url: 'https://ieeexplore.ieee.org/abstract/document/11632566'
   bibtex: |
