@@ -93,7 +93,7 @@
   "itemListElement": [
 {%- assign pos = 0 -%}
 {%- for pub in site.data.publications -%}
-{%- if pub.type != "patent" and pub.status != "To be submitted" -%}
+{%- if pub.type != "patent" and pub.status != "In Preparation" -%}
 {%- assign pos = pos | plus: 1 -%}
 {%- if pos > 1 -%},{%- endif %}
     {

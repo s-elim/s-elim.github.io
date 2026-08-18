@@ -52,8 +52,8 @@
     {% if vrest_strip == "(Accepted)" %}{% assign vrest = "" %}{% endif %}
     <div class="pub-card__meta">
       <span class="pub-card__venue">
-        {%- if pub.status == "To be submitted" -%}
-          <span class="pub-card__venue-name">{% if pub.venue_short %}{{ pub.venue_short }}{% else %}{{ pub.venue }}{% endif %}</span> <span class="pub-venue-accepted">(To be submitted)</span>
+        {%- if pub.status == "In Preparation" -%}
+          <span class="pub-card__venue-name">{% if pub.venue_short %}{{ pub.venue_short }}{% else %}{{ pub.venue }}{% endif %}</span> <span class="pub-venue-accepted">(In Preparation)</span>
         {%- else -%}
           <span class="pub-card__venue-name">{{ vparts[0] | strip }}{% if pub.venue_short and pub.type != "patent" %} ({{ pub.venue_short }}){% endif %}</span>
           {%- if vrest != "" %} <span class="pub-venue-accepted">{{ vrest }}</span>{% endif -%}
@@ -75,11 +75,11 @@
       {% endfor %}
       {% if pub.type == "patent" %}
         <span class="pub-badge pub-badge--patent-label"><i class="fas fa-certificate" aria-hidden="true"></i> Patent</span>
-      {% elsif pub.status != "To be submitted" %}
+      {% elsif pub.status != "In Preparation" %}
         <button class="pub-badge pub-badge--bibtex js-toggle" data-target="#bib-{{ pid }}" type="button" aria-label="Show BibTeX"><i class="fas fa-quote-right" aria-hidden="true"></i> BibTeX</button>
       {% endif %}
     </div>
-    {% if pub.type != "patent" and pub.status != "To be submitted" %}
+    {% if pub.type != "patent" and pub.status != "In Preparation" %}
     <div class="bibtex-block" id="bib-{{ pid }}">
       <button class="pub-badge pub-badge--bibtex js-copy" data-copy="#bibpre-{{ pid }}" type="button" style="margin-bottom:.5rem"><i class="fas fa-copy" aria-hidden="true"></i> <span class="js-copy-label">Copy</span></button>
 <pre id="bibpre-{{ pid }}">{% if pub.bibtex %}{{ pub.bibtex | strip }}{% else %}{{ bibtype }}{% raw %}{{% endraw %}{{ pid | replace: "-", "" | truncate: 24, "" }}{{ pub.year }},

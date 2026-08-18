@@ -8,17 +8,17 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 
 {% assign pubs = site.data.publications %}
 {% assign total = pubs | size %}
-{% assign prep = pubs | where: "status", "To be submitted" %}
+{% assign prep = pubs | where: "status", "In Preparation" %}
 {% assign prepcount = prep | size %}
 {% assign published = 0 %}
 {% for pub in pubs %}
-  {% if pub.status != "To be submitted" and pub.type != "patent" %}
+  {% if pub.status != "In Preparation" and pub.type != "patent" %}
     {% assign published = published | plus: 1 %}
   {% endif %}
 {% endfor %}
 {% assign scie = 0 %}
 {% for pub in pubs %}
-  {% if pub.status != "To be submitted" %}
+  {% if pub.status != "In Preparation" %}
     {% if pub.impact contains "SCIE-Q1" or pub.venue contains "SCIE-Q1" %}
       {% assign scie = scie | plus: 1 %}
     {% endif %}
@@ -26,7 +26,7 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 {% endfor %}
 {% assign ranked = 0 %}
 {% for pub in pubs %}
-  {% if pub.status != "To be submitted" %}
+  {% if pub.status != "In Preparation" %}
     {% if pub.rank %}
       {% assign ranked = ranked | plus: 1 %}
     {% endif %}

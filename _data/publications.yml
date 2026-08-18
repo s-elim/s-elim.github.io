@@ -30,7 +30,7 @@
   type: 'conference'
   flagship: 'robotics'
   rank: 'A*'
-  status: 'To be submitted'
+  status: 'In Preparation'
   thumb: "IROS '27"
   url: 'https://github.com/s-elim/AFFORD-X'
   links:
@@ -44,7 +44,7 @@
   type: 'conference'
   flagship: 'robotics'
   rank: 'A*'
-  status: 'To be submitted'
+  status: 'In Preparation'
   thumb: "ICRA '27"
   url: 'https://github.com/s-elim/AGI'
   links:
@@ -57,7 +57,7 @@
   year: 2027
   type: 'conference'
   rank: 'A*'
-  status: 'To be submitted'
+  status: 'In Preparation'
   thumb: "PRAXIS"
   url: 'https://github.com/s-elim/Physical-AI'
   links:
