@@ -198,15 +198,28 @@
   thumb: 'KR Patent'
 
 - title: 'Dependency-Aware Reliable Orchestration for Smart-IoT Control with Reasoning-Aligned LLMs'
-  authors: 'Md Selim Sarowar and Md Tanvir Islam'
+  authors: 'Md Selim Sarowar, Md Tanvir Islam, Md. Nuruzzaman and Md Ariful Islam Mozumder'
   venue: 'IEEE International Conference on Electrical, Computer and Energy Technologies (Accepted)'
   venue_short: "ICECET'26"
   year: 2026
   type: 'conference'
   custom_tag: 'IEEE'
   thumb: "ICECET '26"
-  url: 'https://github.com/s-elim/Smart-IOT-AI-Agent'
+  url: 'https://ieeexplore.ieee.org/abstract/document/11632566'
+  bibtex: |
+    @INPROCEEDINGS{11632566,
+      author={Sarowar, Md Selim and Islam, Md Tanvir and Nuruzzaman, Md. and Islam Mozumder, Md Ariful},
+      booktitle={2026 6th International Conference on Electrical, Computer and Energy Technologies (ICECET)},
+      title={Dependency-Aware Reliable Orchestration for Smart-IoT Control with Reasoning-Aligned LLMs},
+      year={2026},
+      volume={},
+      number={},
+      pages={1-6},
+      keywords={Modeling;Printing;Internet of Things;Planning;Learning (artificial intelligence);Large language models;Feedback;Training;Safety;Application programming interfaces;Large language models;dependency-aware orchestration;reinforcement learning from execution feedback;smart IoT;edge inference;structured generation;plan verification;chain-of-thought},
+      doi={10.1109/ICECET65726.2026.11632566}}
   links:
+    - { label: 'IEEE Xplore', url: 'https://ieeexplore.ieee.org/abstract/document/11632566', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.researchgate.net/publication/412209815_Dependency-Aware_Reliable_Orchestration_for_Smart-IoT_Control_with_Reasoning-Aligned_LLMs#fullTextFileContent', kind: 'pdf' }
     - { label: 'Code', url: 'https://github.com/s-elim/Smart-IOT-AI-Agent', kind: 'code' }
 
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
