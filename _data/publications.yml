@@ -31,7 +31,7 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'In Preparation'
-  thumb: "IROS '27"
+  thumb: "CVPR '27"
   url: 'https://github.com/s-elim/AFFORD-X'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
@@ -50,13 +50,13 @@
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
-- title: 'Quantifying the Robustness Gap: A Capability-Factored Dataset and Benchmark for Robot Learning'
+- title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
   venue_short: "IROS'27"
   year: 2027
   type: 'conference'
-  rank: 'A*'
+  rank: 'A'
   status: 'In Preparation'
   thumb: "PRAXIS"
   url: 'https://github.com/s-elim/Physical-AI'
