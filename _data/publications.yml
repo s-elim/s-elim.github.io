@@ -171,10 +171,20 @@
   type: 'journal'
   image: '/images/parkinsons-gait-framework.webp'
   thumb: 'Sci. Reports'
-  url: 'https://arxiv.org/abs/2512.04425'
+  url: 'https://www.nature.com/articles/s41598-026-67440-x'
+  bibtex: |
+    @article{alnaasan2026fusionvlmgait,
+      title={Fusion VLM-Gait: RGB-D fusion in vision-language models for explainable multi-task Parkinsonian gait analysis},
+      author={Alnaasan, Manar and Sarowar, Md Selim and Kim, Sungho},
+      journal={Scientific Reports},
+      year={2026},
+      publisher={Nature Publishing Group},
+      doi={10.1038/s41598-026-67440-x},
+      url={https://www.nature.com/articles/s41598-026-67440-x}
+    }
   links:
-    - { label: 'arXiv', url: 'https://arxiv.org/abs/2512.04425', kind: 'link' }
-    - { label: 'PDF', url: 'https://arxiv.org/pdf/2512.04425', kind: 'pdf' }
+    - { label: 'Scientific Reports', url: 'https://www.nature.com/articles/s41598-026-67440-x', kind: 'link' }
+    - { label: 'PDF', url: 'https://www.nature.com/articles/s41598-026-67440-x.pdf', kind: 'pdf' }
 
 - title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
   authors: 'Md Selim Sarowar and Sungho Kim*'
