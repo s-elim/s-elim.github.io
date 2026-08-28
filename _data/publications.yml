@@ -31,10 +31,12 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'In Preparation'
+  image: '/images/affordx-framework.webp'
   thumb: "CVPR '27"
-  url: 'https://github.com/s-elim/AFFORD-X'
+  url: 'https://physical-agi.github.io/AFFORD-X/'
   links:
-    - { label: 'Code', url: 'https://github.com/s-elim/AFFORD-X', kind: 'code' }
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD-X/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
 - title: 'Agentic Intelligence and Latent Lookahead for Robust Manipulation'
   authors: 'Md Selim Sarowar and Sungho Kim*'
