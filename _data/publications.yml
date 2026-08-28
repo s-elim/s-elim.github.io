@@ -97,6 +97,15 @@
   rank: 'A'
   image: '/images/hnh40k-model.webp'
   url: 'https://github.com/s-elim/RWFL-HNH40K'
+  bibtex: |
+    @inproceedings{Ashikuzzaman_2026_BMVC,
+    author    = {Ashikuzzaman and Md Selim Sarowar and Md Tanvir Islam and Sangtae Ahn and Khan Muhammad},
+    title     = {HNH40K: A Robust Dataset and Risk-Weighted Learning for Hand Filtering},
+    booktitle = {37th British Machine Vision Conference 2026, {BMVC} 2026, Lancaster, UK, November 23-26, 2026},
+    publisher = {BMVA},
+    year      = {2026},
+    url       = {https://bmva-archive.org.uk/bmvc/2026/assets/papers/Paper_652/paper.pdf}
+    }
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/RWFL-HNH40K', kind: 'code' }
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=C23KZbQblz', kind: 'link' }
