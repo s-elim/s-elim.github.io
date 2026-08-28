@@ -943,7 +943,7 @@ redirect_from:
               <td style="padding: 0.55rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE Internet of Things Journal <span style="color: var(--muted); font-size: 0.8em; font-weight: 400;">(IEEE IoT-J)</span></td>
               <td style="padding: 0.55rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center; font-weight: 700; color: var(--accent);">8.7</td>
-              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.68rem;">Top 5%</span></td>
+              <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.68rem;">Top 6%</span></td>
               <td style="padding: 0.55rem 0.5rem; text-align: center;"><span style="background: #e0f2fe; color: #0369a1; padding: 0.12rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.68rem;">SCIE-Q1</span></td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border);" data-category="aiml">
