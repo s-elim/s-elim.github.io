@@ -74,6 +74,15 @@
   featured: true
   image: '/images/gaussvla-model.webp'
   url: 'https://gaussvla.github.io/GaussVLA/'
+  bibtex: |
+    @inproceedings{Sarowar_2026_BMVC,
+    author    = {Md Selim Sarowar and Md Tanvir Islam and Sungho Kim and Sangtae Ahn},
+    title     = {GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model},
+    booktitle = {37th British Machine Vision Conference 2026, {BMVC} 2026, Lancaster, UK, November 23-26, 2026},
+    publisher = {BMVA},
+    year      = {2026},
+    url       = {https://bmva-archive.org.uk/bmvc/2026/assets/papers/Paper_121/paper.pdf}
+    }
   links:
     - { label: 'Project Page', url: 'https://gaussvla.github.io/GaussVLA/', kind: 'project' }
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=IYv9sR4feE', kind: 'link' }
