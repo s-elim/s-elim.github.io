@@ -20,8 +20,9 @@ redirect_from:
       <span class="chip">Causal Learning</span>
       <span class="chip">Spatial Intelligence</span>
       <span class="chip">Self Modeling</span>
-      <span class="chip">Vision-Language-Action</span>
+      <span class="chip">VLAs</span>
       <span class="chip">World Models</span>
+      <span class="chip" title="Joint Embedding Predictive Architecture">JEPA</span>
       <span class="chip">Agentic Robotics</span>
       <span class="chip">Robot Learning</span>
       <span class="chip">5D AI Robotics</span>
@@ -1150,7 +1151,7 @@ redirect_from:
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
-      <div class="tag-list"><span class="tag">Vision-Language-Action</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D AI Robotics</span></div>
+      <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D AI Robotics</span></div>
     </div>
   </article>
   <article class="highlight-card card reveal" data-delay="2">
