@@ -9,9 +9,11 @@
   padding-inline: 1.25rem;
 }
 
-// Interior pages: comfortable reading width (no sidebar)
-.container--content { max-width: 980px; }
-// Opt-in full width for dense grid pages (page frontmatter: wide: true)
+// Interior pages share the container width; the pages are grid/card driven,
+// and loose prose caps itself per component (see .hero__bio).
+.container--content { max-width: var(--container); }
+// `wide: true` frontmatter still emits .container--wide; kept as a hook in case
+// a page ever needs to break out of the container again.
 .container--content.container--wide { max-width: var(--container); }
 
 // Two-column shell: sticky profile sidebar + content
