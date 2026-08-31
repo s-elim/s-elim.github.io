@@ -63,10 +63,12 @@
   type: 'conference'
   rank: 'A'
   status: 'In Preparation'
+  image: '/images/praxis-capability-vector.webp'
   thumb: "PRAXIS"
-  url: 'https://github.com/s-elim/Physical-AI'
+  url: 'https://physical-agi.github.io/PRAXIS/'
   links:
-    - { label: 'Code', url: 'https://github.com/s-elim/Physical-AI', kind: 'code' }
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/PRAXIS/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/Physical-AGI/PRAXIS', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'

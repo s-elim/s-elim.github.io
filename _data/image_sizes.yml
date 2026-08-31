@@ -20,6 +20,7 @@ hnh40k-model: { w: 960, h: 266, sm: true }
 iot-healthcare-patent-figure: { w: 960, h: 640, sm: true }
 msp-framework: { w: 960, h: 614, sm: true }
 parkinsons-gait-framework: { w: 960, h: 379, sm: true }
+praxis-capability-vector: { w: 960, h: 528, sm: true }
 Picture2: { w: 1600, h: 1040, sm: false }
 profile: { w: 400, h: 452, sm: true }
 rise-proposal-2026: { w: 960, h: 536, sm: true }
