@@ -503,7 +503,7 @@
     var emptyMsg = document.getElementById("deadlines-empty");
     var heroBadge = document.getElementById("deadlines-next-badge");
 
-    var state = { category: "all", rank: "all", query: "", openOnly: true, view: "grid" };
+    var state = { category: "all", rank: "all", query: "", openOnly: false, view: "grid" };
 
     // ---- Parse the Liquid-rendered stages once -----------------------------
     var models = cards.map(function (card) {
@@ -711,19 +711,6 @@
         }
         slot.textContent = buckets[key] === undefined ? "" : buckets[key];
       });
-
-      if (openOnlyBtn) {
-        var undated = models.filter(function (m) {
-          return m.card.classList.contains("dl-card--closed") ||
-                 m.card.classList.contains("dl-card--tba");
-        }).length;
-        var label = openOnlyBtn.querySelector(".dl-toggle__label");
-        if (label) {
-          label.textContent = state.openOnly
-            ? "Dated calls only (" + undated + " hidden)"
-            : "Showing all " + models.length;
-        }
-      }
     }
 
     // ---- Controls ----------------------------------------------------------
