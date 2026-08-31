@@ -465,78 +465,330 @@
     });
   }
 
-  /* ---- Real-time AI Conference Deadlines Countdown ------------------- */
-  function initDeadlinesCountdown() {
-    var table = document.getElementById("deadlines-table");
-    if (!table) return;
-    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr[data-deadline]"));
-    if (!rows.length) return;
+  /* ---- AI Conference Deadline Tracker -------------------------------- */
+  // Cards are rendered by Jekyll from _data/conferences.yml; this drives the
+  // live countdowns, urgency states, filtering, sorting and the hero badge.
+  function initDeadlineTracker() {
+    var grid = document.getElementById("deadlines-grid");
+    if (!grid) return;
 
-    var now = new Date();
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var upcoming = [];
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(".dl-card"));
+    if (!cards.length) return;
 
-    rows.forEach(function (row) {
-      var dStr = row.getAttribute("data-deadline");
-      if (!dStr) return;
-      // Venues whose next call is not out yet: show TBA rather than count down to
-      // a guessed date or leave the cell blank.
-      if (dStr === "tba") {
-        var tbaCell = row.querySelector(".deadline-countdown");
-        if (tbaCell) {
-          tbaCell.innerHTML = '<span class="deadline-pill deadline-pill--tba">TBA</span>';
+    var MS_DAY = 86400000;
+    var searchInput = document.getElementById("deadline-search");
+    var openOnlyBtn = document.getElementById("deadline-open-only");
+    var ticker = document.getElementById("deadlines-ticker");
+    var emptyMsg = document.getElementById("deadlines-empty");
+    var heroBadge = document.getElementById("deadlines-next-badge");
+
+    var state = { category: "all", rank: "all", query: "", openOnly: true, view: "grid" };
+
+    // ---- Parse the Liquid-rendered stages once -----------------------------
+    var models = cards.map(function (card) {
+      var stages = Array.prototype.slice.call(card.querySelectorAll(".dl-stage")).map(function (el) {
+        var raw = el.getAttribute("data-date");
+        var when = null;
+        if (raw && raw !== "tba") {
+          var p = raw.split("-");
+          if (p.length === 3) {
+            var t = (el.getAttribute("data-time") || "23:59").split(":");
+            when = new Date(
+              parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10),
+              parseInt(t[0], 10) || 23, parseInt(t[1], 10) || 59, 0
+            );
+          }
         }
-        return;
-      }
-      var parts = dStr.split("-");
-      if (parts.length !== 3) return;
-
-      var targetDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      var diffMs = targetDate.getTime() - today.getTime();
-      var diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-
-      var cell = row.querySelector(".deadline-countdown");
-      if (!cell) return;
-
-      var badgeClass = "deadline-pill";
-      var text = "";
-      var confName = row.cells[0] ? row.cells[0].textContent.trim() : "Conf";
-
-      if (diffDays < 0) {
-        badgeClass += " deadline-pill--passed";
-        text = "Passed";
-      } else if (diffDays === 0) {
-        badgeClass += " deadline-pill--urgent";
-        text = "🔥 Today!";
-        upcoming.push({ conf: confName, days: diffDays });
-      } else if (diffDays <= 7) {
-        badgeClass += " deadline-pill--urgent";
-        text = "🔥 " + diffDays + "d left";
-        upcoming.push({ conf: confName, days: diffDays });
-      } else if (diffDays <= 30) {
-        badgeClass += " deadline-pill--soon";
-        text = "⚡ " + diffDays + "d left";
-        upcoming.push({ conf: confName, days: diffDays });
-      } else if (diffDays <= 90) {
-        badgeClass += " deadline-pill--upcoming";
-        text = diffDays + "d left";
-        upcoming.push({ conf: confName, days: diffDays });
-      } else {
-        badgeClass += " deadline-pill--future";
-        text = diffDays + "d left";
-        upcoming.push({ conf: confName, days: diffDays });
-      }
-
-      cell.innerHTML = '<span class="' + badgeClass + '">' + text + '</span>';
+        return { el: el, when: when, label: el.querySelector(".dl-stage__label").textContent.trim() };
+      });
+      return {
+        card: card,
+        stages: stages,
+        name: card.getAttribute("data-name") || "",
+        search: [
+          card.getAttribute("data-name"),
+          card.getAttribute("data-location"),
+          card.getAttribute("data-category")
+        ].join(" ").toLowerCase(),
+        category: card.getAttribute("data-category") || "",
+        rank: card.getAttribute("data-rank") || "unranked",
+        stageEl: card.querySelector(".dl-card__stage"),
+        countEl: card.querySelector(".dl-card__count"),
+        fillEl: card.querySelector(".dl-card__bar-fill"),
+        // Sort key and urgency, refreshed on every tick.
+        next: null,
+        sortKey: Infinity
+      };
     });
 
-    upcoming.sort(function (a, b) { return a.days - b.days; });
-    var nextBadge = document.getElementById("deadlines-next-badge");
-    if (nextBadge && upcoming.length > 0) {
-      var n = upcoming[0];
-      var label = n.days === 0 ? "Today!" : n.days + "d left";
-      nextBadge.innerHTML = '<span class="deadline-pill deadline-pill--urgent" style="font-size: 0.72rem; padding: 1px 7px;">Next: ' + n.conf + ' (' + label + ')</span>';
+    function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+    function bigNumber(value, unit) {
+      return '<span class="dl-card__count-main">' + value + '</span>' +
+             '<span class="dl-card__count-unit">' + unit + '</span>';
     }
+
+    function clockFace(h, m, s) {
+      return bigNumber(pad(h), "hrs") +
+             '<span class="dl-card__count-sep">:</span>' + bigNumber(pad(m), "min") +
+             '<span class="dl-card__count-sep">:</span>' + bigNumber(pad(s), "sec");
+    }
+
+    // ---- One tick: recompute every card's countdown ------------------------
+    function tick() {
+      var now = new Date();
+
+      models.forEach(function (m) {
+        var next = null;
+        var prev = null;
+
+        m.stages.forEach(function (st) {
+          st.el.classList.remove("is-done", "is-next");
+          if (!st.when) return;
+          if (st.when.getTime() <= now.getTime()) {
+            st.el.classList.add("is-done");
+            prev = st;
+          } else if (!next) {
+            next = st;
+          }
+        });
+
+        var hasTba = m.stages.some(function (st) { return !st.when; });
+        m.card.classList.remove("dl-card--urgent", "dl-card--soon", "dl-card--closed", "dl-card--tba");
+        m.next = next;
+
+        if (next) {
+          next.el.classList.add("is-next");
+          var diff = next.when.getTime() - now.getTime();
+          var days = Math.floor(diff / MS_DAY);
+          var hrs = Math.floor((diff % MS_DAY) / 3600000);
+          var mins = Math.floor((diff % 3600000) / 60000);
+          var secs = Math.floor((diff % 60000) / 1000);
+
+          m.sortKey = diff;
+          m.stageEl.textContent = next.label;
+
+          // Inside a day, show a ticking clock; otherwise days (+ hours when close).
+          if (days < 1) {
+            m.countEl.innerHTML = clockFace(hrs, mins, secs);
+            m.card.classList.add("dl-card--urgent");
+          } else if (days <= 7) {
+            m.countEl.innerHTML = bigNumber(days, days === 1 ? "day" : "days") + bigNumber(pad(hrs), "hrs");
+            m.card.classList.add("dl-card--urgent");
+          } else if (days <= 30) {
+            m.countEl.innerHTML = bigNumber(days, "days");
+            m.card.classList.add("dl-card--soon");
+          } else {
+            m.countEl.innerHTML = bigNumber(days, "days");
+          }
+
+          // Fill the bar over the 180 days running up to the deadline.
+          var pct = Math.max(0, Math.min(100, (1 - diff / (180 * MS_DAY)) * 100));
+          m.fillEl.style.width = pct.toFixed(1) + "%";
+        } else if (hasTba) {
+          // Call not published yet: sort after everything dated, before closed.
+          m.sortKey = Number.MAX_SAFE_INTEGER - 1;
+          m.card.classList.add("dl-card--tba");
+          m.stageEl.textContent = m.stages[m.stages.length - 1].label;
+          m.countEl.innerHTML = '<span class="dl-card__count-main">Not announced</span>';
+          m.fillEl.style.width = "0%";
+        } else {
+          m.sortKey = Number.MAX_SAFE_INTEGER;
+          m.card.classList.add("dl-card--closed");
+          m.stageEl.textContent = prev ? prev.label : "Closed";
+          m.countEl.innerHTML = '<span class="dl-card__count-main">Closed</span>';
+          m.fillEl.style.width = "100%";
+        }
+      });
+
+      updateTicker();
+    }
+
+    // ---- Hero badge + "next up" strip --------------------------------------
+    function humanGap(ms) {
+      var days = Math.floor(ms / MS_DAY);
+      if (days >= 1) return days + (days === 1 ? " day" : " days");
+      var hrs = Math.floor((ms % MS_DAY) / 3600000);
+      var mins = Math.floor((ms % 3600000) / 60000);
+      var secs = Math.floor((ms % 60000) / 1000);
+      return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
+    }
+
+    function updateTicker() {
+      var open = models.filter(function (m) { return m.next; })
+                       .sort(function (a, b) { return a.sortKey - b.sortKey; });
+      if (!open.length) {
+        if (ticker) ticker.hidden = true;
+        return;
+      }
+      var soonest = open[0];
+      var gap = humanGap(soonest.sortKey);
+      var isClock = gap.indexOf(":") !== -1;
+
+      if (ticker) {
+        ticker.hidden = false;
+        ticker.querySelector(".deadlines__ticker-body").innerHTML =
+          "<strong>" + soonest.name + "</strong> &middot; " + soonest.next.label +
+          " in <span class=\"dl-mono\">" + gap + "</span>" +
+          (open.length > 1 ? ' <span class="text-muted">&middot; then ' + open[1].name +
+            " in " + humanGap(open[1].sortKey) + "</span>" : "");
+      }
+      if (heroBadge) {
+        heroBadge.innerHTML = '<span class="deadline-pill deadline-pill--' +
+          (isClock || soonest.sortKey <= 7 * MS_DAY ? "urgent" : "soon") +
+          '" style="font-size: 0.72rem; padding: 1px 7px;">' +
+          soonest.name + " &middot; " + gap + "</span>";
+      }
+    }
+
+    // ---- Filtering & sorting ------------------------------------------------
+    function applyFilters() {
+      var visible = 0;
+
+      models.forEach(function (m) {
+        var okCat = state.category === "all" || m.category === state.category;
+        var okRank = state.rank === "all" || m.rank === state.rank;
+        var okQuery = !state.query || m.search.indexOf(state.query) !== -1;
+        // "Dated calls only" hides both lapsed calls and ones with no published
+        // date, so the default grid is the venues you can actually count down to.
+        var undated = m.card.classList.contains("dl-card--closed") ||
+                      m.card.classList.contains("dl-card--tba");
+        var okOpen = !state.openOnly || !undated;
+        var show = okCat && okRank && okQuery && okOpen;
+
+        m.card.classList.toggle("is-hidden", !show);
+        if (show) visible++;
+      });
+
+      resort();
+
+      if (emptyMsg) emptyMsg.hidden = visible > 0;
+      updateCounts();
+    }
+
+    // Soonest deadline first, TBA next, closed last. Re-appending cards is only
+    // worth it when the order actually moved, so compare against the last one.
+    var lastOrder = "";
+    function resort() {
+      var ordered = models.slice().sort(function (a, b) {
+        return a.sortKey - b.sortKey || a.name.localeCompare(b.name);
+      });
+      var sig = ordered.map(function (m) { return m.name; }).join("|");
+      if (sig === lastOrder) return;
+      lastOrder = sig;
+      var frag = document.createDocumentFragment();
+      ordered.forEach(function (m) { frag.appendChild(m.card); });
+      grid.appendChild(frag);
+    }
+
+    function updateCounts() {
+      var buckets = { all: 0, robotics: 0, vision: 0, aiml: 0 };
+      models.forEach(function (m) {
+        if (state.openOnly && (m.card.classList.contains("dl-card--closed") ||
+                               m.card.classList.contains("dl-card--tba"))) return;
+        buckets.all++;
+        if (buckets[m.category] !== undefined) buckets[m.category]++;
+      });
+      document.querySelectorAll(".dl-pill[data-filter]").forEach(function (btn) {
+        var key = btn.getAttribute("data-filter");
+        var slot = btn.querySelector(".dl-pill__count");
+        if (!slot) {
+          slot = document.createElement("span");
+          slot.className = "dl-pill__count";
+          btn.appendChild(slot);
+        }
+        slot.textContent = buckets[key] === undefined ? "" : buckets[key];
+      });
+    }
+
+    // ---- Controls ----------------------------------------------------------
+    document.querySelectorAll(".dl-pill[data-filter]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-pill[data-filter]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.category = btn.getAttribute("data-filter");
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-rank]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-rank]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.rank = btn.getAttribute("data-rank");
+        applyFilters();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-view]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-view]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.view = btn.getAttribute("data-view");
+        grid.classList.toggle("is-list", state.view === "list");
+      });
+    });
+
+    if (openOnlyBtn) {
+      openOnlyBtn.addEventListener("click", function () {
+        state.openOnly = !state.openOnly;
+        openOnlyBtn.classList.toggle("is-active", state.openOnly);
+        openOnlyBtn.setAttribute("aria-pressed", String(state.openOnly));
+        applyFilters();
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        state.query = (searchInput.value || "").trim().toLowerCase();
+        applyFilters();
+      });
+    }
+
+    // Expand a card for the note, conference dates and the CFP link.
+    grid.addEventListener("click", function (e) {
+      var btn = e.target.closest(".js-dl-more");
+      if (!btn) return;
+      var panel = document.getElementById(btn.getAttribute("aria-controls"));
+      if (!panel) return;
+      var open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      panel.hidden = open;
+    });
+
+    // Smooth-scroll the hero shortcut down to the section.
+    var jump = document.querySelector(".js-dl-jump");
+    if (jump) {
+      jump.addEventListener("click", function (e) {
+        var target = document.getElementById("deadlines");
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+      });
+    }
+
+    function statusSignature() {
+      return models.map(function (m) {
+        return m.card.classList.contains("dl-card--closed") ? "c"
+             : m.card.classList.contains("dl-card--tba") ? "t" : "o";
+      }).join("");
+    }
+
+    tick();
+    applyFilters();
+    var lastStatus = statusSignature();
+
+    window.setInterval(function () {
+      tick();
+      var status = statusSignature();
+      if (status !== lastStatus) {
+        // A deadline just lapsed: visibility and counts need a full pass.
+        lastStatus = status;
+        applyFilters();
+      } else {
+        resort();
+      }
+    }, 1000);
   }
 
   /* ---- Journal Search & Category Filter ------------------------------ */
@@ -582,62 +834,6 @@
     if (searchInput) {
       searchInput.addEventListener("input", updateVisibility);
     }
-  }
-
-  /* ---- Deadline Category & Rank Filter ------------------------------- */
-  function initDeadlineFilters() {
-    var filterContainer = document.querySelector(".deadline-filters");
-    var rankContainer = document.querySelector(".deadline-rank-filters");
-    var table = document.getElementById("deadlines-table");
-    if (!table) return;
-
-    var categoryBtns = filterContainer ? filterContainer.querySelectorAll(".deadline-filter-btn") : [];
-    var rankBtns = rankContainer ? rankContainer.querySelectorAll(".deadline-rank-btn") : [];
-    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
-
-    var currentCategory = "all";
-    var currentRank = "all";
-
-    function updateVisibility() {
-      rows.forEach(function (row) {
-        var isHeader = row.classList.contains("category-header-row");
-        var cat = row.getAttribute("data-category");
-        var headerCat = row.getAttribute("data-category-header");
-        var rank = row.getAttribute("data-rank");
-
-        if (isHeader) {
-          var headerMatches = (currentCategory === "all") || (headerCat === currentCategory);
-          row.style.display = headerMatches ? "" : "none";
-        } else {
-          var matchesCat = (currentCategory === "all") || (cat === currentCategory);
-          var matchesRank = (currentRank === "all") || (rank === currentRank);
-
-          if (matchesCat && matchesRank) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        }
-      });
-    }
-
-    categoryBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        categoryBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        currentCategory = btn.getAttribute("data-filter");
-        updateVisibility();
-      });
-    });
-
-    rankBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        rankBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        currentRank = btn.getAttribute("data-rank");
-        updateVisibility();
-      });
-    });
   }
 
   /* ---- Floating Back to Top Button ----------------------------------- */
@@ -1151,8 +1347,7 @@
     safe(initUpdatesScroll);
     safe(initLightbox);
     safe(initModals);
-    safe(initDeadlinesCountdown);
-    safe(initDeadlineFilters);
+    safe(initDeadlineTracker);
     safe(initJournalSearch);
     safe(initRankings);
     safe(initPalette);

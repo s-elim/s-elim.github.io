@@ -36,9 +36,9 @@ redirect_from:
         <i class="fas fa-bullhorn" aria-hidden="true"></i> Click to see updates <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
       </button>
       <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
-      <button type="button" class="js-modal-open" data-modal-target="#deadlines-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines <span id="deadlines-next-badge"></span> <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
-      </button>
+      <a href="#deadlines" class="js-dl-jump" style="text-decoration: none; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
+        <i class="fas fa-stopwatch" aria-hidden="true"></i> AI Conference Deadlines <span id="deadlines-next-badge"></span> <i class="fas fa-arrow-down" aria-hidden="true" style="font-size: 0.9em;"></i>
+      </a>
       <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
       <button type="button" class="js-modal-open" data-modal-target="#journals-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
         <i class="fas fa-book-open" aria-hidden="true"></i> Top Journals (Robotics &amp; Vision) <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
@@ -76,6 +76,112 @@ redirect_from:
     </blockquote>
   </div>
 </div>
+
+<section class="deadlines reveal" id="deadlines" aria-labelledby="deadlines-heading">
+  <div class="deadlines__head">
+    <h2 class="section-title deadlines__title" id="deadlines-heading">
+      <i class="fas fa-stopwatch" aria-hidden="true"></i> AI Conference Deadlines
+    </h2>
+    <p class="deadlines__tagline">Live countdowns for the venues I track. <span class="deadlines__verified">Verified 31 Aug 2026</span></p>
+  </div>
+
+  <div class="deadlines__ticker" id="deadlines-ticker" aria-live="off">
+    <span class="deadlines__ticker-label"><i class="fas fa-bolt" aria-hidden="true"></i> Next up</span>
+    <span class="deadlines__ticker-body">Loading&hellip;</span>
+  </div>
+
+  <div class="deadlines__toolbar">
+    <div class="deadlines__filters" role="group" aria-label="Filter by research domain">
+      <button type="button" class="dl-pill is-active" data-filter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All</button>
+      <button type="button" class="dl-pill" data-filter="robotics"><span class="dl-pill__dot dl-pill__dot--robotics"></span> Robotics</button>
+      <button type="button" class="dl-pill" data-filter="vision"><span class="dl-pill__dot dl-pill__dot--vision"></span> Vision</button>
+      <button type="button" class="dl-pill" data-filter="aiml"><span class="dl-pill__dot dl-pill__dot--aiml"></span> AI/ML</button>
+    </div>
+
+    <div class="deadlines__tools">
+      <label class="dl-search" for="deadline-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="deadline-search" placeholder="Search conferences" autocomplete="off" aria-label="Search conferences by name or location">
+      </label>
+      <div class="dl-segment" role="group" aria-label="Filter by CORE rank">
+        <button type="button" class="dl-seg is-active" data-rank="all">All ranks</button>
+        <button type="button" class="dl-seg" data-rank="A*">A*</button>
+        <button type="button" class="dl-seg" data-rank="A">A</button>
+      </div>
+      <button type="button" class="dl-toggle is-active" id="deadline-open-only" aria-pressed="true">
+        <i class="fas fa-door-open" aria-hidden="true"></i> Dated calls only
+      </button>
+      <div class="dl-segment dl-segment--view" role="group" aria-label="Change layout">
+        <button type="button" class="dl-seg is-active" data-view="grid" aria-label="Card view"><i class="fas fa-th-large" aria-hidden="true"></i></button>
+        <button type="button" class="dl-seg" data-view="list" aria-label="Compact list view"><i class="fas fa-list" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="deadlines__grid" id="deadlines-grid">
+    {% for c in site.data.conferences %}
+    {% assign slug = c.name | slugify %}
+    <article class="dl-card dl-card--{{ c.category }}" data-category="{{ c.category }}" data-rank="{{ c.rank | default: 'unranked' }}" data-name="{{ c.name }}" data-location="{{ c.location }}" id="conf-{{ slug }}">
+      <div class="dl-card__glow" aria-hidden="true"></div>
+
+      <header class="dl-card__head">
+        <div class="dl-card__id">
+          <h3 class="dl-card__name">{{ c.name }} <span class="dl-card__edition">{{ c.edition }}</span></h3>
+          <p class="dl-card__place">{% if c.flag %}<span class="dl-card__flag">{{ c.flag }}</span> {% endif %}{{ c.location }}</p>
+        </div>
+        <div class="dl-card__marks">
+          {% if c.rank %}<span class="dl-rank dl-rank--{% if c.rank == 'A*' %}astar{% else %}a{% endif %}">{{ c.rank }}</span>{% endif %}
+          <span class="dl-cat dl-cat--{{ c.category }}">
+            {% if c.category == 'robotics' %}<i class="fas fa-robot" aria-hidden="true"></i>{% elsif c.category == 'vision' %}<i class="fas fa-eye" aria-hidden="true"></i>{% else %}<i class="fas fa-brain" aria-hidden="true"></i>{% endif %}
+          </span>
+        </div>
+      </header>
+
+      <div class="dl-card__clock">
+        <p class="dl-card__stage">&mdash;</p>
+        <div class="dl-card__count" aria-live="off"><span class="dl-card__count-main">&mdash;</span></div>
+        <div class="dl-card__bar" aria-hidden="true"><span class="dl-card__bar-fill"></span></div>
+      </div>
+
+      <ol class="dl-card__timeline">
+        {% for t in c.timeline %}
+        <li class="dl-stage" data-date="{{ t.date }}"{% if t.time %} data-time="{{ t.time }}"{% endif %}{% if t.tz %} data-tz="{{ t.tz }}"{% endif %}>
+          <span class="dl-stage__dot" aria-hidden="true"></span>
+          <span class="dl-stage__label">{{ t.label }}</span>
+          <span class="dl-stage__date">
+            {%- if t.date == 'tba' -%}TBA{%- else -%}{{ t.date | date: "%b %-d, %Y" }}{%- endif -%}
+          </span>
+        </li>
+        {% endfor %}
+      </ol>
+
+      <footer class="dl-card__foot">
+        <span class="dl-card__dates">{% if c.dates %}<i class="fas fa-calendar-alt" aria-hidden="true"></i> {{ c.dates }}{% endif %}</span>
+        <button type="button" class="dl-card__more js-dl-more" aria-expanded="false" aria-controls="conf-{{ slug }}-details">Details <i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+      </footer>
+
+      <div class="dl-card__details" id="conf-{{ slug }}-details" hidden>
+        {% if c.note %}<p class="dl-card__note"><i class="fas fa-info-circle" aria-hidden="true"></i> {{ c.note }}</p>{% endif %}
+        <dl class="dl-card__meta">
+          {% if c.dates %}<div><dt>Conference</dt><dd>{{ c.dates }}</dd></div>{% endif %}
+          <div><dt>Location</dt><dd>{% if c.flag %}{{ c.flag }} {% endif %}{{ c.location }}</dd></div>
+          {% if c.rank %}<div><dt>CORE rank</dt><dd>{{ c.rank }}</dd></div>{% endif %}
+        </dl>
+        {% if c.website %}<a class="dl-card__link" href="{{ c.website }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Call for papers</a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="deadlines__empty" id="deadlines-empty" hidden>No conference matches those filters.</p>
+
+  <p class="deadlines__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    Dates are checked against official calls for papers and the
+    <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a> dataset.
+    Always confirm on the conference site before submitting.
+  </p>
+</section>
 
 <div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
   <div class="modal__dialog">
@@ -116,272 +222,6 @@ redirect_from:
           </ul>
         </div>
         <div class="updates-card__hint" aria-hidden="true"><i class="fas fa-chevron-down"></i> Scroll for older updates</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="deadlines-modal" role="dialog" aria-modal="true" aria-labelledby="deadlines-modal-title">
-  <div class="modal__dialog" style="max-width: 46rem;">
-    <div class="modal__head">
-      <h3 class="modal__title" id="deadlines-modal-title"><i class="fas fa-calendar-alt" aria-hidden="true"></i> AI Conference Deadlines</h3>
-      <button type="button" class="modal__close js-modal-close" aria-label="Close deadlines popup">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-    <div class="modal__body" style="padding-top: 0.5rem;">
-      <div class="deadline-filters-wrapper" style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.85rem; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.65rem;">
-        <div class="deadline-filters" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
-          <span style="font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-right: 0.15rem;">Domain:</span>
-          <button type="button" class="deadline-filter-btn active" data-filter="all">All (29)</button>
-          <button type="button" class="deadline-filter-btn" data-filter="robotics">🤖 Robotics (6)</button>
-          <button type="button" class="deadline-filter-btn" data-filter="vision">👁️ Vision &amp; Graphics (11)</button>
-          <button type="button" class="deadline-filter-btn" data-filter="aiml">🧠 AI/ML &amp; NLP (12)</button>
-        </div>
-        <div class="deadline-rank-filters" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
-          <span style="font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-right: 0.15rem;">CORE Rank:</span>
-          <button type="button" class="deadline-rank-btn active" data-rank="all">All Ranks (29)</button>
-          <button type="button" class="deadline-rank-btn" data-rank="A*">⭐ A* (19)</button>
-          <button type="button" class="deadline-rank-btn" data-rank="A">🏅 A (6)</button>
-        </div>
-      </div>
-      <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.76rem; text-align: left;" id="deadlines-table">
-          <thead>
-            <tr style="border-bottom: 2px solid var(--border); color: var(--text-strong);">
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Conference</th>
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Category</th>
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Rank</th>
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Deadline, Location</th>
-              <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Countdown</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Robotics Conferences (Top) -->
-            <tr class="category-header-row" data-category-header="robotics" style="background: var(--surface-2);">
-              <td colspan="5" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.72rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
-                <i class="fas fa-robot" aria-hidden="true"></i> Robotics Conferences
-              </td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-15" data-category="robotics" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICRA</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September 15, 2026, South Korea</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-03-02" data-category="robotics" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IROS</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 2, 2027, Florence, Italy</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-20" data-category="robotics" data-rank="unranked">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Humanoids</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.70rem;">—</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 20, 2026, Germany</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-10-01" data-category="robotics" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">HRI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">October 1, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-28" data-category="robotics" data-rank="unranked">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CoRL</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.70rem;">—</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May 28, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-06" data-category="robotics" data-rank="unranked">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">RSS</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--robotics"><i class="fas fa-robot" aria-hidden="true" style="font-size: 0.75em;"></i> Robotics</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.70rem;">—</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 6, 2026, Australia</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-
-            <!-- Vision & Graphics Conferences (Middle) -->
-            <tr class="category-header-row" data-category-header="vision" style="background: var(--surface-2);">
-              <td colspan="5" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.72rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
-                <i class="fas fa-eye" aria-hidden="true"></i> Vision &amp; Image Processing / Graphics
-              </td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-11-11" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CVPR</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">November 11, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-05" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ECCV</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 5, 2026, Germany</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-03-11" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICCV</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 11, 2027, Australia</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-01-21" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">SIGGRAPH</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January 21, 2027, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-19" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">SIGGRAPH Asia</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May 19, 2026, Japan</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-04-10" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACM MM</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">April 10, 2026, Australia</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-18" data-category="vision" data-rank="unranked">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">3DV</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #f1f5f9; color: #64748b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; font-size: 0.70rem;">—</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September 18, 2026, Singapore</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-30" data-category="vision" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">BMVC</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May 30, 2026, UK</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-06-27" data-category="vision" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WACV</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">June 27, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-10" data-category="vision" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">MICCAI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 10, 2026, France</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-08-31" data-category="vision" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IEEE VR</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--vision"><i class="fas fa-eye" aria-hidden="true" style="font-size: 0.75em;"></i> Vision</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">August 31, 2026, Australia</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <!-- AI/ML Conferences (Third) -->
-            <tr class="category-header-row" data-category-header="aiml" style="background: var(--surface-2);">
-              <td colspan="5" style="padding: 0.45rem 0.6rem; font-weight: 700; font-size: 0.72rem; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase;">
-                <i class="fas fa-brain" aria-hidden="true"></i> General AI &amp; Machine Learning / NLP
-              </td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-05-06" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">NeurIPS</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">May 6, 2026, Canada</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-30" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICLR</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September 30, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-01-27" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ICML</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January 27, 2027, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-07-29" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">AAAI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">July 29, 2026, Canada</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-01-15" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">IJCAI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">January 15, 2027, Japan</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-02-15" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">ACL</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">February 15, 2027, Austria</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-06-15" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">EMNLP</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">June 15, 2026, China</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-02-08" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">KDD</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">February 8, 2027, South Korea</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-10-13" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">WWW</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">October 13, 2026, Ireland</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-09-10" data-category="aiml" data-rank="A*">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">CHI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #fee2e2; color: #991b1b; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A*</span></td>
-              <td style="padding: 0.75rem 0.5rem;">September 10, 2026, USA</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2027-02-20" data-category="aiml" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">UAI</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">February 20, 2027, Canada</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);" data-deadline="2026-03-02" data-category="aiml" data-rank="A">
-              <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-strong);">Interspeech</td>
-              <td style="padding: 0.75rem 0.5rem;"><span class="conf-tag conf-tag--aiml"><i class="fas fa-brain" aria-hidden="true" style="font-size: 0.75em;"></i> AI/ML</span></td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;"><span style="background: #ffedd5; color: #c2410c; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.70rem;">A</span></td>
-              <td style="padding: 0.75rem 0.5rem;">March 2, 2026, Australia</td>
-              <td style="padding: 0.75rem 0.5rem; text-align: center;" class="deadline-countdown"></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>

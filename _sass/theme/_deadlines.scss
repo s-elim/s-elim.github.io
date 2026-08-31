@@ -1,0 +1,600 @@
+// ==========================================================================
+//  AI Conference Deadlines - live countdown tracker on the home page
+//  Markup lives in _pages/about.md, behaviour in assets/js/main.js.
+// ==========================================================================
+
+.deadlines {
+  margin: 3rem 0 2.5rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.deadlines__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .35rem 1rem;
+  margin-bottom: .85rem;
+}
+.deadlines__title { margin: 0; }
+.deadlines__tagline {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.deadlines__verified {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  margin-left: .2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+// ---- Live "next up" strip -------------------------------------------------
+.deadlines__ticker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .8rem;
+  padding: .65rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--fs-sm);
+}
+.deadlines__ticker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  flex-shrink: 0;
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.deadlines__ticker-body { color: var(--text); }
+.deadlines__ticker-body strong { color: var(--text-strong); }
+.deadlines__ticker-body .dl-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--red);
+}
+
+// ---- Toolbar --------------------------------------------------------------
+.deadlines__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem 1rem;
+  padding-bottom: .85rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid var(--border);
+}
+.deadlines__filters,
+.deadlines__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+
+.dl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+
+  &:hover { color: var(--text-strong); border-color: var(--border-strong); transform: translateY(-1px); }
+  &.is-active {
+    color: var(--text-strong);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+.dl-pill__count {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.dl-pill__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  &--all      { background: linear-gradient(135deg, #10b981, #3b82f6 55%, #f97316); }
+  &--robotics { background: #10b981; }
+  &--vision   { background: #3b82f6; }
+  &--aiml     { background: #f97316; }
+}
+
+.dl-search {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  transition: border-color .2s var(--ease);
+
+  &:focus-within { border-color: var(--accent); }
+  > i { font-size: .78rem; }
+  input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: .82rem;
+    width: 10.5rem;
+    &::placeholder { color: var(--muted); }
+  }
+}
+
+.dl-segment {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+}
+.dl-seg {
+  padding: .22rem .7rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease);
+
+  &:hover { color: var(--text-strong); }
+  &.is-active {
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+  }
+}
+.dl-segment--view .dl-seg { padding: .22rem .6rem; }
+
+.dl-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-head);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+
+  &:hover { color: var(--text-strong); border-color: var(--border-strong); }
+  &.is-active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+// ---- Card grid ------------------------------------------------------------
+.deadlines__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  gap: 1.15rem;
+  align-items: start;
+}
+
+.deadlines__empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.deadlines__foot {
+  margin-top: 1.4rem;
+  font-size: .78rem;
+  color: var(--muted);
+  > i { color: var(--accent); }
+}
+
+// ---- Card -----------------------------------------------------------------
+.dl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-sm);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  &.is-hidden { display: none; }
+}
+
+// Soft top wash tinted per domain, echoing the filter dots.
+.dl-card__glow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 78px;
+  pointer-events: none;
+  opacity: .5;
+}
+.dl-card--robotics .dl-card__glow { background: linear-gradient(160deg, rgba(16, 185, 129, .22), transparent 78%); }
+.dl-card--vision   .dl-card__glow { background: linear-gradient(160deg, rgba(59, 130, 246, .22), transparent 78%); }
+.dl-card--aiml     .dl-card__glow { background: linear-gradient(160deg, rgba(249, 115, 22, .20), transparent 78%); }
+
+.dl-card__head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: .9rem 1rem .55rem;
+}
+.dl-card__name {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+.dl-card__edition {
+  font-size: .8em;
+  font-weight: 600;
+  color: var(--muted);
+}
+.dl-card__place {
+  margin: .18rem 0 0;
+  font-size: .76rem;
+  color: var(--muted);
+}
+.dl-card__flag { font-size: .95em; }
+
+.dl-card__marks {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+}
+.dl-rank {
+  padding: 1px 7px;
+  border-radius: 5px;
+  font-family: var(--font-head);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  &--astar { color: #991b1b; background: #fee2e2; border: 1px solid #fca5a5; }
+  &--a     { color: #c2410c; background: #ffedd5; border: 1px solid #fdba74; }
+}
+.dl-cat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: .68rem;
+  &--robotics { color: #065f46; background: #d1fae5; }
+  &--vision   { color: #1e40af; background: #dbeafe; }
+  &--aiml     { color: #9a3412; background: #ffedd5; }
+}
+
+// ---- Countdown block ------------------------------------------------------
+.dl-card__clock {
+  position: relative;
+  padding: .35rem 1rem .85rem;
+  text-align: center;
+}
+.dl-card__stage {
+  margin: 0 0 .25rem;
+  font-family: var(--font-head);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dl-card__count {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: .3rem;
+  min-height: 2.35rem;
+  font-family: var(--font-head);
+  font-variant-numeric: tabular-nums;
+}
+.dl-card__count-main {
+  font-size: 1.95rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: var(--text-strong);
+}
+.dl-card__count-unit {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.dl-card__count-sep {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--muted);
+  transform: translateY(-2px);
+}
+
+// Urgency states drive the number colour and the progress fill.
+.dl-card--urgent  .dl-card__count-main { color: #dc2626; }
+.dl-card--soon    .dl-card__count-main { color: #ea580c; }
+.dl-card--closed  .dl-card__count-main,
+.dl-card--tba     .dl-card__count-main { font-size: 1.15rem; color: var(--muted); }
+
+.dl-card--urgent { border-color: rgba(220, 38, 38, .45); }
+.dl-card--urgent .dl-card__glow { background: linear-gradient(160deg, rgba(220, 38, 38, .22), transparent 78%); }
+.dl-card--closed, .dl-card--tba { opacity: .82; }
+.dl-card--closed:hover, .dl-card--tba:hover { opacity: 1; }
+
+.dl-card__bar {
+  height: 4px;
+  margin-top: .6rem;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.dl-card__bar-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  transition: width .6s var(--ease);
+}
+.dl-card--urgent .dl-card__bar-fill { background: linear-gradient(90deg, #f97316, #dc2626); }
+.dl-card--soon   .dl-card__bar-fill { background: linear-gradient(90deg, #fbbf24, #f97316); }
+.dl-card--closed .dl-card__bar-fill,
+.dl-card--tba    .dl-card__bar-fill { background: var(--border-strong); }
+
+// ---- Stage timeline -------------------------------------------------------
+.dl-card__timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: .7rem 1rem .5rem 1.65rem;
+  border-top: 1px dashed var(--border);
+  flex-grow: 1;
+
+  // The rail the stage dots sit on.
+  &::before {
+    content: "";
+    position: absolute;
+    left: calc(1rem + 3px);
+    top: 1.05rem;
+    bottom: .95rem;
+    width: 1px;
+    background: var(--border);
+  }
+}
+.dl-stage {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .17rem 0;
+  font-size: .73rem;
+  color: var(--muted);
+}
+.dl-stage__dot {
+  position: absolute;
+  left: -.65rem;
+  top: .48rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+}
+.dl-stage__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dl-stage__date {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+}
+
+.dl-stage.is-done {
+  color: var(--muted);
+  opacity: .6;
+  .dl-stage__label { text-decoration: line-through; }
+  .dl-stage__dot { background: var(--border-strong); border-color: var(--border-strong); }
+}
+.dl-stage.is-next {
+  color: var(--text-strong);
+  font-weight: 600;
+  .dl-stage__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+}
+.dl-card--urgent .dl-stage.is-next .dl-stage__dot {
+  background: #dc2626;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .18);
+  animation: dl-ping 1.8s ease-in-out infinite;
+}
+@keyframes dl-ping {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(220, 38, 38, .18); }
+  50%      { box-shadow: 0 0 0 6px rgba(220, 38, 38, .05); }
+}
+
+// ---- Card footer & details ------------------------------------------------
+.dl-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .5rem 1rem .65rem;
+  border-top: 1px solid var(--border);
+}
+.dl-card__dates {
+  font-size: .7rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  > i { margin-right: .25rem; }
+}
+.dl-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover { color: var(--accent-hover); }
+  > i { transition: transform .25s var(--ease); font-size: .9em; }
+  &[aria-expanded="true"] > i { transform: rotate(180deg); }
+}
+
+.dl-card__details {
+  padding: .1rem 1rem .9rem;
+  border-top: 1px dashed var(--border);
+  font-size: .75rem;
+}
+.dl-card__note {
+  margin: .65rem 0;
+  padding: .5rem .6rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--muted);
+  line-height: 1.5;
+  > i { color: var(--accent); margin-right: .25rem; }
+}
+.dl-card__meta {
+  margin: .65rem 0;
+  display: grid;
+  gap: .3rem;
+
+  > div { display: flex; gap: .5rem; }
+  dt {
+    flex: 0 0 5.6rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  dd { margin: 0; color: var(--text); }
+}
+.dl-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-weight: 600;
+  font-size: .74rem;
+}
+
+// ---- Compact list view ----------------------------------------------------
+.deadlines__grid.is-list {
+  grid-template-columns: 1fr;
+  gap: .5rem;
+
+  .dl-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .dl-card:hover { transform: none; }
+  .dl-card__glow { display: none; }
+  .dl-card__head { flex: 1 1 15rem; padding: .6rem 1rem; }
+  .dl-card__clock {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .6rem 1rem;
+    text-align: left;
+  }
+  .dl-card__stage { margin: 0; max-width: 9rem; }
+  .dl-card__count { min-height: 0; }
+  .dl-card__count-main { font-size: 1.15rem; }
+  .dl-card__bar { display: none; }
+  .dl-card__timeline { display: none; }
+  .dl-card__foot { flex: 0 0 auto; border: 0; padding: .6rem 1rem; }
+  .dl-card__dates { display: none; }
+  .dl-card__details { flex: 1 0 100%; border-top: 1px dashed var(--border); }
+}
+
+// ---- Dark theme -----------------------------------------------------------
+:root[data-theme="dark"] {
+  .dl-rank--astar { color: #fca5a5; background: rgba(185, 28, 28, .25); border-color: rgba(239, 68, 68, .5); }
+  .dl-rank--a     { color: #fdba74; background: rgba(194, 65, 12, .25); border-color: rgba(249, 115, 22, .5); }
+
+  .dl-cat--robotics { color: #6ee7b7; background: rgba(6, 95, 70, .38); }
+  .dl-cat--vision   { color: #93c5fd; background: rgba(30, 64, 175, .38); }
+  .dl-cat--aiml     { color: #fdba74; background: rgba(154, 52, 18, .38); }
+
+  .dl-card--urgent .dl-card__count-main { color: #f87171; }
+  .dl-card--soon   .dl-card__count-main { color: #fb923c; }
+  .dl-card--urgent { border-color: rgba(248, 113, 113, .45); }
+
+  .deadlines__ticker-body .dl-mono { color: #f87171; }
+
+  .dl-card__glow { opacity: .35; }
+}
+
+// ---- Responsive -----------------------------------------------------------
+@media (max-width: $bp-md) {
+  .deadlines__toolbar { justify-content: flex-start; }
+  .dl-search input { width: 8rem; }
+  .deadlines__grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .9rem; }
+}
+@media (max-width: $bp-sm) {
+  .deadlines__grid { grid-template-columns: 1fr; }
+  .dl-search { flex: 1 1 100%; input { width: 100%; } }
+  .deadlines__grid.is-list .dl-card { flex-direction: column; align-items: stretch; }
+  .deadlines__grid.is-list .dl-card__clock { text-align: center; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dl-card, .dl-card__bar-fill, .dl-card__more > i { transition: none; }
+  .dl-card:hover { transform: none; }
+  .dl-card--urgent .dl-stage.is-next .dl-stage__dot { animation: none; }
+}
