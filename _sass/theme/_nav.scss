@@ -55,7 +55,7 @@
 }
 .nav-link {
   position: relative;
-  white-space: nowrap;      // two-word labels must not wrap the row
+  white-space: nowrap;
   padding: .5rem .7rem;
   font-family: var(--font-head);
   font-weight: 500;
@@ -88,21 +88,6 @@
 @media (max-width: $bp-md) {
   .nav-links { display: none; }
   .nav-actions { margin-left: auto; }
-}
-
-// "Conference Deadlines" and "Top Journals" make the link row far wider than
-// the one-word labels it was built for, so tighten it on the way down to the
-// burger rather than letting it collide with the brand.
-@media (max-width: $bp-xl) {
-  .nav-links { gap: .15rem; }
-  .nav-link { padding: .5rem .55rem; font-size: .9rem; }
-  .nav-link::after { left: .55rem; right: .55rem; }
-}
-@media (max-width: $bp-lg) {
-  .nav-inner { gap: .6rem; }
-  .nav-link { padding: .5rem .45rem; font-size: .88rem; }
-  .nav-link::after { left: .45rem; right: .45rem; }
-  .nav-title { display: none; }   // the avatar still carries the brand
 }
 
 // Theme toggle

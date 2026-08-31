@@ -13,7 +13,10 @@ layout: none
 {%- unless first %},{% endunless %}{% assign first = false %}
 {"t":{{ link.title | jsonify }},"k":"Page","u":{{ link.url | relative_url | jsonify }},"s":""}
 {%- endfor -%}
-,{"t":"Home","k":"Page","u":{{ "/" | relative_url | jsonify }},"s":"about updates journals rankings"}
+,{"t":"Home","k":"Page","u":{{ "/" | relative_url | jsonify }},"s":"about updates rankings"}
+{%- comment -%} Off-nav pages, reached from the home page hero {%- endcomment -%}
+,{"t":"Conference Deadlines","k":"Page","u":{{ "/deadlines/" | relative_url | jsonify }},"s":"conference deadlines call for papers submission countdown CORE rank"}
+,{"t":"Top Journals","k":"Page","u":{{ "/journals/" | relative_url | jsonify }},"s":"journals SCIE Q1 impact factor robotics vision AI"}
 
 {%- comment -%} Conferences: deep-link to the card on the deadlines page {%- endcomment -%}
 {%- for c in site.data.conferences -%}
