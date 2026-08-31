@@ -22,7 +22,7 @@ redirect_from:
       <span class="chip">Self Modeling</span>
       <span class="chip">VLAs</span>
       <span class="chip">World Models</span>
-      <span class="chip" title="Joint Embedding Predictive Architecture">JEPA</span>
+      <span class="chip chip--long">Joint Embedding Predictive Architecture (V-JEPA)</span>
       <span class="chip">Agentic Robotics</span>
       <span class="chip">Robot Learning</span>
       <span class="chip">5D AI Robotics</span>

@@ -136,6 +136,10 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
   animation-play-state: paused;
 }
+// Most interest chips are one or two words and rely on .chip's nowrap. A chip
+// carrying a spelled-out term is wide enough to overflow a narrow phone, the
+// same way .chip--open did, so let this one wrap instead.
+.hero__chips .chip--long { white-space: normal; max-width: 100%; }
 @media (max-width: $bp-sm) { .hero__chips { justify-content: center; } }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
 @media (max-width: $bp-sm) { .hero__actions { justify-content: center; } }
