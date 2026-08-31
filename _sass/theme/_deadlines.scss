@@ -1,10 +1,11 @@
 // ==========================================================================
-//  AI Conference Deadlines - live countdown tracker on the home page
-//  Markup lives in _pages/about.md, behaviour in assets/js/main.js.
+//  AI Conference Deadlines - live countdown tracker on /deadlines/
+//  Markup lives in _pages/deadlines.html, behaviour in assets/js/main.js.
+//  The home page hero only shows the "next up" pill (.deadline-pill).
 // ==========================================================================
 
 .deadlines {
-  margin: 3rem 0 2.5rem;
+  margin: 0 0 2.5rem;
   scroll-margin-top: 5.5rem;
 }
 
@@ -126,6 +127,7 @@
   &--robotics { background: #10b981; }
   &--vision   { background: #3b82f6; }
   &--aiml     { background: #f97316; }
+  &--hci      { background: #8b5cf6; }
 }
 
 .dl-search {
@@ -257,6 +259,7 @@
 .dl-card--robotics .dl-card__glow { background: linear-gradient(160deg, rgba(16, 185, 129, .22), transparent 78%); }
 .dl-card--vision   .dl-card__glow { background: linear-gradient(160deg, rgba(59, 130, 246, .22), transparent 78%); }
 .dl-card--aiml     .dl-card__glow { background: linear-gradient(160deg, rgba(249, 115, 22, .20), transparent 78%); }
+.dl-card--hci      .dl-card__glow { background: linear-gradient(160deg, rgba(139, 92, 246, .20), transparent 78%); }
 
 .dl-card__head {
   position: relative;
@@ -311,6 +314,7 @@
   &--robotics { color: #065f46; background: #d1fae5; }
   &--vision   { color: #1e40af; background: #dbeafe; }
   &--aiml     { color: #9a3412; background: #ffedd5; }
+  &--hci      { color: #5b21b6; background: #ede9fe; }
 }
 
 // ---- Countdown block ------------------------------------------------------
@@ -570,6 +574,7 @@
   .dl-cat--robotics { color: #6ee7b7; background: rgba(6, 95, 70, .38); }
   .dl-cat--vision   { color: #93c5fd; background: rgba(30, 64, 175, .38); }
   .dl-cat--aiml     { color: #fdba74; background: rgba(154, 52, 18, .38); }
+  .dl-cat--hci      { color: #c4b5fd; background: rgba(91, 33, 182, .38); }
 
   .dl-card--urgent .dl-card__count-main { color: #f87171; }
   .dl-card--soon   .dl-card__count-main { color: #fb923c; }
@@ -597,4 +602,14 @@
   .dl-card, .dl-card__bar-fill, .dl-card__more > i { transition: none; }
   .dl-card:hover { transform: none; }
   .dl-card--urgent .dl-stage.is-next .dl-stage__dot { animation: none; }
+}
+
+// ---- Deep-linked card -----------------------------------------------------
+// Reached through /deadlines/#conf-<slug>, e.g. from the command palette.
+.dl-card {
+  scroll-margin-top: 6rem;
+}
+.dl-card.is-linked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
 }

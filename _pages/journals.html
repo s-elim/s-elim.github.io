@@ -1,0 +1,131 @@
+---
+layout: archive
+title: "Top Q1 Journals"
+permalink: /journals/
+wide: true
+subtitle: 'SCIE-Q1 venues in robotics, vision and AI. <span class="journals__count" id="journals-count">79 journals</span>'
+description: "Curated SCIE-Q1 journals in robotics, computer vision and artificial intelligence, with impact factor, category percentile, ISSN and publisher, tracked by Md Selim Sarowar."
+---
+
+{% assign js = site.data.journals %}
+{% assign total = js | size %}
+{% assign rob = js | where: "category", "robotics" | size %}
+{% assign vis = js | where: "category", "vision" | size %}
+{% assign aim = js | where: "category", "aiml" | size %}
+
+<div class="stat-row reveal">
+  <div class="stat"><div class="stat__num">{{ total }}</div><div class="stat__label">Q1 Journals</div></div>
+  <div class="stat stat--research"><div class="stat__num">{{ rob }}</div><div class="stat__label">Robotics &amp; Automation</div></div>
+  <div class="stat stat--industry"><div class="stat__num">{{ vis }}</div><div class="stat__label">Vision &amp; Imaging</div></div>
+  <div class="stat stat--skills"><div class="stat__num">{{ aim }}</div><div class="stat__label">AI &amp; Machine Learning</div></div>
+</div>
+
+<section class="journals reveal" id="journals" aria-label="Q1 journal explorer">
+  <div class="journals__toolbar">
+    <div class="journals__filters" role="group" aria-label="Filter by research domain">
+      <button type="button" class="dl-pill is-active" data-jfilter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All</button>
+      <button type="button" class="dl-pill" data-jfilter="robotics"><span class="dl-pill__dot dl-pill__dot--robotics"></span> Robotics</button>
+      <button type="button" class="dl-pill" data-jfilter="vision"><span class="dl-pill__dot dl-pill__dot--vision"></span> Vision</button>
+      <button type="button" class="dl-pill" data-jfilter="aiml"><span class="dl-pill__dot dl-pill__dot--aiml"></span> AI/ML</button>
+    </div>
+
+    <div class="journals__tools">
+      <label class="dl-search" for="journal-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="journal-search" placeholder="Journal, abbreviation, ISSN" autocomplete="off" aria-label="Search journals by name, abbreviation, ISSN or publisher">
+      </label>
+
+      <div class="jr-range">
+        <span class="jr-range__label">Min IF</span>
+        <input type="range" id="journal-jif" min="0" max="31" step="0.5" value="0" aria-label="Minimum impact factor">
+        <span class="jr-range__value" id="journal-jif-value">0</span>
+      </div>
+
+      <div class="dl-segment" role="group" aria-label="Sort journals">
+        <button type="button" class="dl-seg is-active" data-jsort="jif">Impact</button>
+        <button type="button" class="dl-seg" data-jsort="name">A&ndash;Z</button>
+      </div>
+
+      <div class="dl-segment dl-segment--view" role="group" aria-label="Change layout">
+        <button type="button" class="dl-seg is-active" data-jview="grid" aria-label="Card view"><i class="fas fa-th-large" aria-hidden="true"></i></button>
+        <button type="button" class="dl-seg" data-jview="list" aria-label="Compact list view"><i class="fas fa-list" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="journals__grid" id="journals-grid">
+    {% for j in js %}
+    {% assign slug = j.name | slugify %}
+    <article class="jr-card jr-card--{{ j.category }}"
+             data-category="{{ j.category }}"
+             data-jif="{{ j.jif }}"
+             data-name="{{ j.name | escape }}"
+             data-abbr="{{ j.abbr | default: '' | escape }}"
+             data-issn="{{ j.issn }}"
+             data-publisher="{{ j.publisher | escape }}"
+             id="journal-{{ slug }}">
+
+      <header class="jr-card__head">
+        <h3 class="jr-card__name">{{ j.name }}{% if j.abbr %} <span class="jr-card__abbr">({{ j.abbr }})</span>{% endif %}</h3>
+        <p class="jr-card__issn">ISSN {{ j.issn }}</p>
+      </header>
+
+      <div class="jr-card__metrics">
+        <div class="jr-metric jr-metric--jif">
+          <span class="jr-metric__label">Impact Factor</span>
+          <span class="jr-metric__value">{{ j.jif }}</span>
+        </div>
+        <div class="jr-metric">
+          <span class="jr-metric__label">Category Rank</span>
+          <span class="jr-metric__value">{{ j.percentile | remove: 'Top ' }}</span>
+        </div>
+      </div>
+
+      <div class="jr-card__catrow">
+        <span class="jr-card__catlabel">Category</span>
+        <span class="jr-card__catvalue">
+          {%- if j.category == 'robotics' -%}Robotics &amp; Automation
+          {%- elsif j.category == 'vision' -%}Computer Vision &amp; Imaging
+          {%- else -%}Artificial Intelligence &amp; ML{%- endif -%}
+        </span>
+      </div>
+
+      <div class="jr-card__badges">
+        <span class="jr-badge jr-badge--q1"><i class="fas fa-award" aria-hidden="true"></i> SCIE-{{ j.quartile }}</span>
+        {% if j.percentile == 'Top 1%' or j.percentile == 'Top 2%' %}
+        <span class="jr-badge jr-badge--top1">{{ j.percentile }}</span>
+        {% else %}
+        <span class="jr-badge jr-badge--top">{{ j.percentile }}</span>
+        {% endif %}
+      </div>
+
+      <footer class="jr-card__foot">
+        <span class="jr-card__publisher"><i class="fas fa-building" aria-hidden="true"></i> {{ j.publisher }}</span>
+        <button type="button" class="jr-card__more js-jr-more" aria-expanded="false" aria-controls="journal-{{ slug }}-details">Details <i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+      </footer>
+
+      <div class="jr-card__details" id="journal-{{ slug }}-details" hidden>
+        <dl class="jr-card__meta">
+          <div><dt>Full title</dt><dd>{{ j.name }}</dd></div>
+          <div><dt>ISSN</dt><dd>{{ j.issn }}</dd></div>
+          <div><dt>Publisher</dt><dd>{{ j.publisher }}</dd></div>
+          <div><dt>Impact factor</dt><dd>{{ j.jif }}</dd></div>
+          <div><dt>Percentile</dt><dd>{{ j.percentile }} of category</dd></div>
+          <div><dt>Quartile</dt><dd>SCIE-{{ j.quartile }}</dd></div>
+        </dl>
+        <a class="jr-card__link" href="https://portal.issn.org/resource/ISSN/{{ j.issn }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> ISSN portal record</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="journals__empty" id="journals-empty" hidden>No journal matches those filters.</p>
+
+  <p class="journals__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    Every venue listed is SCIE-Q1. ISSN and publisher are resolved against
+    <a href="https://www.crossref.org/" target="_blank" rel="noopener">Crossref</a>;
+    impact factor and percentile follow Journal Citation Reports. Confirm current
+    values in JCR before citing them formally.
+  </p>
+</section>

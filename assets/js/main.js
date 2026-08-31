@@ -465,6 +465,27 @@
     });
   }
 
+  /* ---- Deadline helpers ---------------------------------------------- */
+  // Shared by the full tracker on /deadlines/ and the home page hero badge.
+  var DL_MS_DAY = 86400000;
+
+  function dlPad(n) { return n < 10 ? "0" + n : String(n); }
+
+  // Coarse above a day, live clock below it - the same read on both pages.
+  function dlHumanGap(ms) {
+    var days = Math.floor(ms / DL_MS_DAY);
+    if (days >= 1) return days + (days === 1 ? " day" : " days");
+    return dlPad(Math.floor((ms % DL_MS_DAY) / 3600000)) + ":" +
+           dlPad(Math.floor((ms % 3600000) / 60000)) + ":" +
+           dlPad(Math.floor((ms % 60000) / 1000));
+  }
+
+  function dlBadgeMarkup(name, gap, urgent) {
+    return '<span class="deadline-pill deadline-pill--' + (urgent ? "urgent" : "soon") +
+           '" style="font-size: 0.72rem; padding: 1px 7px;">' +
+           name + " &middot; " + gap + "</span>";
+  }
+
   /* ---- AI Conference Deadline Tracker -------------------------------- */
   // Cards are rendered by Jekyll from _data/conferences.yml; this drives the
   // live countdowns, urgency states, filtering, sorting and the hero badge.
@@ -521,7 +542,7 @@
       };
     });
 
-    function pad(n) { return n < 10 ? "0" + n : String(n); }
+    var pad = dlPad;
 
     function bigNumber(value, unit) {
       return '<span class="dl-card__count-main">' + value + '</span>' +
@@ -605,14 +626,7 @@
     }
 
     // ---- Hero badge + "next up" strip --------------------------------------
-    function humanGap(ms) {
-      var days = Math.floor(ms / MS_DAY);
-      if (days >= 1) return days + (days === 1 ? " day" : " days");
-      var hrs = Math.floor((ms % MS_DAY) / 3600000);
-      var mins = Math.floor((ms % 3600000) / 60000);
-      var secs = Math.floor((ms % 60000) / 1000);
-      return pad(hrs) + ":" + pad(mins) + ":" + pad(secs);
-    }
+    var humanGap = dlHumanGap;
 
     function updateTicker() {
       var open = models.filter(function (m) { return m.next; })
@@ -634,10 +648,8 @@
             " in " + humanGap(open[1].sortKey) + "</span>" : "");
       }
       if (heroBadge) {
-        heroBadge.innerHTML = '<span class="deadline-pill deadline-pill--' +
-          (isClock || soonest.sortKey <= 7 * MS_DAY ? "urgent" : "soon") +
-          '" style="font-size: 0.72rem; padding: 1px 7px;">' +
-          soonest.name + " &middot; " + gap + "</span>";
+        heroBadge.innerHTML =
+          dlBadgeMarkup(soonest.name, gap, isClock || soonest.sortKey <= 7 * MS_DAY);
       }
     }
 
@@ -682,7 +694,7 @@
     }
 
     function updateCounts() {
-      var buckets = { all: 0, robotics: 0, vision: 0, aiml: 0 };
+      var buckets = { all: 0, robotics: 0, vision: 0, aiml: 0, hci: 0 };
       models.forEach(function (m) {
         if (state.openOnly && (m.card.classList.contains("dl-card--closed") ||
                                m.card.classList.contains("dl-card--tba"))) return;
@@ -699,6 +711,19 @@
         }
         slot.textContent = buckets[key] === undefined ? "" : buckets[key];
       });
+
+      if (openOnlyBtn) {
+        var undated = models.filter(function (m) {
+          return m.card.classList.contains("dl-card--closed") ||
+                 m.card.classList.contains("dl-card--tba");
+        }).length;
+        var label = openOnlyBtn.querySelector(".dl-toggle__label");
+        if (label) {
+          label.textContent = state.openOnly
+            ? "Dated calls only (" + undated + " hidden)"
+            : "Showing all " + models.length;
+        }
+      }
     }
 
     // ---- Controls ----------------------------------------------------------
@@ -756,17 +781,6 @@
       panel.hidden = open;
     });
 
-    // Smooth-scroll the hero shortcut down to the section.
-    var jump = document.querySelector(".js-dl-jump");
-    if (jump) {
-      jump.addEventListener("click", function (e) {
-        var target = document.getElementById("deadlines");
-        if (!target) return;
-        e.preventDefault();
-        target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
-      });
-    }
-
     function statusSignature() {
       return models.map(function (m) {
         return m.card.classList.contains("dl-card--closed") ? "c"
@@ -776,6 +790,36 @@
 
     tick();
     applyFilters();
+
+    // A #conf-<slug> deep link (command palette, shared URL) may point at a card
+    // the default filters hide, so relax them before scrolling to it.
+    (function revealHashTarget() {
+      var hash = window.location.hash;
+      if (!hash || hash.indexOf("#conf-") !== 0) return;
+      var target = document.getElementById(hash.slice(1));
+      if (!target) return;
+      state.category = "all";
+      state.rank = "all";
+      state.query = "";
+      state.openOnly = false;
+      if (searchInput) searchInput.value = "";
+      if (openOnlyBtn) {
+        openOnlyBtn.classList.remove("is-active");
+        openOnlyBtn.setAttribute("aria-pressed", "false");
+      }
+      document.querySelectorAll(".dl-pill[data-filter]").forEach(function (b) {
+        b.classList.toggle("is-active", b.getAttribute("data-filter") === "all");
+      });
+      document.querySelectorAll(".dl-seg[data-rank]").forEach(function (b) {
+        b.classList.toggle("is-active", b.getAttribute("data-rank") === "all");
+      });
+      applyFilters();
+      window.setTimeout(function () {
+        target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+        target.classList.add("is-linked");
+      }, 120);
+    })();
+
     var lastStatus = statusSignature();
 
     window.setInterval(function () {
@@ -791,50 +835,183 @@
     }, 1000);
   }
 
-  /* ---- Journal Search & Category Filter ------------------------------ */
-  function initJournalSearch() {
+  /* ---- Home-page "next deadline" badge -------------------------------- */
+  // The tracker itself lives on /deadlines/. The home page ships only a small
+  // JSON payload (#deadlines-mini), so the hero link still counts down live
+  // without carrying the whole section.
+  function initDeadlineBadge() {
+    var badge = document.getElementById("deadlines-next-badge");
+    var payload = document.getElementById("deadlines-mini");
+    if (!badge || !payload) return;
+
+    var raw;
+    try {
+      raw = JSON.parse(payload.textContent || payload.innerHTML || "[]");
+    } catch (e) {
+      return;
+    }
+    if (!raw || !raw.length) return;
+
+    // Local time, matching how the tracker reads the same dates.
+    var stages = [];
+    raw.forEach(function (s) {
+      var d = String(s.d || "").split("-");
+      if (d.length !== 3) return;
+      var t = String(s.t || "23:59").split(":");
+      stages.push({
+        name: s.n || "",
+        when: new Date(
+          parseInt(d[0], 10), parseInt(d[1], 10) - 1, parseInt(d[2], 10),
+          parseInt(t[0], 10) || 0, parseInt(t[1], 10) || 0, 0
+        ).getTime()
+      });
+    });
+    if (!stages.length) return;
+
+    function render() {
+      var now = Date.now();
+      var next = null;
+      stages.forEach(function (s) {
+        if (s.when > now && (!next || s.when < next.when)) next = s;
+      });
+      if (!next) {
+        badge.innerHTML = "";
+        return;
+      }
+      var left = next.when - now;
+      badge.innerHTML = dlBadgeMarkup(next.name, dlHumanGap(left), left <= 7 * DL_MS_DAY);
+    }
+
+    render();
+    window.setInterval(render, 1000);
+  }
+
+  /* ---- Q1 Journal Explorer ------------------------------------------- */
+  // Cards are rendered by Jekyll from _data/journals.yml on /journals/; this
+  // drives domain filtering, search, the minimum-impact-factor slider, sorting
+  // and the grid/list toggle.
+  function initJournalExplorer() {
+    var grid = document.getElementById("journals-grid");
+    if (!grid) return;
+
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(".jr-card"));
+    if (!cards.length) return;
+
     var searchInput = document.getElementById("journal-search");
-    var filterContainer = document.querySelector(".journal-filters");
-    var table = document.getElementById("journals-table");
-    if (!table) return;
+    var jifInput = document.getElementById("journal-jif");
+    var jifValue = document.getElementById("journal-jif-value");
+    var emptyMsg = document.getElementById("journals-empty");
+    var countEl = document.getElementById("journals-count");
 
-    var rows = Array.prototype.slice.call(table.querySelectorAll("tbody tr"));
-    var currentFilter = "all";
+    var state = { category: "all", query: "", minJif: 0, sort: "jif", view: "grid" };
 
-    function updateVisibility() {
-      var q = searchInput ? (searchInput.value || "").trim().toLowerCase() : "";
-      rows.forEach(function (row) {
-        var cat = row.getAttribute("data-category");
-        var headerCat = row.getAttribute("data-category-header");
+    var models = cards.map(function (card) {
+      return {
+        card: card,
+        category: card.getAttribute("data-category") || "",
+        jif: parseFloat(card.getAttribute("data-jif")) || 0,
+        name: card.getAttribute("data-name") || "",
+        search: [
+          card.getAttribute("data-name"),
+          card.getAttribute("data-abbr"),
+          card.getAttribute("data-issn"),
+          card.getAttribute("data-publisher"),
+          card.getAttribute("data-category")
+        ].join(" ").toLowerCase()
+      };
+    });
 
-        var matchesCat = (currentFilter === "all") || (cat === currentFilter) || (headerCat === currentFilter);
-        var text = row.textContent.toLowerCase();
-        var matchesQuery = !q || (text.indexOf(q) !== -1);
+    // Cap the slider at the highest impact factor actually present.
+    var maxJif = models.reduce(function (m, x) { return Math.max(m, x.jif); }, 0);
+    if (jifInput) jifInput.max = String(Math.ceil(maxJif));
 
-        if (matchesCat && matchesQuery) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
+    var lastOrder = "";
+    function resort() {
+      var ordered = models.slice().sort(function (a, b) {
+        if (state.sort === "name") return a.name.localeCompare(b.name);
+        return b.jif - a.jif || a.name.localeCompare(b.name);
       });
+      var sig = state.sort + "|" + ordered.map(function (m) { return m.name; }).join("|");
+      if (sig === lastOrder) return;
+      lastOrder = sig;
+      var frag = document.createDocumentFragment();
+      ordered.forEach(function (m) { frag.appendChild(m.card); });
+      grid.appendChild(frag);
     }
 
-    if (filterContainer) {
-      var buttons = filterContainer.querySelectorAll(".journal-filter-btn");
-      buttons.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          buttons.forEach(function (b) { b.classList.remove("active"); });
-          btn.classList.add("active");
-          currentFilter = btn.getAttribute("data-filter");
-          updateVisibility();
-        });
+    function apply() {
+      var visible = 0;
+      models.forEach(function (m) {
+        var show = (state.category === "all" || m.category === state.category) &&
+                   (!state.query || m.search.indexOf(state.query) !== -1) &&
+                   (m.jif >= state.minJif);
+        m.card.classList.toggle("is-hidden", !show);
+        if (show) visible++;
       });
+      resort();
+      if (emptyMsg) emptyMsg.hidden = visible > 0;
+      if (countEl) {
+        countEl.textContent = visible === models.length
+          ? models.length + " journals"
+          : visible + " of " + models.length + " journals";
+      }
     }
+
+    document.querySelectorAll(".dl-pill[data-jfilter]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-pill[data-jfilter]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.category = btn.getAttribute("data-jfilter");
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-jsort]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-jsort]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.sort = btn.getAttribute("data-jsort");
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-jview]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-jview]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.view = btn.getAttribute("data-jview");
+        grid.classList.toggle("is-list", state.view === "list");
+      });
+    });
 
     if (searchInput) {
-      searchInput.addEventListener("input", updateVisibility);
+      searchInput.addEventListener("input", function () {
+        state.query = (searchInput.value || "").trim().toLowerCase();
+        apply();
+      });
     }
+
+    if (jifInput) {
+      jifInput.addEventListener("input", function () {
+        state.minJif = parseFloat(jifInput.value) || 0;
+        if (jifValue) jifValue.textContent = state.minJif;
+        apply();
+      });
+    }
+
+    grid.addEventListener("click", function (e) {
+      var btn = e.target.closest(".js-jr-more");
+      if (!btn) return;
+      var panel = document.getElementById(btn.getAttribute("aria-controls"));
+      if (!panel) return;
+      var open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      panel.hidden = open;
+    });
+
+    apply();
   }
+
 
   /* ---- Floating Back to Top Button ----------------------------------- */
   function initBackToTop() {
@@ -1348,7 +1525,8 @@
     safe(initLightbox);
     safe(initModals);
     safe(initDeadlineTracker);
-    safe(initJournalSearch);
+    safe(initDeadlineBadge);
+    safe(initJournalExplorer);
     safe(initRankings);
     safe(initPalette);
     safe(initBackToTop);

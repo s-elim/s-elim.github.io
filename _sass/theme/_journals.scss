@@ -1,0 +1,386 @@
+// ==========================================================================
+//  Q1 Journal Explorer - card grid on the home page
+//  Markup lives in _pages/about.md, behaviour in assets/js/main.js.
+//  Shares the toolbar primitives (.dl-pill, .dl-seg, .dl-search) with the
+//  deadline tracker so the two sections read as one system.
+// ==========================================================================
+
+.journals {
+  margin: 3rem 0 2.5rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.journals__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .35rem 1rem;
+  margin-bottom: .85rem;
+}
+.journals__title { margin: 0; }
+.journals__tagline {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.journals__count {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  margin-left: .2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+// ---- Toolbar --------------------------------------------------------------
+.journals__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem 1rem;
+  padding-bottom: .85rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid var(--border);
+}
+.journals__filters,
+.journals__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+
+// Impact-factor range slider, mirroring the reference tool's "JIF Range".
+.jr-range {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .22rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+.jr-range__label {
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.jr-range__value {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 2.4rem;
+  text-align: right;
+}
+.jr-range input[type="range"] {
+  width: 6.5rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+// ---- Grid -----------------------------------------------------------------
+.journals__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.15rem;
+  align-items: start;
+}
+.journals__empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.journals__more {
+  display: block;
+  margin: 1.4rem auto 0;
+  padding: .5rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+
+  &:hover { border-color: var(--accent); transform: translateY(-1px); }
+}
+.journals__foot {
+  margin-top: 1.2rem;
+  font-size: .78rem;
+  color: var(--muted);
+  > i { color: var(--accent); }
+}
+
+// ---- Card -----------------------------------------------------------------
+.jr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-sm);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  &.is-hidden { display: none; }
+}
+
+// Left rail tinted by domain, echoing the deadline cards.
+.jr-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+}
+.jr-card--robotics::before { background: #10b981; }
+.jr-card--vision::before   { background: #3b82f6; }
+.jr-card--aiml::before     { background: #f97316; }
+
+.jr-card__head { padding: .9rem 1rem .3rem 1.15rem; }
+.jr-card__name {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+.jr-card__abbr {
+  font-size: .82em;
+  font-weight: 500;
+  color: var(--muted);
+}
+.jr-card__issn {
+  margin: .2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--muted);
+}
+
+// ---- Metric tiles ---------------------------------------------------------
+.jr-card__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+  padding: .65rem 1rem .35rem 1.15rem;
+}
+.jr-metric {
+  padding: .45rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.jr-metric__label {
+  display: block;
+  font-family: var(--font-head);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.jr-metric__value {
+  display: block;
+  margin-top: .1rem;
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.jr-metric--jif .jr-metric__value { color: var(--accent); }
+.jr-metric__value--none { color: var(--muted); font-size: .95rem; font-weight: 600; }
+
+.jr-card__catrow {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 1rem .35rem 1.15rem;
+  padding: .45rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.jr-card__catlabel {
+  font-family: var(--font-head);
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.jr-card__catvalue {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ---- Badges & field tags --------------------------------------------------
+.jr-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  padding: .15rem 1rem .2rem 1.15rem;
+}
+.jr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-head);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.jr-badge--q1  { color: #0369a1; background: #e0f2fe; border: 1px solid #7dd3fc; }
+.jr-badge--top1 { color: #991b1b; background: #fee2e2; border: 1px solid #fca5a5; }
+.jr-badge--top { color: #6b21a8; background: #f3f0ff; border: 1px solid #d8b4fe; }
+.jr-badge--oa  { color: #065f46; background: #d1fae5; border: 1px solid #6ee7b7; }
+
+.jr-card__fields {
+  padding: .3rem 1rem .1rem 1.15rem;
+}
+.jr-card__fieldlabel {
+  display: block;
+  margin-bottom: .28rem;
+  font-size: .66rem;
+  color: var(--muted);
+}
+.jr-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 0 .25rem .25rem 0;
+  border: 1px solid var(--tag-bd);
+  border-radius: var(--radius-pill);
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  font-size: .66rem;
+  font-weight: 500;
+}
+
+// ---- Footer & details -----------------------------------------------------
+.jr-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: auto;
+  padding: .5rem 1rem .65rem 1.15rem;
+  border-top: 1px solid var(--border);
+}
+.jr-card__publisher {
+  font-size: .68rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jr-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover { color: var(--accent-hover); }
+  > i { transition: transform .25s var(--ease); font-size: .9em; }
+  &[aria-expanded="true"] > i { transform: rotate(180deg); }
+}
+
+.jr-card__details {
+  padding: .1rem 1rem .9rem 1.15rem;
+  border-top: 1px dashed var(--border);
+  font-size: .74rem;
+}
+.jr-card__meta {
+  margin: .6rem 0;
+  display: grid;
+  gap: .3rem;
+
+  > div { display: flex; gap: .5rem; }
+  dt { flex: 0 0 6.6rem; font-weight: 600; color: var(--muted); }
+  dd { margin: 0; color: var(--text); }
+}
+.jr-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-weight: 600;
+  font-size: .74rem;
+}
+
+// ---- Compact list view ----------------------------------------------------
+.journals__grid.is-list {
+  grid-template-columns: 1fr;
+  gap: .45rem;
+
+  .jr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .jr-card:hover { transform: none; }
+  .jr-card__head { flex: 1 1 18rem; padding: .55rem 1rem .55rem 1.15rem; }
+  .jr-card__issn { display: none; }
+  .jr-card__metrics {
+    flex: 0 0 auto;
+    display: flex;
+    gap: .4rem;
+    padding: .5rem 1rem;
+  }
+  .jr-metric { padding: .25rem .5rem; }
+  .jr-metric__value { font-size: .85rem; }
+  .jr-card__catrow,
+  .jr-card__fields { display: none; }
+  .jr-card__badges { flex: 0 0 auto; padding: .5rem .5rem; }
+  .jr-card__foot { flex: 0 0 auto; border: 0; padding: .5rem 1rem; }
+  .jr-card__publisher { display: none; }
+  .jr-card__details { flex: 1 0 100%; border-top: 1px dashed var(--border); }
+}
+
+// ---- Dark theme -----------------------------------------------------------
+:root[data-theme="dark"] {
+  .jr-badge--q1   { color: #7dd3fc; background: rgba(3, 105, 161, .25); border-color: rgba(56, 189, 248, .5); }
+  .jr-badge--top1 { color: #fca5a5; background: rgba(185, 28, 28, .25); border-color: rgba(239, 68, 68, .5); }
+  .jr-badge--top  { color: #d8b4fe; background: rgba(107, 33, 168, .25); border-color: rgba(192, 132, 252, .5); }
+  .jr-badge--oa   { color: #6ee7b7; background: rgba(6, 95, 70, .3); border-color: rgba(52, 211, 153, .45); }
+}
+
+// ---- Responsive -----------------------------------------------------------
+@media (max-width: $bp-md) {
+  .journals__toolbar { justify-content: flex-start; }
+  .journals__grid { grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: .9rem; }
+  .jr-range input[type="range"] { width: 5rem; }
+}
+@media (max-width: $bp-sm) {
+  .journals__grid { grid-template-columns: 1fr; }
+  .journals__grid.is-list .jr-card { flex-direction: column; align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jr-card, .jr-card__more > i { transition: none; }
+  .jr-card:hover { transform: none; }
+}

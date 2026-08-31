@@ -1,0 +1,112 @@
+---
+layout: archive
+title: "AI Conference Deadlines"
+permalink: /deadlines/
+wide: true
+subtitle: 'Live countdowns for every CORE A* and A venue in AI, vision, robotics and HCI. <span class="deadlines__verified">Verified 31 Aug 2026</span>'
+description: "Live countdown tracker for 60 CORE A* and A conference deadlines across AI, machine learning, computer vision, robotics and HCI: ICRA, IROS, CoRL, CVPR, ICCV, NeurIPS, ICML, ICLR, CHI and more, with full submission timelines."
+---
+
+<section class="deadlines reveal" id="deadlines" aria-label="AI Conference Deadlines">
+  <div class="deadlines__ticker" id="deadlines-ticker" aria-live="off">
+    <span class="deadlines__ticker-label"><i class="fas fa-bolt" aria-hidden="true"></i> Next up</span>
+    <span class="deadlines__ticker-body">Loading&hellip;</span>
+  </div>
+
+  <div class="deadlines__toolbar">
+    <div class="deadlines__filters" role="group" aria-label="Filter by research domain">
+      <button type="button" class="dl-pill is-active" data-filter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All</button>
+      <button type="button" class="dl-pill" data-filter="robotics"><span class="dl-pill__dot dl-pill__dot--robotics"></span> Robotics</button>
+      <button type="button" class="dl-pill" data-filter="vision"><span class="dl-pill__dot dl-pill__dot--vision"></span> Vision</button>
+      <button type="button" class="dl-pill" data-filter="aiml"><span class="dl-pill__dot dl-pill__dot--aiml"></span> AI/ML</button>
+      <button type="button" class="dl-pill" data-filter="hci"><span class="dl-pill__dot dl-pill__dot--hci"></span> HCI</button>
+    </div>
+
+    <div class="deadlines__tools">
+      <label class="dl-search" for="deadline-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="deadline-search" placeholder="Search conferences" autocomplete="off" aria-label="Search conferences by name or location">
+      </label>
+      <div class="dl-segment" role="group" aria-label="Filter by CORE rank">
+        <button type="button" class="dl-seg is-active" data-rank="all">All ranks</button>
+        <button type="button" class="dl-seg" data-rank="A*">A*</button>
+        <button type="button" class="dl-seg" data-rank="A">A</button>
+      </div>
+      <button type="button" class="dl-toggle is-active" id="deadline-open-only" aria-pressed="true">
+        <i class="fas fa-door-open" aria-hidden="true"></i> <span class="dl-toggle__label">Dated calls only</span>
+      </button>
+      <div class="dl-segment dl-segment--view" role="group" aria-label="Change layout">
+        <button type="button" class="dl-seg is-active" data-view="grid" aria-label="Card view"><i class="fas fa-th-large" aria-hidden="true"></i></button>
+        <button type="button" class="dl-seg" data-view="list" aria-label="Compact list view"><i class="fas fa-list" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="deadlines__grid" id="deadlines-grid">
+    {% for c in site.data.conferences %}
+    {% assign slug = c.name | slugify %}
+    <article class="dl-card dl-card--{{ c.category }}" data-category="{{ c.category }}" data-rank="{{ c.rank | default: 'unranked' }}" data-name="{{ c.name }}" data-location="{{ c.location }}" id="conf-{{ slug }}">
+      <div class="dl-card__glow" aria-hidden="true"></div>
+
+      <header class="dl-card__head">
+        <div class="dl-card__id">
+          <h3 class="dl-card__name">{{ c.name }} <span class="dl-card__edition">{{ c.edition }}</span></h3>
+          <p class="dl-card__place">{% if c.flag %}<span class="dl-card__flag">{{ c.flag }}</span> {% endif %}{{ c.location }}</p>
+        </div>
+        <div class="dl-card__marks">
+          {% if c.rank %}<span class="dl-rank dl-rank--{% if c.rank == 'A*' %}astar{% else %}a{% endif %}">{{ c.rank }}</span>{% endif %}
+          <span class="dl-cat dl-cat--{{ c.category }}">
+            {% if c.category == 'robotics' %}<i class="fas fa-robot" aria-hidden="true"></i>{% elsif c.category == 'vision' %}<i class="fas fa-eye" aria-hidden="true"></i>{% elsif c.category == 'hci' %}<i class="fas fa-hand-pointer" aria-hidden="true"></i>{% else %}<i class="fas fa-brain" aria-hidden="true"></i>{% endif %}
+          </span>
+        </div>
+      </header>
+
+      <div class="dl-card__clock">
+        <p class="dl-card__stage">&mdash;</p>
+        <div class="dl-card__count" aria-live="off"><span class="dl-card__count-main">&mdash;</span></div>
+        <div class="dl-card__bar" aria-hidden="true"><span class="dl-card__bar-fill"></span></div>
+      </div>
+
+      <ol class="dl-card__timeline">
+        {% for t in c.timeline %}
+        <li class="dl-stage" data-date="{{ t.date }}"{% if t.time %} data-time="{{ t.time }}"{% endif %}{% if t.tz %} data-tz="{{ t.tz }}"{% endif %}>
+          <span class="dl-stage__dot" aria-hidden="true"></span>
+          <span class="dl-stage__label">{{ t.label }}</span>
+          <span class="dl-stage__date">
+            {%- if t.date == 'tba' -%}TBA{%- else -%}{{ t.date | date: "%b %-d, %Y" }}{%- endif -%}
+          </span>
+        </li>
+        {% endfor %}
+      </ol>
+
+      <footer class="dl-card__foot">
+        <span class="dl-card__dates">{% if c.dates %}<i class="fas fa-calendar-alt" aria-hidden="true"></i> {{ c.dates }}{% endif %}</span>
+        <button type="button" class="dl-card__more js-dl-more" aria-expanded="false" aria-controls="conf-{{ slug }}-details">Details <i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+      </footer>
+
+      <div class="dl-card__details" id="conf-{{ slug }}-details" hidden>
+        {% if c.note %}<p class="dl-card__note"><i class="fas fa-info-circle" aria-hidden="true"></i> {{ c.note }}</p>{% endif %}
+        <dl class="dl-card__meta">
+          {% if c.dates %}<div><dt>Conference</dt><dd>{{ c.dates }}</dd></div>{% endif %}
+          <div><dt>Location</dt><dd>{% if c.flag %}{{ c.flag }} {% endif %}{{ c.location }}</dd></div>
+          {% if c.rank %}<div><dt>CORE rank</dt><dd>{{ c.rank }}</dd></div>{% endif %}
+        </dl>
+        {% if c.website %}<a class="dl-card__link" href="{{ c.website }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Call for papers</a>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="deadlines__empty" id="deadlines-empty" hidden>No conference matches those filters.</p>
+
+  <p class="deadlines__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    Covers every CORE A* and A venue in AI, machine learning, computer vision and
+    graphics, robotics and HCI, plus a few unranked venues central to robot
+    learning. A venue whose call has closed shows its next edition as TBA until
+    the new dates are published. Dates are checked against official calls for
+    papers and the
+    <a href="https://github.com/ccfddl/ccf-deadlines" target="_blank" rel="noopener">ccf-deadlines</a> dataset.
+    Always confirm on the conference site before submitting.
+  </p>
+</section>

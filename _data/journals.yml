@@ -1,0 +1,662 @@
+# ==========================================================================
+#  Q1 journals - data source for the /journals/ page
+# ==========================================================================
+#
+#  Rendered by _pages/journals.html, filtered and sorted by initJournalExplorer()
+#  in assets/js/main.js.
+#
+#  Fields
+#  ------
+#  name        Full journal title.
+#  abbr        Common abbreviation shown beside the title. Optional.
+#  issn        Linking ISSN, resolved against Crossref.
+#  publisher   Publisher, normalised for display (IEEE, Elsevier, Springer...).
+#  category    robotics | vision | aiml - drives the filter pills and card rail.
+#  jif         Journal Impact Factor.
+#  percentile  Category percentile band, e.g. "Top 1%".
+#  quartile    JCR quartile. Every entry here is Q1 by design.
+#  fields      Topic tags shown on the card. Optional.
+#
+#  ISSN and publisher verified against the Crossref REST API on 2026-08-31.
+#  JIF and percentile carried over from the curated SCIE-Q1 table this page
+#  replaces. Confirm current values in JCR before citing them anywhere formal.
+# ==========================================================================
+
+
+# ---- ROBOTICS & AUTOMATION -------------------------------------
+
+- name: "Science Robotics"
+  abbr: "Sci. Robot."
+  issn: "2470-9476"
+  publisher: "AAAS"
+  category: robotics
+  jif: 25.5
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "Journal of Manufacturing Systems"
+  abbr: "JMS"
+  issn: "0278-6125"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 14.9
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Intelligent Vehicles"
+  abbr: "IEEE T-IV"
+  issn: "2379-8858"
+  publisher: "IEEE"
+  category: robotics
+  jif: 14.0
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "Robotics and Computer-Integrated Manufacturing"
+  abbr: "RCIM"
+  issn: "0736-5845"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 12.3
+  percentile: "Top 2%"
+  quartile: Q1
+- name: "Advanced Engineering Informatics"
+  abbr: "AEI"
+  issn: "1474-0346"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 11.5
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Robotics"
+  abbr: "IEEE T-RO"
+  issn: "1552-3098"
+  publisher: "IEEE"
+  category: robotics
+  jif: 11.1
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "Mechanical Systems and Signal Processing"
+  abbr: "MSSP"
+  issn: "0888-3270"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 10.2
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Robotics and Automation Magazine"
+  abbr: "IEEE RAM"
+  issn: "1070-9932"
+  publisher: "IEEE"
+  category: robotics
+  jif: 9.8
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Transactions on Intelligent Transportation Systems"
+  abbr: "IEEE T-ITS"
+  issn: "1524-9050"
+  publisher: "IEEE"
+  category: robotics
+  jif: 9.1
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Transactions on Automation Science and Engineering"
+  abbr: "IEEE T-ASE"
+  issn: "1545-5955"
+  publisher: "IEEE"
+  category: robotics
+  jif: 7.9
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "The International Journal of Robotics Research"
+  abbr: "IJRR"
+  issn: "0278-3649"
+  publisher: "SAGE"
+  category: robotics
+  jif: 7.7
+  percentile: "Top 2%"
+  quartile: Q1
+- name: "Journal of Intelligent Manufacturing"
+  abbr: "JIM"
+  issn: "0956-5515"
+  publisher: "Springer"
+  category: robotics
+  jif: 7.7
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Automatic Control"
+  abbr: "IEEE TAC"
+  issn: "0018-9286"
+  publisher: "IEEE"
+  category: robotics
+  jif: 7.0
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Instrumentation and Measurement"
+  abbr: "IEEE TIM"
+  issn: "0018-9456"
+  publisher: "IEEE"
+  category: robotics
+  jif: 7.0
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Advanced Intelligent Systems"
+  abbr: "Adv. Intell. Syst."
+  issn: "2640-4567"
+  publisher: "Wiley"
+  category: robotics
+  jif: 6.7
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE/ASME Transactions on Mechatronics"
+  abbr: "IEEE/ASME T-MECH"
+  issn: "1083-4435"
+  publisher: "IEEE"
+  category: robotics
+  jif: 6.3
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Automatica"
+  issn: "0005-1098"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 6.2
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Autonomous Robots"
+  abbr: "AURO"
+  issn: "0929-5593"
+  publisher: "Springer"
+  category: robotics
+  jif: 6.0
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "Robotics and Autonomous Systems"
+  abbr: "RAS"
+  issn: "0921-8890"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 6.0
+  percentile: "Top 15%"
+  quartile: Q1
+- name: "Soft Robotics"
+  abbr: "SoRo"
+  issn: "2169-5172"
+  publisher: "SAGE"
+  category: robotics
+  jif: 5.5
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Robotics and Automation Letters"
+  abbr: "IEEE RA-L"
+  issn: "2377-3766"
+  publisher: "IEEE"
+  category: robotics
+  jif: 5.3
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "Control Engineering Practice"
+  abbr: "CEP"
+  issn: "0967-0661"
+  publisher: "Elsevier"
+  category: robotics
+  jif: 5.3
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Cognitive and Developmental Systems"
+  abbr: "IEEE TCDS"
+  issn: "2379-8920"
+  publisher: "IEEE"
+  category: robotics
+  jif: 4.7
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Human-Machine Systems"
+  abbr: "IEEE THMS"
+  issn: "2168-2291"
+  publisher: "IEEE"
+  category: robotics
+  jif: 4.4
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Control Systems Technology"
+  abbr: "IEEE TCST"
+  issn: "1063-6536"
+  publisher: "IEEE"
+  category: robotics
+  jif: 4.4
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Journal of Field Robotics"
+  abbr: "JFR"
+  issn: "1556-4959"
+  publisher: "Wiley"
+  category: robotics
+  jif: 4.2
+  percentile: "Top 15%"
+  quartile: Q1
+- name: "Journal of Intelligent & Robotic Systems"
+  abbr: "JINT"
+  issn: "0921-0296"
+  publisher: "Springer"
+  category: robotics
+  jif: 3.1
+  percentile: "Top 20%"
+  quartile: Q1
+
+# ---- COMPUTER VISION & IMAGING ---------------------------------
+
+- name: "IEEE Transactions on Pattern Analysis and Machine Intelligence"
+  abbr: "IEEE TPAMI"
+  issn: "0162-8828"
+  publisher: "IEEE"
+  category: vision
+  jif: 20.4
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "IEEE Transactions on Image Processing"
+  abbr: "IEEE TIP"
+  issn: "1057-7149"
+  publisher: "IEEE"
+  category: vision
+  jif: 15.3
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "Medical Image Analysis"
+  abbr: "MedIA"
+  issn: "1361-8415"
+  publisher: "Elsevier"
+  category: vision
+  jif: 14.0
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "ACM Transactions on Graphics"
+  abbr: "ACM TOG"
+  issn: "0730-0301"
+  publisher: "ACM"
+  category: vision
+  jif: 13.0
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "ISPRS Journal of Photogrammetry and Remote Sensing"
+  abbr: "ISPRS J. P&RS"
+  issn: "0924-2716"
+  publisher: "Elsevier"
+  category: vision
+  jif: 12.9
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Medical Imaging"
+  abbr: "IEEE TMI"
+  issn: "0278-0062"
+  publisher: "IEEE"
+  category: vision
+  jif: 12.4
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "IEEE Transactions on Circuits and Systems for Video Technology"
+  abbr: "IEEE TCSVT"
+  issn: "1051-8215"
+  publisher: "IEEE"
+  category: vision
+  jif: 10.8
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Signal Processing Magazine"
+  abbr: "IEEE SPM"
+  issn: "1053-5888"
+  publisher: "IEEE"
+  category: vision
+  jif: 10.8
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "International Journal of Computer Vision"
+  abbr: "IJCV"
+  issn: "0920-5691"
+  publisher: "Springer"
+  category: vision
+  jif: 10.3
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "IEEE Transactions on Multimedia"
+  abbr: "IEEE TMM"
+  issn: "1520-9210"
+  publisher: "IEEE"
+  category: vision
+  jif: 9.9
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Geoscience and Remote Sensing"
+  abbr: "IEEE TGRS"
+  issn: "0196-2892"
+  publisher: "IEEE"
+  category: vision
+  jif: 9.4
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Pattern Recognition"
+  abbr: "PR"
+  issn: "0031-3203"
+  publisher: "Elsevier"
+  category: vision
+  jif: 9.1
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Journal of Selected Topics in Signal Processing"
+  abbr: "IEEE JSTSP"
+  issn: "1932-4553"
+  publisher: "IEEE"
+  category: vision
+  jif: 8.5
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Visualization and Computer Graphics"
+  abbr: "IEEE TVCG"
+  issn: "1077-2626"
+  publisher: "IEEE"
+  category: vision
+  jif: 6.8
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "IEEE/ACM Transactions on Audio, Speech, and Language Processing"
+  abbr: "IEEE/ACM TASLP"
+  issn: "2329-9290"
+  publisher: "IEEE"
+  category: vision
+  jif: 5.2
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Computer Vision and Image Understanding"
+  abbr: "CVIU"
+  issn: "1077-3142"
+  publisher: "Elsevier"
+  category: vision
+  jif: 4.3
+  percentile: "Top 15%"
+  quartile: Q1
+- name: "Image and Vision Computing"
+  abbr: "IVC"
+  issn: "0262-8856"
+  publisher: "Elsevier"
+  category: vision
+  jif: 4.2
+  percentile: "Top 15%"
+  quartile: Q1
+- name: "Signal Processing: Image Communication"
+  abbr: "SPIC"
+  issn: "0923-5965"
+  publisher: "Elsevier"
+  category: vision
+  jif: 3.8
+  percentile: "Top 20%"
+  quartile: Q1
+
+# ---- ARTIFICIAL INTELLIGENCE & ML ------------------------------
+
+- name: "Proceedings of the IEEE"
+  abbr: "Proc. IEEE"
+  issn: "0018-9219"
+  publisher: "IEEE"
+  category: aiml
+  jif: 30.9
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "ACM Computing Surveys"
+  abbr: "ACM CSUR"
+  issn: "0360-0300"
+  publisher: "ACM"
+  category: aiml
+  jif: 30.4
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "Nature Machine Intelligence"
+  abbr: "Nat. Mach. Intell."
+  issn: "2522-5839"
+  publisher: "Springer"
+  category: aiml
+  jif: 29.8
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "Artificial Intelligence Review"
+  abbr: "AIRE"
+  issn: "0269-2821"
+  publisher: "Springer"
+  category: aiml
+  jif: 18.8
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "Information Fusion"
+  abbr: "INFUS"
+  issn: "1566-2535"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 17.4
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "IEEE Transactions on Evolutionary Computation"
+  abbr: "IEEE TEVC"
+  issn: "1089-778X"
+  publisher: "IEEE"
+  category: aiml
+  jif: 15.9
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "Artificial Intelligence"
+  abbr: "AIJ"
+  issn: "0004-3702"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 14.0
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "IEEE Transactions on Knowledge and Data Engineering"
+  abbr: "IEEE TKDE"
+  issn: "1041-4347"
+  publisher: "IEEE"
+  category: aiml
+  jif: 11.6
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Cybernetics"
+  abbr: "IEEE T-CYB"
+  issn: "2168-2267"
+  publisher: "IEEE"
+  category: aiml
+  jif: 11.3
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "IEEE Transactions on Affective Computing"
+  abbr: "IEEE TAFFC"
+  issn: "1949-3045"
+  publisher: "IEEE"
+  category: aiml
+  jif: 11.3
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Fuzzy Systems"
+  abbr: "IEEE TFS"
+  issn: "1063-6706"
+  publisher: "IEEE"
+  category: aiml
+  jif: 10.2
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "Computers in Industry"
+  abbr: "COMIND"
+  issn: "0166-3615"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 10.0
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Industrial Informatics"
+  abbr: "IEEE TII"
+  issn: "1551-3203"
+  publisher: "IEEE"
+  category: aiml
+  jif: 9.8
+  percentile: "Top 2%"
+  quartile: Q1
+- name: "IEEE Transactions on Neural Networks and Learning Systems"
+  abbr: "IEEE TNNLS"
+  issn: "2162-237X"
+  publisher: "IEEE"
+  category: aiml
+  jif: 9.7
+  percentile: "Top 3%"
+  quartile: Q1
+- name: "Swarm and Evolutionary Computation"
+  abbr: "SWEVO"
+  issn: "2210-6502"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 9.6
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Expert Systems with Applications"
+  abbr: "ESWA"
+  issn: "0957-4174"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 9.4
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Engineering Applications of Artificial Intelligence"
+  abbr: "EAAI"
+  issn: "0952-1976"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 9.0
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Transactions on Mobile Computing"
+  abbr: "IEEE TMC"
+  issn: "1536-1233"
+  publisher: "IEEE"
+  category: aiml
+  jif: 8.8
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Internet of Things Journal"
+  abbr: "IEEE IoT-J"
+  issn: "2327-4662"
+  publisher: "IEEE"
+  category: aiml
+  jif: 8.7
+  percentile: "Top 6%"
+  quartile: Q1
+- name: "IEEE Transactions on Systems, Man, and Cybernetics: Systems"
+  abbr: "IEEE TSMC-S"
+  issn: "2168-2216"
+  publisher: "IEEE"
+  category: aiml
+  jif: 8.4
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Transportation Research Part C: Emerging Technologies"
+  abbr: "TR-C"
+  issn: "0968-090X"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 8.4
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Information Processing & Management"
+  abbr: "IPM"
+  issn: "0306-4573"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 8.1
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Big Data"
+  abbr: "IEEE TBD"
+  issn: "2332-7790"
+  publisher: "IEEE"
+  category: aiml
+  jif: 8.1
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Knowledge-Based Systems"
+  abbr: "KBS"
+  issn: "0950-7051"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 8.0
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Applied Soft Computing"
+  abbr: "ASOC"
+  issn: "1568-4946"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 7.8
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Artificial Intelligence in Medicine"
+  abbr: "AIIM"
+  issn: "0933-3657"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 7.8
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Computational Intelligence Magazine"
+  abbr: "IEEE CIM"
+  issn: "1556-603X"
+  publisher: "IEEE"
+  category: aiml
+  jif: 7.7
+  percentile: "Top 1%"
+  quartile: Q1
+- name: "IEEE Transactions on Industrial Electronics"
+  abbr: "IEEE TIE"
+  issn: "0278-0046"
+  publisher: "IEEE"
+  category: aiml
+  jif: 7.4
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "Cognitive Computation"
+  abbr: "Cogn. Comput."
+  issn: "1866-9956"
+  publisher: "Springer"
+  category: aiml
+  jif: 7.4
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "Neural Networks"
+  issn: "0893-6080"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 7.2
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "Neurocomputing"
+  issn: "0925-2312"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 6.7
+  percentile: "Top 10%"
+  quartile: Q1
+- name: "Information Sciences"
+  abbr: "INS"
+  issn: "0020-0255"
+  publisher: "Elsevier"
+  category: aiml
+  jif: 6.0
+  percentile: "Top 5%"
+  quartile: Q1
+- name: "IEEE Transactions on Emerging Topics in Computational Intelligence"
+  abbr: "IEEE TETCI"
+  issn: "2471-285X"
+  publisher: "IEEE"
+  category: aiml
+  jif: 6.0
+  percentile: "Top 25%"
+  quartile: Q1
+- name: "IEEE Transactions on Signal Processing"
+  abbr: "IEEE TSP"
+  issn: "1053-587X"
+  publisher: "IEEE"
+  category: aiml
+  jif: 5.5
+  percentile: "Top 10%"
+  quartile: Q1

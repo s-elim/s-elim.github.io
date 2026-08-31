@@ -13,7 +13,17 @@ layout: none
 {%- unless first %},{% endunless %}{% assign first = false %}
 {"t":{{ link.title | jsonify }},"k":"Page","u":{{ link.url | relative_url | jsonify }},"s":""}
 {%- endfor -%}
-,{"t":"Home","k":"Page","u":{{ "/" | relative_url | jsonify }},"s":"about updates deadlines journals rankings"}
+,{"t":"Home","k":"Page","u":{{ "/" | relative_url | jsonify }},"s":"about updates journals rankings"}
+
+{%- comment -%} Conferences: deep-link to the card on the deadlines page {%- endcomment -%}
+{%- for c in site.data.conferences -%}
+,{"t":{{ c.name | append: " " | append: c.edition | jsonify }},"k":"Deadline","u":{{ c.name | slugify | prepend: "/deadlines/#conf-" | relative_url | jsonify }},"s":{{ c.name | append: " " | append: c.location | append: " " | append: c.category | append: " conference deadline call for papers" | jsonify }},"m":{{ c.rank | default: "Conference" | jsonify }}}
+{%- endfor -%}
+
+{%- comment -%} Journals: deep-link to the card on the journals page {%- endcomment -%}
+{%- for j in site.data.journals -%}
+,{"t":{{ j.name | jsonify }},"k":"Journal","u":{{ j.name | slugify | prepend: "/journals/#journal-" | relative_url | jsonify }},"s":{{ j.abbr | default: "" | append: " " | append: j.issn | append: " " | append: j.publisher | append: " " | append: j.category | append: " SCIE-Q1 journal impact factor" | jsonify }},"m":{{ "IF " | append: j.jif | append: " · " | append: j.percentile | jsonify }}}
+{%- endfor -%}
 
 {%- comment -%} Publications: deep-link into the page's own search filter {%- endcomment -%}
 {%- for pub in site.data.publications -%}

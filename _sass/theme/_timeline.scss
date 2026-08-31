@@ -490,34 +490,6 @@
   }
 }
 
-.conf-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 2px 8px;
-  font-family: var(--font-head);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  border-radius: var(--radius-pill);
-
-  &--robotics {
-    color: #065f46;
-    background: #d1fae5;
-    border: 1px solid #6ee7b7;
-  }
-  &--vision {
-    color: #1e40af;
-    background: #dbeafe;
-    border: 1px solid #93c5fd;
-  }
-  &--aiml {
-    color: #9a3412;
-    background: #ffedd5;
-    border: 1px solid #fdba74;
-  }
-}
 
 .deadline-pill--tba {
   color: #64748b;
@@ -525,31 +497,6 @@
   border: 1px solid #cbd5e1;
 }
 
-.deadline-filter-btn,
-.journal-filter-btn,
-.deadline-rank-btn {
-  background: var(--surface-2);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  padding: 0.25rem 0.75rem;
-  font-family: var(--font-head);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-
-  &:hover {
-    color: var(--text-strong);
-    border-color: var(--accent);
-  }
-
-  &.active {
-    background: var(--accent);
-    color: #ffffff;
-    border-color: var(--accent);
-  }
-}
 
 :root[data-theme="dark"] {
   .deadline-pill--urgent {
@@ -583,26 +530,5 @@
     border-color: rgba(255, 255, 255, 0.14);
   }
 
-  .conf-tag--robotics {
-    color: #6ee7b7;
-    background: rgba(6, 95, 70, 0.35);
-    border-color: rgba(52, 211, 153, 0.4);
-  }
-  .conf-tag--vision {
-    color: #93c5fd;
-    background: rgba(30, 64, 175, 0.35);
-    border-color: rgba(96, 165, 250, 0.4);
-  }
-  .conf-tag--aiml {
-    color: #fdba74;
-    background: rgba(154, 52, 18, 0.35);
-    border-color: rgba(251, 146, 60, 0.4);
-  }
 }
 
-// The journal table gained longer titles, which squeezed the last two columns
-// enough to break "SCIE-Q1" across lines. Keep the badges on one line.
-#journals-table td:nth-child(5) span,
-#journals-table td:nth-child(6) span {
-  white-space: nowrap;
-}
