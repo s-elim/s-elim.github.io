@@ -27,25 +27,27 @@ redirect_from:
       <span class="chip">Robot Learning</span>
       <span class="chip">5D AI Robotics</span>
     </div>
-    <div style="margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center;">
-      <button type="button" class="js-modal-open" data-modal-target="#about-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-user-circle" aria-hidden="true"></i> Click to read about me <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+    {%- comment -%}
+      Quick links: quieter than the interest chips above and the buttons below,
+      so the three rows read as a hierarchy. Styling lives in _hero.scss - see
+      .hero__links. An arrow marks the entries that leave the page; the rest
+      open a modal in place.
+    {%- endcomment -%}
+    <div class="hero__links">
+      <button type="button" class="hero__link js-modal-open" data-modal-target="#about-modal">
+        <i class="fas fa-user-circle" aria-hidden="true"></i><span class="hero__link-text">About me</span>
       </button>
-      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
-      <button type="button" class="js-modal-open" data-modal-target="#updates-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-bullhorn" aria-hidden="true"></i> Click to see updates <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      <button type="button" class="hero__link js-modal-open" data-modal-target="#updates-modal">
+        <i class="fas fa-bullhorn" aria-hidden="true"></i><span class="hero__link-text">Updates</span>
       </button>
-      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
-      <a href="{{ '/deadlines/' | relative_url }}" style="text-decoration: none; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-stopwatch" aria-hidden="true"></i> AI Conference Deadlines <span id="deadlines-next-badge"></span> <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      <a class="hero__link hero__link--page" href="{{ '/deadlines/' | relative_url }}">
+        <i class="fas fa-stopwatch" aria-hidden="true"></i><span class="hero__link-text">Conference Deadlines</span><span class="hero__link-badge" id="deadlines-next-badge"></span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
       </a>
-      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
-      <a href="{{ '/journals/' | relative_url }}" style="text-decoration: none; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-book-open" aria-hidden="true"></i> Top Q1 Journals (Robotics, Vision &amp; AI) <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      <a class="hero__link hero__link--page" href="{{ '/journals/' | relative_url }}">
+        <i class="fas fa-book-open" aria-hidden="true"></i><span class="hero__link-text">Top Q1 Journals</span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
       </a>
-      <span class="text-muted" style="font-size: 0.85rem; user-select: none;">|</span>
-      <button type="button" class="js-modal-open" data-modal-target="#rankings-modal" style="background: none; border: none; padding: 0; font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 600; color: var(--accent); cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem; transition: color 0.2s var(--ease);" onmouseover="this.style.color='var(--accent-hover)'" onmouseout="this.style.color='var(--accent)'">
-        <i class="fas fa-trophy" aria-hidden="true"></i> World University Rankings (THE &amp; QS Top 400) <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 0.9em;"></i>
+      <button type="button" class="hero__link js-modal-open" data-modal-target="#rankings-modal">
+        <i class="fas fa-trophy" aria-hidden="true"></i><span class="hero__link-text">University Rankings</span>
       </button>
     </div>
     {%- comment -%}

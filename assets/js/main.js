@@ -482,7 +482,7 @@
 
   function dlBadgeMarkup(name, gap, urgent) {
     return '<span class="deadline-pill deadline-pill--' + (urgent ? "urgent" : "soon") +
-           '" style="font-size: 0.72rem; padding: 1px 7px;">' +
+           '" style="font-size: 0.72em; padding: 1px 7px;">' +
            name + " &middot; " + gap + "</span>";
   }
 

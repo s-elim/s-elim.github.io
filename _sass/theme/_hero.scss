@@ -3,7 +3,21 @@
 // ==========================================================================
 
 // ---- Home hero (full width) ----
+// The hero reads off a 15px root while the rest of the site stays at 17px
+// (html { font-size: 106.25% }). Custom properties inherit, so rescaling the
+// type tokens here by 15/17 takes the name, role, chips, quick links and
+// buttons down together, in proportion. Everything in .hero sizes from a
+// --fs-* token or an em, so nothing is left behind at the old scale.
 .hero {
+  --fs-xs:   .6618rem;  // 11.25px
+  --fs-sm:   .7721rem;  // 13.12px
+  --fs-base: .8824rem;  // 15.00px
+  --fs-lg:   .9926rem;  // 16.88px
+  --fs-xl:  1.2132rem;  // 20.62px
+  --fs-2xl: 1.5441rem;  // 26.25px
+  --fs-3xl: 1.9853rem;  // 33.75px
+  --fs-4xl: 2.6471rem;  // 45.00px
+
   display: grid;
   grid-template-columns: 200px minmax(0, 1fr);
   gap: 2.25rem;
@@ -141,6 +155,59 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
 // same way .chip--open did, so let this one wrap instead.
 .hero__chips .chip--long { white-space: normal; max-width: 100%; }
 @media (max-width: $bp-sm) { .hero__chips { justify-content: center; } }
+// ---- Quick links ----------------------------------------------------------
+// The row between the interest chips and the CV buttons. Text only, so it sits
+// quietly between the two louder rows instead of competing with them. Replaces
+// five copies of the same inline style block that used to live in about.md.
+.hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1.4rem;
+  margin-bottom: 1.15rem;
+}
+.hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-head);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color .2s var(--ease);
+
+  > i { flex: 0 0 auto; }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent-hover);
+    .hero__link-text { text-decoration: underline; text-underline-offset: 3px; }
+  }
+}
+// The live countdown pill is empty until initDeadlineBadge() fills it, and an
+// empty flex child would still claim a gap.
+.hero__link-badge:empty { display: none; }
+
+// Only the entries that navigate carry an arrow; the modals open in place.
+.hero__link-arrow {
+  font-size: .82em;
+  transition: transform .2s var(--ease);
+}
+.hero__link--page:hover .hero__link-arrow { transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .hero__link--page:hover .hero__link-arrow { transform: none; }
+}
+@media (max-width: $bp-sm) {
+  .hero__links { justify-content: center; gap: .5rem 1rem; }
+}
+
 .hero__actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
 @media (max-width: $bp-sm) { .hero__actions { justify-content: center; } }
 .hero__social { display: flex; gap: .4rem; margin-left: .25rem; }
