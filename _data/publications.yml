@@ -9,7 +9,7 @@
 # `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
-- title: 'Perception as Sufficiency, Not Accuracy: A Minimal-Rate, Certifiable Grasping Interface for the Network Edge'
+- title: 'Learning Manipulation-Sufficient Representations via Outcome Bottlenecks'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'IEEE IoT Journal'
   year: 2027
