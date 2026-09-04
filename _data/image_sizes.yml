@@ -5,9 +5,11 @@
 10-years-robotics-taxonomy: { w: 960, h: 640, sm: true }
 2026-proposal: { w: 960, h: 540, sm: true }
 3d-point-cloud-visualization: { w: 960, h: 307, sm: true }
+Picture2: { w: 1600, h: 1040, sm: false }
 aespc-figure: { w: 640, h: 340, sm: true }
 affordx-framework: { w: 960, h: 499, sm: true }
 agentic-framework: { w: 960, h: 495, sm: true }
+agi-framework: { w: 960, h: 679, sm: true }
 c3g-vm6d-architecture: { w: 960, h: 535, sm: true }
 chatbot: { w: 960, h: 611, sm: true }
 dario-framework: { w: 550, h: 303, sm: true }
@@ -21,7 +23,6 @@ iot-healthcare-patent-figure: { w: 960, h: 640, sm: true }
 msp-framework: { w: 960, h: 614, sm: true }
 parkinsons-gait-framework: { w: 960, h: 379, sm: true }
 praxis-capability-vector: { w: 960, h: 528, sm: true }
-Picture2: { w: 1600, h: 1040, sm: false }
 profile: { w: 400, h: 452, sm: true }
 rise-proposal-2026: { w: 960, h: 536, sm: true }
 screenshot-2026-02-27: { w: 960, h: 269, sm: true }

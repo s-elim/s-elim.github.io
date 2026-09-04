@@ -50,7 +50,7 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'Under Review'
-  image: '/images/agentic-framework.webp'
+  image: '/images/agi-framework.webp'
   thumb: "ICRA '27"
   url: 'https://physical-agi.github.io/Agentic-Intelligence/'
   links:
