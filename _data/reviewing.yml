@@ -13,6 +13,13 @@
   org: "British Machine Vision Association (BMVA)"
   date: "2026"
 
+- venue: "NeurIPS Workshop 2026 (NeurIPSw'26)"
+  full_name: "40th Conference on Neural Information Processing Systems"
+  role: "Peer Reviewer"
+  type: "Workshop"
+  org: "Neural Information Processing Systems Foundation"
+  date: "2026"
+
 - venue: "ICML Workshop 2026 (ICMLw'26)"
   full_name: "43rd International Conference on Machine Learning"
   role: "Peer Reviewer"

@@ -25,6 +25,8 @@ redirect_from:
       <span class="chip chip--long">Joint Embedding Predictive Architecture (V-JEPA)</span>
       <span class="chip">Agentic Robotics</span>
       <span class="chip">Robot Learning</span>
+      <span class="chip">Test-Time Compute</span>
+      <span class="chip">RL Fine-Tuning</span>
       <span class="chip">5D AI Robotics</span>
     </div>
     {%- comment -%}
