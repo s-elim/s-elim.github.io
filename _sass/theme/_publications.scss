@@ -62,24 +62,27 @@
 }
 
 .filter-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.filter-chips--years { margin-top: .5rem; }
+.filter-chip__star { color: #f59e0b; margin-right: .2rem; }
+.filter-chip.is-active .filter-chip__star { color: inherit; }
 .filter-chip {
   padding: .38em .85em;
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: #0f172a !important;
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
+  color: var(--chip-fg) !important;
+  background: var(--chip-bg) !important;
+  border: 1px solid var(--chip-bd) !important;
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
 }
 .filter-chip:hover {
   transform: translateY(-2px);
-  border-color: #3b82f6 !important;
-  color: #1e3a8a !important;
-  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
+  border-color: var(--chip-bd-hover) !important;
+  color: var(--chip-fg-hover) !important;
+  background: var(--chip-bg-hover) !important;
+  box-shadow: var(--chip-shadow-hover) !important;
 }
 .filter-chip.is-active {
   background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 80%, #000) 100%) !important;
@@ -87,6 +90,61 @@
   color: var(--accent-contrast) !important;
   box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent) !important;
 }
+
+// Toolbar actions: reorder, bulk-cite, and clear. Kept visually quieter than
+// the filter chips so the chips stay the primary control.
+.pub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-top: .6rem;
+}
+.pub-action {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .34em .8em;
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+}
+.pub-action:hover:not(:disabled),
+.pub-action:focus-visible:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--accent-soft);
+}
+.pub-action:disabled {
+  opacity: .45;
+  cursor: default;
+}
+.pub-action[aria-pressed="true"] {
+  color: var(--accent);
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+// Footnote row under a publication grid: legend left, "all publications" right.
+.pub-footnote {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.pub-legend {
+  font-size: .82rem;
+  margin-top: 1.2rem;
+}
+.pub-footnote .pub-legend { margin-top: 0; }
 
 .pub-year-section + .pub-year-section {
   margin-top: 1.75rem;
@@ -126,3 +184,5 @@
 
 // Copy-feedback toast on badges
 .pub-badge.copied { color: var(--good) !important; border-color: var(--good) !important; }
+
+.bibtex-block__copy { margin-bottom: .5rem; }

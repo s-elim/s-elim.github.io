@@ -70,3 +70,7 @@
 @media (prefers-reduced-motion: reduce) {
   .modal__dialog { animation: none; }
 }
+
+// Wider dialog for the tabular rankings view; the default is sized for prose.
+.modal__dialog--wide { max-width: 54rem; }
+.modal__body--tight { padding-top: .5rem; }

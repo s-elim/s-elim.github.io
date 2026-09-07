@@ -12,9 +12,9 @@
       &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>
       Last updated {{ site.time | date: '%B %Y' }} · Built with <a href="https://jekyllrb.com" rel="nofollow noopener" target="_blank">Jekyll</a>.
       {% if site.flag_counter_id and site.flag_counter_id != "" %}
-      <div class="footer-visitor-counter" style="margin-top: 0.85rem; display: flex; justify-content: center;">
+      <div class="footer-visitor-counter">
         <a href="https://info.flagcounter.com/{{ site.flag_counter_id }}" target="_blank" rel="noopener">
-          <img src="https://s05.flagcounter.com/count2/{{ site.flag_counter_id }}/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_100/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0" style="max-width: 100%; border-radius: 4px;">
+          <img class="footer-visitor-counter__img" src="https://s05.flagcounter.com/count2/{{ site.flag_counter_id }}/bg_FFFFFF/txt_000000/border_CCCCCC/columns_8/maxflags_100/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Visitor flag counter" loading="lazy" decoding="async">
         </a>
       </div>
       {% endif %}

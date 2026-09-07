@@ -56,13 +56,24 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
     <button class="filter-chip" data-value="preprint" type="button">Preprint</button>
     <button class="filter-chip" data-value="workshop" type="button">Workshop</button>
     <button class="filter-chip" data-value="patent" type="button">Patent</button>
-    <button class="filter-chip" data-value="lead" type="button"><i class="fas fa-star" aria-hidden="true" style="color: #f59e0b; margin-right: 0.2rem;"></i> First / Lead Author</button>
+    <button class="filter-chip" data-value="lead" type="button"><i class="fas fa-star filter-chip__star" aria-hidden="true"></i> First / Lead Author</button>
     <button class="filter-chip" data-value="q1" type="button">Q1</button>
     <button class="filter-chip" data-value="toprank" type="button">A*/A</button>
   </div>
-  <div class="filter-chips" data-group="year" role="group" aria-label="Filter by year" style="margin-top:.5rem">
+  <div class="filter-chips filter-chips--years" data-group="year" role="group" aria-label="Filter by year">
     <button class="filter-chip is-active" data-value="all" type="button">All Years</button>
     {% for y in years %}<button class="filter-chip" data-value="{{ y }}" type="button">{{ y }}</button>{% endfor %}
+  </div>
+  <div class="pub-actions">
+    <button class="pub-action" id="pub-order" type="button" aria-pressed="false" title="Switch between newest-first and oldest-first">
+      <i class="fas fa-sort-amount-down" aria-hidden="true"></i> <span class="pub-order__label">Newest first</span>
+    </button>
+    <button class="pub-action" id="pub-copy-all" type="button" title="Copy the BibTeX of every publication currently shown">
+      <i class="fas fa-quote-right" aria-hidden="true"></i> <span class="js-copy-label">Copy BibTeX</span>
+    </button>
+    <button class="pub-action" id="pub-reset" type="button" disabled title="Clear the search box and every active filter">
+      <i class="fas fa-undo" aria-hidden="true"></i> Reset
+    </button>
   </div>
 </div>
 
@@ -78,4 +89,4 @@ description: "Peer-reviewed publications and preprints by Md Selim Sarowar acros
 {% endfor %}
 </div>
 <p class="pub-empty" id="pub-empty">No publications match your filters.</p>
-<p class="text-muted reveal" style="font-size:.82rem;margin-top:1.2rem">* Corresponding author &nbsp;·&nbsp; † Equal contribution</p>
+<p class="pub-legend text-muted reveal">* Corresponding author &nbsp;·&nbsp; † Equal contribution</p>

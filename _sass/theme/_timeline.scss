@@ -63,6 +63,16 @@
   &::-webkit-scrollbar-track { background: transparent; }
 }
 .updates-card__scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+// Inside the Updates modal the card frame is redundant: the dialog already
+// draws one, so the card only supplies the scroll behaviour and fade.
+.updates-card--bare {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  background: transparent;
+}
+.updates-card--bare .updates-card__scroll { max-height: 28rem; }
 .updates-card::before {
   content: "";
   position: absolute;
@@ -394,6 +404,10 @@
 }
 .cv-panel h2 { margin-top: 0; }
 .cv-panel p { color: var(--muted); margin-bottom: 1.25rem; }
+
+// 404
+.error-panel { margin: 3rem auto; text-align: center; }
+.error-panel__code { font-size: 3.5rem; margin-bottom: .25rem; }
 // ---- Carousels (Awards, Activities, Teaching & Reviewing) ----
 .awards-carousel-container,
 .activities-carousel-container,
@@ -408,12 +422,80 @@
   gap: 1.25rem;
   overflow-x: auto;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   padding: 0.5rem 0.25rem 1.2rem;
   scrollbar-width: none; // Firefox
+  cursor: grab;
+  // The track is focusable so it can be scrolled from the keyboard; give the
+  // focus ring some room rather than letting it clip against the cards.
+  outline-offset: -2px;
   &::-webkit-scrollbar {
     display: none; // Chrome, Safari, Edge
   }
+  // Direct scrollLeft writes during a drag must not animate, or the pointer
+  // outruns the track.
+  &.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+    scroll-snap-type: none;
+    user-select: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .awards-carousel,
+  .activities-carousel,
+  .teaching-carousel { scroll-behavior: auto; }
+}
+
+// Fade the edge the track can still scroll towards, so there is a visual cue
+// that more cards exist even where the arrows are hidden (touch).
+.awards-carousel-container,
+.activities-carousel-container,
+.teaching-carousel-container {
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 1.9rem;
+    width: 2.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .25s var(--ease);
+    z-index: 5;
+  }
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+  }
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+  }
+  &.is-scrollable:not(.at-start)::before { opacity: 1; }
+  &.is-scrollable:not(.at-end)::after { opacity: 1; }
+}
+
+// Scroll position rail. Hidden until there is actually something to scroll.
+.carousel-rail {
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity .25s var(--ease);
+}
+[data-carousel].is-scrollable .carousel-rail { opacity: 1; }
+.carousel-rail__bar {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width .12s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel-rail__bar { transition: none; }
 }
 .awards-carousel .carousel-card,
 .activities-carousel .carousel-card,
@@ -443,11 +525,16 @@
   justify-content: center;
   transition: all 0.2s var(--ease);
   outline: none;
-  &:hover {
+  &:hover:not(:disabled) {
     background: var(--accent);
     color: var(--accent-contrast);
     border-color: var(--accent);
     transform: translateY(-50%) scale(1.1);
+  }
+  &:disabled {
+    opacity: .3;
+    cursor: default;
+    box-shadow: none;
   }
   &.prev {
     left: -21px;
@@ -456,6 +543,8 @@
     right: -21px;
   }
 }
+// Nothing overflows, so the controls would be decorative. Hide the whole set.
+[data-carousel]:not(.is-scrollable) .carousel-btn { display: none; }
 @media (max-width: 768px) {
   .carousel-btn {
     display: none !important;

@@ -49,3 +49,13 @@
 }
 .site-footer__meta a { color: var(--muted); }
 .site-footer__meta a:hover { color: var(--accent); }
+
+.footer-visitor-counter {
+  margin-top: .85rem;
+  display: flex;
+  justify-content: center;
+}
+.footer-visitor-counter__img {
+  max-width: 100%;
+  border-radius: 4px;
+}

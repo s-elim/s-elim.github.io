@@ -19,6 +19,8 @@
 @import "theme/journals";
 @import "theme/rankings";
 @import "theme/palette";
+// Print last so its @media block wins over anything above it.
+@import "theme/print";
 
 // Icon fonts (self-contained vendor SCSS; $fa-font-path defaults to ../fonts)
 @import "vendor/font-awesome/fontawesome";

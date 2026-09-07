@@ -51,20 +51,20 @@
   font-family: var(--font-head);
   font-size: var(--fs-xs);
   font-weight: 700;
-  color: #0f172a !important;
-  border: 1px solid #cbd5e1 !important;
-  background: #ffffff !important;
+  color: var(--chip-fg) !important;
+  border: 1px solid var(--chip-bd) !important;
+  background: var(--chip-bg) !important;
   border-radius: 6px;
   cursor: default;
-  animation: chip-glow-light 2.2s ease-in-out infinite;
+  animation: var(--chip-glow) 2.2s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .tag:hover {
   transform: translateY(-2px) scale(1.06);
-  color: #1e3a8a !important;
-  border-color: #3b82f6 !important;
-  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
+  color: var(--chip-fg-hover) !important;
+  border-color: var(--chip-bd-hover) !important;
+  background: var(--chip-bg-hover) !important;
+  box-shadow: var(--chip-shadow-hover) !important;
   animation-play-state: paused;
 }
 
@@ -426,18 +426,18 @@ button.pub-card__media:hover {
   font-size: var(--fs-xs);
   font-weight: 600;
   border-radius: 7px;
-  background: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid #cbd5e1 !important;
+  background: var(--chip-bg) !important;
+  color: var(--chip-fg) !important;
+  border: 1px solid var(--chip-bd) !important;
   cursor: pointer;
   transition: transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
 }
 .pub-badge:hover {
   transform: translateY(-2px);
-  color: #1e3a8a !important;
-  border-color: #3b82f6 !important;
-  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
+  color: var(--chip-fg-hover) !important;
+  border-color: var(--chip-bd-hover) !important;
+  background: var(--chip-bg-hover) !important;
+  box-shadow: var(--chip-shadow-hover) !important;
 }
 .pub-badge--patent-label {
   cursor: default;
@@ -447,10 +447,10 @@ button.pub-card__media:hover {
 }
 .pub-badge--patent-label:hover {
   transform: translateY(-2px);
-  color: #1e3a8a !important;
-  border-color: #3b82f6 !important;
-  background: linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
+  color: var(--chip-fg-hover) !important;
+  border-color: var(--chip-bd-hover) !important;
+  background: var(--chip-bg-hover) !important;
+  box-shadow: var(--chip-shadow-hover) !important;
 }
 
 .pub-extra { margin-top: .7rem; }

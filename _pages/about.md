@@ -124,8 +124,8 @@ redirect_from:
       </button>
     </div>
     <div class="modal__body">
-      <div class="updates-card card" style="border: 0; box-shadow: none; padding: 0; background: transparent;">
-        <div class="updates-card__scroll" id="updates-scroll" tabindex="0" aria-label="Updates timeline, scroll for older news" style="max-height: 28rem;">
+      <div class="updates-card updates-card--bare card">
+        <div class="updates-card__scroll" id="updates-scroll" tabindex="0" aria-label="Updates timeline, scroll for older news">
           <ul class="timeline">
             {% for item in site.data.news %}
             <li class="timeline-item">
@@ -142,14 +142,14 @@ redirect_from:
 </div>
 
 <div class="modal" id="rankings-modal" role="dialog" aria-modal="true" aria-labelledby="rankings-modal-title" data-rank-src="{{ '/assets/data/university-rankings.json' | relative_url }}">
-  <div class="modal__dialog" style="max-width: 54rem;">
+  <div class="modal__dialog modal__dialog--wide">
     <div class="modal__head">
       <h3 class="modal__title" id="rankings-modal-title"><i class="fas fa-trophy" aria-hidden="true"></i> World University Rankings &mdash; Top 400</h3>
       <button type="button" class="modal__close js-modal-close" aria-label="Close university rankings popup">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
-    <div class="modal__body" style="padding-top: 0.5rem;">
+    <div class="modal__body modal__body--tight">
       {% assign rk = site.data.university_rankings %}
       {% assign rk_keys = "the,qs" | split: "," %}
       <div class="rank-tags" role="tablist" aria-label="Ranking system">
@@ -188,7 +188,7 @@ redirect_from:
           <table class="rank-table" data-rank-table="{{ k }}">
             <thead>
               <tr>
-                <th style="text-align:center;">Rank</th>
+                <th class="rank-th-num">Rank</th>
                 <th>University</th>
                 <th>Country<span class="rank-th-full"> / Territory</span></th>
               </tr>
@@ -245,12 +245,12 @@ redirect_from:
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-award" aria-hidden="true"></i> Awards &amp; Honors</h2>
-<div class="awards-carousel-container reveal">
-  <button class="carousel-btn prev" aria-label="Previous Award" onclick="document.getElementById('awards-carousel').scrollBy({left: -370, behavior: 'smooth'})">
+<div class="awards-carousel-container reveal" data-carousel>
+  <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll awards backwards">
     <i class="fas fa-chevron-left" aria-hidden="true"></i>
   </button>
   
-  <div class="awards-carousel" id="awards-carousel">
+  <div class="awards-carousel" id="awards-carousel" data-carousel-track tabindex="0" role="group" aria-label="Awards, scroll horizontally or use the arrow keys">
     {% for a in site.data.awards %}
     <div class="award-card carousel-card">
       <div class="xp-head">
@@ -276,18 +276,19 @@ redirect_from:
     {% endfor %}
   </div>
 
-  <button class="carousel-btn next" aria-label="Next Award" onclick="document.getElementById('awards-carousel').scrollBy({left: 370, behavior: 'smooth'})">
+  <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll awards forwards">
     <i class="fas fa-chevron-right" aria-hidden="true"></i>
   </button>
+  <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-tasks" aria-hidden="true"></i> Professional Activities</h2>
-<div class="activities-carousel-container reveal">
-  <button class="carousel-btn prev" aria-label="Previous Activity" onclick="document.getElementById('activities-carousel').scrollBy({left: -370, behavior: 'smooth'})">
+<div class="activities-carousel-container reveal" data-carousel>
+  <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll professional activities backwards">
     <i class="fas fa-chevron-left" aria-hidden="true"></i>
   </button>
   
-  <div class="activities-carousel" id="activities-carousel">
+  <div class="activities-carousel" id="activities-carousel" data-carousel-track tabindex="0" role="group" aria-label="Professional activities, scroll horizontally or use the arrow keys">
     {% for group in site.data.fun_time %}
       {% for ev in group.events %}
       {% case ev.cat %}
@@ -315,9 +316,10 @@ redirect_from:
     {% endfor %}
   </div>
 
-  <button class="carousel-btn next" aria-label="Next Activity" onclick="document.getElementById('activities-carousel').scrollBy({left: 370, behavior: 'smooth'})">
+  <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll professional activities forwards">
     <i class="fas fa-chevron-right" aria-hidden="true"></i>
   </button>
+  <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-star" aria-hidden="true"></i> Featured Publications</h2>
@@ -325,6 +327,6 @@ redirect_from:
 {% assign featured = site.data.publications | where: "featured", true %}
 {% for pub in featured %}{% include pub-card.html pub=pub %}{% endfor %}
 </div>
-<p class="reveal" style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="text-muted" style="font-size:.82rem">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
+<p class="pub-footnote reveal"><span class="pub-legend text-muted">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
 

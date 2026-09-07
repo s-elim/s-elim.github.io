@@ -127,6 +127,11 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
   }
 }
 
+.btn--sm {
+  font-size: .78rem;
+  padding: .35rem .75rem;
+}
+
 /* Project accordion figures (was an inline style before the shared image include) */
 .proj-img {
   max-width: 600px;
@@ -134,4 +139,63 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
   height: auto;
   margin-inline: auto;
   border-radius: 6px;
+}
+.proj-figure { text-align: center; }
+.proj-meta {
+  font-size: .85rem;
+  margin: 0 0 .6rem;
+}
+.proj-repo { margin-top: .8rem; }
+.proj-lead {
+  font-weight: 700;
+  font-size: .95rem;
+  margin-bottom: .6rem;
+  color: var(--text-strong);
+}
+.proj-points {
+  list-style: disc;
+  padding-left: 1.15rem;
+  margin: 0 0 .5rem;
+  li { margin-bottom: .35rem; }
+}
+
+/* Expand-all / collapse-all pair above the project accordions */
+.accordion-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+/* Skills filter box */
+.skill-search-wrap { margin-bottom: .85rem; }
+.skill-search {
+  width: 100%;
+  padding: .45rem .85rem;
+  font-family: var(--font-head);
+  font-size: .84rem;
+  color: var(--text-strong);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+
+  &::placeholder { color: var(--muted); }
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+}
+
+/* Timeline pill on the industry-collaboration accordion headers */
+.timeline-badge {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: .18rem .55rem;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
 }

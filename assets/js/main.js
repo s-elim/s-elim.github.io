@@ -207,6 +207,9 @@
       var otherChips = g.querySelectorAll('.filter-chip:not([data-value="all"])');
 
       g.querySelectorAll(".filter-chip").forEach(function (chip) {
+        // Toggle buttons need aria-pressed; the is-active class alone tells a
+        // screen-reader user nothing about which filters are on.
+        chip.setAttribute("aria-pressed", chip.classList.contains("is-active") ? "true" : "false");
         chip.addEventListener("click", function () {
           var val = chip.getAttribute("data-value");
           
@@ -232,6 +235,9 @@
               groups[groupName] = selected;
             }
           }
+          g.querySelectorAll(".filter-chip").forEach(function (c) {
+            c.setAttribute("aria-pressed", c.classList.contains("is-active") ? "true" : "false");
+          });
           apply();
         });
       });
@@ -310,9 +316,122 @@
       }
     });
 
+    document.querySelectorAll(".filter-chip").forEach(function (c) {
+      c.setAttribute("aria-pressed", c.classList.contains("is-active") ? "true" : "false");
+    });
+
     if (search) search.addEventListener("input", apply);
     apply();
     syncUrl = true; // only mirror to the URL once the user drives it
+  }
+
+  /* ---- Publications toolbar: order, reset, bulk BibTeX ---------------- */
+  // Deliberately thin: rather than reach into initPubFilter's state, Reset
+  // clicks the same "All" chips a visitor would, so there is one code path for
+  // clearing a filter and it cannot drift out of sync.
+  function initPubTools() {
+    var list = document.getElementById("pub-list");
+    if (!list) return;
+    var order = document.getElementById("pub-order");
+    var reset = document.getElementById("pub-reset");
+    var copyAll = document.getElementById("pub-copy-all");
+    var search = document.getElementById("pub-search");
+
+    function visibleBibtex() {
+      var out = [];
+      list.querySelectorAll(".pub-card:not([hidden]) .bibtex-block pre").forEach(function (pre) {
+        var t = (pre.innerText || "").trim();
+        if (t) out.push(t);
+      });
+      return out;
+    }
+
+    function syncCopyLabel() {
+      if (!copyAll) return;
+      var n = visibleBibtex().length;
+      var label = copyAll.querySelector(".js-copy-label");
+      if (label) label.textContent = "Copy " + n + " BibTeX";
+      copyAll.disabled = n === 0;
+    }
+
+    function anyFilterActive() {
+      if (search && search.value.trim()) return true;
+      return !!document.querySelector('.filter-chip.is-active:not([data-value="all"])');
+    }
+
+    function syncReset() {
+      if (reset) reset.disabled = !anyFilterActive();
+    }
+
+    if (order) {
+      // The button reports the order currently applied, so a click flips to the
+      // other one. The page ships newest-first, matching aria-pressed="false".
+      order.addEventListener("click", function () {
+        var toOldest = order.getAttribute("aria-pressed") !== "true";
+        var secs = Array.prototype.slice.call(list.querySelectorAll(".pub-year-section"));
+        secs.sort(function (a, b) {
+          var ya = parseInt(a.getAttribute("data-year"), 10) || 0;
+          var yb = parseInt(b.getAttribute("data-year"), 10) || 0;
+          return toOldest ? ya - yb : yb - ya;
+        });
+        secs.forEach(function (sec) { list.appendChild(sec); });
+        order.setAttribute("aria-pressed", toOldest ? "true" : "false");
+        var lbl = order.querySelector(".pub-order__label");
+        if (lbl) lbl.textContent = toOldest ? "Oldest first" : "Newest first";
+        var ic = order.querySelector("i");
+        if (ic) {
+          ic.classList.toggle("fa-sort-amount-down", !toOldest);
+          ic.classList.toggle("fa-sort-amount-up", toOldest);
+        }
+      });
+    }
+
+    if (reset) {
+      reset.addEventListener("click", function () {
+        document.querySelectorAll('.filter-chip[data-value="all"]').forEach(function (c) { c.click(); });
+        if (search && search.value) {
+          search.value = "";
+          search.dispatchEvent(new Event("input"));
+        }
+        search && search.focus();
+      });
+    }
+
+    if (copyAll) {
+      copyAll.addEventListener("click", function () {
+        var entries = visibleBibtex();
+        if (!entries.length) return;
+        var text = entries.join("\n\n") + "\n";
+        var done = function () {
+          showCopyToast(entries.length + " BibTeX " +
+            (entries.length === 1 ? "entry" : "entries") + " copied to clipboard!");
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(function () {});
+        } else {
+          var ta = document.createElement("textarea");
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); done(); } catch (err) {}
+          document.body.removeChild(ta);
+        }
+      });
+    }
+
+    // The filter owns the card visibility; watch its result counter rather than
+    // every card, so re-syncing costs one observed node.
+    var shown = document.getElementById("pub-shown");
+    if (shown && window.MutationObserver) {
+      new MutationObserver(function () { syncCopyLabel(); syncReset(); })
+        .observe(shown, { childList: true, characterData: true, subtree: true });
+    }
+    document.querySelectorAll(".filter-chips").forEach(function (g) {
+      g.addEventListener("click", function () {
+        window.setTimeout(function () { syncCopyLabel(); syncReset(); }, 0);
+      });
+    });
+    if (search) search.addEventListener("input", syncReset);
+    syncCopyLabel();
+    syncReset();
   }
 
   /* ---- Activities filter (fun-time) ----------------------------------- */
@@ -1488,10 +1607,123 @@
     }
   }
 
-  /* ---- Personal Quote Banner ------------------------------------------ */
-  function initQuoteBanner() {
-    var banner = document.getElementById("quote-banner");
-    if (!banner) return;
+  /* ---- Carousels (awards / activities / teaching) --------------------- */
+  // One controller for every [data-carousel]. Replaces the inline onclick
+  // handlers that scrolled a hardcoded 330-370px: the step is now derived from
+  // the real card width, the arrows disable at the ends instead of looking
+  // broken, and the track takes keyboard and drag input.
+  function initCarousels() {
+    document.querySelectorAll("[data-carousel]").forEach(function (box) {
+      var track = box.querySelector("[data-carousel-track]");
+      if (!track) return;
+      var prev = box.querySelector("[data-carousel-prev]");
+      var next = box.querySelector("[data-carousel-next]");
+      var bar = box.querySelector("[data-carousel-progress]");
+
+      function step() {
+        var card = track.querySelector(".carousel-card");
+        if (!card) return Math.round(track.clientWidth * 0.8);
+        var gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
+        return Math.round(card.getBoundingClientRect().width + gap);
+      }
+
+      function maxScroll() {
+        return Math.max(0, track.scrollWidth - track.clientWidth);
+      }
+
+      // The track carries horizontal padding so hover shadows are not clipped,
+      // and scroll-snap parks the first card against the content box, not the
+      // scrollport. So a track sitting at its start reads scrollLeft == its
+      // left padding, not 0. Derive the end tolerances from that padding rather
+      // than guessing a pixel constant.
+      function edgeSlack() {
+        var cs = getComputedStyle(track);
+        return {
+          start: Math.max(2, (parseFloat(cs.paddingLeft) || 0) + 1),
+          end: Math.max(2, (parseFloat(cs.paddingRight) || 0) + 1)
+        };
+      }
+
+      function scrollBy(dir) {
+        track.scrollBy({
+          left: dir * step(),
+          behavior: prefersReduced ? "auto" : "smooth"
+        });
+      }
+
+      function sync() {
+        var max = maxScroll();
+        var at = track.scrollLeft;
+        var slack = edgeSlack();
+        var atStart = at <= slack.start;
+        var atEnd = at >= max - slack.end;
+        box.classList.toggle("is-scrollable", max > 1);
+        box.classList.toggle("at-start", atStart);
+        box.classList.toggle("at-end", atEnd);
+        if (prev) prev.disabled = atStart;
+        if (next) next.disabled = atEnd;
+        if (bar) bar.style.width = (max > 1 ? (at / max) * 100 : 100) + "%";
+      }
+
+      if (prev) prev.addEventListener("click", function () { scrollBy(-1); });
+      if (next) next.addEventListener("click", function () { scrollBy(1); });
+
+      track.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") { e.preventDefault(); scrollBy(1); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); scrollBy(-1); }
+        else if (e.key === "Home") { e.preventDefault(); track.scrollTo({ left: 0, behavior: prefersReduced ? "auto" : "smooth" }); }
+        else if (e.key === "End") { e.preventDefault(); track.scrollTo({ left: maxScroll(), behavior: prefersReduced ? "auto" : "smooth" }); }
+      });
+
+      // Click-drag on pointer devices. Touch keeps the browser's native
+      // momentum scrolling, so it is deliberately left alone.
+      var dragging = false, startX = 0, startLeft = 0, moved = 0;
+      track.addEventListener("pointerdown", function (e) {
+        if (e.pointerType === "touch" || e.button !== 0) return;
+        if (e.target.closest("a, button")) return;
+        dragging = true; moved = 0;
+        startX = e.clientX;
+        startLeft = track.scrollLeft;
+        track.classList.add("is-dragging");
+      });
+      track.addEventListener("pointermove", function (e) {
+        if (!dragging) return;
+        var dx = e.clientX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        if (moved > 3 && track.setPointerCapture && e.pointerId != null) {
+          try { track.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        track.scrollLeft = startLeft - dx;
+      });
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        track.classList.remove("is-dragging");
+      }
+      track.addEventListener("pointerup", endDrag);
+      track.addEventListener("pointercancel", endDrag);
+      track.addEventListener("pointerleave", endDrag);
+      // Swallow the click that ends a drag so it never opens a card link.
+      track.addEventListener("click", function (e) {
+        if (moved > 4) { e.preventDefault(); e.stopPropagation(); moved = 0; }
+      }, true);
+
+      var ticking = false;
+      track.addEventListener("scroll", function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(function () { ticking = false; sync(); });
+      }, { passive: true });
+
+      if (window.ResizeObserver) {
+        new ResizeObserver(sync).observe(track);
+      } else {
+        window.addEventListener("resize", sync);
+      }
+      // Cards hold lazy images, so the scroll width settles after first paint.
+      window.addEventListener("load", sync);
+      sync();
+    });
   }
 
   /* ---- Boot ---------------------------------------------------------- */
@@ -1507,6 +1739,7 @@
     safe(initCopyEmail);
     safe(initAccordionControls);
     safe(initPubFilter);
+    safe(initPubTools);
     safe(initActivityFilter);
     safe(initUpdatesScroll);
     safe(initLightbox);
@@ -1518,7 +1751,7 @@
     safe(initPalette);
     safe(initBackToTop);
     safe(initSkillSearch);
-    safe(initQuoteBanner);
+    safe(initCarousels);
     // Last: it fires input events at widgets above, so they must be listening.
     safe(initDeepLinks);
   }

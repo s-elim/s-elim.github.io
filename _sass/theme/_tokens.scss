@@ -55,6 +55,19 @@ $bp-xl: 1280px;
   --tag-bd-hover:   #3b82f6;
   --tag-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
 
+  // Interest / skill chips and tag pills. White at rest, deep-blue on hover.
+  // Themed here because four components share the look (hero chips, the
+  // availability chip, highlight-card tags, publication filter chips); before
+  // this they carried the light hex inline and stayed white in dark mode.
+  --chip-bg:           #ffffff;
+  --chip-fg:           #0f172a;
+  --chip-bd:           #cbd5e1;
+  --chip-bg-hover:     linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%);
+  --chip-fg-hover:     #1e3a8a;
+  --chip-bd-hover:     #3b82f6;
+  --chip-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
+  --chip-glow:         chip-glow-light;
+
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
   --shadow-md: 0 6px 20px rgba(15, 23, 42, .08);
   --shadow-lg: 0 16px 40px rgba(15, 23, 42, .14);
@@ -117,6 +130,16 @@ $bp-xl: 1280px;
   --tag-bd-hover:   #8ccff7;
   --tag-shadow-hover: 0 4px 14px rgba(86, 182, 242, .35);
 
+  // Chips: a translucent inset on the dark ground, lighting up to the accent.
+  --chip-bg:           rgba(255, 255, 255, .06);
+  --chip-fg:           #dbe4f0;
+  --chip-bd:           #3b4f70;
+  --chip-bg-hover:     linear-gradient(135deg, #8ccff7 15%, #56b6f2 75%, #2a8ecb 100%);
+  --chip-fg-hover:     #071120;
+  --chip-bd-hover:     #8ccff7;
+  --chip-shadow-hover: 0 4px 14px rgba(86, 182, 242, .35);
+  --chip-glow:         chip-glow-dark;
+
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, .45);
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, .55);
@@ -150,6 +173,19 @@ $bp-xl: 1280px;
   --red:       #dc2626; // flagship
   --rank:      #7c3aed; // CORE rank badge
   --img-dim: none;      // media dimming (dark mode only)
+
+  // Interest / skill chips and tag pills. White at rest, deep-blue on hover.
+  // Themed here because four components share the look (hero chips, the
+  // availability chip, highlight-card tags, publication filter chips); before
+  // this they carried the light hex inline and stayed white in dark mode.
+  --chip-bg:           #ffffff;
+  --chip-fg:           #0f172a;
+  --chip-bd:           #cbd5e1;
+  --chip-bg-hover:     linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%);
+  --chip-fg-hover:     #1e3a8a;
+  --chip-bd-hover:     #3b82f6;
+  --chip-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
+  --chip-glow:         chip-glow-light;
 
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05);
   --shadow-md: 0 6px 20px rgba(15, 23, 42, .08);

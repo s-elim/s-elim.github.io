@@ -104,6 +104,29 @@ table { border-collapse: collapse; width: 100%; }
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+// Skip-to-content link. It has to leave the clipped state on focus, otherwise
+// keyboard users can tab to it but never see where the focus went. Fixed rather
+// than absolute so it lands on screen even when the page is already scrolled.
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 200;
+  padding: .6rem 1.05rem;
+  font-family: var(--font-head);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  transition: top .18s var(--ease);
+}
+.skip-link:focus {
+  top: 1rem;
+  color: var(--accent-contrast);
+}
+
 // Flag icons alignment
 .fi {
   margin-left: 0.4rem;

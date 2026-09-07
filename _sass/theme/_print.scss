@@ -1,0 +1,165 @@
+// ==========================================================================
+//  Print - the pages get printed and saved to PDF for applications, so the
+//  screen chrome (nav, search, toggles, carousel arrows) has to come off and
+//  the horizontally scrolled and collapsed content has to unfold.
+// ==========================================================================
+
+@media print {
+  // Force the light palette whatever the toggle is set to: a dark theme on
+  // paper is unreadable and burns ink.
+  :root,
+  :root[data-theme="dark"],
+  :root[data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #111111;
+    --text-strong: #000000;
+    --muted: #444444;
+    --border: #cccccc;
+    --border-strong: #999999;
+    --accent: #14448c;
+    --accent-hover: #14448c;
+    --accent-soft: transparent;
+    --accent-contrast: #ffffff;
+    --chip-bg: #ffffff;
+    --chip-fg: #111111;
+    --chip-bd: #999999;
+    --chip-glow: none;
+    // The screen pills are a pale blue wash that all but vanishes in ink.
+    --tag-bg: #ffffff;
+    --tag-fg: #14448c;
+    --tag-bd: #7a7a7a;
+    --tag-bg-hover: #ffffff;
+    --tag-fg-hover: #14448c;
+    --tag-bd-hover: #7a7a7a;
+    --tag-shadow-hover: none;
+    --rank: #4a2f8f;
+    --good: #14631f;
+    --vision: #0a5c6b;
+    --robotics: #8a4a06;
+    --red: #96201f;
+    --img-dim: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+
+  @page { margin: 14mm; }
+
+  html { font-size: 100%; }
+  body {
+    background: #ffffff;
+    color: #111111;
+  }
+
+  // Screen-only chrome.
+  .site-nav,
+  .site-footer,
+  .mobile-menu,
+  .nav-overlay,
+  .palette,
+  .back-to-top,
+  .copy-toast,
+  .skip-link,
+  .modal,
+  .carousel-btn,
+  .carousel-rail,
+  .pub-toolbar,
+  .accordion-controls,
+  .skill-search-wrap,
+  .hero__links,
+  .hero__actions,
+  .updates-card__hint,
+  .pub-badge--bibtex,
+  .bibtex-block,
+  .js-copy,
+  .js-copy-email,
+  .quote-banner__bg-icon,
+  .footer-visitor-counter {
+    display: none !important;
+  }
+
+  // Scroll-reveal never fires without a scroll, so anything below the fold
+  // would otherwise print blank.
+  .reveal,
+  .js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  // Unfold everything that is collapsed or scrolled off-axis on screen.
+  .awards-carousel,
+  .activities-carousel,
+  .teaching-carousel {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: .6rem;
+  }
+  .awards-carousel .carousel-card,
+  .activities-carousel .carousel-card,
+  .teaching-carousel .carousel-card {
+    flex: 0 0 48%;
+  }
+  .awards-carousel-container::before,
+  .awards-carousel-container::after,
+  .activities-carousel-container::before,
+  .activities-carousel-container::after,
+  .teaching-carousel-container::before,
+  .teaching-carousel-container::after { display: none; }
+
+  .accordion__panel {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .accordion__icon { display: none; }
+
+  .updates-card__scroll,
+  .updates-card--bare .updates-card__scroll {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .rank-scroll { overflow: visible !important; }
+
+  // Cards: flat, and not split across a page boundary.
+  .card,
+  .pub-card,
+  .xp-card,
+  .award-card,
+  .activity-card,
+  .teaching-card,
+  .highlight-card,
+  .project-cat-card {
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    transform: none !important;
+  }
+  .pub-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .highlight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+  .pub-year-section { break-inside: auto; }
+
+  a { color: #14448c; text-decoration: underline; }
+  // Spell out the destination of links that leave the site, since a printed
+  // page cannot be clicked. Internal and in-page links stay clean.
+  .pub-card__title a[href^="http"]::after,
+  .pub-badge[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-family: var(--font-mono);
+    font-size: .72em;
+    font-weight: 400;
+    word-break: break-all;
+  }
+
+  img { filter: none !important; }
+  .container { max-width: 100%; padding-inline: 0; }
+  .site-main { padding-block: 0; }
+}

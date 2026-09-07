@@ -108,11 +108,11 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <span class="project-cat-card__count">{{ site.data.teaching | size }} courses</span>
   </header>
   <div class="project-cat-card__body">
-    <div class="teaching-carousel-container">
-      <button class="carousel-btn prev" aria-label="Previous Course" onclick="document.getElementById('teaching-carousel').scrollBy({left: -330, behavior: 'smooth'})">
+    <div class="teaching-carousel-container" data-carousel>
+      <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll taught courses backwards">
         <i class="fas fa-chevron-left" aria-hidden="true"></i>
       </button>
-      <div class="teaching-carousel" id="teaching-carousel">
+      <div class="teaching-carousel" id="teaching-carousel" data-carousel-track tabindex="0" role="group" aria-label="Taught courses, scroll horizontally or use the arrow keys">
         {% for t in site.data.teaching %}
         <div class="teaching-card card carousel-card">
           <h3 class="teaching-card__title">
@@ -127,9 +127,10 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
         </div>
         {% endfor %}
       </div>
-      <button class="carousel-btn next" aria-label="Next Course" onclick="document.getElementById('teaching-carousel').scrollBy({left: 330, behavior: 'smooth'})">
+      <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll taught courses forwards">
         <i class="fas fa-chevron-right" aria-hidden="true"></i>
       </button>
+      <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
     </div>
   </div>
 </section>
@@ -151,7 +152,7 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
         {% if group.size > 0 %}
         <div class="reviewing-group">
           <h3 class="reviewing-group__title">
-            <i class="fas {% if rtype == 'Journal' %}fa-book-open{% elsif rtype == 'Workshop' %}fa-tools{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
+            <i class="fas {% if rtype == 'Journal' %}fa-book-open{% elsif rtype == 'Workshop' %}fa-toolbox{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
             <span>{{ rtype }}s</span>
             <span class="reviewing-group__count">{{ group | size }}</span>
           </h3>
