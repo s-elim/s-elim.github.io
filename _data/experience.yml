@@ -11,6 +11,16 @@
     - '<strong>Agentic Intelligence &amp; World Models</strong>: Developed <strong>AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation</strong> (<em>ICRA’27</em>), integrating executable code generation, latent world-model imagination, and verification for robust physical AI robot manipulation.'
     - '<strong>Core Domains</strong>: 3D Computer Vision, Spatial Intelligence, 6D Pose Estimation, Vision-Language-Action Models, World Models, and Agentic Robotics.'
 
+- role: 'Researcher'
+  org: 'Future Drive Ltd. · South Korea <span class="fi fi-kr"></span>'
+  date: 'During M.Sc.'
+  current: true
+  points:
+    - '<strong>World Models for Physical AI</strong>: Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions in imagination before committing to them.'
+    - '<strong>Agentic Robotics</strong>: Developing agentic planning loops that pair latent lookahead with executable action generation and verification, connecting high-level task instructions to low-level control on real hardware.'
+    - '<strong>Vision-Language-Action Navigation</strong>: Extending the VLA stack for autonomous mobile robots toward end-to-end semantic navigation, with action-chunked policies deployed on low-power edge accelerators.'
+    - '<strong>Core Domains</strong>: World Models, Agentic Robotics, Physical AI, Vision-Language-Action Models, and Autonomous Mobile Robots.'
+
 - role: 'Research Assistant'
   org: '<a href="https://www.ee.nthu.edu.tw/cychi/index.php" target="_blank" rel="noopener">Wireless Communications &amp; Signal Processing Lab (WCSP)</a> · National Tsing Hua University, Hsinchu, Taiwan <span class="fi fi-tw"></span>'
   date: 'Sep 2023 - Aug 2024'

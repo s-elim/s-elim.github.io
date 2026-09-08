@@ -120,6 +120,11 @@
   .xp-grid { grid-template-columns: 1fr; }
 }
 
+// Education and research positions carry several lines of detail each, so they
+// read better one per row than side by side. The collaboration cards are a
+// single line and keep the two-up grid.
+.xp-grid--stack { grid-template-columns: minmax(0, 1fr); }
+
 .xp-head {
   display: flex;
   flex-wrap: wrap;

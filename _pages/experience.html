@@ -16,7 +16,7 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <span class="project-cat-card__count">{{ site.data.education | size }} institutions</span>
   </header>
   <div class="project-cat-card__body">
-    <div class="xp-grid">
+    <div class="xp-grid xp-grid--stack">
       {% for edu in site.data.education %}
       <div class="xp-card card">
         <div class="xp-head">
@@ -49,7 +49,7 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <span class="project-cat-card__count">{{ site.data.experience | size }} positions</span>
   </header>
   <div class="project-cat-card__body">
-    <div class="xp-grid">
+    <div class="xp-grid xp-grid--stack">
       {% for ex in site.data.experience %}
       <div class="xp-card card">
         <div class="xp-head">
