@@ -55,8 +55,10 @@ industry:
   - name: 'Future Drive Ltd., Korea'
     timeline: 'During M.Sc.'
     points:
-      - 'Building VLA models for autonomous mobile robots'
-      - 'Designing visual-language-action (VLA) architectures for end-to-end semantic navigation and room-to-room task planning'
+      - 'World Model &amp; Agentic Robotics based Physical AI for Autonomous Mobile Robots'
+      - 'Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions before committing to them'
+      - 'Developing agentic planning loops that pair latent lookahead with executable action generation and verification, connecting high-level task instructions to low-level control on real hardware'
+      - 'Designing vision-language-action (VLA) architectures for end-to-end semantic navigation and room-to-room task planning'
       - 'Implementing action-chunking and policy deployment on low-power edge accelerators for real-time obstacle avoidance'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
