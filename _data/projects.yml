@@ -47,7 +47,7 @@ industry:
       - 'Building shared infrastructure and benchmarks for general-purpose physical AI, spanning perception, world-model learning, and spatial reasoning for robot manipulation'
       - 'Integrating action-conditioned world models with spatial reasoning modules to enable robust, generalizable manipulation policies across diverse robotic platforms'
   - name: 'Future Drive Ltd., Korea'
-    timeline: 'Sep 2024 - Aug 2027'
+    timeline: 'Aug 2025 - Sep 2027'
     points:
       - 'World Model &amp; Agentic Robotics based Physical AI for Autonomous Mobile Robots'
       - 'Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions before committing to them'

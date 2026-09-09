@@ -2,7 +2,7 @@
 # `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
 - role: 'Graduate Research Assistant'
   org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea <span class="fi fi-kr"></span>'
-  date: 'Sep 2024 - Present'
+  date: 'Aug 2025 - Sep 2027'
   current: true
   extra: 'Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>'
   points:
@@ -13,7 +13,7 @@
 
 - role: 'Researcher'
   org: 'Future Drive Ltd. · South Korea <span class="fi fi-kr"></span>'
-  date: 'Sep 2024 - Aug 2027'
+  date: 'Aug 2025 - Sep 2027'
   current: true
   points:
     - '<strong>World Models for Physical AI</strong>: Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions in imagination before committing to them.'
