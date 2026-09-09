@@ -46,19 +46,14 @@ industry:
       - 'PI: Prof. Sungho Kim'
       - 'Building shared infrastructure and benchmarks for general-purpose physical AI, spanning perception, world-model learning, and spatial reasoning for robot manipulation'
       - 'Integrating action-conditioned world models with spatial reasoning modules to enable robust, generalizable manipulation policies across diverse robotic platforms'
-  - name: 'YUJINMS Co. Ltd., Korea'
-    timeline: 'During M.Sc.'
-    points:
-      - 'Multimodal AI Sensing + World Model for Manufacturing Robots'
-      - 'Fusing RGB-D vision, point clouds, and multi-modal sensory inputs for high-precision robot perception on dynamic assembly lines'
-      - 'Developing action-conditioned latent world models to predict physical interaction outcomes and plan robust manipulation trajectories'
   - name: 'Future Drive Ltd., Korea'
-    timeline: 'During M.Sc.'
+    timeline: 'Sep 2024 - Aug 2027'
     points:
       - 'World Model &amp; Agentic Robotics based Physical AI for Autonomous Mobile Robots'
       - 'Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions before committing to them'
       - 'Developing agentic planning loops that pair latent lookahead with executable action generation and verification, connecting high-level task instructions to low-level control on real hardware'
       - 'Designing vision-language-action (VLA) architectures for end-to-end semantic navigation and room-to-room task planning'
+      - 'Building the simulation-to-deployment stack on Isaac Lab and ROS 2, carrying policies trained in simulation onto the mobile robot'
       - 'Implementing action-chunking and policy deployment on low-power edge accelerators for real-time obstacle avoidance'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
@@ -79,7 +74,7 @@ skills:
     items: ['PyTorch', 'Hugging Face', 'TensorFlow', 'Matplotlib', 'Open3D', 'ROS2', 'CUDA', 'OpenCV']
   - group: 'Research Tools & Hardware'
     icon: 'fa-microchip'
-    items: ['Blender (3D Modeling)', 'Isaac Sim', 'LaTeX', 'World Models', 'VLAs', 'Jetson AGX Orin', 'RGBD+LiDAR sensor']
+    items: ['Blender (3D Modeling)', 'Isaac Sim', 'Isaac Lab', 'LaTeX', 'World Models', 'VLAs', 'Jetson AGX Orin', 'RGBD+LiDAR sensor']
   - group: 'Languages'
     icon: 'fa-language'
     items: ['Bengali: Native', 'English: Fluent', 'Korean: Intermediate', 'Hindi: Fluent', 'Chinese (Mandarin): Elementary']
