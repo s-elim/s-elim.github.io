@@ -13,7 +13,7 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
 {% assign skill_count = 0 %}{% for grp in pj.skills %}{% assign skill_count = skill_count | plus: grp.items.size %}{% endfor %}
 
 <div class="stat-row reveal">
-  <div class="stat"><div class="stat__num">{{ bootcamp_count }}</div><div class="stat__label">Bootcamps</div></div>
+  <div class="stat"><div class="stat__num">{{ bootcamp_count }}</div><div class="stat__label">Bootcamps &amp; Courses</div></div>
   <div class="stat stat--research"><div class="stat__num">{{ research_count }}</div><div class="stat__label">Research Projects</div></div>
   <div class="stat stat--industry"><div class="stat__num">{{ collab_count }}</div><div class="stat__label">Industry Projects</div></div>
   <div class="stat stat--skills"><div class="stat__num">{{ skill_count }}</div><div class="stat__label">Skills</div></div>
@@ -31,8 +31,8 @@ description: "Research projects, bootcamps, and industrial collaborations by Md 
   <header class="project-cat-card__header">
     <div class="project-cat-card__icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
-      <h2 class="project-cat-card__title">Bootcamps</h2>
-      <p class="project-cat-card__sub">Extensive hands-on training programs</p>
+      <h2 class="project-cat-card__title">Bootcamps &amp; Courses</h2>
+      <p class="project-cat-card__sub">Extensive hands-on training programs and graduate coursework</p>
     </div>
     <span class="project-cat-card__count">{{ bootcamps.size }} programs</span>
   </header>

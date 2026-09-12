@@ -4,6 +4,12 @@
 # `url` optional; `org` / `where` hold the verbatim organizer / location+date text.
 - year: '2026'
   events:
+    - type: 'Course'
+      cat: 'bootcamp'
+      title: 'World Models (CIS 6280)'
+      detail: 'Graduate Course · Fall 2026'
+      url: 'https://www.cis.upenn.edu/~cis6280/'
+      org: 'Univ. of Pennsylvania · Instructor: Jiatao Gu'
     - type: 'Bootcamp'
       cat: 'bootcamp'
       title: 'Modern Robot Learning (VLAs & World Models)'

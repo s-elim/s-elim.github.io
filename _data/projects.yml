@@ -2,6 +2,10 @@
 certifications_url: 'https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr'
 
 latest:
+  - title: 'World Models (CIS 6280, University of Pennsylvania)'
+    category: 'Bootcamp'
+    meta: 'Graduate Course · Fall 2026 · Instructor: Jiatao Gu'
+    desc: '<p>Graduate course on learned representations and predictors of environment dynamics for perception, planning, and decision making, and how they support control and reasoning across reinforcement learning, video and 3D, multimodal agents, and robotics. Twenty-three lectures spanning probabilistic formulations of world models, environments and rollouts, state-space models, representation learning, and generative foundations (latent-variable, adversarial, autoregressive, diffusion and flow matching, normalizing flows).</p><ul><li>Sequential generative world models; model-based reinforcement learning, planning, and control</li><li>Video world models: generative architectures, rollout, interaction, memory, efficiency</li><li>Spatial world models: 3D geometry, 4D dynamics, neural physics and learned physical dynamics</li><li>World models for robot learning: simulation, sim-to-real, vision-language-action and world-action models</li><li>LLMs as world models: simulation, state tracking, grounding; reasoning with test-time computation; world models for digital agents</li><li>Evaluating world models: utility, robustness, and open problems</li></ul><p><a href="https://www.cis.upenn.edu/~cis6280/" target="_blank" rel="noopener">Course page</a></p>'
   - title: 'Modern Robot Learning (VLAs & World Models)'
     category: 'Bootcamp'
     meta: '3-Month Extensive Bootcamp · Vizuara AI Lab'
