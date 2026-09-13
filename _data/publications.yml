@@ -9,8 +9,8 @@
 # `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
-- title: 'Learning Manipulation-Sufficient Representations via Outcome Bottlenecks'
-  authors: 'Md Selim Sarowar and Sungho Kim*'
+- title: 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
+  authors: 'Md Selim Sarowar, Taeung Kang, Soon Kwon, and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
   year: 2027
@@ -18,12 +18,12 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'Under Review'
-  image: '/images/msp-framework.webp'
+  image: '/images/agi-framework.webp'
   thumb: "ICRA '27"
-  url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
+  url: 'https://physical-agi.github.io/Agentic-Intelligence/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
-    - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/Agentic-Intelligence/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
 - title: 'Affordance-Grounded Coding Agents are Robust Where Vision-Language-Action Policies Fail'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
@@ -41,8 +41,8 @@
     - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD-X/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
-- title: 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
-  authors: 'Md Selim Sarowar, Taeung Kang, Soon Kwon, and Sungho Kim*'
+- title: 'Learning Manipulation-Sufficient Representations via Outcome Bottlenecks'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
   year: 2027
@@ -50,12 +50,12 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'Under Review'
-  image: '/images/agi-framework.webp'
+  image: '/images/msp-framework.webp'
   thumb: "ICRA '27"
-  url: 'https://physical-agi.github.io/Agentic-Intelligence/'
+  url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/Agentic-Intelligence/', kind: 'project' }
-    - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'
   authors: 'Md Selim Sarowar and Sungho Kim*'
