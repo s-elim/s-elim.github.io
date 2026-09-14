@@ -110,9 +110,26 @@ a.chip.chip--open:hover, a.chip.chip--open:focus-visible {
   0%, 100% { box-shadow: 0 0 4px rgba(255, 255, 255, 0.05); }
   50%      { box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent); }
 }
+@keyframes hero-chip-glow-light {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.42), 0 0 18px rgba(59, 130, 246, 0.25), inset 0 0 4px rgba(59, 130, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(37, 99, 235, 0.68), 0 0 28px rgba(59, 130, 246, 0.45), inset 0 0 6px rgba(59, 130, 246, 0.28);
+  }
+}
+@keyframes hero-chip-glow-dark {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(86, 182, 242, 0.55), 0 0 20px rgba(56, 189, 248, 0.32), inset 0 0 4px rgba(86, 182, 242, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(86, 182, 242, 0.90), 0 0 32px rgba(56, 189, 248, 0.60), inset 0 0 8px rgba(86, 182, 242, 0.40);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .chip.chip--open,
   .hero__chips .chip,
+  .hero__chips .chip--glow,
   .tag { animation: none; }
 }
 .chip__cta {
@@ -143,7 +160,6 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   background: var(--chip-bg) !important;
   border-radius: var(--radius-pill);
   cursor: default;
-  animation: var(--chip-glow) 2.2s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .hero__chips .chip:hover {
@@ -152,6 +168,19 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   border-color: var(--chip-bd-hover) !important;
   background: var(--chip-bg-hover) !important;
   box-shadow: var(--chip-shadow-hover) !important;
+  animation-play-state: paused;
+}
+// Featured interest chips with continuous, radiant ambient glow across light and dark themes.
+.hero__chips .chip--glow {
+  color: var(--hero-glow-fg) !important;
+  border: 1px solid var(--hero-glow-bd) !important;
+  background: var(--hero-glow-bg) !important;
+  box-shadow: var(--hero-glow-shadow-base) !important;
+  animation: var(--hero-glow-anim) 2.4s ease-in-out infinite;
+}
+.hero__chips .chip--glow:hover {
+  transform: translateY(-2px) scale(1.07);
+  box-shadow: var(--hero-glow-shadow-hover) !important;
   animation-play-state: paused;
 }
 // Most interest chips are one or two words and rely on .chip's nowrap. A chip
