@@ -53,12 +53,9 @@ industry:
   - name: 'Future Drive Ltd., Korea'
     timeline: 'Aug 2025 - Sep 2027'
     points:
-      - 'World Model &amp; Agentic Robotics based Physical AI for Autonomous Mobile Robots'
-      - 'Building action-conditioned latent world models that predict the outcome of physical interaction, so a mobile robot can evaluate candidate actions before committing to them'
-      - 'Developing agentic planning loops that pair latent lookahead with executable action generation and verification, connecting high-level task instructions to low-level control on real hardware'
-      - 'Designing vision-language-action (VLA) architectures for end-to-end semantic navigation and room-to-room task planning'
-      - 'Building the simulation-to-deployment stack on Isaac Lab and ROS 2, carrying policies trained in simulation onto the mobile robot'
-      - 'Implementing action-chunking and policy deployment on low-power edge accelerators for real-time obstacle avoidance'
+      - 'Agentic Policy &amp; World Models for Autonomous Mobile Robots'
+      - 'Building action-conditioned latent world models and agentic planning loops with latent lookahead to verify candidate actions in imagination before physical execution'
+      - 'Deploying vision-language-action policies and sim-to-real pipelines with Isaac Lab and ROS 2 on edge mobile robot platforms'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
     points:

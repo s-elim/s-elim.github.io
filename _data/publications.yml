@@ -25,7 +25,7 @@
     - { label: 'Project Page', url: 'https://physical-agi.github.io/Agentic-Intelligence/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
-- title: 'Affordance-Grounded Coding Agents are Robust Where Vision-Language-Action Policies Fail'
+- title: 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition'
   venue_short: "CVPR'27"
