@@ -55,6 +55,8 @@
   url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
   links:
     - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
+    - { label: 'arXiv', url: 'https://arxiv.org/abs/2609.13235', kind: 'link' }
+    - { label: 'PDF', url: 'https://arxiv.org/pdf/2609.13235', kind: 'pdf' }
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'

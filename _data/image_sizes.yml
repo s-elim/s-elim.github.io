@@ -7,7 +7,7 @@
 3d-point-cloud-visualization: { w: 960, h: 307, sm: true }
 Picture2: { w: 1600, h: 1040, sm: false }
 aespc-figure: { w: 640, h: 340, sm: true }
-affordx-framework: { w: 960, h: 499, sm: true }
+affordx-framework: { w: 960, h: 389, sm: true }
 agentic-framework: { w: 960, h: 495, sm: true }
 agi-framework: { w: 960, h: 679, sm: true }
 c3g-vm6d-architecture: { w: 960, h: 535, sm: true }
