@@ -156,9 +156,9 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
             <span>{{ rtype }}s</span>
             <span class="reviewing-group__count">{{ group | size }}</span>
           </h3>
-          <ul class="reviewing-list">
+          <ul class="reviewing-list{% if rtype == 'Journal' %} reviewing-list--stacked{% endif %}">
             {% for r in group %}
-            <li class="reviewing-chip"{% if r.full_name %} title="{{ r.full_name }}"{% endif %}>
+            <li class="reviewing-chip{% if rtype == 'Journal' %} reviewing-chip--stacked{% endif %}"{% if r.full_name %} title="{{ r.full_name }}"{% endif %}>
               <span class="reviewing-chip__venue">{{ r.venue }}</span>
               {% if r.date %}<span class="reviewing-chip__date">{{ r.date }}</span>{% endif %}
             </li>

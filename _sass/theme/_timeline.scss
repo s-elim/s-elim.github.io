@@ -397,6 +397,45 @@
   white-space: nowrap;
 }
 
+// Stacked variant for list-based display (Journals)
+.reviewing-list--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  width: 100%;
+}
+.reviewing-chip--stacked {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .85rem;
+  padding: .5rem .95rem;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+.reviewing-chip--stacked:hover {
+  transform: translateX(4px);
+}
+.reviewing-chip--stacked .reviewing-chip__venue {
+  line-height: 1.35;
+}
+.reviewing-chip--stacked .reviewing-chip__date {
+  flex-shrink: 0;
+}
+@media (max-width: 540px) {
+  .reviewing-chip--stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .25rem;
+  }
+}
+@media (min-width: 860px) {
+  .reviewing-panel {
+    grid-template-columns: minmax(220px, 1fr) minmax(360px, 1.45fr);
+  }
+}
+
 // ---- CV download panel ----
 .cv-panel {
   background: var(--card-bg);

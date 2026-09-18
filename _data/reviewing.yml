@@ -21,7 +21,7 @@
   org: "Neural Information Processing Systems Foundation"
   date: "2026"
 
-- venue: "IEEE RA-L"
+- venue: "IEEE Robotics and Automation Letters"
   full_name: "IEEE Robotics and Automation Letters (SCIE-Q1 Journal)"
   role: "Peer Reviewer"
   type: "Journal"
@@ -42,10 +42,11 @@
   org: "IEEE (Institute of Electrical and Electronics Engineers)"
   date: "2025 - Present"
 
-- venue: "IJCAS"
+- venue: "International Journal of Control, Automation, and Systems"
   full_name: "International Journal of Control, Automation, and Systems (SCIE Journal)"
   role: "Peer Reviewer"
   type: "Journal"
   org: "ICROS and KIEE (published by Springer)"
   date: "2026 - Present"
+
 
