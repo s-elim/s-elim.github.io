@@ -21,6 +21,13 @@
   org: "International Machine Learning Society (IMLS)"
   date: "2026"
 
+- venue: "IEEE RA-L"
+  full_name: "IEEE Robotics and Automation Letters (SCIE-Q1 Journal)"
+  role: "Peer Reviewer"
+  type: "Journal"
+  org: "IEEE Robotics and Automation Society (IEEE RAS)"
+  date: "2026 - Present"
+
 - venue: "PLOS ONE"
   full_name: "PLOS ONE (SCIE-Q1 Journal)"
   role: "Peer Reviewer"
@@ -41,3 +48,4 @@
   type: "Journal"
   org: "ICROS and KIEE (published by Springer)"
   date: "2026 - Present"
+
