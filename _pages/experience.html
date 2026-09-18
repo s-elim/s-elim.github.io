@@ -140,19 +140,19 @@ description: "Education, research, work, and teaching experience of Md Selim Sar
     <div class="project-cat-card__icon"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
     <div class="project-cat-card__titles">
       <h2 class="project-cat-card__title">Reviewing Experience</h2>
-      <p class="project-cat-card__sub">Peer review service for international conferences, workshops &amp; journals</p>
+      <p class="project-cat-card__sub">Peer review service for international conferences &amp; journals</p>
     </div>
     <span class="project-cat-card__count">{{ site.data.reviewing | size }} venues</span>
   </header>
   <div class="project-cat-card__body">
     <div class="reviewing-panel card">
-      {% assign review_types = "Conference,Workshop,Journal" | split: "," %}
+      {% assign review_types = "Conference,Journal" | split: "," %}
       {% for rtype in review_types %}
         {% assign group = site.data.reviewing | where: "type", rtype %}
         {% if group.size > 0 %}
         <div class="reviewing-group">
           <h3 class="reviewing-group__title">
-            <i class="fas {% if rtype == 'Journal' %}fa-book-open{% elsif rtype == 'Workshop' %}fa-toolbox{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
+            <i class="fas {% if rtype == 'Journal' %}fa-book-open{% else %}fa-check-circle{% endif %}" aria-hidden="true"></i>
             <span>{{ rtype }}s</span>
             <span class="reviewing-group__count">{{ group | size }}</span>
           </h3>

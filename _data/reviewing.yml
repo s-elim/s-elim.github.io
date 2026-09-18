@@ -1,5 +1,5 @@
 # Peer reviewing experience (Experience page).
-# Rendered as one grouped card: conferences first, then workshops, then journals.
+# Rendered as one grouped card: conferences first, then journals.
 - venue: "BMVC 2026"
   full_name: "37th British Machine Vision Conference"
   role: "Peer Reviewer"
@@ -7,18 +7,18 @@
   org: "British Machine Vision Association (BMVA)"
   date: "2026"
 
-- venue: "NeurIPS Workshop 2026"
-  full_name: "40th Conference on Neural Information Processing Systems"
+- venue: "ICMLw"
+  full_name: "ICML Workshop 2026 (43rd International Conference on Machine Learning)"
   role: "Peer Reviewer"
-  type: "Workshop"
-  org: "Neural Information Processing Systems Foundation"
+  type: "Conference"
+  org: "International Machine Learning Society (IMLS)"
   date: "2026"
 
-- venue: "ICML Workshop 2026"
-  full_name: "43rd International Conference on Machine Learning"
+- venue: "NeurIPSw"
+  full_name: "NeurIPS Workshop 2026 (40th Conference on Neural Information Processing Systems)"
   role: "Peer Reviewer"
-  type: "Workshop"
-  org: "International Machine Learning Society (IMLS)"
+  type: "Conference"
+  org: "Neural Information Processing Systems Foundation"
   date: "2026"
 
 - venue: "IEEE RA-L"
