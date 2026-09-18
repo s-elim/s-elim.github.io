@@ -61,15 +61,17 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
 // Floating Back to Top Button
 .back-to-top {
   position: fixed;
-  bottom: 2.2rem;
-  right: 2.2rem;
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  bottom: 1.55rem;
+  right: 1.55rem;
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  backdrop-filter: saturate(160%) blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,15 +84,22 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
   transition: all 0.25s var(--ease);
 
   &:hover {
-    background: var(--accent-hover);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+    color: var(--accent-hover);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
   }
 
   &.is-visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+  }
+}
+@media (max-width: $bp-sm) {
+  .back-to-top {
+    bottom: 1rem;
+    right: 1rem;
   }
 }
 

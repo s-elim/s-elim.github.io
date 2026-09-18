@@ -1131,8 +1131,34 @@
       }
     });
     btn.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
     });
+  }
+
+  /* ---- Reading progress ---------------------------------------------- */
+  function initScrollProgress() {
+    var bar = document.getElementById("scroll-progress");
+    if (!bar) return;
+    var ticking = false;
+
+    function sync() {
+      ticking = false;
+      var doc = document.documentElement;
+      var max = Math.max(1, doc.scrollHeight - window.innerHeight);
+      var progress = Math.max(0, Math.min(1, window.scrollY / max));
+      root.style.setProperty("--scroll-progress", progress.toFixed(4));
+    }
+
+    function requestSync() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(sync);
+    }
+
+    window.addEventListener("scroll", requestSync, { passive: true });
+    window.addEventListener("resize", requestSync);
+    window.addEventListener("load", requestSync);
+    sync();
   }
 
   /* ---- Interactive Skill Search -------------------------------------- */
@@ -1749,6 +1775,7 @@
     safe(initJournalExplorer);
     safe(initRankings);
     safe(initPalette);
+    safe(initScrollProgress);
     safe(initBackToTop);
     safe(initSkillSearch);
     safe(initCarousels);
