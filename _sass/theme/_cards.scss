@@ -11,14 +11,14 @@
 }
 .card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 46%, var(--border)) !important;
-  background: var(--card-bg) !important;
-  box-shadow: var(--shadow-md), 0 12px 30px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #e8f2fe 65%, #cbe3fe 100%) !important;
+  box-shadow: 0 8px 26px rgba(59, 130, 246, 0.22) !important;
 }
 :root[data-theme="dark"] .card:hover {
-  border-color: color-mix(in srgb, var(--accent) 54%, var(--border)) !important;
-  background: var(--card-bg) !important;
-  box-shadow: var(--shadow-md), 0 12px 30px color-mix(in srgb, var(--accent) 14%, transparent) !important;
+  border-color: #60a5fa !important;
+  background: linear-gradient(135deg, #1b2942 15%, #1e3a8a 65%, #2563eb 100%) !important;
+  box-shadow: 0 8px 26px rgba(37, 99, 235, 0.35) !important;
 }
 
 // ---- Research highlight grid ----
@@ -56,6 +56,7 @@
   background: var(--chip-bg) !important;
   border-radius: 6px;
   cursor: default;
+  animation: var(--chip-glow) 2.2s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .tag:hover {
@@ -88,14 +89,14 @@
 }
 .pub-card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 46%, var(--border)) !important;
-  background: var(--card-bg) !important;
-  box-shadow: var(--shadow-md), 0 12px 30px color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #ffffff 15%, #e8f2fe 65%, #cbe3fe 100%) !important;
+  box-shadow: 0 8px 26px rgba(59, 130, 246, 0.22) !important;
 }
 :root[data-theme="dark"] .pub-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 54%, var(--border)) !important;
-  background: var(--card-bg) !important;
-  box-shadow: var(--shadow-md), 0 12px 30px color-mix(in srgb, var(--accent) 14%, transparent) !important;
+  border-color: #60a5fa !important;
+  background: linear-gradient(135deg, #1b2942 15%, #1e3a8a 65%, #2563eb 100%) !important;
+  box-shadow: 0 8px 26px rgba(37, 99, 235, 0.35) !important;
 }
 // Tags sit on their own row so the title below can use the card's full width
 // (the header spans both grid columns, figure column included).
@@ -254,6 +255,7 @@ button.pub-card__media:hover {
   border-color: var(--tag-bd) !important;
   background: var(--tag-bg) !important;
   cursor: default;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .pub-tag--conference:hover,
@@ -364,6 +366,7 @@ button.pub-card__media:hover {
   border-color: var(--tag-bd);
   background: var(--tag-bg) !important;
   cursor: default;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .flagship-box.robotics:hover,
@@ -396,6 +399,7 @@ button.pub-card__media:hover {
   color: var(--tag-fg) !important;
   background: var(--tag-bg) !important;
   cursor: default;
+  animation: tag-glow 2.4s ease-in-out infinite;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
 .rank-box:hover {
@@ -502,8 +506,12 @@ button.pub-card__media:hover {
 }
 .project-cat-card:hover {
   transform: translateY(-3px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md), 0 0 14px color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 26px rgba(59, 130, 246, 0.22) !important;
+}
+:root[data-theme="dark"] .project-cat-card:hover {
+  border-color: #60a5fa !important;
+  box-shadow: 0 8px 26px rgba(37, 99, 235, 0.35) !important;
 }
 .project-cat-card__header {
   display: flex;
@@ -558,8 +566,12 @@ button.pub-card__media:hover {
 }
 .accordion__item:hover {
   transform: translateY(-2px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow-sm), 0 0 10px color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: #3b82f6;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.18);
+}
+:root[data-theme="dark"] .accordion__item:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28);
 }
 .accordion__item.is-open { border-color: var(--accent); box-shadow: var(--shadow-sm); }
 .accordion__header {
@@ -600,8 +612,12 @@ button.pub-card__media:hover {
 }
 .skill-group:hover {
   transform: translateY(-2px);
-  border-color: var(--cat, var(--accent));
-  box-shadow: var(--shadow-sm), 0 0 10px color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: #3b82f6;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.18);
+}
+:root[data-theme="dark"] .skill-group:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28);
 }
 .skill-group__title { font-family: var(--font-head); font-size: var(--fs-sm); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
 .skill-group__title > i { color: var(--cat, var(--accent)); margin-right: .35rem; }

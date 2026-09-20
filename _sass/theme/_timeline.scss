@@ -381,8 +381,15 @@
   transition: border-color .2s var(--ease), background .2s var(--ease);
 }
 .reviewing-chip:hover {
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  transform: translateY(-2px);
+  border-color: #3b82f6 !important;
+  background: var(--chip-bg-hover) !important;
+  color: var(--chip-fg-hover) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.30) !important;
+}
+:root[data-theme="dark"] .reviewing-chip:hover {
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 14px rgba(86, 182, 242, 0.35) !important;
 }
 .reviewing-chip__venue {
   font-family: var(--font-head);
@@ -416,6 +423,13 @@
 }
 .reviewing-chip--stacked:hover {
   transform: translateX(4px);
+  border-color: #3b82f6 !important;
+  background: var(--chip-bg-hover) !important;
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.28) !important;
+}
+:root[data-theme="dark"] .reviewing-chip--stacked:hover {
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 18px rgba(86, 182, 242, 0.35) !important;
 }
 .reviewing-chip--stacked .reviewing-chip__venue {
   line-height: 1.35;
