@@ -1932,6 +1932,407 @@
     }
   }
 
+  /* ---- Research Highlights: 3D orbit map ------------------------------ */
+  // Builds a rotating 3D scene on the home page from the three highlight cards
+  // already in the DOM: a root, one node per topic carrying its figure, and a
+  // satellite per tag. No WebGL and no library: points are rotated and
+  // projected here, and the nodes stay real focusable DOM elements so the text
+  // is selectable, translatable and reachable by keyboard. With JavaScript off
+  // the stage never appears and the cards render as they always did.
+  var RM_FOCAL = 760;        // perspective distance in scene units
+  var RM_R_TOPIC = 185;      // radius of the topic shell
+  var RM_R_TAG = 96;         // radius of a tag shell around its topic
+  var RM_SPIN = 0.0032;      // radians per frame while idle
+  var RM_COLORS = ["#ea7317", "#0891b2", "#8b5cf6"];
+
+  // Fibonacci sphere: n points spread evenly over a unit sphere, deterministic
+  // so the scene looks the same on every load.
+  function rmSphere(n) {
+    var pts = [];
+    var golden = Math.PI * (3 - Math.sqrt(5));
+    for (var i = 0; i < n; i++) {
+      var y = n === 1 ? 0 : 1 - (2 * i + 1) / n;
+      var r = Math.sqrt(Math.max(0, 1 - y * y));
+      var a = golden * i;
+      pts.push({ x: Math.cos(a) * r, y: y, z: Math.sin(a) * r });
+    }
+    return pts;
+  }
+
+  function rmRotate(p, yaw, pitch) {
+    var cy = Math.cos(yaw), sy = Math.sin(yaw);
+    var x1 = p.x * cy + p.z * sy;
+    var z1 = p.z * cy - p.x * sy;
+    var cp = Math.cos(pitch), sp = Math.sin(pitch);
+    return { x: x1, y: p.y * cp - z1 * sp, z: p.y * sp + z1 * cp };
+  }
+
+  function initResearchMap() {
+    var root = document.getElementById("rmap");
+    var stage = document.getElementById("rmap-stage");
+    var bar = document.getElementById("rmap-bar");
+    var nodeLayer = document.getElementById("rmap-nodes");
+    var edgeLayer = document.getElementById("rmap-edges");
+    var cards = document.getElementById("rmap-cards");
+    var panel = document.getElementById("rmap-panel");
+    if (!root || !stage || !nodeLayer || !edgeLayer || !cards || !panel) return;
+
+    var panelBody = panel.querySelector(".rmap__panel-body");
+    var articles = Array.prototype.slice.call(cards.querySelectorAll(".highlight-card"));
+    if (!articles.length) return;
+
+    /* -- scene built from the cards -- */
+    var nodes = [];   // {el, pos, kind, topic, color, tag}
+    var edges = [];   // {from, to, line, color}
+
+    function addNode(el, pos, kind, topic, color) {
+      var node = { el: el, pos: pos, kind: kind, topic: topic, color: color };
+      nodes.push(node);
+      return node;
+    }
+
+    var rootEl = document.createElement("button");
+    rootEl.type = "button";
+    rootEl.className = "rm-node rm-node--root";
+    rootEl.setAttribute("data-rnode", "root");
+    rootEl.innerHTML = '<span class="rm-node__root-label">Physical<br>AI</span>';
+    rootEl.setAttribute("aria-label", "Physical AI, the centre of the map. Activate to clear the selection.");
+    nodeLayer.appendChild(rootEl);
+    var rootNode = addNode(rootEl, { x: 0, y: 0, z: 0 }, "root", -1, null);
+
+    var topicDirs = rmSphere(articles.length);
+    articles.forEach(function (card, i) {
+      var color = RM_COLORS[i % RM_COLORS.length];
+      var title = (card.querySelector(".highlight-card__title") || {}).textContent || "Topic";
+      var dir = topicDirs[i];
+      var pos = { x: dir.x * RM_R_TOPIC, y: dir.y * RM_R_TOPIC, z: dir.z * RM_R_TOPIC };
+
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "rm-node rm-node--topic";
+      el.style.setProperty("--rm-color", color);
+      el.setAttribute("data-rnode", "topic-" + i);
+      el.setAttribute("aria-label", title + ". Activate to read this highlight.");
+
+      var thumb = card.querySelector(".highlight-card__media img");
+      if (thumb) {
+        var copy = thumb.cloneNode(true);
+        copy.removeAttribute("loading");
+        copy.className = "rm-node__thumb";
+        copy.setAttribute("alt", "");
+        el.appendChild(copy);
+      }
+      var label = document.createElement("span");
+      label.className = "rm-node__label";
+      label.textContent = title.trim();
+      el.appendChild(label);
+      nodeLayer.appendChild(el);
+
+      var topicNode = addNode(el, pos, "topic", i, color);
+      edges.push({ from: rootNode, to: topicNode, color: color, weight: 2 });
+
+      var tags = Array.prototype.slice.call(card.querySelectorAll(".tag-list .tag"));
+      var dirs = rmSphere(Math.max(tags.length, 1));
+      tags.forEach(function (tag, j) {
+        var d = dirs[j];
+        // Push the satellites outward from the centre so they orbit their topic
+        // on the far side rather than falling back through the middle.
+        var tpos = {
+          x: pos.x + (d.x * 0.9 + dir.x * 0.5) * RM_R_TAG,
+          y: pos.y + (d.y * 0.9 + dir.y * 0.5) * RM_R_TAG,
+          z: pos.z + (d.z * 0.9 + dir.z * 0.5) * RM_R_TAG
+        };
+        var tEl = document.createElement("button");
+        tEl.type = "button";
+        tEl.className = "rm-node rm-node--tag";
+        tEl.style.setProperty("--rm-color", color);
+        tEl.setAttribute("data-rnode", "tag-" + i + "-" + j);
+        tEl.textContent = tag.textContent.trim();
+        tEl.setAttribute("aria-label", tag.textContent.trim() + ", part of " + title.trim());
+        nodeLayer.appendChild(tEl);
+        var tagNode = addNode(tEl, tpos, "tag", i, color);
+        tagNode.tag = tag.textContent.trim().toLowerCase();
+        edges.push({ from: topicNode, to: tagNode, color: color, weight: 1 });
+      });
+    });
+
+    edges.forEach(function (e) {
+      var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("class", "rm-edge");
+      line.setAttribute("stroke-width", e.weight);
+      line.style.stroke = e.color;
+      edgeLayer.appendChild(line);
+      e.line = line;
+    });
+
+    // Worst-case projected radius: the scene's outermost point, magnified by
+    // perspective when it swings to the near side. Every fit below is measured
+    // against it so a node cannot leave the stage at the default zoom.
+    var sceneR = nodes.reduce(function (m, n) {
+      return Math.max(m, Math.sqrt(n.pos.x * n.pos.x + n.pos.y * n.pos.y + n.pos.z * n.pos.z));
+    }, 1);
+    var reach = sceneR * (RM_FOCAL / Math.max(120, RM_FOCAL - sceneR));
+
+    /* -- view state -- */
+    var view = { yaw: 0.6, pitch: -0.18, zoom: 1 };
+    var spinning = !prefersReduced;
+    var dragging = false;
+    var onScreen = true;
+    var selected = null;
+    var frame = null;
+    var size = { w: 0, h: 0 };
+
+    function measure() {
+      var rect = stage.getBoundingClientRect();
+      size.w = rect.width || stage.offsetWidth || 640;
+      size.h = rect.height || stage.offsetHeight || 460;
+      edgeLayer.setAttribute("viewBox", "0 0 " + size.w + " " + size.h);
+      // Positions shrink to fit the stage; the nodes themselves shrink only
+      // part of the way, so the labels stay readable on a phone.
+      size.posFit = Math.max(0.3, Math.min(1, (0.46 * Math.min(size.w, size.h)) / reach));
+      size.nodeFit = Math.min(1, 0.6 + 0.4 * size.posFit);
+    }
+
+    function render() {
+      var cx = size.w / 2;
+      var cy = size.h / 2;
+      // The panel covers the right of the stage, so slide the scene left when
+      // it is open instead of drawing behind it.
+      if (!panel.hidden && size.w > 720) cx = size.w * 0.34;
+      var fit = size.posFit || 1;
+
+      nodes.forEach(function (n) {
+        var r = rmRotate(n.pos, view.yaw, view.pitch);
+        var depth = RM_FOCAL + r.z * fit;
+        var persp = RM_FOCAL / Math.max(120, depth);
+        var scale = persp * view.zoom * fit;
+        n.sx = cx + r.x * scale;
+        n.sy = cy + r.y * scale;
+        // Perspective drives the position; the drawn size is clamped so the
+        // near node does not balloon over the rest of the scene.
+        n.scale = Math.max(0.55, Math.min(1.2, persp * view.zoom)) * (size.nodeFit || 1);
+        n.z = r.z * fit;
+      });
+
+      nodes.forEach(function (n) {
+        var fade = Math.max(0.22, Math.min(1, 1.18 - (n.z + sceneR) / (3.1 * sceneR)));
+        if (n.kind !== "tag") fade = Math.max(0.55, fade);
+        if (n.dim) fade *= 0.2;
+        n.el.style.transform = "translate3d(" + (n.sx).toFixed(1) + "px," + (n.sy).toFixed(1) +
+                               "px,0) translate(-50%,-50%) scale(" + n.scale.toFixed(3) + ")";
+        n.el.style.zIndex = String(600 - Math.round(n.z));
+        n.el.style.opacity = fade.toFixed(2);
+      });
+
+      edges.forEach(function (e) {
+        e.line.setAttribute("x1", e.from.sx.toFixed(1));
+        e.line.setAttribute("y1", e.from.sy.toFixed(1));
+        e.line.setAttribute("x2", e.to.sx.toFixed(1));
+        e.line.setAttribute("y2", e.to.sy.toFixed(1));
+        var far = (e.from.z + e.to.z) / 2;
+        e.line.setAttribute("stroke-opacity",
+          Math.max(0.08, Math.min(0.55, 0.5 - far / (5 * RM_R_TOPIC))).toFixed(2));
+      });
+    }
+
+    function tick() {
+      if (spinning && !dragging && onScreen && panel.hidden) view.yaw += RM_SPIN;
+      render();
+      frame = window.requestAnimationFrame(tick);
+    }
+
+    function start() {
+      if (frame === null) frame = window.requestAnimationFrame(tick);
+    }
+    function stop() {
+      if (frame !== null) { window.cancelAnimationFrame(frame); frame = null; }
+    }
+
+    /* -- selection and panel -- */
+    function clearLit() {
+      nodes.forEach(function (n) {
+        n.dim = false;
+        n.el.classList.remove("is-lit");
+      });
+      edges.forEach(function (e) { e.line.classList.remove("is-lit"); });
+    }
+
+    function litTopic(index) {
+      clearLit();
+      nodes.forEach(function (n) {
+        var mine = n.topic === index || n.kind === "root";
+        n.dim = !mine;
+        n.el.classList.toggle("is-lit", mine && n.kind !== "root");
+      });
+      edges.forEach(function (e) {
+        e.line.classList.toggle("is-lit", e.to.topic === index || e.from.topic === index);
+      });
+    }
+
+    function closePanel() {
+      panel.hidden = true;
+      panelBody.innerHTML = "";
+      selected = null;
+      clearLit();
+      render();
+    }
+
+    function openTopic(index) {
+      var card = articles[index];
+      if (!card) return;
+      panelBody.innerHTML = "";
+
+      var trigger = card.querySelector(".js-lightbox");
+      var img = card.querySelector(".highlight-card__media img");
+      if (img && trigger) {
+        var shot = document.createElement("button");
+        shot.type = "button";
+        shot.className = "rmap__shot";
+        shot.setAttribute("aria-label", "Open the figure full size");
+        var copy = img.cloneNode(true);
+        copy.removeAttribute("loading");
+        shot.appendChild(copy);
+        // Reuse the card's own lightbox trigger rather than binding a second one.
+        shot.addEventListener("click", function () { trigger.click(); });
+        panelBody.appendChild(shot);
+      }
+
+      var body = card.querySelector(".highlight-card__body");
+      if (body) {
+        var clone = body.cloneNode(true);
+        clone.classList.add("rmap__panel-text");
+        panelBody.appendChild(clone);
+      }
+
+      panel.style.setProperty("--rm-color", RM_COLORS[index % RM_COLORS.length]);
+      panel.hidden = false;
+      panel.scrollTop = 0;
+      selected = index;
+      litTopic(index);
+      render();
+    }
+
+    /* -- input -- */
+    nodeLayer.addEventListener("click", function (e) {
+      var btn = e.target.closest(".rm-node");
+      if (!btn) return;
+      var id = btn.getAttribute("data-rnode") || "";
+      if (id === "root") { closePanel(); return; }
+      if (id.indexOf("topic-") === 0) {
+        var index = parseInt(id.slice(6), 10);
+        if (selected === index) closePanel(); else openTopic(index);
+        return;
+      }
+      if (id.indexOf("tag-") === 0) openTopic(parseInt(id.split("-")[1], 10));
+    });
+
+    nodeLayer.addEventListener("mouseover", function (e) {
+      var btn = e.target.closest(".rm-node");
+      if (!btn || selected !== null) return;
+      var id = btn.getAttribute("data-rnode") || "";
+      if (id === "root") return;
+      var parts = id.split("-");
+      litTopic(parseInt(parts[1], 10));
+      render();
+    });
+    nodeLayer.addEventListener("mouseleave", function () {
+      if (selected !== null) return;
+      clearLit();
+      render();
+    });
+
+    var drag = null;
+    stage.addEventListener("pointerdown", function (e) {
+      if (e.target.closest(".rmap__panel")) return;
+      drag = { x: e.clientX, y: e.clientY, yaw: view.yaw, pitch: view.pitch, moved: false };
+      dragging = true;
+      stage.classList.add("is-dragging");
+      stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      var dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+      view.yaw = drag.yaw + dx * 0.006;
+      view.pitch = Math.max(-1.1, Math.min(1.1, drag.pitch + dy * 0.005));
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (evt) {
+      stage.addEventListener(evt, function () {
+        drag = null;
+        dragging = false;
+        stage.classList.remove("is-dragging");
+      });
+    });
+
+    stage.addEventListener("wheel", function (e) {
+      if (e.target.closest(".rmap__panel")) return;
+      e.preventDefault();
+      view.zoom = Math.max(0.6, Math.min(2.2, view.zoom * (e.deltaY > 0 ? 0.92 : 1.08)));
+    }, { passive: false });
+
+    var spinBtn = root.querySelector('[data-rmap="spin"]');
+    if (spinBtn) {
+      spinBtn.addEventListener("click", function () {
+        spinning = !spinning;
+        spinBtn.setAttribute("aria-pressed", String(spinning));
+        spinBtn.setAttribute("aria-label", spinning ? "Pause the rotation" : "Resume the rotation");
+        spinBtn.innerHTML = spinning
+          ? '<i class="fas fa-pause" aria-hidden="true"></i>'
+          : '<i class="fas fa-play" aria-hidden="true"></i>';
+      });
+      if (prefersReduced) {
+        spinBtn.setAttribute("aria-pressed", "false");
+        spinBtn.innerHTML = '<i class="fas fa-play" aria-hidden="true"></i>';
+      }
+    }
+    var resetBtn = root.querySelector('[data-rmap="reset"]');
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        view.yaw = 0.6; view.pitch = -0.18; view.zoom = 1;
+        render();
+      });
+    }
+    var closeBtn = panel.querySelector(".rmap__close");
+    if (closeBtn) closeBtn.addEventListener("click", closePanel);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panel.hidden) closePanel();
+    });
+
+    document.querySelectorAll(".dl-seg[data-rview]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-rview]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        var mode = btn.getAttribute("data-rview");
+        stage.hidden = mode !== "map";
+        cards.hidden = mode === "map";
+        if (mode === "map") { measure(); render(); start(); } else { stop(); }
+      });
+    });
+
+    /* -- go live -- */
+    bar.hidden = false;
+    stage.hidden = false;
+    cards.hidden = true;
+    measure();
+    render();
+
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(function () { measure(); render(); }).observe(stage);
+    } else {
+      window.addEventListener("resize", function () { measure(); render(); });
+    }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+        if (onScreen && !stage.hidden) start(); else stop();
+      }, { threshold: 0.05 }).observe(stage);
+    } else {
+      start();
+    }
+  }
+
   /* ---- Floating Back to Top Button ----------------------------------- */
   function initBackToTop() {
     var btn = document.getElementById("back-to-top");
@@ -2588,6 +2989,7 @@
     safe(initJournalExplorer);
     safe(initResearchIdeas);
     safe(initLinkLibrary);
+    safe(initResearchMap);
     safe(initRankings);
     safe(initPalette);
     safe(initScrollProgress);

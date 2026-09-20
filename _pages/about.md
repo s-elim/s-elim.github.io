@@ -214,7 +214,37 @@ redirect_from:
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
-<div class="highlight-grid">
+
+{%- comment -%}
+  The three cards below are the content. initResearchMap() in assets/js/main.js
+  reads them and builds the 3D orbit map from what is already in the DOM, then
+  reveals the stage and hides the grid. With JavaScript off the stage and its
+  toolbar stay hidden and the cards render as they always did, so nothing here
+  depends on the map running.
+{%- endcomment -%}
+<div class="rmap reveal" id="rmap">
+  <div class="rmap__bar" id="rmap-bar" hidden>
+    <p class="rmap__hint"><i class="fas fa-hand-pointer" aria-hidden="true"></i> Drag to orbit, scroll to zoom, pick a node to read it.</p>
+    <div class="rmap__tools">
+      <div class="dl-segment" role="group" aria-label="Change how the highlights are shown">
+        <button type="button" class="dl-seg is-active" data-rview="map"><i class="fas fa-cube" aria-hidden="true"></i> 3D map</button>
+        <button type="button" class="dl-seg" data-rview="cards"><i class="fas fa-th-large" aria-hidden="true"></i> Cards</button>
+      </div>
+      <button type="button" class="im-btn" data-rmap="spin" aria-pressed="true" aria-label="Pause the rotation"><i class="fas fa-pause" aria-hidden="true"></i></button>
+      <button type="button" class="im-btn" data-rmap="reset" aria-label="Reset the view"><i class="fas fa-compress" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div class="rmap__stage" id="rmap-stage" hidden>
+    <svg class="rmap__edges" id="rmap-edges" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="rmap__nodes" id="rmap-nodes"></div>
+    <aside class="rmap__panel" id="rmap-panel" hidden aria-live="polite">
+      <button type="button" class="rmap__close" aria-label="Close the highlight panel"><i class="fas fa-times" aria-hidden="true"></i></button>
+      <div class="rmap__panel-body"></div>
+    </aside>
+  </div>
+
+<div class="highlight-grid" id="rmap-cards">
   <article class="highlight-card card reveal" data-delay="1">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI." aria-label="Zoom figure">
       {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
@@ -245,6 +275,7 @@ redirect_from:
       <div class="tag-list"><span class="tag">Point Clouds</span><span class="tag">Representation Learning</span><span class="tag">Denoising</span></div>
     </div>
   </article>
+</div>
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-award" aria-hidden="true"></i> Awards &amp; Honors</h2>
