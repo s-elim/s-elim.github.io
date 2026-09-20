@@ -1,0 +1,2909 @@
+# ==========================================================================
+#  Link Library - data source for the directory on /research-ideas/
+# ==========================================================================
+#
+#  Rendered by _pages/research-ideas.html below the idea board, filtered by
+#  initLinkLibrary() in assets/js/main.js.
+#
+#  Import a browser bookmarks export (File > Bookmark manager > Export):
+#      ./scripts/manage.py import-bookmarks --file bookmarks.html
+#  It merges: existing entries and any hand edits are kept, new URLs are
+#  appended, duplicates and private links are skipped. Add one by hand with:
+#      ./scripts/manage.py add-link
+#
+#  groups   Sections of the directory, in display order.
+#             id, label, icon (Font Awesome solid), color (hex), blurb
+#  links    id     stable slug, used by the anchor
+#           title  display name
+#           url    the link
+#           group  group id
+#           kind   lab | code | reading | dataset | people | course |
+#                  position | talk | tool   (drives the icon and the filter)
+#           site   host shown under the title
+#           note   one line of context, optional
+#           added  YYYY-MM-DD the link was captured
+#
+#  Folders that the importer maps: Robo Labs -> robotics,
+#  Robo Labs/Benchmark -> benchmarks, CV Labs -> vision,
+#  Scientists -> people. Everything else lands in the fallback group.
+# ==========================================================================
+
+groups:
+  - id: robotics
+    label: Robotics Labs
+    icon: fa-robot
+    color: '#ea7317'
+    blurb: Groups, institutes and people working on robot learning and control.
+  - id: vision
+    label: Computer Vision Labs
+    icon: fa-eye
+    color: '#0891b2'
+    blurb: Vision, graphics and perception groups worth watching.
+  - id: benchmarks
+    label: 'Benchmarks & Datasets'
+    icon: fa-database
+    color: '#ef4444'
+    blurb: Simulators, task suites and datasets used for evaluation.
+  - id: people
+    label: Researchers
+    icon: fa-user-graduate
+    color: '#8b5cf6'
+    blurb: Individual homepages and profiles.
+  - id: funding
+    label: 'Funding & Positions'
+    icon: fa-award
+    color: '#f59e0b'
+    blurb: Fellowships, mobility schemes and open calls.
+  - id: tools
+    label: 'Tools & Trackers'
+    icon: fa-toolbox
+    color: '#10b981'
+    blurb: Writing, figure, deadline and paper-tracking tools.
+links:
+  - id: papers
+    title: Papers
+    url: https://www.themoonlight.io/en/library
+    group: tools
+    kind: tool
+    site: themoonlight.io
+    added: '2026-01-09'
+  - id: roboarena
+    title: RoboArena
+    url: https://robo-arena.github.io/
+    group: robotics
+    kind: lab
+    site: robo-arena.github.io
+    added: '2026-01-14'
+  - id: vizuaraai-modern-robot-learning
+    title: VizuaraAI/Modern-Robot-Learning
+    url: https://github.com/VizuaraAI/Modern-Robot-Learning
+    group: robotics
+    kind: code
+    site: github.com
+    note: This repository is aimed to make Modern-Robot-Learning accessible to all.
+    added: '2026-01-21'
+  - id: reuss-vla
+    title: Reuss_VLA
+    url: https://mbreuss.github.io/
+    group: robotics
+    kind: lab
+    site: mbreuss.github.io
+    added: '2026-01-14'
+  - id: manipulationnet
+    title: ManipulationNet
+    url: https://manipulation-net.org/
+    group: robotics
+    kind: lab
+    site: manipulation-net.org
+    added: '2026-01-14'
+  - id: libero-datasets-libero
+    title: LIBERO Datasets – LIBERO
+    url: https://libero-project.github.io/datasets
+    group: robotics
+    kind: dataset
+    site: libero-project.github.io
+    added: '2026-01-22'
+  - id: huggingface-nanovlm
+    title: huggingface/nanoVLM
+    url: https://github.com/huggingface/nanoVLM
+    group: robotics
+    kind: code
+    site: github.com
+    note: The simplest, fastest repository for training/finetuning small-sized VLMs.
+    added: '2026-01-22'
+  - id: elvis-nava
+    title: Elvis Nava
+    url: https://www.elvisnava.com/
+    group: robotics
+    kind: lab
+    site: elvisnava.com
+    added: '2026-01-22'
+  - id: mimic-robotics
+    title: Mimic Robotics
+    url: https://www.mimicrobotics.com/careers
+    group: robotics
+    kind: position
+    site: mimicrobotics.com
+    added: '2026-01-22'
+  - id: michiganrobotics-rob501
+    title: michiganrobotics/rob501
+    url: https://github.com/michiganrobotics/rob501
+    group: robotics
+    kind: code
+    site: github.com
+    note: Mathematics for Robotics
+    added: '2026-01-22'
+  - id: mujoco-advanced-physics-simulation
+    title: MuJoCo — Advanced Physics Simulation
+    url: https://mujoco.org/
+    group: robotics
+    kind: lab
+    site: mujoco.org
+    added: '2026-01-22'
+  - id: google-deepmind-mujoco
+    title: google-deepmind/mujoco
+    url: https://github.com/google-deepmind/mujoco
+    group: robotics
+    kind: code
+    site: github.com
+    note: Multi-Joint dynamics with Contact. A general purpose physics simulator.
+    added: '2026-01-22'
+  - id: compact-3d-representations-with-2k-gaaussian
+    title: Compact 3D Representations with 2K Gaaussians
+    url: https://cvlab-kaist.github.io/C3G/
+    group: robotics
+    kind: lab
+    site: cvlab-kaist.github.io
+    added: '2026-01-22'
+  - id: huggingface-lerobot
+    title: huggingface/lerobot
+    url: https://github.com/huggingface/lerobot
+    group: robotics
+    kind: code
+    site: github.com
+    note: '🤗 LeRobot: Making AI for Robotics more accessible with end-to-end learning'
+    added: '2026-01-23'
+  - id: interesting-directions-in-vision-language-ac
+    title: Interesting Directions in Vision-Language-Action Model Research
+    url: https://itcanthink.substack.com/p/interesting-directions-in-vision
+    group: robotics
+    kind: reading
+    site: itcanthink.substack.com
+    added: '2026-01-24'
+  - id: 10-open-challenges-steering-the-future-of-vi
+    title: 10 Open Challenges Steering the Future of Vision-Language-Action Models
+    url: https://arxiv.org/html/2511.05936v1
+    group: robotics
+    kind: reading
+    site: arxiv.org
+    added: '2026-01-24'
+  - id: ep-39-molmoact-an-action-reasoning-model-tha
+    title: 'Ep#39: MolmoAct: An Action Reasoning Model that reasons in 3D space'
+    url: https://robopapers.substack.com/p/ep39-molmoact-an-action-reasoning
+    group: robotics
+    kind: reading
+    site: robopapers.substack.com
+    added: '2026-01-24'
+  - id: robotics-simulation-labs-robotics-simulation
+    title: Robotics Simulation Labs | Robotics-Simulation-Labs
+    url: https://felipenmartins.github.io/Robotics-Simulation-Labs/
+    group: robotics
+    kind: lab
+    site: felipenmartins.github.io
+    added: '2026-01-24'
+  - id: smolvla-efficient-vision-language-action-mod
+    title: 'SmolVLA: Efficient Vision-Language-Action Model trained on Lerobot Community Data'
+    url: https://huggingface.co/blog/smolvla
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-01-25'
+  - id: lerobot-docs-source-xvla-mdx-at-main-hugging
+    title: 'lerobot/docs/source/xvla.mdx at main · huggingface/lerobot'
+    url: https://github.com/huggingface/lerobot/blob/main/docs/source/xvla.mdx
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-01-25'
+  - id: zxy-mllab-libero-pro
+    title: Zxy-MLlab/LIBERO-PRO
+    url: https://github.com/Zxy-MLlab/LIBERO-PRO
+    group: robotics
+    kind: code
+    site: github.com
+    note: LIBERO-PRO is the official repository of the LIBERO-PRO — an evaluation extension of
+      the original LIBERO benchmark
+    added: '2026-01-25'
+  - id: ros-2-tutorials-husarion
+    title: ROS 2 Tutorials | Husarion
+    url: https://husarion.com/tutorials/ros2-tutorials/ros2/
+    group: robotics
+    kind: course
+    site: husarion.com
+    added: '2026-01-27'
+  - id: home-2025-ieee-robotics-and-automation-socie
+    title: Home 2025 - IEEE Robotics and Automation Society Website
+    url: https://www.ieee-ras.org/
+    group: robotics
+    kind: lab
+    site: ieee-ras.org
+    added: '2026-01-28'
+  - id: clare-continual-learning-for-vision-language
+    title: 'CLARE: Continual Learning for Vision-Language-Action Models via Autonomous Adapter
+      Routing and…'
+    url: https://tum-lsy.github.io/clare/
+    group: robotics
+    kind: lab
+    site: tum-lsy.github.io
+    added: '2026-01-29'
+  - id: dusty-nv-jetson-containers
+    title: dusty-nv/jetson-containers
+    url: https://github.com/dusty-nv/jetson-containers
+    group: robotics
+    kind: code
+    site: github.com
+    note: Machine Learning Containers for NVIDIA Jetson and JetPack-L4T
+    added: '2026-01-29'
+  - id: to-view-this-page-correctly-you-need-a-web-b
+    title: To view this page correctly, you need a Web browser that supports frames.
+    url: http://www.eng.usf.edu/~chang5/
+    group: robotics
+    kind: lab
+    site: eng.usf.edu
+    added: '2026-01-30'
+  - id: robot-vision-learning
+    title: 'Robot Vision & Learning'
+    url: https://rvl.cs.toronto.edu/
+    group: robotics
+    kind: lab
+    site: rvl.cs.toronto.edu
+    added: '2026-02-03'
+  - id: 10-post-linkedin
+    title: (10) Post | LinkedIn
+    url: https://www.linkedin.com/posts/marija-popovi%C4%87-31237260_icra2026-robotics-agtech-activity-7424157160361742337-zrra/
+    group: robotics
+    kind: lab
+    site: linkedin.com
+    added: '2026-02-04'
+  - id: google-ai-studio
+    title: Google AI Studio
+    url: 'https://aistudio.google.com/apps/bundled/robotics_franka_pick_and_place?showPreview=true&showAssistant=true'
+    group: robotics
+    kind: lab
+    site: aistudio.google.com
+    added: '2026-02-05'
+  - id: dreamzero0-dreamzero
+    title: dreamzero0/dreamzero
+    url: https://github.com/dreamzero0/dreamzero
+    group: robotics
+    kind: code
+    site: github.com
+    note: Code to load DreamZero model checkpoints and run evaluation on DROID-sim and Genie Sim
+      3.0
+    added: '2026-02-06'
+  - id: priyabrata004-smolvla-mycobot
+    title: Priyabrata004/smolvla_mycobot
+    url: https://github.com/Priyabrata004/smolvla_mycobot
+    group: robotics
+    kind: code
+    site: github.com
+    note: SmolVLA Projects
+    added: '2026-02-07'
+  - id: sa74ll-smolvla-so100-finetune
+    title: Sa74ll/smolvla-so100-finetune
+    url: https://github.com/Sa74ll/smolvla-so100-finetune/blob/main/01_train_smolvla.ipynb
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-02-07'
+  - id: huggingfacetb-smolvlm2-500m-video-instruct-h
+    title: 'HuggingFaceTB/SmolVLM2-500M-Video-Instruct · Hugging Face'
+    url: https://huggingface.co/HuggingFaceTB/SmolVLM2-500M-Video-Instruct
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-02-07'
+  - id: robotx-ethz-ch-education-summer-school-html
+    title: robotx.ethz.ch/education/summer-school.html
+    url: https://robotx.ethz.ch/education/summer-school.html
+    group: robotics
+    kind: lab
+    site: robotx.ethz.ch
+    added: '2026-02-10'
+  - id: rd-vla
+    title: RD-VLA
+    url: https://rd-vla.github.io/
+    group: robotics
+    kind: lab
+    site: rd-vla.github.io
+    added: '2026-02-11'
+  - id: mit-princeton-at-the-amazon-robotics-challen
+    title: MIT-Princeton at the Amazon Robotics Challenge
+    url: https://arc.cs.princeton.edu/
+    group: robotics
+    kind: dataset
+    site: arc.cs.princeton.edu
+    added: '2026-02-12'
+  - id: csrankings
+    title: CSRankings
+    url: 'https://csrankings.org/#/index?all&asia'
+    group: robotics
+    kind: lab
+    site: csrankings.org
+    added: '2026-01-20'
+  - id: introducing-v-jepa-2
+    title: Introducing V-JEPA 2
+    url: https://ai.meta.com/research/vjepa/
+    group: robotics
+    kind: lab
+    site: ai.meta.com
+    added: '2026-02-04'
+  - id: tiktokenizer
+    title: Tiktokenizer
+    url: https://tiktokenizer.vercel.app/?model=gpt-4-1106-preview
+    group: robotics
+    kind: lab
+    site: tiktokenizer.vercel.app
+    added: '2026-02-12'
+  - id: robot-ai-project
+    title: Robot AI Project
+    url: https://github.com/nv-nguyen/gigapose?tab=readme-ov-file
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-02-12'
+  - id: gigapose-fast-and-robust-novel-object-pose-e
+    title: 'GigaPose: Fast and Robust Novel Object Pose Estimation via One Correspondence'
+    url: https://nv-nguyen.github.io/gigapose/
+    group: robotics
+    kind: lab
+    site: nv-nguyen.github.io
+    added: '2026-02-12'
+  - id: andyzeng-arc-robot-vision
+    title: andyzeng/arc-robot-vision
+    url: https://github.com/andyzeng/arc-robot-vision
+    group: robotics
+    kind: code
+    site: github.com
+    note: >-
+      MIT-Princeton Vision Toolbox for Robotic Pick-and-Place at the Amazon Robotics Challenge
+      2017 - Robotic Grasping and One-shot Recognition of Novel Objects with…
+    added: '2026-02-12'
+  - id: awesome-mlss-awesome-mlss
+    title: awesome-mlss/awesome-mlss
+    url: https://github.com/awesome-mlss/awesome-mlss
+    group: robotics
+    kind: code
+    site: github.com
+    note: 🤖 Machine Learning Summer School Guide
+    added: '2026-02-12'
+  - id: gojs-interactive-diagrams-for-the-web-in-jav
+    title: GoJS - Interactive Diagrams for the Web in JavaScript and TypeScript
+    url: 'https://gojs.net/latest/?a=s1&gad_source=1&gad_campaignid=1715038279&gbraid=0AAAAAD_g3VPVDu4nTdbo0JQGszKz6gSsc'
+    group: robotics
+    kind: lab
+    site: gojs.net
+    added: '2026-02-12'
+  - id: portal-core-edu-au-conf-ranks
+    title: portal.core.edu.au/conf-ranks/
+    url: https://portal.core.edu.au/conf-ranks/
+    group: robotics
+    kind: lab
+    site: portal.core.edu.au
+    added: '2026-02-04'
+  - id: umass-embodied-agi-3d-vla
+    title: UMass-Embodied-AGI/3D-VLA
+    url: https://github.com/UMass-Embodied-AGI/3D-VLA
+    group: robotics
+    kind: code
+    site: github.com
+    note: '[ICML 2024] 3D-VLA: A 3D Vision-Language-Action Generative World Model'
+    added: '2026-02-12'
+  - id: number-tokenization-blog-a-hugging-face-spac
+    title: Number Tokenization Blog - a Hugging Face Space by huggingface
+    url: https://huggingface.co/spaces/huggingface/number-tokenization-blog
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-02-13'
+  - id: gigabrain-0-5m-a-vla-that-learns-from-world-
+    title: 'GigaBrain-0.5M*: a VLA That Learns From World Model-Based Reinforcement Learning'
+    url: https://gigabrain05m.github.io/
+    group: robotics
+    kind: lab
+    site: gigabrain05m.github.io
+    added: '2026-02-13'
+  - id: snu-robot-vision-lab
+    title: SNU Robot Vision Lab
+    url: https://rvlab.snu.ac.kr/home
+    group: robotics
+    kind: lab
+    site: rvlab.snu.ac.kr
+    added: '2026-01-20'
+  - id: robot-learning-laboratory
+    title: Robot Learning Laboratory
+    url: https://rllab.snu.ac.kr/
+    group: robotics
+    kind: lab
+    site: rllab.snu.ac.kr
+    added: '2026-01-20'
+  - id: soft-robotics-and-bionics-laboratory-서울대학교
+    title: Soft Robotics and Bionics Laboratory - 서울대학교
+    url: https://softrobotics.snu.ac.kr/
+    group: robotics
+    kind: lab
+    site: softrobotics.snu.ac.kr
+    added: '2026-01-20'
+  - id: join-healthcare-robotics-lab-snu
+    title: Join — Healthcare Robotics Lab @SNU
+    url: https://hero.snu.ac.kr/join
+    group: robotics
+    kind: lab
+    site: hero.snu.ac.kr
+    added: '2026-01-20'
+  - id: 서울대학교-동적로봇시스템-연구실
+    title: 서울대학교 동적로봇시스템 연구실
+    url: http://dyros.snu.ac.kr/
+    group: robotics
+    kind: lab
+    site: dyros.snu.ac.kr
+    added: '2026-01-20'
+  - id: lab-for-autonomous-robotics-research-aerospa
+    title: Lab for Autonomous Robotics Research – Aerospace Engineering, Seoul National University,
+      South…
+    url: https://larr.snu.ac.kr/
+    group: robotics
+    kind: lab
+    site: larr.snu.ac.kr
+    added: '2026-01-20'
+  - id: snu-wearable-robotics-laboratory
+    title: SNU | Wearable Robotics Laboratory
+    url: https://sites.google.com/snu.ac.kr/jkim/home
+    group: robotics
+    kind: lab
+    site: sites.google.com
+    added: '2026-01-20'
+  - id: research-ayoung-kim
+    title: Research | Ayoung Kim
+    url: https://ayoungk.github.io/
+    group: robotics
+    kind: lab
+    site: ayoungk.github.io
+    added: '2026-01-20'
+  - id: algorithmic-intelligence-laboratory-alin-lab
+    title: Algorithmic Intelligence Laboratory (ALIN-LAB)
+    url: https://alinlab.kaist.ac.kr/index.html
+    group: robotics
+    kind: lab
+    site: alinlab.kaist.ac.kr
+    added: '2026-01-24'
+  - id: urban-robotics-lab-kaist-ee
+    title: Urban Robotics Lab – KAIST EE
+    url: https://urobot.kaist.ac.kr/
+    group: robotics
+    kind: lab
+    site: urobot.kaist.ac.kr
+    added: '2026-01-26'
+  - id: publications-iris-lab
+    title: Publications | IRiS Lab
+    url: https://iris.kaist.ac.kr/publication/
+    group: robotics
+    kind: lab
+    site: iris.kaist.ac.kr
+    added: '2026-01-26'
+  - id: vl-kaist
+    title: VL KAIST
+    url: https://vllab.kaist.ac.kr/
+    group: robotics
+    kind: lab
+    site: vllab.kaist.ac.kr
+    added: '2026-01-26'
+  - id: cvlab
+    title: CVLAB
+    url: https://cvlab.kaist.ac.kr/home
+    group: robotics
+    kind: lab
+    site: cvlab.kaist.ac.kr
+    added: '2026-01-26'
+  - id: join-us-kaist-visual-ai-group
+    title: Join Us - KAIST Visual AI Group
+    url: https://visualai.kaist.ac.kr/join_us/
+    group: robotics
+    kind: lab
+    site: visualai.kaist.ac.kr
+    added: '2026-01-26'
+  - id: home
+    title: Home
+    url: https://sites.google.com/view/tkkim/home
+    group: robotics
+    kind: people
+    site: sites.google.com
+    added: '2026-01-28'
+  - id: nvlabs
+    title: NVLabs
+    url: https://github.com/NVlabs
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2025-09-05'
+  - id: 2nd-3d-llm-vla-workshop-cvpr-2026
+    title: 2nd 3D-LLM/VLA Workshop | CVPR 2026
+    url: https://3d-llm-vla.github.io/
+    group: robotics
+    kind: lab
+    site: 3d-llm-vla.github.io
+    added: '2026-02-16'
+  - id: untitled-diagram-draw-io
+    title: Untitled Diagram - draw.io
+    url: https://app.diagrams.net/
+    group: robotics
+    kind: lab
+    site: app.diagrams.net
+    added: '2026-02-16'
+  - id: mit-biomimetic-robotics-lab
+    title: MIT Biomimetic Robotics Lab
+    url: https://biomimetics.mit.edu/
+    group: robotics
+    kind: lab
+    site: biomimetics.mit.edu
+    added: '2026-02-18'
+  - id: apple-ml
+    title: Apple_ML
+    url: https://machinelearning.apple.com/
+    group: robotics
+    kind: lab
+    site: machinelearning.apple.com
+    added: '2026-01-14'
+  - id: brain-ai-lab
+    title: Brain AI Lab.
+    url: https://knu-brainai.github.io/
+    group: robotics
+    kind: lab
+    site: knu-brainai.github.io
+    added: '2026-02-19'
+  - id: lift3d-foundation-policy-lifting-2d-large-sc
+    title: 'Lift3D Foundation Policy: Lifting 2D Large-Scale Pretrained Models for Robust 3D Robotic
+      Manipu…'
+    url: https://lift3d-web.github.io/
+    group: robotics
+    kind: lab
+    site: lift3d-web.github.io
+    added: '2026-02-22'
+  - id: xtudbxk-gpstoken
+    title: xtudbxk/GPSToken
+    url: https://github.com/xtudbxk/GPSToken
+    group: robotics
+    kind: code
+    site: github.com
+    note: >-
+      The official code for paper "GPSToken: Gaussian Parameterized Spatially-adaptive Tokenization
+      for Image Representation and Generation"
+    added: '2026-02-22'
+  - id: chrisdong-thu-gaussiantoken
+    title: ChrisDong-THU/GaussianToken
+    url: https://github.com/ChrisDong-THU/GaussianToken
+    group: robotics
+    kind: code
+    site: github.com
+    note: 'Official PyTorch implementation of GaussianToken: An Effective Image Tokenizer with
+      2D Gaussian Splatting'
+    added: '2026-02-22'
+  - id: bridgedata-v2
+    title: BridgeData V2
+    url: https://rail-berkeley.github.io/bridgedata/
+    group: robotics
+    kind: lab
+    site: rail-berkeley.github.io
+    added: '2026-02-25'
+  - id: lerobot-lerobot
+    title: lerobot (LeRobot)
+    url: https://huggingface.co/lerobot
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-03-05'
+  - id: behavior-behavior
+    title: BEHAVIOR - BEHAVIOR
+    url: https://behavior.stanford.edu/index.html
+    group: robotics
+    kind: lab
+    site: behavior.stanford.edu
+    added: '2026-03-05'
+  - id: dreamzero-world-action-models-are-zero-shot-
+    title: 'DreamZero: World Action Models are Zero-shot Policies'
+    url: https://dreamzero0.github.io/
+    group: robotics
+    kind: lab
+    site: dreamzero0.github.io
+    added: '2026-03-10'
+  - id: agenticros-agentic-robotics
+    title: AgenticROS — Agentic Robotics
+    url: https://agenticros.com/#quick-start
+    group: robotics
+    kind: lab
+    site: agenticros.com
+    added: '2026-03-13'
+  - id: ros-2-for-beginners-ros-jazzy-2026
+    title: ROS 2 for Beginners (ROS Jazzy - 2026)
+    url: https://www.udemy.com/course/ros2-for-beginners/
+    group: robotics
+    kind: course
+    site: udemy.com
+    added: '2026-03-14'
+  - id: what-does-pi0-5-see-attention-visualized
+    title: What Does Pi0.5 See? — Attention Visualized
+    url: https://pi05-attention-visualizer.vercel.app/
+    group: robotics
+    kind: lab
+    site: pi05-attention-visualizer.vercel.app
+    added: '2026-03-14'
+  - id: research-insights-world-labs
+    title: 'Research & Insights | World Labs'
+    url: https://www.worldlabs.ai/blog
+    group: robotics
+    kind: reading
+    site: worldlabs.ai
+    added: '2026-03-14'
+  - id: ami-labs-real-world-real-intelligence
+    title: 'AMI Labs: Real World. Real Intelligence.'
+    url: https://amilabs.xyz/
+    group: robotics
+    kind: lab
+    site: amilabs.xyz
+    added: '2026-03-14'
+  - id: onkarsus13-confidenet-large-vq-32-hugging-fa
+    title: 'onkarsus13/ConFiDeNet-Large-VQ-32 · Hugging Face'
+    url: https://huggingface.co/onkarsus13/ConFiDeNet-Large-VQ-32
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-03-15'
+  - id: zhouxueyang-libero-pro-datasets-at-hugging-f
+    title: 'zhouxueyang/LIBERO-Pro · Datasets at Hugging Face'
+    url: https://huggingface.co/datasets/zhouxueyang/LIBERO-Pro
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-03-15'
+  - id: facebookresearch-flow-matching
+    title: facebookresearch/flow_matching
+    url: https://github.com/facebookresearch/flow_matching
+    group: robotics
+    kind: code
+    site: github.com
+    note: >-
+      A PyTorch library for implementing flow matching algorithms, featuring continuous and discrete
+      flow matching implementations. It includes practical examples fo…
+    added: '2026-03-16'
+  - id: robospace-robot-simulation-platform
+    title: RoboSpace - Robot Simulation Platform
+    url: https://robospace.app/dashboard
+    group: robotics
+    kind: lab
+    site: robospace.app
+    added: '2026-03-16'
+  - id: osrf-google-summer-of-code-2026-community-ne
+    title: OSRF Google Summer of Code 2026 🌞 - Community News - Open Robotics Discourse
+    url: https://discourse.openrobotics.org/t/osrf-google-summer-of-code-2026/53266
+    group: robotics
+    kind: course
+    site: discourse.openrobotics.org
+    added: '2026-03-18'
+  - id: alibaba-damo-academy-rynnvla-002
+    title: alibaba-damo-academy/RynnVLA-002
+    url: https://github.com/alibaba-damo-academy/RynnVLA-002
+    group: robotics
+    kind: code
+    site: github.com
+    note: 'RynnVLA-002: A Unified Vision-Language-Action and World Model'
+    added: '2026-03-19'
+  - id: reinforcement-learning-rlhf-book-by-nathan-l
+    title: Reinforcement Learning | RLHF Book by Nathan Lambert
+    url: https://rlhfbook.com/c/06-policy-gradients
+    group: robotics
+    kind: lab
+    site: rlhfbook.com
+    added: '2026-03-20'
+  - id: mamba-the-linear-time-alternative-to-transfo
+    title: '“Mamba: The Linear-Time Alternative to Transformers That’s Changing LLM Architecture”
+      | by Mohi…'
+    url: >-
+      https://medium.com/@wanimohit1/mamba-the-linear-time-alternative-to-transformers-thats-changing-llm-architecture-6470d0ad6ead
+    group: robotics
+    kind: reading
+    site: medium.com
+    added: '2026-03-23'
+  - id: moonshotai-attention-residuals
+    title: MoonshotAI/Attention-Residuals
+    url: https://github.com/MoonshotAI/Attention-Residuals
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-03-23'
+  - id: moonshot-ai
+    title: Moonshot AI
+    url: https://github.com/MoonshotAI
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-03-23'
+  - id: lucas-maes-le-wm
+    title: lucas-maes/le-wm
+    url: https://github.com/lucas-maes/le-wm
+    group: robotics
+    kind: code
+    site: github.com
+    note: 'Official code base for LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture
+      from Pixels'
+    added: '2026-03-24'
+  - id: robopapers-substack
+    title: RoboPapers | Substack
+    url: https://robopapers.substack.com/
+    group: robotics
+    kind: reading
+    site: robopapers.substack.com
+    added: '2026-03-25'
+  - id: the-37th-british-machine-vision-conference-2
+    title: 'The 37th British Machine Vision Conference 2026: Home'
+    url: https://bmvc2026.bmva.org/
+    group: robotics
+    kind: lab
+    site: bmvc2026.bmva.org
+    added: '2026-03-27'
+  - id: project-instinct-instinctlab
+    title: project-instinct/InstinctLab
+    url: https://github.com/project-instinct/InstinctLab
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-04-01'
+  - id: moritz-reuss-robotics-vla-research
+    title: 'Moritz Reuss — Robotics & VLA Research'
+    url: https://mbreuss.github.io/index.html
+    group: robotics
+    kind: lab
+    site: mbreuss.github.io
+    added: '2026-04-03'
+  - id: generalist
+    title: Generalist
+    url: https://generalistai.com/
+    group: robotics
+    kind: lab
+    site: generalistai.com
+    added: '2026-04-05'
+  - id: smolvla-asynchronous-inference-visualizer
+    title: SmolVLA Asynchronous Inference Visualizer
+    url: https://smolvla-async-inference-visualizer.vercel.app/
+    group: robotics
+    kind: lab
+    site: smolvla-async-inference-visualizer.vercel.app
+    added: '2026-04-05'
+  - id: rajatdandekar-rajat-abhijit-dandekar
+    title: RajatDandekar (Rajat Abhijit Dandekar)
+    url: https://huggingface.co/RajatDandekar/datasets
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-04-05'
+  - id: allenai-molmospaces
+    title: allenai/molmospaces
+    url: https://github.com/allenai/molmospaces
+    group: robotics
+    kind: code
+    site: github.com
+    note: An end-to-end open ecosystem for robot learning
+    added: '2026-04-08'
+  - id: newton-physics-newton
+    title: newton-physics/newton
+    url: https://github.com/newton-physics/newton
+    group: robotics
+    kind: code
+    site: github.com
+    note: >-
+      An open-source, GPU-accelerated physics simulation engine built upon NVIDIA Warp, specifically
+      targeting roboticists and simulation researchers.
+    added: '2026-04-09'
+  - id: nvidia-nemoclaw
+    title: NVIDIA/NemoClaw
+    url: https://github.com/NVIDIA/NemoClaw
+    group: robotics
+    kind: code
+    site: github.com
+    note: Run OpenClaw more securely inside NVIDIA OpenShell with managed inference
+    added: '2026-04-09'
+  - id: world-model-arena-leaderboard
+    title: World Model Arena — Leaderboard
+    url: https://world-model-arena.vercel.app/
+    group: robotics
+    kind: dataset
+    site: world-model-arena.vercel.app
+    added: '2026-04-12'
+  - id: rajatdandekar-world-model-arena
+    title: RajatDandekar/world-model-arena
+    url: https://github.com/RajatDandekar/world-model-arena
+    group: robotics
+    kind: code
+    site: github.com
+    note: 'Train a world model, dream a policy, race it for real. Live leaderboard for IRIS &
+      DIAMOND world models on MetaDrive.'
+    added: '2026-04-12'
+  - id: world-models
+    title: World Models
+    url: https://worldmodels.github.io/
+    group: robotics
+    kind: lab
+    site: worldmodels.github.io
+    added: '2026-04-12'
+  - id: rhoda-ai
+    title: Rhoda AI
+    url: https://www.rhoda.ai/
+    group: robotics
+    kind: lab
+    site: rhoda.ai
+    added: '2026-04-12'
+  - id: vla
+    title: VLA
+    url: https://mbreuss.github.io/blog_post_iclr_26_vla.html
+    group: robotics
+    kind: reading
+    site: mbreuss.github.io
+    added: '2026-01-14'
+  - id: try-nvidia-nim-apis
+    title: Try NVIDIA NIM APIs
+    url: https://build.nvidia.com/models
+    group: robotics
+    kind: lab
+    site: build.nvidia.com
+    added: '2026-04-24'
+  - id: marble-labs
+    title: Marble Labs
+    url: https://www.worldlabs.ai/labs
+    group: robotics
+    kind: lab
+    site: worldlabs.ai
+    added: '2026-04-03'
+  - id: so-arm-101-datasets-a-whosricky-collection
+    title: SO-ARM 101 datasets - a whosricky Collection
+    url: https://huggingface.co/collections/whosricky/so-arm-101-datasets
+    group: robotics
+    kind: code
+    site: huggingface.co
+    added: '2026-04-30'
+  - id: vizuaraailabs-modern-robot-learning
+    title: VizuaraAILabs/Modern-Robot-Learning
+    url: https://github.com/VizuaraAILabs/Modern-Robot-Learning
+    group: robotics
+    kind: code
+    site: github.com
+    note: This repository is aimed to make Modern-Robot-Learning accessible to all.
+    added: '2026-04-30'
+  - id: world-labs
+    title: World Labs
+    url: https://www.worldlabs.ai/
+    group: robotics
+    kind: lab
+    site: worldlabs.ai
+    added: '2026-04-30'
+  - id: marble
+    title: Marble
+    url: https://marble.worldlabs.ai/
+    group: robotics
+    kind: lab
+    site: marble.worldlabs.ai
+    added: '2026-04-30'
+  - id: hierarchical-planning-with-latent-world-mode
+    title: Hierarchical Planning with Latent World Models
+    url: https://kevinghst.github.io/HWM/
+    group: robotics
+    kind: lab
+    site: kevinghst.github.io
+    added: '2026-05-06'
+  - id: wancong-zhang
+    title: Wancong Zhang
+    url: https://kevinghst.github.io/
+    group: robotics
+    kind: lab
+    site: kevinghst.github.io
+    added: '2026-05-06'
+  - id: iclr-2026-workshop-world-models
+    title: ICLR 2026 Workshop World Models
+    url: https://sites.google.com/view/iclr-2026-workshop-world-model/home
+    group: robotics
+    kind: people
+    site: sites.google.com
+    added: '2026-05-06'
+  - id: iclr-2026-workshop-world-models-openreview
+    title: ICLR 2026 Workshop World Models | OpenReview
+    url: https://openreview.net/group?id=ICLR.cc%2F2026%2FWorkshop%2FWorld_Models#tab-accept
+    group: robotics
+    kind: reading
+    site: openreview.net
+    added: '2026-05-06'
+  - id: awesome-ai-review-paper-reading-world-models
+    title: 'Awesome-AI-Review/Paper Reading/World Models.md at main · junfanz1/Awesome-AI-Review'
+    url: https://github.com/junfanz1/Awesome-AI-Review/blob/main/Paper%20Reading/World%20Models.md
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-05-07'
+  - id: junfanz1-awesome-ai-review
+    title: junfanz1/Awesome-AI-Review
+    url: https://github.com/junfanz1/Awesome-AI-Review
+    group: robotics
+    kind: code
+    site: github.com
+    note: 'Awesome AI industry & research review'
+    added: '2026-05-07'
+  - id: world-model-for-robot-learning-a-comprehensi
+    title: 'World Model for Robot Learning: A Comprehensive Survey'
+    url: https://ntumars.github.io/wm-robot-survey/
+    group: robotics
+    kind: lab
+    site: ntumars.github.io
+    added: '2026-05-08'
+  - id: ntumars-awesome-world-model-for-robotics-pol
+    title: NTUMARS/Awesome-World-Model-for-Robotics-Policy
+    url: https://github.com/NTUMARS/Awesome-World-Model-for-Robotics-Policy
+    group: robotics
+    kind: code
+    site: github.com
+    added: '2026-05-08'
+  - id: icra-iros-acceptance-rate-history
+    title: ICRA/IROS Acceptance Rate History
+    url: https://staff.aist.go.jp/k.koide/acceptance-rate.html
+    group: robotics
+    kind: lab
+    site: staff.aist.go.jp
+    added: '2026-05-13'
+  - id: lecture-notes-modern-robot-learning-v2-bootc
+    title: Lecture Notes — Modern Robot Learning V2 Bootcamp
+    url: https://modern-robot-learning-v2-notes.vizuara.ai/
+    group: robotics
+    kind: course
+    site: modern-robot-learning-v2-notes.vizuara.ai
+    added: '2026-05-18'
+  - id: mac-vo-metric-aware-covariance-for-learning-
+    title: 'MAC-VO: Metric-Aware Covariance for Learning-based Stereo Visual Odometry'
+    url: https://mac-vo.github.io/
+    group: robotics
+    kind: lab
+    site: mac-vo.github.io
+    added: '2026-05-23'
+  - id: cap-x-benchmarking-coding-agents-for-robot-m
+    title: 'CaP-X: Benchmarking Coding Agents for Robot Manipulation'
+    url: https://capgym.github.io/
+    group: robotics
+    kind: dataset
+    site: capgym.github.io
+    added: '2026-06-01'
+  - id: computer-vision-and-geometry-group-robot-lea
+    title: Computer Vision and Geometry Group | Robot Learning
+    url: https://cvg.ethz.ch/lectures/Robot-Learning/
+    group: robotics
+    kind: course
+    site: cvg.ethz.ch
+    added: '2026-06-10'
+  - id: cvpr-2026-paper-explorer
+    title: 'CVPR 2026 · Paper Explorer'
+    url: https://gisbi-kim.github.io/cvpr2026-explorer/output/cvpr2026_explorer.html
+    group: robotics
+    kind: lab
+    site: gisbi-kim.github.io
+    added: '2026-06-22'
+  - id: icra-2026-explorers
+    title: ICRA 2026 Explorers
+    url: https://gisbi-kim.github.io/icra2026-explorer/
+    group: robotics
+    kind: lab
+    site: gisbi-kim.github.io
+    added: '2026-06-22'
+  - id: giseop-kim
+    title: Giseop Kim
+    url: https://gisbi-kim.github.io/
+    group: robotics
+    kind: lab
+    site: gisbi-kim.github.io
+    added: '2026-06-22'
+  - id: open-positions-hao-dong
+    title: open positions | Hao Dong
+    url: https://donghao51.github.io/open-positions/
+    group: robotics
+    kind: position
+    site: donghao51.github.io
+    added: '2026-06-29'
+  - id: pretrained-to-imagine-fine-tuned-to-act-the-
+    title: 'Pretrained to Imagine, Fine-Tuned to Act: The Rise of World-Action Models | NVIDIA
+      Technical Bl…'
+    url: https://developer.nvidia.com/blog/pretrained-to-imagine-fine-tuned-to-act-the-rise-of-world-action-models/
+    group: robotics
+    kind: reading
+    site: developer.nvidia.com
+    added: '2026-07-01'
+  - id: video4real
+    title: Video4Real
+    url: https://sites.google.com/utwente.nl/video4real
+    group: robotics
+    kind: lab
+    site: sites.google.com
+    added: '2026-07-12'
+  - id: category-robotics-nvidia-technical-blog
+    title: 'Category: Robotics | NVIDIA Technical Blog'
+    url: https://developer.nvidia.com/blog/category/robotics/
+    group: robotics
+    kind: reading
+    site: developer.nvidia.com
+    added: '2026-07-13'
+  - id: kaist-5d-ai-ri-5d-ai-robotics-initiative
+    title: 'KAIST :: 5D AI-RI: 5D AI Robotics Initiative'
+    url: https://www.innocore.or.kr/kaist/kaistLab/krsch_rsch08
+    group: robotics
+    kind: lab
+    site: innocore.or.kr
+    added: '2026-07-13'
+  - id: how-hydroshear-gives-robots-a-realistic-sens
+    title: How HydroShear gives robots a realistic sense of touch, trained entirely in simulation
+      - Amazon…
+    url: https://www.amazon.science/blog/amazon-and-university-of-michigan-give-robots-a-sense-of-touch
+    group: robotics
+    kind: reading
+    site: amazon.science
+    added: '2026-07-16'
+  - id: www-anthropic-com
+    title: www.anthropic.com
+    url: https://www.anthropic.com/research/claude-plays-robotics
+    group: robotics
+    kind: lab
+    site: anthropic.com
+    added: '2026-07-16'
+  - id: agentic-systems-lab-eth-zürich
+    title: Agentic Systems Lab - ETH Zürich
+    url: https://www.agenticsystemslab.org/
+    group: robotics
+    kind: lab
+    site: agenticsystemslab.org
+    added: '2026-07-16'
+  - id: gemini-robotics-2-brings-whole-body-intellig
+    title: Gemini Robotics 2 brings whole body intelligence to robots — Google DeepMind
+    url: https://deepmind.google/blog/gemini-robotics-2-brings-whole-body-intelligence-to-robots/
+    group: robotics
+    kind: reading
+    site: deepmind.google
+    added: '2026-08-04'
+  - id: droid-dataset-droid
+    title: droid-dataset/droid
+    url: https://github.com/droid-dataset/droid
+    group: robotics
+    kind: code
+    site: github.com
+    note: Distributed Robot Interaction Dataset.
+    added: '2026-08-24'
+  - id: lifelong-robot-learning-libero
+    title: Lifelong-Robot-Learning/LIBERO
+    url: https://github.com/Lifelong-Robot-Learning/LIBERO
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: Benchmarking Knowledge Transfer in Lifelong Robot Learning
+    added: '2026-04-23'
+  - id: nvlabs-robolab
+    title: NVlabs/RoboLab
+    url: https://github.com/NVLabs/RoboLab
+    group: benchmarks
+    kind: code
+    site: github.com
+    added: '2026-04-23'
+  - id: robocasa-robocasa
+    title: robocasa/robocasa
+    url: https://github.com/robocasa/robocasa
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: 'RoboCasa: Large-Scale Simulation of Everyday Tasks for Generalist Robots'
+    added: '2026-04-23'
+  - id: zxy-mllab-libero-pro-2
+    title: Zxy-MLlab/LIBERO-PRO
+    url: https://github.com/Zxy-MLlab/LIBERO-PRO?tab=readme-ov-file
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: LIBERO-PRO is the official repository of the LIBERO-PRO — an evaluation extension of
+      the original LIBERO benchmark
+    added: '2026-04-23'
+  - id: mees-calvin
+    title: mees/calvin
+    url: https://github.com/mees/calvin
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: CALVIN - A benchmark for Language-Conditioned Policy Learning for Long-Horizon Robot
+      Manipulation Tasks
+    added: '2026-04-23'
+  - id: farama-foundation-metaworld
+    title: Farama-Foundation/Metaworld
+    url: https://github.com/Farama-Foundation/Metaworld
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: Collections of robotics environments geared towards benchmarking multi-task and meta
+      reinforcement learning
+    added: '2026-04-23'
+  - id: stepjam-rlbench
+    title: stepjam/RLBench
+    url: https://github.com/stepjam/RLBench
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: A large-scale benchmark and learning environment.
+    added: '2026-04-23'
+  - id: dexmal-dexbotic-benchmark
+    title: dexmal/dexbotic-benchmark
+    url: https://github.com/dexmal/dexbotic-benchmark
+    group: benchmarks
+    kind: code
+    site: github.com
+    added: '2026-04-23'
+  - id: simpler-env-simplerenv
+    title: simpler-env/SimplerEnv
+    url: https://github.com/simpler-env/SimplerEnv
+    group: benchmarks
+    kind: code
+    site: github.com
+    note: >-
+      Evaluating and reproducing real-world robot manipulation policies (e.g., RT-1, RT-1-X, Octo)
+      in simulation under common setups (e.g., Google Robot, WidowX+Brid…
+    added: '2026-04-23'
+  - id: tektonian-robocasapre-robocasa365-generalist
+    title: Tektonian/RobocasaPre — RoboCasa365 Generalist Robot Benchmark | Tektonian
+    url: https://tektonian.com/profile/Tektonian/RobocasaPre
+    group: benchmarks
+    kind: dataset
+    site: tektonian.com
+    added: '2026-05-04'
+  - id: the-droid-dataset-droid-docs
+    title: The DROID Dataset | DROID Docs
+    url: https://droid-dataset.github.io/droid/the-droid-dataset
+    group: benchmarks
+    kind: dataset
+    site: droid-dataset.github.io
+    added: '2026-08-24'
+  - id: cis-6280-world-models
+    title: 'CIS 6280 · World Models'
+    url: https://www.cis.upenn.edu/~cis6280/
+    group: robotics
+    kind: lab
+    site: cis.upenn.edu
+    added: '2026-09-12'
+  - id: giovanni-iacca
+    title: Giovanni Iacca
+    url: https://sites.google.com/site/giovanniiacca/
+    group: vision
+    kind: lab
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: vision-and-learning-lab
+    title: Vision and Learning Lab
+    url: https://vllab.cs.nctu.edu.tw/
+    group: vision
+    kind: lab
+    site: vllab.cs.nctu.edu.tw
+    added: '2026-02-12'
+  - id: icu-ee-ethz-ch
+    title: icu.ee.ethz.ch
+    url: https://icu.ee.ethz.ch/
+    group: vision
+    kind: lab
+    site: icu.ee.ethz.ch
+    added: '2026-02-12'
+  - id: phd-candidate-in-statistical-machine-learnin
+    title: PhD Candidate in Statistical Machine Learning and Signal Processing (251404) | NTNU
+      - Norwegian…
+    url: >-
+      https://www.jobbnorge.no/en/available-jobs/job/251404/phd-candidate-in-statistical-machine-learning-and-signal-processing
+    group: vision
+    kind: position
+    site: jobbnorge.no
+    added: '2026-02-12'
+  - id: home-marie-skłodowska-curie-actions
+    title: Home | Marie Skłodowska-Curie Actions
+    url: https://marie-sklodowska-curie-actions.ec.europa.eu/
+    group: vision
+    kind: lab
+    site: marie-sklodowska-curie-actions.ec.europa.eu
+    added: '2026-02-12'
+  - id: intelligent-machines-lab-iml
+    title: Intelligent Machines Lab (iML)
+    url: https://iml.carleton.ca/
+    group: vision
+    kind: lab
+    site: iml.carleton.ca
+    added: '2026-02-12'
+  - id: job-details
+    title: Job Details
+    url: https://my.corehr.com/pls/uogrecruit/erq_jobspec_version_4.display_form
+    group: vision
+    kind: position
+    site: my.corehr.com
+    added: '2026-02-12'
+  - id: jobs-job-search-job-vacancies-on-jobs-ac-uk
+    title: Jobs | Job Search | Job Vacancies on jobs.ac.uk
+    url: https://www.jobs.ac.uk/
+    group: vision
+    kind: position
+    site: jobs.ac.uk
+    added: '2026-02-12'
+  - id: phd-scholarships-2-in-cyber-security-and-cyb
+    title: PhD Scholarships (2) in Cyber-Security and Cyber-Deception – DTU Compute - DTU Career
+      Site Care…
+    url: https://efzu.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/2909
+    group: vision
+    kind: position
+    site: efzu.fa.em2.oraclecloud.com
+    added: '2026-02-12'
+  - id: visual-intelligence-for-transportation-epfl
+    title: Visual Intelligence for Transportation ‐ EPFL
+    url: https://www.epfl.ch/labs/vita/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: home-privacy-preserving-systems-lab
+    title: Home | Privacy Preserving Systems Lab
+    url: https://pps-lab.com/
+    group: vision
+    kind: lab
+    site: pps-lab.com
+    added: '2026-02-12'
+  - id: security-privacy-ic-epfl
+    title: 'Security & Privacy ‒ IC ‐ EPFL'
+    url: https://www.epfl.ch/schools/ic/research/security-privacy/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: spring-open-positions
+    title: SPRING - Open Positions
+    url: https://spring.epfl.ch/open_positions.html
+    group: vision
+    kind: position
+    site: spring.epfl.ch
+    added: '2026-02-12'
+  - id: intelligent-maintenance-and-operations-syste
+    title: Intelligent Maintenance and Operations Systems ‐…
+    url: https://www.epfl.ch/labs/imos/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: image-and-visual-representation-lab-epfl
+    title: Image and Visual Representation Lab ‐ EPFL
+    url: https://www.epfl.ch/labs/ivrl/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: data-science-lab
+    title: Data Science Lab
+    url: https://dlab.epfl.ch/
+    group: vision
+    kind: lab
+    site: dlab.epfl.ch
+    added: '2026-02-12'
+  - id: home-biic-lab
+    title: HOME | BIIC LAB
+    url: https://biic.ee.nthu.edu.tw/index.php
+    group: vision
+    kind: lab
+    site: biic.ee.nthu.edu.tw
+    added: '2026-02-12'
+  - id: department-of-computer-science-department-of
+    title: Department of Computer Science – Department of Co…
+    url: https://inf.ethz.ch/
+    group: vision
+    kind: lab
+    site: inf.ethz.ch
+    added: '2026-02-12'
+  - id: computer-vision-laboratory-epfl
+    title: Computer Vision Laboratory ‐ EPFL
+    url: https://www.epfl.ch/labs/cvlab/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: homepage-cvl-computer-vision-lab-eth-zurich
+    title: Homepage - CVL – Computer Vision Lab | ETH Zurich
+    url: https://vision.ee.ethz.ch/
+    group: vision
+    kind: lab
+    site: vision.ee.ethz.ch
+    added: '2026-02-12'
+  - id: homepage-signal-and-information-processing-l
+    title: Homepage - Signal and Information Processing Labo…
+    url: https://isi.ee.ethz.ch/
+    group: vision
+    kind: lab
+    site: isi.ee.ethz.ch
+    added: '2026-02-12'
+  - id: stellenangebote-der-eth-zürich
+    title: Stellenangebote der ETH Zürich
+    url: https://jobs.ethz.ch/
+    group: vision
+    kind: position
+    site: jobs.ethz.ch
+    added: '2026-02-12'
+  - id: itri
+    title: ITRI
+    url: https://itri.applytojob.com/apply
+    group: vision
+    kind: lab
+    site: itri.applytojob.com
+    added: '2026-02-12'
+  - id: max-planck
+    title: Max Planck
+    url: https://machinelearning.uni-saarland.de/research/
+    group: vision
+    kind: lab
+    site: machinelearning.uni-saarland.de
+    added: '2026-02-12'
+  - id: european-lab-for-learning-intelligent-system
+    title: 'European Lab for Learning & Intelligent Systems'
+    url: https://ellis.eu/
+    group: vision
+    kind: lab
+    site: ellis.eu
+    added: '2026-02-12'
+  - id: epfl
+    title: EPFL
+    url: https://www.epfl.ch/education/phd/programs/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: kaust
+    title: KAUST
+    url: https://cemse.kaust.edu.sa/ece
+    group: vision
+    kind: lab
+    site: cemse.kaust.edu.sa
+    added: '2026-02-12'
+  - id: eth
+    title: ETH
+    url: https://ethz.ch/en/the-eth-zurich/organisation/departments-and-competence-centres/departments.html
+    group: vision
+    kind: lab
+    site: ethz.ch
+    added: '2026-02-12'
+  - id: harvard-cs
+    title: Harvard CS
+    url: https://gsas.harvard.edu/program/computer-science
+    group: vision
+    kind: lab
+    site: gsas.harvard.edu
+    added: '2026-02-12'
+  - id: harvard-ee
+    title: Harvard EE
+    url: https://gsas.harvard.edu/program/electrical-engineering
+    group: vision
+    kind: lab
+    site: gsas.harvard.edu
+    added: '2026-02-12'
+  - id: khan-lab-usc
+    title: Khan Lab @ USC
+    url: http://khan.usc.edu/
+    group: vision
+    kind: lab
+    site: khan.usc.edu
+    added: '2026-02-12'
+  - id: ee-6485-computer-vision
+    title: EE 6485 Computer Vision
+    url: https://aliensunmin.github.io/teaching/cv2023/index.html
+    group: vision
+    kind: lab
+    site: aliensunmin.github.io
+    added: '2026-02-12'
+  - id: phd-positions
+    title: PhD Positions
+    url: https://vacancyedu.com/27-phd-degree-fully-funded-at-eth-zurich-switzerland/
+    group: vision
+    kind: position
+    site: vacancyedu.com
+    added: '2026-02-12'
+  - id: usc-iris-computer-vision-lab-usc-institute-o
+    title: USC Iris Computer Vision Lab – USC Institute of Robotics and Intelligent Systems
+    url: https://sites.usc.edu/iris-cvlab/
+    group: vision
+    kind: lab
+    site: sites.usc.edu
+    added: '2026-02-12'
+  - id: phd-fellowship-google-research
+    title: PhD Fellowship – Google Research
+    url: https://research.google/outreach/phd-fellowship/
+    group: vision
+    kind: position
+    site: research.google
+    added: '2026-02-12'
+  - id: microsoft-research-phd-fellowship-microsoft-
+    title: Microsoft Research PhD Fellowship - Microsoft Research
+    url: https://www.microsoft.com/en-us/research/academic-program/phd-fellowship/
+    group: vision
+    kind: position
+    site: microsoft.com
+    added: '2026-02-12'
+  - id: research-ibm-com-university-awards-fellowshi
+    title: research.ibm.com/university/awards/fellowships.html
+    url: https://research.ibm.com/university/awards/fellowships.html
+    group: vision
+    kind: position
+    site: research.ibm.com
+    added: '2026-02-12'
+  - id: announcing-the-2023-meta-research-phd-fellow
+    title: Announcing the 2023 Meta Research PhD Fellowship award winners | Meta Research
+    url: https://research.facebook.com/blog/2023/4/announcing-the-2023-meta-research-phd-fellowship-award-winners/
+    group: vision
+    kind: reading
+    site: research.facebook.com
+    added: '2026-02-12'
+  - id: hiring-sri-lab
+    title: Hiring | SRI Lab
+    url: https://www.sri.inf.ethz.ch/hiring/
+    group: vision
+    kind: lab
+    site: sri.inf.ethz.ch
+    added: '2026-02-12'
+  - id: imprs-is-international-max-planck-research-s
+    title: IMPRS-IS International Max Planck Research School for Intelligent Systems
+    url: https://imprs.is.mpg.de/
+    group: vision
+    kind: lab
+    site: imprs.is.mpg.de
+    added: '2026-02-12'
+  - id: marta-kwiatkowska-department-of-computer-sci
+    title: Marta Kwiatkowska | Department of Computer Science
+    url: https://www.cs.ox.ac.uk/people/marta.kwiatkowska/
+    group: vision
+    kind: lab
+    site: cs.ox.ac.uk
+    added: '2026-02-12'
+  - id: continuous-code-analysis-for-rapidly-evolvin
+    title: Continuous Code Analysis for Rapidly Evolving Software - Study - The University of
+      Queensland
+    url: >-
+      https://study.uq.edu.au/study-options/phd-mphil-professional-doctorate/projects/continuous-code-analysis-rapidly-evolving-software
+    group: vision
+    kind: lab
+    site: study.uq.edu.au
+    added: '2026-02-12'
+  - id: icl-ece-snu
+    title: ICL @ ECE, SNU
+    url: https://icl.snu.ac.kr/home
+    group: vision
+    kind: lab
+    site: icl.snu.ac.kr
+    added: '2026-02-12'
+  - id: hci-tech-lab-home
+    title: HCI Tech Lab | Home
+    url: https://hcitech.org/
+    group: vision
+    kind: lab
+    site: hcitech.org
+    added: '2026-02-12'
+  - id: em-intelligent-design-opening
+    title: 'EM& Intelligent Design - Opening'
+    url: https://sites.google.com/view/eidl/opening
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: job-hiring
+    title: Job Hiring
+    url: https://sites.google.com/view/fnailab/Professor/job-hiring
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: join-us-bio-optical-and-acoustic-system-labo
+    title: Join Us | Bio Optical And Acoustic System Laboratory
+    url: https://www.byulleelab.com/joinus
+    group: vision
+    kind: lab
+    site: byulleelab.com
+    added: '2026-02-12'
+  - id: distributed-ai-lab
+    title: Distributed AI Lab
+    url: https://sites.google.com/view/distributed-ai-lab
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: raicam-eu-home
+    title: raicam.eu/#home
+    url: https://raicam.eu/#home
+    group: vision
+    kind: lab
+    site: raicam.eu
+    added: '2026-02-12'
+  - id: up-lab
+    title: UP Lab
+    url: https://surrey-uplab.github.io/
+    group: vision
+    kind: lab
+    site: surrey-uplab.github.io
+    added: '2026-02-12'
+  - id: serena-booth
+    title: Serena Booth
+    url: https://slbooth.com/#publications
+    group: vision
+    kind: lab
+    site: slbooth.com
+    added: '2026-02-12'
+  - id: research-topics-mavlab
+    title: Research Topics - MAVLab
+    url: https://mavlab.tudelft.nl/research-topics/
+    group: vision
+    kind: lab
+    site: mavlab.tudelft.nl
+    added: '2026-02-12'
+  - id: berkeley-artificial-intelligence-research-la
+    title: Berkeley Artificial Intelligence Research Lab
+    url: https://bair.berkeley.edu/
+    group: vision
+    kind: lab
+    site: bair.berkeley.edu
+    added: '2026-02-12'
+  - id: information-system-lab-isl-information-scien
+    title: Information System Lab | ISL | Information Science Lab
+    url: https://cemse.kaust.edu.sa/isl
+    group: vision
+    kind: lab
+    site: cemse.kaust.edu.sa
+    added: '2026-02-12'
+  - id: ai-robotics-kist-korea-institute-of-science-
+    title: AI-Robotics | KIST Korea Institute of Science and Technology
+    url: https://kist_school.kist.re.kr/professors/ai/list
+    group: vision
+    kind: lab
+    site: kist_school.kist.re.kr
+    added: '2026-02-12'
+  - id: tasnuva-farheen-join-our-lab
+    title: Tasnuva Farheen - Join Our Lab
+    url: https://sites.google.com/view/tasnuvafarheen/join-our-lab
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: taeyeop-lee
+    title: Taeyeop Lee
+    url: https://sites.google.com/view/taeyeop-lee/
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: cvpr-2024-accepted-papers
+    title: CVPR 2024 Accepted Papers
+    url: https://cvpr.thecvf.com/Conferences/2024/AcceptedPapers
+    group: vision
+    kind: lab
+    site: cvpr.thecvf.com
+    added: '2026-02-12'
+  - id: chandra-robot-δutonomy-lab
+    title: Chandra Robot Δutonomy Lab
+    url: https://cral-uva.github.io/
+    group: vision
+    kind: lab
+    site: cral-uva.github.io
+    added: '2026-02-12'
+  - id: 4m-massively-multimodal-masked-modeling
+    title: '4M: Massively Multimodal Masked Modeling'
+    url: https://4m.epfl.ch/
+    group: vision
+    kind: lab
+    site: 4m.epfl.ch
+    added: '2026-02-12'
+  - id: computer-vision-research-group-intelligent-v
+    title: Computer Vision Research Group | Intelligent Visual Analytics Lab
+    url: https://www.ival-mbzuai.com/
+    group: vision
+    kind: lab
+    site: ival-mbzuai.com
+    added: '2026-02-12'
+  - id: open-positions
+    title: Open Positions
+    url: https://sites.google.com/view/fahadkhans/open-positions
+    group: vision
+    kind: position
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: join-alham-fikri-aji
+    title: Join - Alham Fikri Aji
+    url: https://afaji.github.io/join.html
+    group: vision
+    kind: lab
+    site: afaji.github.io
+    added: '2026-02-12'
+  - id: vita
+    title: VITA
+    url: https://vita-group.github.io/
+    group: vision
+    kind: lab
+    site: vita-group.github.io
+    added: '2026-02-12'
+  - id: zhengzhong-tu
+    title: Zhengzhong Tu
+    url: https://vztu.github.io/
+    group: vision
+    kind: lab
+    site: vztu.github.io
+    added: '2026-02-12'
+  - id: careers-nus-edu-sg-nus-go-academic-and-resea
+    title: careers.nus.edu.sg/NUS/go/Academic-and-Research-Positions/545744/
+    url: https://careers.nus.edu.sg/NUS/go/Academic-and-Research-Positions/545744/
+    group: vision
+    kind: position
+    site: careers.nus.edu.sg
+    added: '2026-02-12'
+  - id: omid-taheri
+    title: Omid Taheri
+    url: https://otaheri.github.io/
+    group: vision
+    kind: lab
+    site: otaheri.github.io
+    added: '2026-02-12'
+  - id: pliang279-awesome-phd-advice
+    title: pliang279/awesome-phd-advice
+    url: https://github.com/pliang279/awesome-phd-advice
+    group: vision
+    kind: code
+    site: github.com
+    note: Collection of advice for prospective and current PhD students
+    added: '2026-02-12'
+  - id: cs-phd-statements-of-purpose
+    title: CS PhD Statements of Purpose
+    url: https://cs-sop.notion.site/cs-sop/CS-PhD-Statements-of-Purpose-df39955313834889b7ac5411c37b958d
+    group: vision
+    kind: lab
+    site: cs-sop.notion.site
+    added: '2026-02-12'
+  - id: next-top-post
+    title: Next-top post
+    url: https://atahersams.notion.site/Next-top-post-704da05022c346999f00224a34d8df5f
+    group: vision
+    kind: lab
+    site: atahersams.notion.site
+    added: '2026-02-12'
+  - id: md-awsafur-rahman
+    title: Md Awsafur Rahman
+    url: https://awsaf49.github.io/
+    group: vision
+    kind: lab
+    site: awsaf49.github.io
+    added: '2026-02-12'
+  - id: conference-ranks
+    title: Conference Ranks
+    url: http://www.conferenceranks.com/
+    group: vision
+    kind: lab
+    site: conferenceranks.com
+    added: '2026-02-12'
+  - id: students-cvlab
+    title: Students | CVLab
+    url: https://cv.snu.ac.kr/index.php/students/
+    group: vision
+    kind: lab
+    site: cv.snu.ac.kr
+    added: '2026-02-12'
+  - id: greg-dongyoon-han
+    title: Greg Dongyoon Han
+    url: https://sites.google.com/site/dyhan0920/
+    group: vision
+    kind: lab
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: ai-from-theory-to-real
+    title: AI from Theory to Real
+    url: https://aibl.snu.ac.kr/
+    group: vision
+    kind: lab
+    site: aibl.snu.ac.kr
+    added: '2026-02-12'
+  - id: augcog-dttd2
+    title: augcog/DTTD2
+    url: https://github.com/augcog/DTTD2
+    group: vision
+    kind: code
+    site: github.com
+    note: >-
+      [ICMLW 2024] Official repository of "Robust Digital-Twin Localization via An RGBD-based
+      Transformer Network and A Comprehensive Evaluation on a Mobile Dataset"
+    added: '2026-02-12'
+  - id: alexjungaalto-github-io
+    title: alexjungaalto.github.io
+    url: https://alexjungaalto.github.io/
+    group: vision
+    kind: lab
+    site: alexjungaalto.github.io
+    added: '2026-02-12'
+  - id: csstipendrankings-cs-phd-stipend-rankings
+    title: 'CSStipendRankings: CS PhD Stipend Rankings'
+    url: https://csstipendrankings.org/
+    group: vision
+    kind: lab
+    site: csstipendrankings.org
+    added: '2026-02-12'
+  - id: malcolm-mielle
+    title: Malcolm Mielle
+    url: https://malcolmmielle.github.io/
+    group: vision
+    kind: lab
+    site: malcolmmielle.github.io
+    added: '2026-02-12'
+  - id: lily-xu
+    title: Lily Xu
+    url: https://lily-x.github.io/
+    group: vision
+    kind: lab
+    site: lily-x.github.io
+    added: '2026-02-12'
+  - id: position-usc-iris-computer-vision-lab
+    title: Position – USC Iris Computer Vision Lab
+    url: https://sites.usc.edu/iris-cvlab/position/
+    group: vision
+    kind: position
+    site: sites.usc.edu
+    added: '2026-02-12'
+  - id: tales-imbiriba-this-is-the-tales-imbiriba-pe
+    title: Tales Imbiriba | This is the Tales Imbiriba personal page used for sharing a bit of
+      his researc…
+    url: https://talesimbiriba.github.io/
+    group: vision
+    kind: lab
+    site: talesimbiriba.github.io
+    added: '2026-02-12'
+  - id: iq-brain-iq-brain-university-of-antwerp
+    title: IQ-BRAIN | IQ-BRAIN | University of Antwerp
+    url: https://www.uantwerpen.be/en/projects/iq-brain/
+    group: vision
+    kind: lab
+    site: uantwerpen.be
+    added: '2026-02-12'
+  - id: phd-application-support-program-ucsb-compute
+    title: PhD Application Support Program | UCSB Computer Science
+    url: https://cs.ucsb.edu/education/graduate/phd-application-support-program
+    group: vision
+    kind: lab
+    site: cs.ucsb.edu
+    added: '2026-02-12'
+  - id: about-me-haoqi-li
+    title: About me - Haoqi Li
+    url: https://haoqilele.github.io/
+    group: vision
+    kind: lab
+    site: haoqilele.github.io
+    added: '2026-02-12'
+  - id: mlilab
+    title: MLILAB
+    url: https://mli.kaist.ac.kr/
+    group: vision
+    kind: lab
+    site: mli.kaist.ac.kr
+    added: '2026-02-12'
+  - id: find-email-addresses-and-send-cold-emails-hu
+    title: Find email addresses and send cold emails • Hunter
+    url: https://hunter.io/
+    group: vision
+    kind: lab
+    site: hunter.io
+    added: '2026-02-12'
+  - id: sensing-perception-interactive-computing-and
+    title: Sensing, Perception, Interactive Computing and Experiences Lab | Northwestern University
+    url: https://spice-lab.org/
+    group: vision
+    kind: lab
+    site: spice-lab.org
+    added: '2026-02-12'
+  - id: yue-zhao
+    title: Yue Zhao
+    url: https://viterbi-web.usc.edu/~yzhao010/
+    group: vision
+    kind: lab
+    site: viterbi-web.usc.edu
+    added: '2026-02-12'
+  - id: yuzhe-yang
+    title: Yuzhe Yang
+    url: https://people.csail.mit.edu/yuzhe/
+    group: vision
+    kind: lab
+    site: people.csail.mit.edu
+    added: '2026-02-12'
+  - id: felix-petersen
+    title: Felix Petersen
+    url: https://petersen.ai/
+    group: vision
+    kind: lab
+    site: petersen.ai
+    added: '2026-02-12'
+  - id: vision-learning-lab
+    title: 'Vision & Learning Lab'
+    url: https://vision.snu.ac.kr/
+    group: vision
+    kind: lab
+    site: vision.snu.ac.kr
+    added: '2026-02-12'
+  - id: snu-robot-vision-lab-2
+    title: SNU Robot Vision Lab
+    url: https://sites.google.com/view/snu-rvlab/home
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: 3d-vision-lab-home
+    title: 3D Vision Lab - Home
+    url: https://3d.snu.ac.kr/
+    group: vision
+    kind: lab
+    site: 3d.snu.ac.kr
+    added: '2026-02-12'
+  - id: cvlab-2
+    title: CVLAB
+    url: https://cvlab.kaist.ac.kr/
+    group: vision
+    kind: lab
+    site: cvlab.kaist.ac.kr
+    added: '2026-02-12'
+  - id: cvml-lab
+    title: CVML Lab.
+    url: https://sites.google.com/view/cvml-kaist
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: notice-kaist-ai
+    title: Notice - KAIST AI
+    url: https://gsai.kaist.ac.kr/notice/
+    group: vision
+    kind: lab
+    site: gsai.kaist.ac.kr
+    added: '2026-02-12'
+  - id: kaist-io
+    title: KAIST IO
+    url: https://io.kaist.ac.kr/menu/io.do?mguid=D4CD2D0A-21E5-E511-940C-2C44FD7DF8B9
+    group: vision
+    kind: lab
+    site: io.kaist.ac.kr
+    added: '2026-02-12'
+  - id: bispl-bioimaging-signal-processing-learning-
+    title: 'BISPL- BioImaging, Signal Processing & Learning Lab @ KAIST AI - BISPL News'
+    url: https://bispl.weebly.com/
+    group: vision
+    kind: lab
+    site: bispl.weebly.com
+    added: '2026-02-12'
+  - id: dgist-3dvg-lab
+    title: DGIST 3DVG Lab
+    url: https://sites.google.com/view/3dvg-dgist/home
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: dgist-computer-vision-lab
+    title: DGIST Computer Vision Lab.
+    url: https://cvlab.dgist.ac.kr/
+    group: vision
+    kind: lab
+    site: cvlab.dgist.ac.kr
+    added: '2026-02-12'
+  - id: onepose-one-shot-object-pose-estimation-with
+    title: 'OnePose: One-Shot Object Pose Estimation without CAD Models'
+    url: https://zju3dv.github.io/onepose/
+    group: vision
+    kind: lab
+    site: zju3dv.github.io
+    added: '2026-02-12'
+  - id: llm-systems-large-language-model-systems
+    title: LLM Systems | Large Language Model Systems
+    url: https://llmsystem.github.io/llmsystem2025spring/
+    group: vision
+    kind: lab
+    site: llmsystem.github.io
+    added: '2026-02-12'
+  - id: about-me-sejoon-oh
+    title: About me - Sejoon Oh
+    url: https://sejoonoh.github.io/
+    group: vision
+    kind: lab
+    site: sejoonoh.github.io
+    added: '2026-02-12'
+  - id: murge-lab-nlp-group-unc-chapel-hill
+    title: MURGe-Lab NLP Group, UNC Chapel Hill
+    url: https://murgelab.cs.unc.edu/
+    group: vision
+    kind: lab
+    site: murgelab.cs.unc.edu
+    added: '2026-02-12'
+  - id: jaemin-cho
+    title: Jaemin Cho
+    url: https://j-min.io/
+    group: vision
+    kind: lab
+    site: j-min.io
+    added: '2026-02-12'
+  - id: paul-gavrikov
+    title: Paul Gavrikov
+    url: https://paulgavrikov.github.io/
+    group: vision
+    kind: lab
+    site: paulgavrikov.github.io
+    added: '2026-02-12'
+  - id: lin-ai
+    title: Lin Ai
+    url: https://lynneeai.github.io/
+    group: vision
+    kind: lab
+    site: lynneeai.github.io
+    added: '2026-02-12'
+  - id: computer-vision-lab-postech
+    title: Computer Vision Lab. POSTECH
+    url: https://cvlab.postech.ac.kr/lab/
+    group: vision
+    kind: lab
+    site: cvlab.postech.ac.kr
+    added: '2026-02-12'
+  - id: computer-engineering-faculty-jobs-higheredjo
+    title: Computer Engineering Faculty Jobs - HigherEdJobs
+    url: 'https://www.higheredjobs.com/faculty/search.cfm?JobCat=116&CatName=Computer+Engineering'
+    group: vision
+    kind: position
+    site: higheredjobs.com
+    added: '2026-02-12'
+  - id: join-us-tu-e-automl-lab
+    title: Join us! – TU/e AutoML Lab
+    url: https://openml-labs.github.io/website/join/join.html
+    group: vision
+    kind: lab
+    site: openml-labs.github.io
+    added: '2026-02-12'
+  - id: deepak-sridhar
+    title: Deepak Sridhar
+    url: https://deepaksridhar.github.io/
+    group: vision
+    kind: lab
+    site: deepaksridhar.github.io
+    added: '2026-02-12'
+  - id: intelligent-vehicles-group-established-2016-
+    title: Intelligent Vehicles Group | Established 2016 at TU Delft
+    url: https://intelligent-vehicles.org/
+    group: vision
+    kind: lab
+    site: intelligent-vehicles.org
+    added: '2026-02-12'
+  - id: zhe-zeng-曾哲
+    title: Zhe Zeng (曾哲)
+    url: https://zzeng.me/
+    group: vision
+    kind: lab
+    site: zzeng.me
+    added: '2026-02-12'
+  - id: icl-ece-snu-2
+    title: ICL @ ECE, SNU
+    url: https://icl.snu.ac.kr/
+    group: vision
+    kind: lab
+    site: icl.snu.ac.kr
+    added: '2026-02-12'
+  - id: hadi-daneshmand
+    title: Hadi Daneshmand
+    url: https://hadidaneshmand.github.io/dhadi
+    group: vision
+    kind: lab
+    site: hadidaneshmand.github.io
+    added: '2026-02-12'
+  - id: beomjoon-kim
+    title: Beomjoon Kim
+    url: https://beomjoonkim.github.io/
+    group: vision
+    kind: lab
+    site: beomjoonkim.github.io
+    added: '2026-02-12'
+  - id: people-kaist-ai
+    title: People - KAIST AI
+    url: https://gsai.kaist.ac.kr/people/
+    group: vision
+    kind: lab
+    site: gsai.kaist.ac.kr
+    added: '2026-02-12'
+  - id: taiwan-international-internship-program
+    title: Taiwan International Internship Program
+    url: https://tiip.dia.sinica.edu.tw/
+    group: vision
+    kind: lab
+    site: tiip.dia.sinica.edu.tw
+    added: '2026-02-12'
+  - id: people-syed-bahauddin-alam
+    title: People - Syed Bahauddin Alam
+    url: https://sbahauddin.tech/?page_id=336
+    group: vision
+    kind: lab
+    site: sbahauddin.tech
+    added: '2026-02-12'
+  - id: human-centered-data-science-georg-august-uni
+    title: Human-Centered Data Science - Georg-August-Universität Göttingen
+    url: https://www.uni-goettingen.de/en/691017.html
+    group: vision
+    kind: lab
+    site: uni-goettingen.de
+    added: '2026-02-12'
+  - id: prospective-students-and-visitors-zhijiang-g
+    title: Prospective Students and Visitors | Zhijiang Guo
+    url: https://cartus.github.io/news/announcement_2/
+    group: vision
+    kind: lab
+    site: cartus.github.io
+    added: '2026-02-12'
+  - id: xuandong-s-homepage
+    title: 'Xuandong''s Homepage'
+    url: https://xuandongzhao.github.io/
+    group: vision
+    kind: lab
+    site: xuandongzhao.github.io
+    added: '2026-02-12'
+  - id: mlv-lab
+    title: MLV Lab
+    url: https://www.hyunwoojkim.com/
+    group: vision
+    kind: lab
+    site: hyunwoojkim.com
+    added: '2026-02-12'
+  - id: clvr
+    title: CLVR
+    url: https://www.clvrai.com/
+    group: vision
+    kind: lab
+    site: clvrai.com
+    added: '2026-02-12'
+  - id: karl-pertsch
+    title: Karl Pertsch
+    url: https://kpertsch.github.io/
+    group: vision
+    kind: lab
+    site: kpertsch.github.io
+    added: '2026-02-12'
+  - id: karol-hausman
+    title: Karol Hausman
+    url: https://karolhausman.github.io/
+    group: vision
+    kind: lab
+    site: karolhausman.github.io
+    added: '2026-02-12'
+  - id: people-sketchx-cvssp
+    title: People – SketchX @ CVSSP
+    url: https://sketchx.eecs.qmul.ac.uk/people/
+    group: vision
+    kind: lab
+    site: sketchx.eecs.qmul.ac.uk
+    added: '2026-02-12'
+  - id: github-gkalliatakis-computer-vision-journals
+    title: GitHub - GKalliatakis/Computer-Vision-Journals-Catalogue
+    url: https://github.com/GKalliatakis/Computer-Vision-Journals-Catalogue
+    group: vision
+    kind: code
+    site: github.com
+    note: Computer Vision Journals List, Review Speed, Impact Factors
+    added: '2026-02-12'
+  - id: ai-vision-lab
+    title: ':: AI Vision Lab ::'
+    url: https://ai-vision-lab.github.io/AIVision/
+    group: vision
+    kind: lab
+    site: ai-vision-lab.github.io
+    added: '2026-02-12'
+  - id: ai-vision-lab-2
+    title: ':: AI Vision Lab ::'
+    url: https://ai-vision-lab.github.io/AIVision/members.html
+    group: vision
+    kind: lab
+    site: ai-vision-lab.github.io
+    added: '2026-02-12'
+  - id: home-autonomous-vehicle-systems
+    title: Home - Autonomous Vehicle Systems
+    url: https://www.mos.ed.tum.de/en/avs/home/
+    group: vision
+    kind: lab
+    site: mos.ed.tum.de
+    added: '2026-02-12'
+  - id: jeany-son-computer-vision-lab-postech
+    title: Jeany Son - Computer Vision Lab @ POSTECH
+    url: https://cvlab.postech.ac.kr/~jeany/mindex.html
+    group: vision
+    kind: lab
+    site: cvlab.postech.ac.kr
+    added: '2026-02-12'
+  - id: epfl-neuroai-lab-epfl
+    title: EPFL NeuroAI Lab ‐ EPFL
+    url: https://www.epfl.ch/labs/schrimpflab/
+    group: vision
+    kind: lab
+    site: epfl.ch
+    added: '2026-02-12'
+  - id: data-intelligence-system-lab-disl
+    title: Data Intelligence System Lab. (DISL)
+    url: https://disl-lab.github.io/
+    group: vision
+    kind: lab
+    site: disl-lab.github.io
+    added: '2026-02-12'
+  - id: muhammad-haris-khan
+    title: Muhammad Haris Khan
+    url: https://m-haris-khan.com/
+    group: vision
+    kind: lab
+    site: m-haris-khan.com
+    added: '2026-02-12'
+  - id: vrg-visual-recognition-group
+    title: VRG - Visual Recognition Group
+    url: https://vrg.fel.cvut.cz/
+    group: vision
+    kind: lab
+    site: vrg.fel.cvut.cz
+    added: '2026-02-12'
+  - id: isl-lab-dgist
+    title: ISL Lab @ DGIST
+    url: https://sites.google.com/view/isllab-dgist/home
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: anastasia-koloskova
+    title: Anastasia Koloskova
+    url: https://koloskova.github.io/
+    group: vision
+    kind: lab
+    site: koloskova.github.io
+    added: '2026-02-12'
+  - id: phd-positions-owlindex
+    title: PhD. positions - Owlindex
+    url: https://www.owlindex.com/service-explorer/phd-explorer/
+    group: vision
+    kind: position
+    site: owlindex.com
+    added: '2026-02-12'
+  - id: is-win-laboratory
+    title: IS-WiN Laboratory
+    url: https://sites.google.com/g.clemson.edu/is-win-lab/home
+    group: vision
+    kind: lab
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: g-m-hasan-ul-banna
+    title: G M Hasan Ul Banna
+    url: https://sites.google.com/site/engrgmhub/home
+    group: vision
+    kind: lab
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: song-chong-lab-kaist-kaist-graduate-school-o
+    title: Song Chong Lab @ KAIST - KAIST Graduate School of AI
+    url: https://sites.google.com/a/kaist.edu/song-chong/kaist-graduate-school-of-ai
+    group: vision
+    kind: lab
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: dynamic-and-autonomous-robotic-systems-lab-r
+    title: 'Dynamic and Autonomous Robotic Systems Lab : Robotics @ UMass Amherst : UMass Amherst'
+    url: https://www.umass.edu/robotics/daros
+    group: vision
+    kind: lab
+    site: umass.edu
+    added: '2026-02-12'
+  - id: ku-leuven-vacatures-several-phd-positions-in
+    title: KU Leuven Vacatures | Several PhD Positions in Artificial Intelligence at Computer
+      Science KU L…
+    url: https://www.kuleuven.be/personeel/jobsite/jobs/60438292
+    group: vision
+    kind: position
+    site: kuleuven.be
+    added: '2026-02-12'
+  - id: ku-leuven-vacatures
+    title: KU Leuven Vacatures
+    url: https://www.kuleuven.be/personeel/jobsite/jobs/phd?lang=nl
+    group: vision
+    kind: position
+    site: kuleuven.be
+    added: '2026-02-12'
+  - id: plutoedu
+    title: PlutoEdu
+    url: https://plutoedu.com/form/792303130
+    group: vision
+    kind: lab
+    site: plutoedu.com
+    added: '2026-02-12'
+  - id: mohamed-h-elhoseiny
+    title: Mohamed H. Elhoseiny
+    url: https://www.mohamed-elhoseiny.com/
+    group: vision
+    kind: lab
+    site: mohamed-elhoseiny.com
+    added: '2026-02-12'
+  - id: kashyap-chitta-ai-researcher
+    title: Kashyap Chitta | AI Researcher
+    url: https://kashyap7x.github.io/
+    group: vision
+    kind: lab
+    site: kashyap7x.github.io
+    added: '2026-02-12'
+  - id: sangeetha-abdu-jyothi
+    title: Sangeetha Abdu Jyothi
+    url: https://ics.uci.edu/~sabdujyo/
+    group: vision
+    kind: lab
+    site: ics.uci.edu
+    added: '2026-02-12'
+  - id: home-2
+    title: Home
+    url: https://sites.google.com/view/hyunacho
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: ubiquitous-ai-lab-unist
+    title: Ubiquitous AI Lab, UNIST
+    url: https://sites.google.com/view/uailab
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: khan-muhammad-khan-muhammad
+    title: 'Khan Muhammad · Khan Muhammad'
+    url: https://khan-muhammad.github.io/
+    group: vision
+    kind: lab
+    site: khan-muhammad.github.io
+    added: '2026-02-12'
+  - id: jihwan-kim-jihwan-kim
+    title: Jihwan Kim - Jihwan Kim
+    url: https://jjihwan.github.io/
+    group: vision
+    kind: lab
+    site: jjihwan.github.io
+    added: '2026-02-12'
+  - id: bohyung-han-cvlab
+    title: Bohyung Han | CVLab
+    url: https://cv.snu.ac.kr/index.php/~bhhan/
+    group: vision
+    kind: lab
+    site: cv.snu.ac.kr
+    added: '2026-02-12'
+  - id: xishun-heeson-liao-researcher-in-ai-and-digi
+    title: Xishun (Heeson) Liao - Researcher in AI and Digital Twin Systems
+    url: https://xishunliao.github.io/
+    group: vision
+    kind: lab
+    site: xishunliao.github.io
+    added: '2026-02-12'
+  - id: mahir-labib-dihan
+    title: Mahir Labib Dihan
+    url: https://mahirlabibdihan.github.io/
+    group: vision
+    kind: lab
+    site: mahirlabibdihan.github.io
+    added: '2026-02-12'
+  - id: graduate-school-homepage-ista
+    title: Graduate School Homepage ISTA
+    url: https://phd.pages.ist.ac.at/funding-and-awards/
+    group: vision
+    kind: lab
+    site: phd.pages.ist.ac.at
+    added: '2026-02-12'
+  - id: hao-tang
+    title: Hao Tang
+    url: https://ha0tang.github.io/
+    group: vision
+    kind: lab
+    site: ha0tang.github.io
+    added: '2026-02-12'
+  - id: visionlabs-creates-world-leading-facial-reco
+    title: VisionLabs creates world-leading facial recognition technology - VisionLabs
+    url: https://visionlabs.ai/
+    group: vision
+    kind: lab
+    site: visionlabs.ai
+    added: '2026-02-12'
+  - id: xuhao-chen-mit
+    title: '[Xuhao Chen @ MIT]'
+    url: https://chenxuhao.github.io/
+    group: vision
+    kind: lab
+    site: chenxuhao.github.io
+    added: '2026-02-12'
+  - id: cv-group-university-of-amsterdam
+    title: CV Group @ University of Amsterdam
+    url: https://ivi.fnwi.uva.nl/cv/
+    group: vision
+    kind: lab
+    site: ivi.fnwi.uva.nl
+    added: '2026-02-12'
+  - id: university-assistant-predoctoral-job-details
+    title: University assistant predoctoral Job Details | Universität Wien
+    url: https://jobs.univie.ac.at/job/University-assistant-predoctoral/1212525201/
+    group: vision
+    kind: position
+    site: jobs.univie.ac.at
+    added: '2026-02-12'
+  - id: gyeongchan-yun
+    title: Gyeongchan Yun
+    url: https://gyeongchan-yun.github.io/
+    group: vision
+    kind: lab
+    site: gyeongchan-yun.github.io
+    added: '2026-02-12'
+  - id: amin-karimi-monsefi-amin-s-personal-website
+    title: Amin Karimi Monsefi - Amin’s Personal Website
+    url: https://7amin.github.io/
+    group: vision
+    kind: lab
+    site: 7amin.github.io
+    added: '2026-02-12'
+  - id: advanced-machine-intelligence-lab-ami-lab-ka
+    title: Advanced Machine Intelligence Lab (AMI Lab.) @ KAIST
+    url: https://ami.kaist.ac.kr/
+    group: vision
+    kind: lab
+    site: ami.kaist.ac.kr
+    added: '2026-02-12'
+  - id: publications-lvr-lab
+    title: Publications - LVR Lab
+    url: https://lvrlab.github.io/publications.html
+    group: vision
+    kind: lab
+    site: lvrlab.github.io
+    added: '2026-02-12'
+  - id: lvr-lab-learning-in-vision-and-robotics
+    title: LVR Lab - Learning in Vision and Robotics
+    url: https://lvrlab.github.io/index.html
+    group: vision
+    kind: lab
+    site: lvrlab.github.io
+    added: '2026-02-12'
+  - id: homepage-robotic-systems-lab-eth-zurich
+    title: Homepage – Robotic Systems Lab | ETH Zurich
+    url: https://rsl.ethz.ch/
+    group: vision
+    kind: lab
+    site: rsl.ethz.ch
+    added: '2026-02-12'
+  - id: homepage-autonomous-systems-lab-eth-zurich
+    title: Homepage – Autonomous Systems Lab | ETH Zurich
+    url: https://asl.ethz.ch/
+    group: vision
+    kind: lab
+    site: asl.ethz.ch
+    added: '2026-02-12'
+  - id: cs-294-277-robots-that-learn-fall-2024
+    title: CS 294-277, Robots That Learn (Fall 2024)
+    url: https://robots-that-learn.github.io/
+    group: vision
+    kind: lab
+    site: robots-that-learn.github.io
+    added: '2026-02-12'
+  - id: mak-raiaan-coldemailphdmsc
+    title: mak-raiaan/ColdEmailPhDMSc
+    url: https://github.com/mak-raiaan/ColdEmailPhDMSc?tab=readme-ov-file
+    group: vision
+    kind: code
+    site: github.com
+    note: 📩 Guideline for writing cold emails to PhD/MSc supervisors 🌍🎓 | Do it right!
+    added: '2026-02-12'
+  - id: kist-robot-vision-lab
+    title: KIST Robot Vision Lab
+    url: https://kistrobot.vision/
+    group: vision
+    kind: lab
+    site: kistrobot.vision
+    added: '2026-02-12'
+  - id: professor-hongdong-li-anu
+    title: Professor Hongdong Li - ANU
+    url: https://users.cecs.anu.edu.au/~hongdong/
+    group: vision
+    kind: lab
+    site: users.cecs.anu.edu.au
+    added: '2026-02-12'
+  - id: computer-vision-robotics-insait
+    title: 'Computer Vision & Robotics | INSAIT'
+    url: https://insait.ai/computer-vision-robotics/
+    group: vision
+    kind: lab
+    site: insait.ai
+    added: '2026-02-12'
+  - id: embedded-ai-lab-kaist-ee
+    title: 'Embedded AI Lab: KAIST EE'
+    url: https://sites.google.com/view/embeddedai/home
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-28'
+  - id: machine-learning-summer-schools-mlss
+    title: Machine Learning Summer Schools - MLSS
+    url: http://mlss.cc./
+    group: vision
+    kind: course
+    site: mlss.cc.
+    added: '2026-03-02'
+  - id: eai-lab-unist-computer-science-ai-graduate-s
+    title: 'EAI Lab: UNIST Computer Science (AI Graduate School) - Research Statement'
+    url: https://sites.google.com/view/embeddedai/research-statement
+    group: vision
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: chung-chi-tsai-charles
+    title: Chung-Chi Tsai (Charles)
+    url: https://sites.google.com/view/chungchitsai
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: wasiq-ameen
+    title: Wasiq Ameen
+    url: https://sites.google.com/view/wasiq-ameen/
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: dr-arul-s-home-page
+    title: 'Dr. Arul''s Home Page'
+    url: https://mx.nthu.edu.tw/~aambikapathi/
+    group: people
+    kind: people
+    site: mx.nthu.edu.tw
+    added: '2026-02-12'
+  - id: tonmoy-hossain
+    title: Tonmoy Hossain
+    url: https://tonmoy-hossain.github.io/
+    group: people
+    kind: people
+    site: tonmoy-hossain.github.io
+    added: '2026-02-12'
+  - id: taki-hasan-rafi
+    title: Taki Hasan Rafi
+    url: https://takihasan.github.io/
+    group: people
+    kind: people
+    site: takihasan.github.io
+    added: '2026-02-12'
+  - id: salary-eth-zurich
+    title: Salary | ETH Zurich
+    url: >-
+      https://ethz.ch/en/the-eth-zurich/working-teaching-and-research/welcome-center/employment-contract-and-salary/salary.html
+    group: people
+    kind: people
+    site: ethz.ch
+    added: '2026-02-12'
+  - id: lingjuan-lv
+    title: Lingjuan Lv
+    url: https://sites.google.com/view/lingjuan-lyu/home
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: hao-dong-s-homepage
+    title: 'Hao Dong''s Homepage'
+    url: https://sites.google.com/view/dong-hao/
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: keivan-faghih-niresi
+    title: Keivan Faghih Niresi
+    url: https://keiv4n.github.io/
+    group: people
+    kind: people
+    site: keiv4n.github.io
+    added: '2026-02-12'
+  - id: github-yonghaigong-fedadmm
+    title: GitHub - YonghaiGong/FedADMM
+    url: https://github.com/YonghaiGong/FedADMM
+    group: people
+    kind: code
+    site: github.com
+    added: '2026-02-12'
+  - id: ashwinrj-ashwin-r-jadhav-github
+    title: 'AshwinRJ (Ashwin R Jadhav) · GitHub'
+    url: https://github.com/AshwinRJ
+    group: people
+    kind: code
+    site: github.com
+    added: '2026-02-12'
+  - id: chung-ju-github
+    title: 'Chung-ju · GitHub'
+    url: https://github.com/chung-ju
+    group: people
+    kind: code
+    site: github.com
+    added: '2026-02-12'
+  - id: muhammad-ferjad-naeem
+    title: Muhammad Ferjad Naeem
+    url: https://ferjad.github.io/
+    group: people
+    kind: people
+    site: ferjad.github.io
+    added: '2026-02-12'
+  - id: website
+    title: Website
+    url: https://sites.google.com/view/selimsarowar13/about
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: kim-s-net
+    title: 'Kim''s Net'
+    url: https://phdkim.net/professor/open-lab
+    group: people
+    kind: people
+    site: phdkim.net
+    added: '2026-02-12'
+  - id: xiaolong-wang
+    title: Xiaolong Wang
+    url: https://xiaolonw.github.io/
+    group: people
+    kind: people
+    site: xiaolonw.github.io
+    added: '2026-02-12'
+  - id: home-3
+    title: Home
+    url: https://sites.google.com/iisc.ac.in/nehajawalkar
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: bejoy-sikder-curriculum-vitae
+    title: Bejoy Sikder - Curriculum Vitae
+    url: https://sites.google.com/view/bejoysikder/curriculum-vitae
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: home-ishtiaque-ahmed
+    title: Home | Ishtiaque Ahmed
+    url: https://www.ishtiaque.net/
+    group: people
+    kind: people
+    site: ishtiaque.net
+    added: '2026-02-12'
+  - id: about-me-niaz-mahmud-zafri
+    title: About Me | Niaz Mahmud Zafri
+    url: https://www.niazmahmudzafri.com/about-me-1
+    group: people
+    kind: people
+    site: niazmahmudzafri.com
+    added: '2026-02-12'
+  - id: li-yuan-tsao
+    title: Li-Yuan Tsao
+    url: https://liyuantsao.github.io/
+    group: people
+    kind: people
+    site: liyuantsao.github.io
+    added: '2026-02-12'
+  - id: gurkirt-singh
+    title: Gurkirt Singh
+    url: https://gurkirt.github.io/
+    group: people
+    kind: people
+    site: gurkirt.github.io
+    added: '2026-02-12'
+  - id: khawar-islam
+    title: Khawar Islam
+    url: https://khawar-islam.github.io/
+    group: people
+    kind: people
+    site: khawar-islam.github.io
+    added: '2026-02-12'
+  - id: daeun-lee-homepage
+    title: Daeun Lee - Homepage
+    url: https://daeunni.github.io/
+    group: people
+    kind: people
+    site: daeunni.github.io
+    added: '2026-02-12'
+  - id: mnat
+    title: MNAT
+    url: https://www.nasimtaj.com/
+    group: people
+    kind: people
+    site: nasimtaj.com
+    added: '2026-02-12'
+  - id: chaitali-bhattacharyya
+    title: Chaitali Bhattacharyya
+    url: https://cv-chaitali.github.io/myvision.github.io/
+    group: people
+    kind: people
+    site: cv-chaitali.github.io
+    added: '2026-02-12'
+  - id: omar-khattab
+    title: Omar Khattab
+    url: https://omarkhattab.com/
+    group: people
+    kind: people
+    site: omarkhattab.com
+    added: '2026-02-12'
+  - id: muhammad-mahboob-ur-rahman
+    title: Muhammad Mahboob Ur Rahman
+    url: https://sites.google.com/site/mmahboobr/
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: animesh-garg-home
+    title: Animesh Garg Home
+    url: https://animesh.garg.tech/
+    group: people
+    kind: people
+    site: animesh.garg.tech
+    added: '2026-02-12'
+  - id: yann-lecun-s-home-page
+    title: 'Yann LeCun''s Home Page'
+    url: http://yann.lecun.com/
+    group: people
+    kind: people
+    site: yann.lecun.com
+    added: '2026-02-12'
+  - id: cilvr-at-nyu
+    title: CILVR at NYU
+    url: https://wp.nyu.edu/cilvr/
+    group: people
+    kind: people
+    site: wp.nyu.edu
+    added: '2026-02-12'
+  - id: kalin-nonchev
+    title: Kalin Nonchev
+    url: https://kalinnonchev.github.io/
+    group: people
+    kind: people
+    site: kalinnonchev.github.io
+    added: '2026-02-12'
+  - id: rohit-k-bharadwaj
+    title: Rohit K Bharadwaj
+    url: https://rohit901.github.io/
+    group: people
+    kind: people
+    site: rohit901.github.io
+    added: '2026-02-12'
+  - id: sultan-mahmud-sajal
+    title: Sultan Mahmud Sajal
+    url: https://smsajal.github.io/
+    group: people
+    kind: people
+    site: smsajal.github.io
+    added: '2026-02-12'
+  - id: timothy-zhu-department-of-computer-science-a
+    title: Timothy Zhu – Department of Computer Science and Engineering
+    url: https://sites.psu.edu/timothyz/
+    group: people
+    kind: people
+    site: sites.psu.edu
+    added: '2026-02-12'
+  - id: gwanghyun-bradley-kim-icl-ece-snu
+    title: Gwanghyun (Bradley) Kim | ICL, ECE, SNU
+    url: https://gwang-kim.github.io/
+    group: people
+    kind: people
+    site: gwang-kim.github.io
+    added: '2026-02-12'
+  - id: zhongzhu-s-homepage
+    title: 'Zhongzhu''s Homepage'
+    url: https://sites.google.com/umich.edu/zhongzhc/home
+    group: people
+    kind: people
+    site: sites.google.com
+    added: '2026-02-12'
+  - id: zicong-fan-alex
+    title: Zicong Fan (Alex)
+    url: https://zc-alexfan.github.io/
+    group: people
+    kind: people
+    site: zc-alexfan.github.io
+    added: '2026-02-12'
+  - id: jindong-gu
+    title: Jindong Gu
+    url: https://jindonggu.github.io/
+    group: people
+    kind: people
+    site: jindonggu.github.io
+    added: '2026-02-12'
+  - id: i-m-hiring-fully-funded-phd-students-at-nyua
+    title: 'I''m hiring fully funded PhD students at NYUAD for Fall 2025! | Sarah Nadi'
+    url: https://sarahnadi.org/news/hiring/
+    group: people
+    kind: people
+    site: sarahnadi.org
+    added: '2026-02-12'
+  - id: new-york-university-abu-dhabi-s-global-ph-d-
+    title: 'New York University Abu Dhabi’s Global Ph.D. Student Fellowship: My Experiences |
+      by Maeda Hana…'
+    url: https://maeda-han.medium.com/new-york-university-abu-dhabis-global-ph-d-student-fellowship-my-experiences-75fb29d11dcf
+    group: people
+    kind: reading
+    site: maeda-han.medium.com
+    added: '2026-02-12'
+  - id: phd-positions-2
+    title: PhD Positions
+    url: https://groups.google.com/g/ML-news/search?q=PhD+Positions
+    group: people
+    kind: position
+    site: groups.google.com
+    added: '2026-02-12'
+  - id: jinuk-kim
+    title: Jinuk Kim
+    url: https://jusjinuk.me/
+    group: people
+    kind: people
+    site: jusjinuk.me
+    added: '2026-02-12'
+  - id: phd-position-ai-big-data-in-sea-and-shipping
+    title: 'PhD Position AI & Big Data in Sea and Shipping Performance Optimization: Infrastructure
+      State &…'
+    url: >-
+      https://careers.tudelft.nl/job/Delft-PhD-Position-AI-&-Big-Data-in-Sea-and-Shipping-Performance-Optimization-Infrastructure-State-&-Use-2628-CD/811979802/
+    group: people
+    kind: position
+    site: careers.tudelft.nl
+    added: '2026-02-12'
+  - id: ml-ai-scholarships-readme-md-at-main-marylee
+    title: 'ML-AI-Scholarships/README.md at main · Maryleen/ML-AI-Scholarships · GitHub'
+    url: https://github.com/Maryleen/ML-AI-Scholarships/blob/main/README.md#deadlines-from-february-2025
+    group: people
+    kind: code
+    site: github.com
+    added: '2026-02-12'
+  - id: sai-ashish-somayajula
+    title: Sai Ashish Somayajula
+    url: https://sai-ashish.github.io/website/
+    group: people
+    kind: people
+    site: sai-ashish.github.io
+    added: '2026-02-12'
+  - id: seungone-kim
+    title: Seungone Kim
+    url: https://seungonekim.github.io/
+    group: people
+    kind: people
+    site: seungonekim.github.io
+    added: '2026-02-12'
+  - id: insait
+    title: INSAIT
+    url: https://insait.ai/
+    group: tools
+    kind: tool
+    site: insait.ai
+    added: '2026-01-23'
+  - id: vizuara-s-substack-substack
+    title: Vizuara’s Substack | Substack
+    url: https://vizuara.substack.com/
+    group: tools
+    kind: reading
+    site: vizuara.substack.com
+    added: '2026-03-05'
+  - id: paperplot-automating-academic-illustration
+    title: PaperPlot - Automating Academic Illustration
+    url: https://paperplot.org/
+    group: tools
+    kind: tool
+    site: paperplot.org
+    added: '2026-03-12'
+  - id: world-labs-theworldlabs-x
+    title: World Labs (@theworldlabs) / X
+    url: https://x.com/theworldlabs
+    group: tools
+    kind: tool
+    site: x.com
+    added: '2026-03-14'
+  - id: tigp-aiot-program
+    title: TIGP AIoT Program
+    url: https://tigpaiot.iis.sinica.edu.tw/#/
+    group: tools
+    kind: tool
+    site: tigpaiot.iis.sinica.edu.tw
+    added: '2026-03-14'
+  - id: limhyungtae-awesome-phd-cv
+    title: LimHyungTae/Awesome-PhD-CV
+    url: https://github.com/LimHyungTae/Awesome-PhD-CV
+    group: tools
+    kind: code
+    site: github.com
+    note: Curated academic CV templates and guidelines for PhD students, researchers, and faculty
+      job applicants.
+    added: '2026-03-24'
+  - id: euraxess-researchers-in-motion
+    title: EURAXESS | Researchers in motion
+    url: https://euraxess.ec.europa.eu/
+    group: funding
+    kind: position
+    site: euraxess.ec.europa.eu
+    added: '2026-03-30'
+  - id: bop
+    title: BOP
+    url: https://bop.felk.cvut.cz/challenges/
+    group: tools
+    kind: dataset
+    site: bop.felk.cvut.cz
+    added: '2025-09-04'
+  - id: david-morilla-cabello
+    title: David Morilla-Cabello
+    url: https://dvdmc.github.io/posts/research-guide/
+    group: tools
+    kind: tool
+    site: dvdmc.github.io
+    added: '2026-04-20'
+  - id: github
+    title: GitHub
+    url: https://github.com/
+    group: tools
+    kind: code
+    site: github.com
+    added: '2026-04-22'
+  - id: sci-bot
+    title: sci-bot
+    url: https://sci-bot.ru/
+    group: tools
+    kind: tool
+    site: sci-bot.ru
+    added: '2026-04-28'
+  - id: homepage-toyota-research-institute
+    title: Homepage | Toyota Research Institute
+    url: https://www.tri.global/
+    group: tools
+    kind: tool
+    site: tri.global
+    added: '2026-04-29'
+  - id: robotics-toyota-research-institute
+    title: Robotics | Toyota Research Institute
+    url: https://www.tri.global/our-work/robotics
+    group: tools
+    kind: tool
+    site: tri.global
+    added: '2026-04-29'
+  - id: kird-homepage-알림공간-공지사항-상세-화면
+    title: 'KIRD Homepage: 알림공간 > 공지사항 | 상세 화면'
+    url: https://www.kird.re.kr/notificationSpace/notice/1019c9aa-d42f-4142-9d13-1304b7c45434
+    group: tools
+    kind: tool
+    site: kird.re.kr
+    added: '2026-05-02'
+  - id: ai-ml-conference-deadlines-2026-2027-countdo
+    title: 'AI & ML Conference Deadlines 2026–2027 — Countdowns & Calendar | Bibby AI'
+    url: https://trybibby.com/conference-deadlines
+    group: tools
+    kind: tool
+    site: trybibby.com
+    added: '2026-06-01'
+  - id: ai-conference-deadlines
+    title: AI Conference Deadlines
+    url: https://nunoduarte.github.io/deadlines/
+    group: tools
+    kind: tool
+    site: nunoduarte.github.io
+    added: '2026-06-01'
+  - id: hugging
+    title: Hugging
+    url: https://huggingface.co/selim-sarowar
+    group: tools
+    kind: code
+    site: huggingface.co
+    added: '2026-01-24'
+  - id: erasmus-mundus-catalogue-european-education-
+    title: Erasmus Mundus Catalogue - European Education and Culture Executive Agency
+    url: https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en
+    group: funding
+    kind: position
+    site: eacea.ec.europa.eu
+    added: '2026-07-23'
+  - id: cspaper-the-verification-layer-of-research-c
+    title: CSPaper — The Verification Layer of Research — CSPaper
+    url: https://cspaper.org/
+    group: tools
+    kind: tool
+    site: cspaper.org
+    added: '2026-07-31'
+  - id: stanford-agentic-reviewer-submit-paper
+    title: Stanford Agentic Reviewer - Submit Paper
+    url: https://paperreview.ai/
+    group: tools
+    kind: tool
+    site: paperreview.ai
+    added: '2026-07-31'

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import os
+import re
 import sys
 import datetime
 import argparse
 import subprocess
+import urllib.parse
+from html.parser import HTMLParser
 import yaml
 
 # Path setup
@@ -398,6 +401,309 @@ def add_idea_interactive():
     save_yaml('research_ideas.yml', data, header=leading_comment('research_ideas.yml'), width=86)
     print(f"Added idea '{idea_id}'. It renders at /research-ideas/#idea-{idea_id}.")
 
+# ---------------------------------------------------------------------------
+#  Link library: import a browser bookmarks export into _data/link_library.yml
+# ---------------------------------------------------------------------------
+
+LINK_GROUPS = [
+    {'id': 'robotics', 'label': 'Robotics Labs', 'icon': 'fa-robot', 'color': '#ea7317',
+     'blurb': 'Groups, institutes and people working on robot learning and control.'},
+    {'id': 'vision', 'label': 'Computer Vision Labs', 'icon': 'fa-eye', 'color': '#0891b2',
+     'blurb': 'Vision, graphics and perception groups worth watching.'},
+    {'id': 'benchmarks', 'label': 'Benchmarks & Datasets', 'icon': 'fa-database', 'color': '#ef4444',
+     'blurb': 'Simulators, task suites and datasets used for evaluation.'},
+    {'id': 'people', 'label': 'Researchers', 'icon': 'fa-user-graduate', 'color': '#8b5cf6',
+     'blurb': 'Individual homepages and profiles.'},
+    {'id': 'funding', 'label': 'Funding & Positions', 'icon': 'fa-award', 'color': '#f59e0b',
+     'blurb': 'Fellowships, mobility schemes and open calls.'},
+    {'id': 'tools', 'label': 'Tools & Trackers', 'icon': 'fa-toolbox', 'color': '#10b981',
+     'blurb': 'Writing, figure, deadline and paper-tracking tools.'},
+]
+
+# Bookmark folder (below the bar) -> group id. Anything unmapped lands in the
+# fallback group and can be re-sorted by editing the data file.
+FOLDER_GROUPS = {
+    ('Robo Labs',): 'robotics',
+    ('Robo Labs', 'Benchmark'): 'benchmarks',
+    ('CV Labs',): 'vision',
+    ('Scientists',): 'people',
+}
+
+# Hosts that are private accounts, chat sessions or workspaces. A portfolio
+# page is public, so these never leave the browser.
+SKIP_HOSTS = {
+    'mail.google.com', 'keep.google.com', 'docs.google.com', 'drive.google.com',
+    'notebook.google.com', 'calendar.google.com', 'app.notion.com', 'www.notion.so',
+    'notion.so', 'claude.ai', 'chatgpt.com', 'chat.openai.com', 'prism.openai.com',
+    'gemini.google.com', 'grok.com', 'perplexity.ai', 'www.perplexity.ai',
+    'chat.sakana.ai', 'manus.im', 'www.meta.ai', 'meta.ai', 'portal.yu.ac.kr',
+    'factchat.yu.ac.kr', 'www.google.com', 'google.com', 'www.canva.com',
+    'huggingface.co/selim-sarowar',
+}
+SKIP_PATTERNS = ('/login', '/signin', '/sign-in', '/sso/', 'mentor-login', 'localhost')
+# authuser, usp and pli ride along on Google Sites links and say nothing about
+# the page, so they are stripped rather than treated as private.
+TRACKING_PREFIXES = ('utm_', 'fbclid', 'gclid', 'icid', 'linkid', 'rcm', 'mibextid',
+                     'authuser', 'usp', 'pli', 'sa', 'ved')
+
+def _host(url):
+    try:
+        return urllib.parse.urlparse(url).netloc.lower()
+    except ValueError:
+        return ''
+
+def _is_public(url):
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme not in ('http', 'https'):
+        return False, 'not a web link'
+    host = parsed.netloc.lower()
+    if not host:
+        return False, 'no host'
+    if re.match(r'^\d{1,3}(\.\d{1,3}){3}', host):
+        return False, 'internal address'
+    if host in SKIP_HOSTS:
+        return False, 'private account or workspace'
+    low = url.lower()
+    for pat in SKIP_PATTERNS:
+        if pat in low:
+            return False, 'session or login URL'
+    return True, ''
+
+def clean_url(url):
+    parsed = urllib.parse.urlparse(url)
+    keep = [(k, v) for k, v in urllib.parse.parse_qsl(parsed.query)
+            if not any(k.lower().startswith(p) for p in TRACKING_PREFIXES)]
+    query = urllib.parse.urlencode(keep)
+    return urllib.parse.urlunparse(parsed._replace(query=query))
+
+def url_key(url):
+    parsed = urllib.parse.urlparse(clean_url(url))
+    path = parsed.path.rstrip('/')
+    return (parsed.netloc.lower().replace('www.', ''), path, parsed.query)
+
+def classify(url, title, group):
+    """Best-guess kind, stored in the file so it can be corrected by hand."""
+    host = _host(url).replace('www.', '')
+    low = (url + ' ' + title).lower()
+    if host in ('github.com', 'gitlab.com', 'huggingface.co', 'gitee.com'):
+        return 'code'
+    if host in ('arxiv.org', 'openreview.net', 'proceedings.mlr.press') or 'substack.com' in host \
+            or '/blog' in low or 'medium.com' in host:
+        return 'reading'
+    if 'youtube.com' in host or 'youtu.be' in host:
+        return 'talk'
+    if any(w in low for w in ('jobs', 'careers', 'vacanc', 'recruit', 'position', 'phd-candidate',
+                              'fellowship', 'scholarship', 'euraxess', 'jobbnorge')):
+        return 'position'
+    if group == 'benchmarks' or any(w in low for w in ('benchmark', 'dataset', 'challenge', 'leaderboard')):
+        return 'dataset'
+    if group == 'people' or 'sites.google.com/view' in low:
+        return 'people'
+    if any(w in low for w in ('lecture', 'course', 'tutorial', 'summer school')):
+        return 'course'
+    if group == 'tools':
+        return 'tool'
+    return 'lab'
+
+def tidy_title(title, url):
+    title = re.sub(r'\s+', ' ', title or '').strip()
+    note = ''
+    if _host(url).endswith('github.com') and ': ' in title:
+        title, note = title.split(': ', 1)
+    if len(title) > 96:
+        title = title[:95].rstrip() + '\u2026'
+    if len(note) > 160:
+        note = note[:159].rstrip() + '\u2026'
+    return title or urllib.parse.urlparse(url).netloc, note
+
+class BookmarkParser(HTMLParser):
+    """Netscape bookmark format: nested <DL> with <H3> folders and <A> links."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.path, self.items = [], []
+        self._mode, self._attrs, self._buf = None, {}, ''
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'h3':
+            self._mode, self._buf = 'h3', ''
+        elif tag == 'a':
+            self._mode, self._buf, self._attrs = 'a', '', dict(attrs)
+
+    def handle_endtag(self, tag):
+        if tag == 'h3':
+            self.path.append(self._buf.strip())
+            self._mode = None
+        elif tag == 'a':
+            self.items.append({
+                'folder': tuple(self.path),
+                'title': self._buf.strip(),
+                'url': self._attrs.get('href', ''),
+                'added': self._attrs.get('add_date', ''),
+            })
+            self._mode = None
+        elif tag == 'dl' and self.path:
+            self.path.pop()
+
+    def handle_data(self, data):
+        if self._mode:
+            self._buf += data
+
+LINK_LIBRARY_HEADER = """\
+# ==========================================================================
+#  Link Library - data source for the directory on /research-ideas/
+# ==========================================================================
+#
+#  Rendered by _pages/research-ideas.html below the idea board, filtered by
+#  initLinkLibrary() in assets/js/main.js.
+#
+#  Import a browser bookmarks export (File > Bookmark manager > Export):
+#      ./scripts/manage.py import-bookmarks --file bookmarks.html
+#  It merges: existing entries and any hand edits are kept, new URLs are
+#  appended, duplicates and private links are skipped. Add one by hand with:
+#      ./scripts/manage.py add-link
+#
+#  groups   Sections of the directory, in display order.
+#             id, label, icon (Font Awesome solid), color (hex), blurb
+#  links    id     stable slug, used by the anchor
+#           title  display name
+#           url    the link
+#           group  group id
+#           kind   lab | code | reading | dataset | people | course |
+#                  position | talk | tool   (drives the icon and the filter)
+#           site   host shown under the title
+#           note   one line of context, optional
+#           added  YYYY-MM-DD the link was captured
+#
+#  Folders that the importer maps: Robo Labs -> robotics,
+#  Robo Labs/Benchmark -> benchmarks, CV Labs -> vision,
+#  Scientists -> people. Everything else lands in the fallback group.
+# ==========================================================================
+
+"""
+
+def link_slug(title, url, taken):
+    base = slugify(title) or slugify(_host(url)) or 'link'
+    base = base[:44]
+    slug, n = base, 2
+    while slug in taken:
+        slug = '%s-%d' % (base, n)
+        n += 1
+    taken.add(slug)
+    return slug
+
+def import_bookmarks(path, fallback='tools', dry_run=False):
+    if not os.path.exists(path):
+        print(f"No such file: {path}")
+        sys.exit(1)
+    parser = BookmarkParser()
+    with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        parser.feed(f.read())
+
+    data = load_yaml('link_library.yml')
+    if not isinstance(data, dict) or not data:
+        data = {'groups': LINK_GROUPS, 'links': []}
+    data.setdefault('groups', LINK_GROUPS)
+    data.setdefault('links', [])
+
+    known = {url_key(l['url']) for l in data['links']}
+    taken = {l['id'] for l in data['links']}
+    added, skipped, dupes = [], {}, 0
+
+    for item in parser.items:
+        url = clean_url(item['url'])
+        ok, reason = _is_public(url)
+        if not ok:
+            skipped.setdefault(reason, []).append(item['title'] or url)
+            continue
+        key = url_key(url)
+        if key in known:
+            dupes += 1
+            continue
+        known.add(key)
+        folder = tuple(p for p in item['folder'] if p.lower() not in ('bookmarks bar', 'bookmarks menu', 'other bookmarks'))
+        group = FOLDER_GROUPS.get(folder)
+        title, note = tidy_title(item['title'], url)
+        kind = classify(url, title, group or fallback)
+        if group is None:
+            # An unmapped folder: let the kind decide rather than dumping
+            # everything into one bucket.
+            group = 'funding' if kind == 'position' else fallback
+        entry = {
+            'id': link_slug(title, url, taken),
+            'title': title,
+            'url': url,
+            'group': group,
+            'kind': kind,
+            'site': _host(url).replace('www.', ''),
+        }
+        if note:
+            entry['note'] = note
+        if item['added']:
+            try:
+                entry['added'] = datetime.date.fromtimestamp(int(item['added'])).isoformat()
+            except (ValueError, OverflowError, OSError):
+                pass
+        added.append(entry)
+
+    print(f"Parsed {len(parser.items)} bookmarks from {os.path.basename(path)}")
+    print(f"  new: {len(added)}   already present: {dupes}   skipped: {sum(len(v) for v in skipped.values())}")
+    for reason, titles in sorted(skipped.items()):
+        print(f"  skipped ({reason}): {len(titles)}")
+        for t in titles[:40]:
+            print(f"      - {t[:76]}")
+    by_group = {}
+    for e in added:
+        by_group[e['group']] = by_group.get(e['group'], 0) + 1
+    for g, n in sorted(by_group.items(), key=lambda kv: -kv[1]):
+        print(f"  -> {g}: {n}")
+
+    if dry_run:
+        print("Dry run: nothing written.")
+        return
+
+    data['links'] = data['links'] + added
+    save_yaml('link_library.yml', data,
+              header=leading_comment('link_library.yml') or LINK_LIBRARY_HEADER, width=92)
+    print(f"{len(data['links'])} links in _data/link_library.yml")
+
+def add_link_interactive():
+    data = load_yaml('link_library.yml')
+    if not isinstance(data, dict) or not data:
+        data = {'groups': LINK_GROUPS, 'links': []}
+    groups = [g['id'] for g in data.get('groups', LINK_GROUPS)]
+    kinds = ['lab', 'code', 'reading', 'dataset', 'people', 'course', 'position', 'talk', 'tool']
+
+    print("\n--- New link ---")
+    url = clean_url(ask("URL", required=True))
+    ok, reason = _is_public(url)
+    if not ok:
+        print(f"  Refusing: {reason}. This page is public.")
+        sys.exit(1)
+    if url_key(url) in {url_key(l['url']) for l in data['links']}:
+        print("  Already in the library.")
+        sys.exit(0)
+    title = ask("Title", required=True)
+    group = ask_choice("Group", groups, groups[0])
+    kind = ask_choice("Kind", kinds, classify(url, title, group))
+    note = ask("One line of context (optional)")
+
+    entry = {
+        'id': link_slug(title, url, {l['id'] for l in data['links']}),
+        'title': title,
+        'url': url,
+        'group': group,
+        'kind': kind,
+        'site': _host(url).replace('www.', ''),
+    }
+    if note:
+        entry['note'] = note
+    entry['added'] = datetime.date.today().isoformat()
+    data['links'].append(entry)
+    save_yaml('link_library.yml', data,
+              header=leading_comment('link_library.yml') or LINK_LIBRARY_HEADER, width=92)
+    print(f"Added '{title}' to {group}.")
+
 def run_server():
     print("Starting Jekyll Local Server...")
     try:
@@ -425,6 +731,14 @@ def main():
     # Add idea command
     subparsers.add_parser('add-idea', help="Interactively log a research idea")
 
+    # Link library commands
+    parser_bm = subparsers.add_parser('import-bookmarks', help="Merge a browser bookmarks export into the link library")
+    parser_bm.add_argument('--file', required=True, help="Path to the exported bookmarks HTML file")
+    parser_bm.add_argument('--group', default='tools', help="Group for links whose folder is not mapped")
+    parser_bm.add_argument('--dry-run', action='store_true', help="Report what would be imported, write nothing")
+
+    subparsers.add_parser('add-link', help="Add a single link to the library")
+
     # Serve command
     subparsers.add_parser('serve', help="Run the local Jekyll dev server")
 
@@ -438,6 +752,10 @@ def main():
         add_project_interactive()
     elif args.command == 'add-idea':
         add_idea_interactive()
+    elif args.command == 'import-bookmarks':
+        import_bookmarks(args.file, fallback=args.group, dry_run=args.dry_run)
+    elif args.command == 'add-link':
+        add_link_interactive()
     elif args.command == 'serve':
         run_server()
     else:

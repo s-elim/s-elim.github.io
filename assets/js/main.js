@@ -1806,6 +1806,132 @@
     }
   }
 
+  /* ---- Link Library --------------------------------------------------- */
+  // The directory below the idea board on /research-ideas/, rendered by Jekyll
+  // from _data/link_library.yml. Filters by section, by kind and by text, keeps
+  // the per-section counts honest, and collapses sections that go empty.
+  function initLinkLibrary() {
+    var wrap = document.getElementById("links-groups");
+    if (!wrap) return;
+
+    var rows = Array.prototype.slice.call(wrap.querySelectorAll(".lk"));
+    if (!rows.length) return;
+
+    var groups = Array.prototype.slice.call(wrap.querySelectorAll(".lg"));
+    var searchInput = document.getElementById("link-search");
+    var emptyMsg = document.getElementById("links-empty");
+    var countEl = document.getElementById("links-count");
+    var collapseBtn = document.getElementById("links-collapse");
+
+    var models = rows.map(function (row) {
+      var section = row.closest(".lg");
+      return {
+        row: row,
+        group: section ? section.getAttribute("data-group") : "",
+        kind: row.getAttribute("data-kind") || "",
+        search: (row.getAttribute("data-search") || "").toLowerCase()
+      };
+    });
+
+    var state = { group: "all", kind: "all", query: "" };
+
+    function setOpen(section, open) {
+      var head = section.querySelector(".lg__head");
+      var body = section.querySelector(".lg__body");
+      if (!head || !body) return;
+      head.setAttribute("aria-expanded", String(open));
+      body.hidden = !open;
+    }
+
+    function apply() {
+      var total = 0;
+      models.forEach(function (m) {
+        var show = (state.group === "all" || m.group === state.group) &&
+                   (state.kind === "all" || m.kind === state.kind) &&
+                   (!state.query || m.search.indexOf(state.query) !== -1);
+        m.row.classList.toggle("is-hidden", !show);
+        if (show) total++;
+      });
+
+      groups.forEach(function (section) {
+        var visible = section.querySelectorAll(".lk:not(.is-hidden)").length;
+        var counter = section.querySelector("[data-lg-count]");
+        if (counter) counter.textContent = visible;
+        section.classList.toggle("is-hidden", visible === 0);
+        // A search should surface its hits, not leave them behind a collapsed
+        // header; clearing the box leaves the sections as the reader left them.
+        if (state.query && visible) setOpen(section, true);
+      });
+
+      if (emptyMsg) emptyMsg.hidden = total > 0;
+      if (countEl) {
+        countEl.textContent = total === models.length
+          ? models.length + " links"
+          : total + " of " + models.length + " links";
+      }
+    }
+
+    document.querySelectorAll(".dl-pill[data-lfilter]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-pill[data-lfilter]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.group = btn.getAttribute("data-lfilter");
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-lkind]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-lkind]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.kind = btn.getAttribute("data-lkind");
+        apply();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        state.query = (searchInput.value || "").trim().toLowerCase();
+        apply();
+      });
+    }
+
+    wrap.addEventListener("click", function (e) {
+      var head = e.target.closest(".js-lg-toggle");
+      if (!head) return;
+      var section = head.closest(".lg");
+      if (section) setOpen(section, head.getAttribute("aria-expanded") !== "true");
+    });
+
+    if (collapseBtn) {
+      collapseBtn.addEventListener("click", function () {
+        var collapse = collapseBtn.getAttribute("aria-pressed") !== "true";
+        collapseBtn.setAttribute("aria-pressed", String(collapse));
+        collapseBtn.classList.toggle("is-active", collapse);
+        collapseBtn.innerHTML = collapse
+          ? '<i class="fas fa-expand-alt" aria-hidden="true"></i> Expand all'
+          : '<i class="fas fa-compress-alt" aria-hidden="true"></i> Collapse all';
+        groups.forEach(function (section) { setOpen(section, !collapse); });
+      });
+    }
+
+    apply();
+
+    var hash = window.location.hash || "";
+    if (hash.indexOf("#link-") === 0) {
+      var target = document.getElementById(hash.slice(1));
+      if (target) {
+        var section = target.closest(".lg");
+        if (section) setOpen(section, true);
+        target.classList.add("is-flash");
+        window.setTimeout(function () { target.classList.remove("is-flash"); }, 2400);
+        window.setTimeout(function () {
+          target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+        }, 60);
+      }
+    }
+  }
+
   /* ---- Floating Back to Top Button ----------------------------------- */
   function initBackToTop() {
     var btn = document.getElementById("back-to-top");
@@ -2461,6 +2587,7 @@
     safe(initDeadlineBadge);
     safe(initJournalExplorer);
     safe(initResearchIdeas);
+    safe(initLinkLibrary);
     safe(initRankings);
     safe(initPalette);
     safe(initScrollProgress);

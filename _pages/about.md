@@ -42,7 +42,7 @@ redirect_from:
       <button type="button" class="hero__link js-modal-open" data-modal-target="#updates-modal">
         <i class="fas fa-bullhorn" aria-hidden="true"></i><span class="hero__link-text">Updates</span>
       </button>
-      <a class="hero__link hero__link--page" href="{{ '/research-ideas/' | relative_url }}">
+      <a class="hero__link hero__link--page" href="{{ '/research-ideas/' | relative_url }}" title="{{ site.data.research_ideas.ideas | size }} ideas and {{ site.data.link_library.links | size }} tracked links">
         <i class="fas fa-lightbulb" aria-hidden="true"></i><span class="hero__link-text">Research Ideas</span><span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.research_ideas.ideas | size }}</span></span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
       </a>
       <a class="hero__link hero__link--page" href="{{ '/deadlines/' | relative_url }}">
