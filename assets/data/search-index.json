@@ -17,6 +17,7 @@ layout: none
 {%- comment -%} Off-nav pages, reached from the home page hero {%- endcomment -%}
 ,{"t":"Conference Deadlines","k":"Page","u":{{ "/deadlines/" | relative_url | jsonify }},"s":"conference deadlines call for papers submission countdown CORE rank"}
 ,{"t":"Top Journals","k":"Page","u":{{ "/journals/" | relative_url | jsonify }},"s":"journals SCIE Q1 impact factor robotics vision AI"}
+,{"t":"Research Ideas","k":"Page","u":{{ "/research-ideas/" | relative_url | jsonify }},"s":"research ideas mind map physical AI directions backlog"}
 
 {%- comment -%} Conferences: deep-link to the card on the deadlines page {%- endcomment -%}
 {%- for c in site.data.conferences -%}
@@ -26,6 +27,12 @@ layout: none
 {%- comment -%} Journals: deep-link to the card on the journals page {%- endcomment -%}
 {%- for j in site.data.journals -%}
 ,{"t":{{ j.name | jsonify }},"k":"Journal","u":{{ j.name | slugify | prepend: "/journals/#journal-" | relative_url | jsonify }},"s":{{ j.abbr | default: "" | append: " " | append: j.issn | append: " " | append: j.publisher | append: " " | append: j.category | append: " SCIE-Q1 journal impact factor" | jsonify }},"m":{{ "IF " | append: j.jif | append: " · " | append: j.percentile | jsonify }}}
+{%- endfor -%}
+
+{%- comment -%} Research ideas: deep-link to the card, which opens on hash {%- endcomment -%}
+{%- for idea in site.data.research_ideas.ideas -%}
+{%- capture ihay %}{{ idea.summary }} {{ idea.venue }} {{ idea.tags | join: " " }} {{ idea.source.author }}{% endcapture -%}
+,{"t":{{ idea.title | jsonify }},"k":"Idea","u":{{ idea.id | prepend: "/research-ideas/#idea-" | relative_url | jsonify }},"s":{{ ihay | strip_newlines | jsonify }},"m":{{ idea.status | capitalize | jsonify }}}
 {%- endfor -%}
 
 {%- comment -%} Publications: deep-link into the page's own search filter {%- endcomment -%}

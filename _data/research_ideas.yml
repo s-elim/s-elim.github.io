@@ -1,0 +1,243 @@
+# ==========================================================================
+#  Research Ideas - data source for the /research-ideas/ board and mind map
+# ==========================================================================
+#
+#  Rendered by _pages/research-ideas.html, driven by initResearchIdeas() in
+#  assets/js/main.js, styled by _sass/theme/_research-ideas.scss. The home page
+#  hero reads the same list for its counter chip. Nothing here appears in the
+#  main navigation: the page is reached from the hero and from Cmd/Ctrl-K.
+#
+#  This file is a capture log, not a claim. An entry records where an idea came
+#  from, what it would take to test it, and what is still unknown. Publication
+#  status lives in publications.yml and is never implied here.
+#
+#  Add an idea with:  ./scripts/manage.py add-idea
+#  (or by hand, newest first, following the schema below)
+#
+#  themes
+#  ------
+#  The ring of the mind map and the colour of every card. Order here is the
+#  order around the map, clockwise from the top.
+#    id     Slug used by `theme`, `also` and the filter pills.
+#    label  Display name.
+#    icon   Font Awesome 5 free-solid class (fa-globe, fa-robot, ...).
+#    color  Hex used for the card accent and the map node. Pick something
+#           distinguishable from its neighbours in both light and dark mode.
+#    blurb  One line shown in the map legend and the filter tooltip.
+#
+#  ideas
+#  -----
+#    id        Stable slug. Anchor (#idea-<id>), map node id, `related` target.
+#              Never reuse or rename one: links break.
+#    title     Short claim or question. This is the map label, so keep it tight.
+#    theme     Primary theme id. Drives colour and map placement.
+#    also      Secondary theme ids. Rendered as extra edges on the map.
+#    status    spark    captured, not yet examined
+#              shaping  being framed into a question
+#              active   being worked right now
+#              parked   deliberately on hold, with a reason in `angle`
+#              shipped  turned into a manuscript or a repository
+#    priority  1-5. 5 = drop other things for it. Drives the sort.
+#    added     YYYY-MM-DD the idea was captured.
+#    effort    low | medium | high   Honest cost to a first result.
+#    risk      low | medium | high   Chance the idea does not survive contact.
+#    venue     Candidate target, free text. A target, never a claim.
+#    summary   One or two sentences. What the idea is.
+#    why       What gap it addresses and why it is worth compute.
+#    angle     Your own attack on it, including what makes it hard for you
+#              specifically. Write the objection you already expect.
+#    facts     Verified detail from the source, as label/value pairs. Only
+#              things you actually read; put anything uncertain in `questions`.
+#    questions Open research questions, most decision-relevant first.
+#    next      Concrete next actions. Each one should fit in a day.
+#    source    Where it came from.
+#                kind      linkedin | arxiv | paper | talk | lab | self | web
+#                author    Who said it.
+#                label     Human-readable description of the source.
+#                url       Link to the source.
+#                captured  YYYY-MM-DD you read it.
+#    links     Extra references, as label/url pairs.
+#    connects  Your own projects or papers this touches, as plain labels.
+#    related   ids of other ideas. Renders as a dashed cross-link on the map.
+#    tags      Free keywords. Searched, not displayed as filters.
+#    note      Caveat printed at the bottom of the card. Use it for anything
+#              you have not verified.
+# ==========================================================================
+
+themes:
+  - id: world-models
+    label: World Models
+    icon: fa-globe
+    color: '#6366f1'
+    blurb: Action-conditioned latent dynamics, lookahead, controllability.
+  - id: vla
+    label: VLA Models
+    icon: fa-language
+    color: '#0ea5e9'
+    blurb: Vision-language-action policies for robot manipulation.
+  - id: agentic
+    label: Agentic Robotics
+    icon: fa-project-diagram
+    color: '#8b5cf6'
+    blurb: Planning, tool use and self-correction inside the control loop.
+  - id: spatial-3d
+    label: '3D & Spatial Intelligence'
+    icon: fa-cube
+    color: '#0891b2'
+    blurb: Geometry, Gaussian representations, spatial reasoning.
+  - id: pose-6d
+    label: 6D Pose Estimation
+    icon: fa-crosshairs
+    color: '#14b8a6'
+    blurb: Object pose from RGB-D, category-level and novel-object settings.
+  - id: embodied
+    label: 'Embodied & Physical AI'
+    icon: fa-robot
+    color: '#ea7317'
+    blurb: Sim-to-real, contact, whole-body control, deployment.
+  - id: causal
+    label: 'Causal Learning & Self-Modeling'
+    icon: fa-code-branch
+    color: '#d946ef'
+    blurb: Interventions, invariance, agents that model their own body.
+  - id: tta
+    label: Test-Time Adaptation
+    icon: fa-bolt
+    color: '#f59e0b'
+    blurb: Adaptation and test-time compute under distribution shift.
+  - id: efficiency
+    label: Efficient Post-Training
+    icon: fa-compress-arrows-alt
+    color: '#10b981'
+    blurb: Fine-tuning, distillation and inference budgets for edge robots.
+  - id: data-benchmarks
+    label: 'Data & Benchmarks'
+    icon: fa-database
+    color: '#ef4444'
+    blurb: Where the data comes from and whether the metric measures anything.
+ideas:
+  - id: v2d-pipeline-break
+    title: Where the human-video to robot-skill pipeline actually breaks
+    theme: data-benchmarks
+    also:
+      - embodied
+      - spatial-3d
+      - world-models
+    status: shaping
+    priority: 4
+    added: 2026-09-21
+    effort: high
+    risk: high
+    venue: CoRL 2026 challenge entry, or an analysis paper at ICRA/IROS 2027
+    summary: >-
+      NVIDIA's Video-to-Data (V2D) Challenge splits the human-video to robot-policy pipeline
+      into three coupled tracks and asks which stage loses the task-relevant signal: 4D
+      reconstruction from monocular third-person video, robotic grounding of that reconstruction
+      into a policy, and egocentric video to policy end to end.
+    why: >-
+      The field reports reconstruction quality and policy success in separate papers with
+      separate protocols, so nobody has shown that lowering chamfer distance raises manipulation
+      success. V2D fixes the embodiment, the task suite and the corruption model across
+      all three tracks, which turns that question into a measurable one for the first time.
+    angle: >-
+      The tier structure of Track 2 is the interesting instrument, not the leaderboard.
+      Tier 1 uses clean multi-view captures, Tier 2 injects corruption sampled from the
+      Track 1 error distribution, and Tier 3 uses off-the-shelf reconstructions. Sweeping
+      that corruption gives a dose-response curve from perceptual error to policy success,
+      which is the same question the outcome-bottleneck work asks: which part of the perceptual
+      error is task-relevant at all. The cost is real. Track 2 fixes a G1 humanoid with
+      Dex3 hands, so entering it means standing up an Isaac Lab humanoid retargeting and
+      RL stack that has nothing in common with the Franka and LIBERO tooling already running
+      here, and the leaderboard freezes on 4 Nov 2026, about six weeks out, inside the CVPR
+      2027 window. Track 3 is the cheaper fit: it is method-agnostic and accepts an implicit
+      egocentric-video-to-policy model, which is the world-model direction already funded
+      at Future Drive.
+    facts:
+      - label: Track 1
+        value: >-
+          4D reconstruction of human-object interaction from a single third-person RGB video,
+          in metric scale, no depth sensor or rigging. Scored equally on accuracy (chamfer
+          distance for human and object meshes against a multi-view baseline) and physical
+          plausibility (acceleration error, contact penetration).
+      - label: Track 2
+        value: >-
+          Robotic grounding of 4D human-object interaction into a policy on a fixed G1 robot
+          with Dex3 hands. Three tiers: clean multi-view capture, synthetic corruption (jitter,
+          dropout, contact error) sampled from Track 1 error distributions, and off-the-shelf
+          reconstructions. Reported with AUC, SP-SR, MP-SR and MPPE from the CHORD manuscript.
+      - label: Track 3
+        value: >-
+          Egocentric video to policy, evaluated end to end and method-agnostic: explicit
+          reconstruct-then-retarget or implicit VLA / world-action model. Held-out test
+          set curated from an in-house collection.
+      - label: Timeline
+        value: >-
+          Leaderboard opens with the data release, freezes 4 Nov 2026 at 17:00 EST, winners
+          announced 12 Nov 2026 at the CoRL 2026 tutorial. Up to five submissions per week,
+          unlimited in the final three days.
+      - label: Eligibility
+        value: >-
+          A valid final submission, code released under a research license, and a technical
+          report contribution. Nine awards: winner, runner-up and an industry innovation
+          award per track.
+    questions:
+      - >-
+        Does Track 1 accuracy rank-correlate with Track 2 and Track 3 policy success? Kendall
+        tau across public submissions answers it, and a weak correlation would mean the
+        reconstruction leaderboard optimises a metric the downstream task does not care
+        about.
+      - >-
+        Which corruption mode dominates the drop from Tier 1 to Tier 3: pose jitter, temporal
+        dropout, or contact error? The Tier 2 sampler is parameterised, so this is an ablation
+        rather than a guess.
+      - >-
+        Does training the grounding stage on Tier 2 corruptions beat training on clean Tier
+        1 data when both are evaluated on Tier 3?
+      - >-
+        Is metric-scale recovery the binding constraint, or is contact and wrench plausibility
+        the thing that decides whether a retargeted motion survives on hardware?
+      - >-
+        Does any conclusion drawn on a G1 with Dex3 hands transfer to a five-finger gripper
+        on a mobile base, which is the RISE deployment target?
+    next:
+      - Register and pull the released data and evaluation scripts.
+      - >-
+        Read the Tier 2 corruption sampler in eval_robotic_grounding.py and record exactly
+        which error statistics it draws from Track 1.
+      - Check whether the leaderboard exposes per-episode results. Without them the correlation
+        study needs its own submissions.
+      - >-
+        Decide scope before committing compute: Track 3 only, or no entry and an analysis
+        paper built on the released error distributions.
+    source:
+      kind: linkedin
+      author: NVIDIA Robotics
+      label: NVIDIA Robotics post announcing the V2D Challenge at CoRL 2026
+      url: https://www.linkedin.com/posts/corl2026-ugcPost-7506026673457229824-cOA8/
+      captured: 2026-09-21
+    links:
+      - label: V2D Challenge page
+        url: https://nvidia-isaac.github.io/video_to_data/v2d_challenge/
+      - label: Video-to-Data project
+        url: https://nvidia-isaac.github.io/video_to_data/
+      - label: CoRL 2026
+        url: https://www.corl.org/
+    connects:
+      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
+      - AFFORD-X
+      - PRAXIS
+      - Future Drive world models
+    related: []
+    tags:
+      - human video
+      - 4D reconstruction
+      - retargeting
+      - egocentric
+      - CHORD
+      - Isaac Lab
+      - G1
+      - challenge
+    note: >-
+      Facts above were read from the challenge page on 21 Sep 2026. The page prints "September
+      21, 2025" for the data release, which is a typo for 2026 given the CoRL 2026 cycle.
+      Confirm every date on the challenge site before committing to it.

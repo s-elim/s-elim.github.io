@@ -1119,6 +1119,693 @@
   }
 
 
+  /* ---- Research Ideas board + mind map -------------------------------- */
+  // Cards are rendered by Jekyll from _data/research_ideas.yml on
+  // /research-ideas/. This drives theme and status filtering, search, sorting,
+  // and the SVG mind map. The map is laid out deterministically (themes on a
+  // ring around a root node, ideas fanned out in their theme's wedge) so the
+  // same data always draws the same picture, and it is built the first time the
+  // map view is opened rather than on every page load.
+  var IM_NS = "http://www.w3.org/2000/svg";
+  var IM_R_THEME_MIN = 210;  // smallest theme-ring radius
+  var IM_R_GAP = 140;        // clearance between the theme ring and the first idea
+  var IM_RING_STEP = 88;     // radial step between two ideas of the same theme
+  var IM_CHAR_W = 6.2;       // idea label width per character at 11.5px
+  var IM_THEME_CHAR_W = 7;   // theme label width per character at 12.5px bold
+  var IM_LINE_CHARS = 20;    // wrap width of an idea label, in characters
+  var IM_THEME_CHARS = 16;   // wrap width of a theme label, in characters
+  var IM_NODE_H1 = 27;       // one-line idea box
+  var IM_NODE_H2 = 40;       // two-line idea box
+
+  // Label widths are estimated from character counts rather than measured with
+  // getBBox: the map is often built while its panel is still hidden, where
+  // getBBox reports zeros.
+
+  function imEl(name, attrs) {
+    var node = document.createElementNS(IM_NS, name);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) { node.setAttribute(k, attrs[k]); });
+    }
+    return node;
+  }
+
+  // Greedy wrap into at most `maxLines` lines, ellipsised when it overflows.
+  function imWrap(text, maxChars, maxLines) {
+    var words = String(text || "").split(/\s+/);
+    var lines = [];
+    var line = "";
+    words.forEach(function (w) {
+      var candidate = line ? line + " " + w : w;
+      if (candidate.length > maxChars && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = candidate;
+      }
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      var last = lines[maxLines - 1];
+      lines[maxLines - 1] = last.slice(0, Math.max(0, maxChars - 1)).replace(/\s+\S*$/, "") + "…";
+    }
+    return lines;
+  }
+
+  function initResearchIdeas() {
+    var grid = document.getElementById("ideas-grid");
+    if (!grid) return;
+
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(".idea-card"));
+    if (!cards.length) return;
+
+    var mapWrap = document.getElementById("idea-map");
+    var svg = document.getElementById("idea-map-svg");
+    var canvas = document.getElementById("idea-map-canvas");
+    var panel = document.getElementById("idea-map-panel");
+    var panelBody = panel ? panel.querySelector(".im-panel__body") : null;
+    var searchInput = document.getElementById("idea-search");
+    var emptyMsg = document.getElementById("ideas-empty");
+    var countEl = document.getElementById("ideas-count");
+
+    var graph = { themes: [], ideas: [] };
+    var payload = document.getElementById("idea-graph");
+    if (payload) {
+      try { graph = JSON.parse(payload.textContent || payload.innerHTML); } catch (e) { graph = { themes: [], ideas: [] }; }
+    }
+
+    var themes = graph.themes || [];
+    var themeById = {};
+    var themeOrder = {};
+    themes.forEach(function (t, i) { themeById[t.id] = t; themeOrder[t.id] = i; });
+
+    var models = cards.map(function (card) {
+      var id = card.getAttribute("data-id");
+      return {
+        id: id,
+        card: card,
+        theme: card.getAttribute("data-theme") || "",
+        themes: (card.getAttribute("data-themes") || "").split(/\s+/),
+        status: card.getAttribute("data-status") || "",
+        priority: parseInt(card.getAttribute("data-priority"), 10) || 0,
+        added: card.getAttribute("data-added") || "",
+        title: card.getAttribute("data-title") || "",
+        search: (card.getAttribute("data-search") || "").toLowerCase()
+      };
+    });
+    var byId = {};
+    models.forEach(function (m) { byId[m.id] = m; });
+
+    var state = { theme: "all", status: "all", query: "", sort: "added", view: "cards" };
+    var selected = null;
+
+    /* -- filtering, sorting, counts -- */
+    function matches(m) {
+      return (state.theme === "all" || m.themes.indexOf(state.theme) !== -1) &&
+             (state.status === "all" || m.status === state.status) &&
+             (!state.query || m.search.indexOf(state.query) !== -1);
+    }
+
+    function resort() {
+      var ordered = models.slice().sort(function (a, b) {
+        if (state.sort === "priority") return b.priority - a.priority || b.added.localeCompare(a.added);
+        if (state.sort === "theme") {
+          var ta = themeOrder[a.theme], tb = themeOrder[b.theme];
+          ta = (ta === undefined) ? 999 : ta;
+          tb = (tb === undefined) ? 999 : tb;
+          return ta - tb || b.priority - a.priority;
+        }
+        return b.added.localeCompare(a.added) || b.priority - a.priority;
+      });
+      var frag = document.createDocumentFragment();
+      ordered.forEach(function (m) { frag.appendChild(m.card); });
+      grid.appendChild(frag);
+    }
+
+    function apply() {
+      var visible = 0;
+      models.forEach(function (m) {
+        var show = matches(m);
+        m.visible = show;
+        m.card.classList.toggle("is-hidden", !show);
+        if (show) visible++;
+      });
+      resort();
+      if (emptyMsg) emptyMsg.hidden = visible > 0 || state.view === "map";
+      if (countEl) {
+        countEl.textContent = visible === models.length
+          ? models.length + (models.length === 1 ? " idea" : " ideas")
+          : visible + " of " + models.length + " ideas";
+      }
+      if (state.view === "map") drawMap();
+    }
+
+    function syncThemePills() {
+      document.querySelectorAll(".dl-pill[data-ifilter]").forEach(function (b) {
+        b.classList.toggle("is-active", b.getAttribute("data-ifilter") === state.theme);
+      });
+    }
+
+    /* -- mind map ------------------------------------------------------- */
+    var view = null;      // current viewBox
+    var baseView = null;  // the fitted viewBox, restored by the Fit button
+
+    function setView(v) {
+      view = v;
+      svg.setAttribute("viewBox", v.x + " " + v.y + " " + v.w + " " + v.h);
+    }
+
+    function nodeGroup(cls, color, id) {
+      var g = imEl("g", { "class": "im-node " + cls, tabindex: "0", role: "button" });
+      if (color) g.style.setProperty("--idea-color", color);
+      if (id) g.setAttribute("data-node", id);
+      return g;
+    }
+
+    function drawMap() {
+      if (!svg) return;
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      svg.classList.remove("is-focused");
+
+      var edgeLayer = imEl("g", { "class": "im-edges" });
+      var nodeLayer = imEl("g", { "class": "im-nodes" });
+      svg.appendChild(edgeLayer);
+      svg.appendChild(nodeLayer);
+
+      // Every theme is drawn, including the empty ones: the taxonomy is the
+      // point of the map, so a new idea has an obvious place to land.
+      var ring = themes.slice();
+      var known = {};
+      ring.forEach(function (t) { known[t.id] = true; });
+      (graph.ideas || []).forEach(function (g) {
+        if (!known[g.theme]) {
+          known[g.theme] = true;
+          ring.push({ id: g.theme, label: g.theme, color: "#2563eb" });
+        }
+      });
+      if (!ring.length) return;
+
+      var visibleIdeas = (graph.ideas || []).filter(function (g) {
+        var m = byId[g.id];
+        return m && m.visible;
+      });
+      var perTheme = {};
+      ring.forEach(function (t) { perTheme[t.id] = []; });
+      visibleIdeas.forEach(function (g) { (perTheme[g.theme] || (perTheme[g.theme] = [])).push(g); });
+
+      var cx = 0, cy = 0;
+      var step = (Math.PI * 2) / ring.length;
+      var points = {};   // node id -> {x, y}
+
+      // Wrap every visible label first, then size the two rings so that the arc
+      // between neighbouring spokes is always wider than the widest label they
+      // carry. Adding themes or long titles pushes the rings out instead of
+      // piling nodes on top of each other.
+      var box = {};
+      var maxIdeaW = 96;
+      visibleIdeas.forEach(function (g) {
+        var lines = imWrap(g.title, IM_LINE_CHARS, 2);
+        var longest = lines.reduce(function (n, l) { return Math.max(n, l.length); }, 0);
+        var w = Math.max(96, longest * IM_CHAR_W + 22);
+        box[g.id] = { lines: lines, w: w, h: lines.length > 1 ? IM_NODE_H2 : IM_NODE_H1 };
+        maxIdeaW = Math.max(maxIdeaW, w);
+      });
+      var maxThemeW = 0;
+      var themeLines = {};
+      ring.forEach(function (t) {
+        var lines = imWrap(t.label, IM_THEME_CHARS, 2);
+        themeLines[t.id] = lines;
+        maxThemeW = Math.max(maxThemeW, lines.reduce(function (n, l) {
+          return Math.max(n, l.length * IM_THEME_CHAR_W);
+        }, 0));
+      });
+      // + 40 covers the label drawn below each disc: for the spokes at the top
+      // of the ring that offset pulls the label inward, onto a shorter arc.
+      var rTheme = Math.max(IM_R_THEME_MIN, (maxThemeW + 18) / step + 40);
+      // The first idea ring clears both the disc and the widest theme label
+      // beside it, so a long label never runs into the node next to it.
+      var rIdea = Math.max(
+        rTheme + Math.max(IM_R_GAP, maxThemeW / 2 + maxIdeaW / 2 + 20),
+        (maxIdeaW + 26) / step
+      );
+
+      // Root
+      var rootG = nodeGroup("im-node--root", null, "__root");
+      rootG.appendChild(imEl("circle", { "class": "im-node__disc", r: 46, cx: 0, cy: 0 }));
+      var rootT = imEl("text", { x: 0, y: 1, "text-anchor": "middle", "font-size": "13" });
+      rootT.textContent = "Physical AI";
+      rootG.appendChild(rootT);
+      rootG.setAttribute("aria-label", "All themes. Activate to clear the theme filter.");
+      nodeLayer.appendChild(rootG);
+
+      var bounds = { minX: -90, maxX: 90, minY: -90, maxY: 90 };
+      function grow(x, y, w, h) {
+        bounds.minX = Math.min(bounds.minX, x - w);
+        bounds.maxX = Math.max(bounds.maxX, x + w);
+        bounds.minY = Math.min(bounds.minY, y - h);
+        bounds.maxY = Math.max(bounds.maxY, y + h);
+      }
+
+      ring.forEach(function (t, i) {
+        var ang = -Math.PI / 2 + i * step;
+        var tx = cx + rTheme * Math.cos(ang);
+        var ty = cy + rTheme * Math.sin(ang);
+        points["t:" + t.id] = { x: tx, y: ty };
+        var mine = perTheme[t.id] || [];
+
+        // root -> theme
+        var e0 = imEl("path", {
+          "class": "im-edge im-edge--theme",
+          "data-edge": "t:" + t.id,
+          d: "M0,0 Q" + (tx * 0.5) + "," + (ty * 0.5) + " " + tx + "," + ty
+        });
+        e0.style.setProperty("--idea-color", t.color);
+        edgeLayer.appendChild(e0);
+
+        var g = nodeGroup("im-node--theme" + (mine.length ? "" : " im-node--empty"), t.color, "t:" + t.id);
+        g.appendChild(imEl("circle", { "class": "im-node__disc", r: 21, cx: tx, cy: ty }));
+        var cnt = imEl("text", { "class": "im-node__count", x: tx, y: ty + 1, "text-anchor": "middle" });
+        cnt.textContent = String(mine.length);
+        g.appendChild(cnt);
+        themeLines[t.id].forEach(function (ln, k) {
+          var lab = imEl("text", { x: tx, y: ty + 36 + k * 15, "text-anchor": "middle" });
+          lab.textContent = ln;
+          g.appendChild(lab);
+        });
+        g.setAttribute("aria-label", t.label + ", " + mine.length + " idea" + (mine.length === 1 ? "" : "s") + ". Activate to filter the board to this theme.");
+        nodeLayer.appendChild(g);
+        grow(tx, ty + 36 + (themeLines[t.id].length - 1) * 15, maxThemeW / 2 + 10, 30);
+
+        mine.forEach(function (gi, j) {
+          // Ideas stack straight out along their theme's spoke. The step is
+          // projected onto the spoke direction: a branch pointing sideways has
+          // to clear a node's width, one pointing up or down only its height.
+          var spokeStep = Math.max(
+            IM_RING_STEP,
+            Math.abs(Math.cos(ang)) * (maxIdeaW + 14),
+            Math.abs(Math.sin(ang)) * (IM_NODE_H2 + 14)
+          );
+          var rad = rIdea + j * spokeStep;
+          var ix = cx + rad * Math.cos(ang);
+          var iy = cy + rad * Math.sin(ang);
+          points["i:" + gi.id] = { x: ix, y: iy };
+
+          var e1 = imEl("path", {
+            "class": "im-edge",
+            "data-edge": "t:" + t.id,
+            "data-edge2": "i:" + gi.id,
+            d: "M" + tx + "," + ty + " L" + ix + "," + iy
+          });
+          e1.style.setProperty("--idea-color", t.color);
+          edgeLayer.appendChild(e1);
+
+          var lines = box[gi.id].lines;
+          var w = box[gi.id].w;
+          var h = box[gi.id].h;
+
+          var ig = nodeGroup("im-node--idea", t.color, "i:" + gi.id);
+          ig.appendChild(imEl("rect", {
+            "class": "im-node__box",
+            x: ix - w / 2, y: iy - h / 2, width: w, height: h
+          }));
+          lines.forEach(function (ln, k) {
+            var y = iy + (k - (lines.length - 1) / 2) * 14;
+            var tnode = imEl("text", { x: ix, y: y, "text-anchor": "middle" });
+            tnode.textContent = ln;
+            ig.appendChild(tnode);
+          });
+          ig.setAttribute("aria-label", gi.title + ". " + t.label + ", status " + gi.status + ". Activate to read the idea.");
+          nodeLayer.appendChild(ig);
+          grow(ix, iy, w / 2 + 12, h / 2 + 12);
+        });
+      });
+
+      // Secondary themes and idea-to-idea links, drawn under everything else.
+      var drawnPairs = {};
+      visibleIdeas.forEach(function (gi) {
+        var from = points["i:" + gi.id];
+        if (!from) return;
+        (gi.also || []).forEach(function (a) {
+          var to = points["t:" + a];
+          if (!to) return;
+          var e = imEl("path", {
+            "class": "im-edge im-edge--also",
+            "data-edge": "i:" + gi.id,
+            "data-edge2": "t:" + a,
+            d: "M" + from.x + "," + from.y + " Q" + ((from.x + to.x) / 2 * 0.62) + "," + ((from.y + to.y) / 2 * 0.62) + " " + to.x + "," + to.y
+          });
+          var th = themeById[a];
+          if (th) e.style.setProperty("--idea-color", th.color);
+          edgeLayer.insertBefore(e, edgeLayer.firstChild);
+        });
+        (gi.related || []).forEach(function (rid) {
+          var to = points["i:" + rid];
+          var pair = [gi.id, rid].sort().join("|");
+          if (!to || drawnPairs[pair]) return;   // one line per pair, either way round
+          drawnPairs[pair] = true;
+          var e = imEl("path", {
+            "class": "im-edge im-edge--rel",
+            "data-edge": "i:" + gi.id,
+            "data-edge2": "i:" + rid,
+            d: "M" + from.x + "," + from.y + " Q" + ((from.x + to.x) / 2 * 0.5) + "," + ((from.y + to.y) / 2 * 0.5) + " " + to.x + "," + to.y
+          });
+          edgeLayer.insertBefore(e, edgeLayer.firstChild);
+        });
+      });
+
+      var pad = 40;
+      var w = (bounds.maxX - bounds.minX) + pad * 2;
+      var h = (bounds.maxY - bounds.minY) + pad * 2;
+      baseView = { x: bounds.minX - pad, y: bounds.minY - pad, w: w, h: h };
+      setView({ x: baseView.x, y: baseView.y, w: baseView.w, h: baseView.h });
+
+      // A selected idea that a filter has just removed takes its panel with it.
+      if (selected) {
+        if (svg.querySelector('[data-node="' + selected + '"]')) highlight(selected, true);
+        else closePanel();
+      }
+    }
+
+    function fitMap() {
+      if (!baseView) return;
+      setView({ x: baseView.x, y: baseView.y, w: baseView.w, h: baseView.h });
+    }
+
+    /* -- highlight one branch -- */
+    function clearHighlight() {
+      svg.classList.remove("is-focused");
+      svg.querySelectorAll(".is-lit").forEach(function (n) { n.classList.remove("is-lit"); });
+      svg.querySelectorAll(".is-selected").forEach(function (n) { n.classList.remove("is-selected"); });
+    }
+
+    function highlight(nodeId, keepSelected) {
+      clearHighlight();
+      var node = svg.querySelector('[data-node="' + nodeId + '"]');
+      if (!node) return;
+      svg.classList.add("is-focused");
+      node.classList.add("is-lit");
+      if (keepSelected) node.classList.add("is-selected");
+      svg.querySelectorAll(".im-edge").forEach(function (e) {
+        var a = e.getAttribute("data-edge");
+        var b = e.getAttribute("data-edge2");
+        if (a === nodeId || b === nodeId) {
+          e.classList.add("is-lit");
+          [a, b].forEach(function (other) {
+            if (!other || other === nodeId) return;
+            var peer = svg.querySelector('[data-node="' + other + '"]');
+            if (peer) peer.classList.add("is-lit");
+          });
+        }
+      });
+      // A theme keeps its own ideas lit; the root lights the whole ring.
+      if (nodeId === "__root") {
+        svg.classList.remove("is-focused");
+      }
+    }
+
+    /* -- side panel ----------------------------------------------------- */
+    function closePanel() {
+      if (!panel) return;
+      panel.hidden = true;
+      if (panelBody) panelBody.innerHTML = "";
+      selected = null;
+      clearHighlight();
+    }
+
+    function openPanel(ideaId) {
+      var m = byId[ideaId];
+      if (!m || !panel || !panelBody) return;
+      var th = themeById[m.theme] || { label: m.theme, color: "#2563eb" };
+      panel.style.setProperty("--idea-color", th.color);
+      panelBody.innerHTML = "";
+
+      var head = document.createElement("div");
+      head.className = "im-panel__head";
+      var themeLine = document.createElement("span");
+      themeLine.className = "im-panel__theme";
+      themeLine.textContent = th.label;
+      var title = document.createElement("h3");
+      title.className = "im-panel__title";
+      title.textContent = m.title;
+      var status = document.createElement("span");
+      status.className = "idea-status idea-status--" + m.status;
+      status.textContent = m.status;
+      head.appendChild(themeLine);
+      head.appendChild(title);
+      head.appendChild(status);
+      panelBody.appendChild(head);
+
+      var summary = m.card.querySelector(".idea-card__summary");
+      if (summary) panelBody.appendChild(summary.cloneNode(true));
+
+      var details = m.card.querySelector(".idea-card__details");
+      if (details) {
+        var copy = details.cloneNode(true);
+        copy.removeAttribute("id");
+        copy.hidden = false;
+        panelBody.appendChild(copy);
+      }
+
+      var open = document.createElement("button");
+      open.type = "button";
+      open.className = "im-panel__open";
+      open.innerHTML = '<i class="fas fa-arrow-right" aria-hidden="true"></i> Open the card';
+      open.addEventListener("click", function () {
+        setViewMode("cards");
+        revealCard(ideaId);
+      });
+      panelBody.appendChild(open);
+
+      panel.hidden = false;
+      panel.scrollTop = 0;
+      selected = "i:" + ideaId;
+      highlight(selected, true);
+    }
+
+    function revealCard(ideaId) {
+      var m = byId[ideaId];
+      if (!m) return;
+      var more = m.card.querySelector(".js-idea-more");
+      var details = m.card.querySelector(".idea-card__details");
+      if (more && details && details.hidden) {
+        more.setAttribute("aria-expanded", "true");
+        details.hidden = false;
+      }
+      m.card.classList.add("is-flash");
+      window.setTimeout(function () { m.card.classList.remove("is-flash"); }, 2400);
+      window.setTimeout(function () {
+        m.card.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+      }, 60);
+    }
+
+    /* -- view switching -------------------------------------------------- */
+    function setViewMode(mode) {
+      state.view = mode;
+      document.querySelectorAll(".dl-seg[data-iview]").forEach(function (b) {
+        b.classList.toggle("is-active", b.getAttribute("data-iview") === mode);
+      });
+      if (mapWrap) mapWrap.hidden = mode !== "map";
+      grid.hidden = mode === "map";
+      if (mode === "map") {
+        drawMap();
+        if (emptyMsg) emptyMsg.hidden = true;
+      } else {
+        closePanel();
+        apply();
+      }
+    }
+
+    /* -- wiring ---------------------------------------------------------- */
+    document.querySelectorAll(".dl-pill[data-ifilter]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.theme = btn.getAttribute("data-ifilter");
+        syncThemePills();
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-istatus]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-istatus]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.status = btn.getAttribute("data-istatus");
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-isort]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-isort]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.sort = btn.getAttribute("data-isort");
+        apply();
+      });
+    });
+
+    document.querySelectorAll(".dl-seg[data-iview]").forEach(function (btn) {
+      btn.addEventListener("click", function () { setViewMode(btn.getAttribute("data-iview")); });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        state.query = (searchInput.value || "").trim().toLowerCase();
+        apply();
+      });
+    }
+
+    grid.addEventListener("click", function (e) {
+      var more = e.target.closest(".js-idea-more");
+      if (more) {
+        var pnl = document.getElementById(more.getAttribute("aria-controls"));
+        if (!pnl) return;
+        var open = more.getAttribute("aria-expanded") === "true";
+        more.setAttribute("aria-expanded", String(!open));
+        pnl.hidden = open;
+        return;
+      }
+      var focus = e.target.closest(".js-idea-focus");
+      if (focus) {
+        var id = focus.getAttribute("data-focus");
+        var m = byId[id];
+        if (m && !m.visible) {          // clear filters so the node exists
+          state.theme = "all";
+          state.status = "all";
+          state.query = "";
+          if (searchInput) searchInput.value = "";
+          syncThemePills();
+          document.querySelectorAll(".dl-seg[data-istatus]").forEach(function (b) {
+            b.classList.toggle("is-active", b.getAttribute("data-istatus") === "all");
+          });
+          apply();
+        }
+        setViewMode("map");
+        openPanel(id);
+      }
+    });
+
+    if (svg) {
+      svg.addEventListener("click", function (e) {
+        var node = e.target.closest(".im-node");
+        if (!node) { closePanel(); return; }
+        var id = node.getAttribute("data-node") || "";
+        if (id === "__root") {
+          state.theme = "all";
+          syncThemePills();
+          closePanel();
+          apply();
+        } else if (id.indexOf("t:") === 0) {
+          state.theme = id.slice(2);
+          syncThemePills();
+          closePanel();
+          apply();
+        } else if (id.indexOf("i:") === 0) {
+          openPanel(id.slice(2));
+        }
+      });
+
+      svg.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        var node = e.target.closest(".im-node");
+        if (!node) return;
+        e.preventDefault();
+        node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      });
+
+      svg.addEventListener("mouseover", function (e) {
+        var node = e.target.closest(".im-node");
+        if (!node || selected) return;
+        highlight(node.getAttribute("data-node"), false);
+      });
+      svg.addEventListener("mouseleave", function () {
+        if (!selected) clearHighlight();
+      });
+    }
+
+    if (panel) {
+      var closeBtn = panel.querySelector(".im-panel__close");
+      if (closeBtn) closeBtn.addEventListener("click", closePanel);
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && panel && !panel.hidden) closePanel();
+    });
+
+    /* -- zoom and pan ----------------------------------------------------- */
+    function zoomBy(factor, originX, originY) {
+      if (!view) return;
+      var w = Math.min(4200, Math.max(320, view.w * factor));
+      var scale = w / view.w;
+      var h = view.h * scale;
+      setView({
+        x: originX - (originX - view.x) * scale,
+        y: originY - (originY - view.y) * scale,
+        w: w,
+        h: h
+      });
+    }
+
+    function svgPoint(clientX, clientY) {
+      var r = svg.getBoundingClientRect();
+      if (!view || !r.width || !r.height) return { x: 0, y: 0 };
+      return {
+        x: view.x + ((clientX - r.left) / r.width) * view.w,
+        y: view.y + ((clientY - r.top) / r.height) * view.h
+      };
+    }
+
+    document.querySelectorAll(".im-btn[data-imap]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var mode = btn.getAttribute("data-imap");
+        if (mode === "fit") { fitMap(); return; }
+        if (!view) return;
+        var mid = { x: view.x + view.w / 2, y: view.y + view.h / 2 };
+        zoomBy(mode === "in" ? 0.8 : 1.25, mid.x, mid.y);
+      });
+    });
+
+    if (canvas) {
+      canvas.addEventListener("wheel", function (e) {
+        if (!view) return;
+        e.preventDefault();
+        var p = svgPoint(e.clientX, e.clientY);
+        zoomBy(e.deltaY > 0 ? 1.12 : 0.89, p.x, p.y);
+      }, { passive: false });
+
+      var drag = null;
+      canvas.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".im-node") || e.target.closest(".im-panel") || e.target.closest(".im-controls")) return;
+        if (!view) return;
+        drag = { x: e.clientX, y: e.clientY, view: { x: view.x, y: view.y, w: view.w, h: view.h } };
+        canvas.classList.add("is-panning");
+        canvas.setPointerCapture(e.pointerId);
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!drag) return;
+        var r = svg.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var dx = ((e.clientX - drag.x) / r.width) * drag.view.w;
+        var dy = ((e.clientY - drag.y) / r.height) * drag.view.h;
+        setView({ x: drag.view.x - dx, y: drag.view.y - dy, w: drag.view.w, h: drag.view.h });
+      });
+      ["pointerup", "pointercancel", "pointerleave"].forEach(function (evt) {
+        canvas.addEventListener(evt, function () {
+          drag = null;
+          canvas.classList.remove("is-panning");
+        });
+      });
+    }
+
+    /* -- first paint and deep links --------------------------------------- */
+    apply();
+
+    var hash = window.location.hash || "";
+    if (hash.indexOf("#idea-") === 0) {
+      var wanted = hash.slice(6);
+      if (byId[wanted]) revealCard(wanted);
+    } else if (hash === "#map") {
+      setViewMode("map");
+    }
+  }
+
   /* ---- Floating Back to Top Button ----------------------------------- */
   function initBackToTop() {
     var btn = document.getElementById("back-to-top");
@@ -1773,6 +2460,7 @@
     safe(initDeadlineTracker);
     safe(initDeadlineBadge);
     safe(initJournalExplorer);
+    safe(initResearchIdeas);
     safe(initRankings);
     safe(initPalette);
     safe(initScrollProgress);

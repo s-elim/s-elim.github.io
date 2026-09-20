@@ -3,3 +3,4 @@ _site/
 
 # stray page captures from live verification
 live*.html
+__pycache__/

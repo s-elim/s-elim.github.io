@@ -1,0 +1,265 @@
+---
+layout: archive
+title: "Research Ideas"
+permalink: /research-ideas/
+wide: true
+subtitle: 'A capture log for Physical AI research directions, with the source, the open questions and the cost of testing each one. <span class="ideas__count" id="ideas-count"></span>'
+description: "Running log of Physical AI research ideas tracked by Md Selim Sarowar: world models, vision-language-action models, agentic robotics, 3D spatial intelligence and robot-learning benchmarks, with sources, open questions and a mind map of how the directions connect."
+---
+
+{% assign themes = site.data.research_ideas.themes %}
+{% assign ideas = site.data.research_ideas.ideas %}
+{% assign total = ideas | size %}
+{% assign n_spark = ideas | where: "status", "spark" | size %}
+{% assign n_shaping = ideas | where: "status", "shaping" | size %}
+{% assign n_active = ideas | where: "status", "active" | size %}
+
+<div class="stat-row reveal">
+  <div class="stat"><div class="stat__num">{{ total }}</div><div class="stat__label">Ideas Logged</div></div>
+  <div class="stat stat--research"><div class="stat__num">{{ n_spark }}</div><div class="stat__label">Sparks</div></div>
+  <div class="stat stat--industry"><div class="stat__num">{{ n_shaping }}</div><div class="stat__label">Being Shaped</div></div>
+  <div class="stat stat--skills"><div class="stat__num">{{ n_active }}</div><div class="stat__label">Under Work</div></div>
+</div>
+
+<section class="ideas reveal" id="ideas" aria-label="Research idea board">
+
+  {%- comment -%}
+    Toolbar. Reuses the deadline tracker's primitives (.dl-pill, .dl-seg,
+    .dl-search) so the three data pages read as one system. Theme pills are
+    emitted only for themes that actually carry an idea; the mind map still
+    draws the full taxonomy so a new idea has somewhere obvious to land.
+  {%- endcomment -%}
+  <div class="ideas__toolbar">
+    <div class="ideas__filters" role="group" aria-label="Filter by research theme">
+      <button type="button" class="dl-pill is-active" data-ifilter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All <span class="dl-pill__count">{{ total }}</span></button>
+      {% for t in themes %}
+      {% assign in_theme = ideas | where: "theme", t.id | size %}
+      {% if in_theme > 0 %}
+      <button type="button" class="dl-pill" data-ifilter="{{ t.id }}" style="--idea-color: {{ t.color }}" title="{{ t.blurb | escape }}">
+        <span class="dl-pill__dot idea-dot"></span> {{ t.label }} <span class="dl-pill__count">{{ in_theme }}</span>
+      </button>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ideas__tools">
+      <label class="dl-search" for="idea-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="idea-search" placeholder="Search ideas, sources, tags" autocomplete="off" aria-label="Search ideas by title, question, tag or source">
+      </label>
+
+      <div class="dl-segment" role="group" aria-label="Filter by idea status">
+        <button type="button" class="dl-seg is-active" data-istatus="all">All</button>
+        <button type="button" class="dl-seg" data-istatus="spark">Spark</button>
+        <button type="button" class="dl-seg" data-istatus="shaping">Shaping</button>
+        <button type="button" class="dl-seg" data-istatus="active">Active</button>
+        <button type="button" class="dl-seg" data-istatus="parked">Parked</button>
+        <button type="button" class="dl-seg" data-istatus="shipped">Shipped</button>
+      </div>
+
+      <div class="dl-segment" role="group" aria-label="Sort ideas">
+        <button type="button" class="dl-seg is-active" data-isort="added">Newest</button>
+        <button type="button" class="dl-seg" data-isort="priority">Priority</button>
+        <button type="button" class="dl-seg" data-isort="theme">Theme</button>
+      </div>
+
+      <div class="dl-segment dl-segment--view" role="group" aria-label="Change layout">
+        <button type="button" class="dl-seg is-active" data-iview="cards" aria-label="Card view"><i class="fas fa-th-large" aria-hidden="true"></i></button>
+        <button type="button" class="dl-seg" data-iview="map" aria-label="Mind map view"><i class="fas fa-share-alt" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ---- Card view ---- {%- endcomment -%}
+  <div class="ideas__grid" id="ideas-grid">
+    {% for idea in ideas %}
+    {% assign th = themes | where: "id", idea.theme | first %}
+    {% capture hay %}{{ idea.title }} {{ idea.summary }} {{ idea.why }} {{ idea.angle }} {{ idea.venue }} {{ idea.status }} {{ th.label }} {{ idea.tags | join: " " }} {{ idea.connects | join: " " }} {{ idea.source.author }} {{ idea.source.label }}{% endcapture %}
+    <article class="idea-card idea-card--{{ idea.status }}"
+             id="idea-{{ idea.id }}"
+             style="--idea-color: {{ th.color | default: '#2563eb' }}"
+             data-id="{{ idea.id }}"
+             data-theme="{{ idea.theme }}"
+             data-themes="{{ idea.theme }}{% for a in idea.also %} {{ a }}{% endfor %}"
+             data-status="{{ idea.status }}"
+             data-priority="{{ idea.priority | default: 3 }}"
+             data-added="{{ idea.added }}"
+             data-title="{{ idea.title | escape }}"
+             data-search="{{ hay | strip_newlines | escape }}">
+      <div class="idea-card__glow" aria-hidden="true"></div>
+
+      <header class="idea-card__head">
+        <span class="idea-card__theme"><i class="fas {{ th.icon | default: 'fa-lightbulb' }}" aria-hidden="true"></i> {{ th.label | default: idea.theme }}</span>
+        <span class="idea-status idea-status--{{ idea.status }}">{{ idea.status }}</span>
+      </header>
+
+      <h3 class="idea-card__title">{{ idea.title }}</h3>
+      <p class="idea-card__summary">{{ idea.summary }}</p>
+
+      <div class="idea-card__row">
+        {% if idea.source %}
+        <a class="idea-src" href="{{ idea.source.url }}" target="_blank" rel="noopener" title="{{ idea.source.label | escape }}">
+          {%- if idea.source.kind == 'linkedin' -%}<i class="fab fa-linkedin" aria-hidden="true"></i>
+          {%- elsif idea.source.kind == 'arxiv' or idea.source.kind == 'paper' -%}<i class="fas fa-file-alt" aria-hidden="true"></i>
+          {%- elsif idea.source.kind == 'talk' -%}<i class="fas fa-microphone" aria-hidden="true"></i>
+          {%- elsif idea.source.kind == 'lab' -%}<i class="fas fa-flask" aria-hidden="true"></i>
+          {%- elsif idea.source.kind == 'self' -%}<i class="fas fa-lightbulb" aria-hidden="true"></i>
+          {%- else -%}<i class="fas fa-globe" aria-hidden="true"></i>{%- endif -%}
+          {{ idea.source.author | default: idea.source.kind }}
+        </a>
+        {% endif %}
+        {% if idea.added %}<span class="idea-meta"><i class="fas fa-calendar-plus" aria-hidden="true"></i> {{ idea.added | date: "%b %-d, %Y" }}</span>{% endif %}
+        {% if idea.venue %}<span class="idea-meta idea-meta--venue"><i class="fas fa-bullseye" aria-hidden="true"></i> {{ idea.venue }}</span>{% endif %}
+      </div>
+
+      <div class="idea-card__gauges">
+        <span class="idea-gauge" title="Priority {{ idea.priority | default: 3 }} of 5">
+          <span class="idea-gauge__label">Priority</span>
+          <span class="idea-dots" aria-hidden="true">
+            {% assign pr = idea.priority | default: 3 %}
+            {% for n in (1..5) %}<i class="idea-dots__d{% if n <= pr %} is-on{% endif %}"></i>{% endfor %}
+          </span>
+          <span class="sr-only">Priority {{ pr }} of 5</span>
+        </span>
+        {% if idea.effort %}<span class="idea-tagpill">Effort: {{ idea.effort }}</span>{% endif %}
+        {% if idea.risk %}<span class="idea-tagpill">Risk: {{ idea.risk }}</span>{% endif %}
+      </div>
+
+      <footer class="idea-card__foot">
+        <button type="button" class="idea-card__focus js-idea-focus" data-focus="{{ idea.id }}" title="Show this idea in the mind map">
+          <i class="fas fa-share-alt" aria-hidden="true"></i> In map
+        </button>
+        <button type="button" class="idea-card__more js-idea-more" aria-expanded="false" aria-controls="idea-{{ idea.id }}-details">Details <i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+      </footer>
+
+      <div class="idea-card__details" id="idea-{{ idea.id }}-details" hidden>
+        {% if idea.why %}
+        <div class="idea-block">
+          <h4 class="idea-block__title"><i class="fas fa-question-circle" aria-hidden="true"></i> Why it matters</h4>
+          <p>{{ idea.why }}</p>
+        </div>
+        {% endif %}
+
+        {% if idea.angle %}
+        <div class="idea-block idea-block--angle">
+          <h4 class="idea-block__title"><i class="fas fa-crosshairs" aria-hidden="true"></i> My angle</h4>
+          <p>{{ idea.angle }}</p>
+        </div>
+        {% endif %}
+
+        {% if idea.facts %}
+        <div class="idea-block">
+          <h4 class="idea-block__title"><i class="fas fa-clipboard-list" aria-hidden="true"></i> From the source</h4>
+          <dl class="idea-facts">
+            {% for f in idea.facts %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
+          </dl>
+        </div>
+        {% endif %}
+
+        {% if idea.questions %}
+        <div class="idea-block">
+          <h4 class="idea-block__title"><i class="fas fa-flask" aria-hidden="true"></i> Open questions</h4>
+          <ol class="idea-list idea-list--q">
+            {% for q in idea.questions %}<li>{{ q }}</li>{% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+
+        {% if idea.next %}
+        <div class="idea-block">
+          <h4 class="idea-block__title"><i class="fas fa-shoe-prints" aria-hidden="true"></i> Next actions</h4>
+          <ul class="idea-list idea-list--next">
+            {% for n in idea.next %}<li>{{ n }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if idea.connects %}
+        <div class="idea-block">
+          <h4 class="idea-block__title"><i class="fas fa-link" aria-hidden="true"></i> Touches my own work</h4>
+          <div class="idea-chips">
+            {% for c in idea.connects %}<span class="idea-chip">{{ c }}</span>{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if idea.tags %}
+        <div class="idea-chips idea-chips--tags">
+          {% for tg in idea.tags %}<span class="idea-chip idea-chip--tag">#{{ tg }}</span>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% if idea.links %}
+        <div class="idea-links">
+          {% for l in idea.links %}<a class="idea-link" href="{{ l.url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> {{ l.label }}</a>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% if idea.note %}<p class="idea-note"><i class="fas fa-info-circle" aria-hidden="true"></i> {{ idea.note }}</p>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  {%- comment -%}
+    ---- Mind map view ----
+    Empty on load. initResearchIdeas() draws the SVG the first time this panel
+    is shown, from #idea-graph below, and redraws it whenever a filter changes.
+  {%- endcomment -%}
+  <div class="ideas__map" id="idea-map" hidden>
+    <div class="im-stage">
+      <div class="im-canvas" id="idea-map-canvas">
+        <svg id="idea-map-svg" role="img" aria-label="Mind map of research themes and ideas" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <div class="im-controls" role="group" aria-label="Mind map controls">
+        <button type="button" class="im-btn" data-imap="in" aria-label="Zoom in"><i class="fas fa-plus" aria-hidden="true"></i></button>
+        <button type="button" class="im-btn" data-imap="out" aria-label="Zoom out"><i class="fas fa-minus" aria-hidden="true"></i></button>
+        <button type="button" class="im-btn" data-imap="fit" aria-label="Fit map to view"><i class="fas fa-compress" aria-hidden="true"></i></button>
+      </div>
+
+      <p class="im-hint"><i class="fas fa-hand-pointer" aria-hidden="true"></i> Drag to pan, scroll to zoom, click a node to read it.</p>
+
+      <aside class="im-panel" id="idea-map-panel" hidden aria-live="polite">
+        <button type="button" class="im-panel__close" aria-label="Close idea panel"><i class="fas fa-times" aria-hidden="true"></i></button>
+        <div class="im-panel__body"></div>
+      </aside>
+    </div>
+
+    <div class="im-legend">
+      {% for t in themes %}
+      <span class="im-legend__item" style="--idea-color: {{ t.color }}" title="{{ t.blurb | escape }}"><i class="im-legend__dot"></i> {{ t.label }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <p class="ideas__empty" id="ideas-empty" hidden>No idea matches those filters.</p>
+
+  <p class="ideas__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    A working log, not a publication list. Entries record where an idea came
+    from and what it would take to test it, so a claim here is a hypothesis
+    until it appears on the
+    <a href="{{ '/publications/' | relative_url }}">publications</a> page.
+    Sources are linked on every card; check them before citing anything.
+  </p>
+
+  {%- comment -%}
+    Graph payload for the mind map: structure only. The panel clones the card
+    body already in the DOM, so nothing on a card is duplicated here.
+  {%- endcomment -%}
+  <script type="application/json" id="idea-graph">{
+  "themes": [
+    {%- for t in themes -%}
+    {%- unless forloop.first %},{% endunless -%}
+    {"id":{{ t.id | jsonify }},"label":{{ t.label | jsonify }},"color":{{ t.color | jsonify }},"blurb":{{ t.blurb | default: "" | jsonify }}}
+    {%- endfor -%}
+  ],
+  "ideas": [
+    {%- for idea in ideas -%}
+    {%- unless forloop.first %},{% endunless -%}
+    {"id":{{ idea.id | jsonify }},"title":{{ idea.title | jsonify }},"theme":{{ idea.theme | jsonify }},"status":{{ idea.status | jsonify }},"priority":{{ idea.priority | default: 3 | jsonify }},"also":[{% for a in idea.also %}{% unless forloop.first %},{% endunless %}{{ a | jsonify }}{% endfor %}],"related":[{% for r in idea.related %}{% unless forloop.first %},{% endunless %}{{ r | jsonify }}{% endfor %}]}
+    {%- endfor -%}
+  ]
+}</script>
+</section>

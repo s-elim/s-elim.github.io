@@ -18,6 +18,10 @@ class CleanDumper(yaml.SafeDumper):
 def string_representer(dumper, data):
     if '\n' in data:
         return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+    # Long prose (idea summaries, angles, facts) folds across lines instead of
+    # running off the right edge, so the file stays editable by hand.
+    if len(data) > 120:
+        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='>')
     if any(char in data for char in ["'", '"', '<', '>', '&', '·', '🇰🇷', '🇮🇳', '🇧🇩']):
         return dumper.represent_scalar('tag:yaml.org,2002:str', data, style="'")
     return dumper.represent_scalar('tag:yaml.org,2002:str', data)
@@ -35,11 +39,33 @@ def load_yaml(filename):
             print(f"Error loading {filename}: {e}")
             sys.exit(1)
 
-def save_yaml(filename, data):
+def leading_comment(filename):
+    """Return the comment block at the top of a data file, verbatim.
+
+    research_ideas.yml carries its own schema documentation. Re-emitting that
+    block on save is what keeps `add-idea` from deleting the instructions.
+    """
+    filepath = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(filepath):
+        return ''
+    kept = []
+    with open(filepath, 'r', encoding='utf-8') as f:
+        for line in f:
+            if line.startswith('#'):
+                kept.append(line)
+            elif line.strip() == '' and kept:
+                kept.append(line)
+            else:
+                break
+    return ''.join(kept)
+
+def save_yaml(filename, data, header=None, width=1000):
     filepath = os.path.join(DATA_DIR, filename)
     with open(filepath, 'w', encoding='utf-8') as f:
+        if header:
+            f.write(header)
         # Print a header comment if applicable
-        if filename == 'news.yml':
+        elif filename == 'news.yml':
             f.write("# Home page \"Updates\" timeline (most recent first). HTML allowed in `text`.\n")
         elif filename == 'publications.yml':
             f.write('# Publications, newest year first. `year` groups + drives the year filter.\n')
@@ -47,7 +73,7 @@ def save_yaml(filename, data):
         elif filename == 'projects.yml':
             f.write('# Research projects, bootcamps, and industrial collaborations.\n')
         
-        yaml.dump(data, f, Dumper=CleanDumper, default_flow_style=False, sort_keys=False, allow_unicode=True, width=1000)
+        yaml.dump(data, f, Dumper=CleanDumper, default_flow_style=False, sort_keys=False, allow_unicode=True, width=width)
     print(f"Successfully updated {filename}")
 
 def add_news_item(text, date=None):
@@ -225,6 +251,153 @@ def add_project_interactive():
         projects_data['latest'].insert(0, proj_item)
         save_yaml('projects.yml', projects_data)
 
+IDEA_STATUSES = ['spark', 'shaping', 'active', 'parked', 'shipped']
+IDEA_LEVELS = ['low', 'medium', 'high']
+IDEA_SOURCES = ['linkedin', 'arxiv', 'paper', 'talk', 'lab', 'self', 'web']
+
+def slugify(text):
+    out = ''.join(c.lower() if c.isalnum() else '-' for c in text)
+    while '--' in out:
+        out = out.replace('--', '-')
+    return out.strip('-')[:48]
+
+def ask(label, default=None, required=False):
+    suffix = f" [{default}]" if default else ""
+    while True:
+        value = input(f"{label}{suffix}: ").strip()
+        if not value and default is not None:
+            return default
+        if value or not required:
+            return value
+        print("  Required.")
+
+def ask_choice(label, options, default=None):
+    print(f"{label} ({', '.join(options)})")
+    while True:
+        value = ask("  >", default)
+        if value in options:
+            return value
+        print(f"  Pick one of: {', '.join(options)}")
+
+def ask_list(label):
+    print(f"{label} (one per line, blank line ends)")
+    items = []
+    while True:
+        value = input("  - ").strip()
+        if not value:
+            return items
+        items.append(value)
+
+def add_idea_interactive():
+    """Append an entry to _data/research_ideas.yml, newest first."""
+    data = load_yaml('research_ideas.yml')
+    if not isinstance(data, dict):
+        print("research_ideas.yml is malformed: expected a mapping with `themes` and `ideas`.")
+        sys.exit(1)
+    themes = data.get('themes', [])
+    ideas = data.get('ideas', [])
+    theme_ids = [t['id'] for t in themes]
+
+    print("\n--- New research idea ---")
+    title = ask("Title (short claim or question)", required=True)
+
+    print("\nThemes:")
+    for t in themes:
+        print(f"  {t['id']:<16} {t['label']}")
+    theme = ask_choice("Primary theme", theme_ids, theme_ids[0] if theme_ids else None)
+    also = [a.strip() for a in ask("Secondary themes (comma separated, optional)").split(',') if a.strip()]
+    unknown = [a for a in also if a not in theme_ids]
+    if unknown:
+        print(f"  Ignoring unknown theme ids: {', '.join(unknown)}")
+        also = [a for a in also if a in theme_ids]
+
+    status = ask_choice("Status", IDEA_STATUSES, 'spark')
+    priority = ask("Priority 1-5", '3')
+    effort = ask_choice("Effort to a first result", IDEA_LEVELS, 'medium')
+    risk = ask_choice("Risk the idea does not survive contact", IDEA_LEVELS, 'medium')
+    venue = ask("Candidate venue (optional)")
+    summary = ask("Summary (one or two sentences)", required=True)
+    why = ask("Why it matters (optional)")
+    angle = ask("My angle, including what makes it hard (optional)")
+
+    questions = ask_list("Open questions")
+    next_steps = ask_list("Next actions")
+    tags = [t.strip() for t in ask("Tags (comma separated)").split(',') if t.strip()]
+    connects = [c.strip() for c in ask("Own projects it touches (comma separated)").split(',') if c.strip()]
+
+    print("\nSource:")
+    src_kind = ask_choice("  kind", IDEA_SOURCES, 'web')
+    src_author = ask("  author")
+    src_label = ask("  label")
+    src_url = ask("  url")
+
+    print("\nExtra links (blank label ends)")
+    links = []
+    while True:
+        label = input("  label: ").strip()
+        if not label:
+            break
+        url = input("  url:   ").strip()
+        links.append({'label': label, 'url': url})
+
+    note = ask("Caveat printed at the bottom of the card (optional)")
+
+    suggested = slugify(title)
+    idea_id = ask("Id (stable slug, used by links)", suggested)
+    existing = {i.get('id') for i in ideas}
+    if idea_id in existing:
+        print(f"  Id '{idea_id}' is already used. Pick another.")
+        sys.exit(1)
+
+    try:
+        priority = max(1, min(5, int(priority)))
+    except ValueError:
+        priority = 3
+
+    item = {
+        'id': idea_id,
+        'title': title,
+        'theme': theme,
+    }
+    if also:
+        item['also'] = also
+    item.update({
+        'status': status,
+        'priority': priority,
+        'added': datetime.date.today().isoformat(),
+        'effort': effort,
+        'risk': risk,
+    })
+    for key, value in (('venue', venue), ('summary', summary), ('why', why), ('angle', angle)):
+        if value:
+            item[key] = value
+    if questions:
+        item['questions'] = questions
+    if next_steps:
+        item['next'] = next_steps
+    if src_url or src_label or src_author:
+        item['source'] = {
+            'kind': src_kind,
+            'author': src_author,
+            'label': src_label,
+            'url': src_url,
+            'captured': datetime.date.today().isoformat(),
+        }
+    if links:
+        item['links'] = links
+    if connects:
+        item['connects'] = connects
+    item['related'] = []
+    if tags:
+        item['tags'] = tags
+    if note:
+        item['note'] = note
+
+    ideas.insert(0, item)
+    data['ideas'] = ideas
+    save_yaml('research_ideas.yml', data, header=leading_comment('research_ideas.yml'), width=86)
+    print(f"Added idea '{idea_id}'. It renders at /research-ideas/#idea-{idea_id}.")
+
 def run_server():
     print("Starting Jekyll Local Server...")
     try:
@@ -249,6 +422,9 @@ def main():
     # Add project command
     subparsers.add_parser('add-project', help="Interactively add a new project")
 
+    # Add idea command
+    subparsers.add_parser('add-idea', help="Interactively log a research idea")
+
     # Serve command
     subparsers.add_parser('serve', help="Run the local Jekyll dev server")
 
@@ -260,6 +436,8 @@ def main():
         add_publication_interactive()
     elif args.command == 'add-project':
         add_project_interactive()
+    elif args.command == 'add-idea':
+        add_idea_interactive()
     elif args.command == 'serve':
         run_server()
     else:

@@ -28,7 +28,14 @@ Prompts you to add a new **Bootcamp**, **Research Project**, or **Industry Colla
 ./scripts/manage.py add-project
 ```
 
-### 4. Add a News/Update Item
+### 4. Log a Research Idea (Interactive)
+Prompts for the theme, status, priority, source, open questions and next actions, then prepends the entry to `_data/research_ideas.yml`. The schema comment at the top of that file is preserved on save.
+```bash
+./scripts/manage.py add-idea
+```
+*The entry renders on `/research-ideas/` as a card and as a node on the mind map, and is reachable at `/research-ideas/#idea-<id>`.*
+
+### 5. Add a News/Update Item
 Quickly prepends a new update to the home page timeline modal.
 ```bash
 ./scripts/manage.py add-news --text "Paper on VLA models accepted at <strong>CVPR'27</strong>! Check project page <a href='https://example.com' target='_blank'>here</a>."
@@ -92,6 +99,22 @@ Courses taught or assisted.
   * `university`: School name.
   * `date`: Semester/Duration.
 
+### 💡 `research_ideas.yml`
+Capture log behind `/research-ideas/`, reached from the home page hero chip and from Cmd/Ctrl-K, deliberately not in the navigation.
+* **`themes`**: the ring of the mind map and the colour of every card.
+  * `id`, `label`, `icon` (Font Awesome solid class), `color` (hex), `blurb`.
+  * Order in the file is the order clockwise around the map. Adding a theme needs no CSS: the colour is read from YAML.
+* **`ideas`** (newest first):
+  * `id`: stable slug, used by the anchor, the map node and `related`. Never rename one.
+  * `theme` / `also`: primary theme, plus secondary themes drawn as dashed edges.
+  * `status`: `spark` | `shaping` | `active` | `parked` | `shipped`.
+  * `priority` 1-5, `effort` and `risk` (`low` | `medium` | `high`), `added` (YYYY-MM-DD).
+  * `summary`, `why`, `angle`: what it is, the gap it addresses, and your own attack including its cost.
+  * `facts`: label/value pairs read from the source. `questions`, `next`: lists.
+  * `source`: `kind` (`linkedin` | `arxiv` | `paper` | `talk` | `lab` | `self` | `web`), `author`, `label`, `url`, `captured`.
+  * `links`, `connects`, `related`, `tags`, `note`.
+* The page is a working log, not a publication list. Publication status stays in `publications.yml`.
+
 ### 🏆 `awards.yml`
 Scholarships, medals, and academic awards.
 * **Fields**:
@@ -109,6 +132,7 @@ The website styling has been modularized:
 * `_base.scss`: Reset styles, custom text, and flag alignment rules (`.fi`).
 * `_cards.scss`: Project cards, publications, and layouts like `.project-double-grid`.
 * `_timeline.scss`: Experience timelines, news timelines, and `.xp-pill` badge layouts.
+* `_research-ideas.scss`: Idea cards and the SVG mind map. Theme colour arrives as `--idea-color`, so every tint is mixed from the YAML value.
 
 ---
 
