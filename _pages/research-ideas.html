@@ -3,9 +3,111 @@ layout: archive
 title: "Research Ideas"
 permalink: /research-ideas/
 wide: true
-subtitle: 'A capture log for Physical AI research directions, with the source, the open questions and the cost of testing each one, over a directory of the labs, code and people behind them. <span class="ideas__count" id="ideas-count"></span>'
+subtitle: 'A capture log for Physical AI research directions, with the source, the open questions and the cost of testing each one, under a directory of the labs, code and people behind them. <span class="ideas__count" id="ideas-count"></span>'
 description: "Running log of Physical AI research ideas tracked by Md Selim Sarowar: world models, vision-language-action models, agentic robotics, 3D spatial intelligence and robot-learning benchmarks, with sources, open questions, a mind map of how the directions connect, and a directory of robotics and computer vision labs, code, datasets and researchers."
 ---
+
+{%- comment -%}
+  ---- Resources library ----
+  A directory of the labs, code, benchmarks and people worth tracking, imported
+  from a browser bookmarks export by `./scripts/manage.py import-bookmarks`.
+  Kind icons are set in CSS from the .lk--<kind> class, so adding a kind is a
+  one-line rule rather than a branch in this template.
+{%- endcomment -%}
+{% assign lib = site.data.link_library %}
+{% assign links = lib.links %}
+{% assign n_links = links | size %}
+
+<section class="linklib linklib--box reveal" id="links" aria-label="Resources library">
+  <header class="linklib__head">
+    <span class="linklib__mark" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+    <div class="linklib__headtext">
+      <h2 class="linklib__title">Resources Library <span class="linklib__count" id="links-count">{{ n_links }} links</span></h2>
+      <p class="linklib__tagline">Labs, code, benchmarks and people I follow, kept here so a bookmark bar does not have to remember them. Private accounts and logins are filtered out on import.</p>
+    </div>
+    <a class="linklib__jump" href="#ideas"><span>Idea board</span> <i class="fas fa-arrow-down" aria-hidden="true"></i></a>
+  </header>
+
+  <div class="linklib__toolbar">
+    <div class="linklib__filters" role="group" aria-label="Filter by section">
+      <button type="button" class="dl-pill is-active" data-lfilter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All <span class="dl-pill__count">{{ n_links }}</span></button>
+      {% for g in lib.groups %}
+      {% assign in_group = links | where: "group", g.id | size %}
+      {% if in_group > 0 %}
+      <button type="button" class="dl-pill" data-lfilter="{{ g.id }}" style="--idea-color: {{ g.color }}" title="{{ g.blurb | escape }}">
+        <span class="dl-pill__dot idea-dot"></span> {{ g.label }} <span class="dl-pill__count">{{ in_group }}</span>
+      </button>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="linklib__tools">
+      <label class="dl-search" for="link-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="link-search" placeholder="Search labs, repos, people" autocomplete="off" aria-label="Search the resources library by name, site or note">
+      </label>
+
+      <div class="dl-segment" role="group" aria-label="Filter by link type">
+        <button type="button" class="dl-seg is-active" data-lkind="all">All</button>
+        {% assign kinds = "lab,code,people,dataset,reading,position,course,tool" | split: "," %}
+        {% for k in kinds %}
+        {% assign in_kind = links | where: "kind", k | size %}
+        {% if in_kind > 0 %}
+        <button type="button" class="dl-seg" data-lkind="{{ k }}">{{ k | capitalize }} <span class="dl-seg__count">{{ in_kind }}</span></button>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      <button type="button" class="dl-toggle is-active" id="links-collapse" aria-pressed="true">
+        <i class="fas fa-expand-alt" aria-hidden="true"></i> Expand all
+      </button>
+    </div>
+  </div>
+
+  <div class="linklib__groups" id="links-groups">
+    {% for g in lib.groups %}
+    {% assign rows = links | where: "group", g.id %}
+    {% if rows.size > 0 %}
+    <section class="lg" id="links-{{ g.id }}" data-group="{{ g.id }}" style="--lg-color: {{ g.color }}">
+      <button type="button" class="lg__head js-lg-toggle" aria-expanded="false" aria-controls="links-{{ g.id }}-body">
+        <span class="lg__icon"><i class="fas {{ g.icon }}" aria-hidden="true"></i></span>
+        <span class="lg__id">
+          <span class="lg__label">{{ g.label }} <span class="lg__count" data-lg-count>{{ rows.size }}</span></span>
+          <span class="lg__blurb">{{ g.blurb }}</span>
+        </span>
+        <i class="fas fa-chevron-down lg__chev" aria-hidden="true"></i>
+      </button>
+
+      <div class="lg__body" id="links-{{ g.id }}-body" hidden>
+        {% for l in rows %}
+        {% capture lhay %}{{ l.title }} {{ l.note }} {{ l.site }} {{ l.kind }} {{ g.label }}{% endcapture %}
+        <a class="lk lk--{{ l.kind }}" id="link-{{ l.id }}" href="{{ l.url }}" target="_blank" rel="noopener"
+           data-kind="{{ l.kind }}" data-search="{{ lhay | strip_newlines | escape }}">
+          <span class="lk__icon" aria-hidden="true"></span>
+          <span class="lk__text">
+            <span class="lk__title">{{ l.title }}</span>
+            {% if l.note %}<span class="lk__note">{{ l.note }}</span>{% endif %}
+          </span>
+          <span class="lk__site">{{ l.site }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <p class="linklib__empty" id="links-empty" hidden>No link matches those filters.</p>
+
+  <p class="linklib__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    A reading list, not an endorsement. Re-import an updated export with
+    <code>./scripts/manage.py import-bookmarks --file bookmarks.html</code>:
+    existing entries and hand edits survive, new URLs are appended, and
+    anything behind a login stays out.
+  </p>
+</section>
+
 
 {% assign themes = site.data.research_ideas.themes %}
 {% assign ideas = site.data.research_ideas.ideas %}
@@ -242,7 +344,6 @@ description: "Running log of Physical AI research ideas tracked by Md Selim Saro
     until it appears on the
     <a href="{{ '/publications/' | relative_url }}">publications</a> page.
     Sources are linked on every card; check them before citing anything.
-    <a class="ideas__jump" href="#links"><i class="fas fa-bookmark" aria-hidden="true"></i> Jump to the link library</a>
   </p>
 
   {%- comment -%}
@@ -263,101 +364,4 @@ description: "Running log of Physical AI research ideas tracked by Md Selim Saro
     {%- endfor -%}
   ]
 }</script>
-</section>
-
-{%- comment -%}
-  ---- Link library ----
-  A directory of the labs, code, benchmarks and people worth tracking, imported
-  from a browser bookmarks export by `./scripts/manage.py import-bookmarks`.
-  Kind icons are set in CSS from the .lk--<kind> class, so adding a kind is a
-  one-line rule rather than a branch in this template.
-{%- endcomment -%}
-{% assign lib = site.data.link_library %}
-{% assign links = lib.links %}
-{% assign n_links = links | size %}
-
-<section class="linklib reveal" id="links" aria-label="Link library">
-  <header class="linklib__head">
-    <h2 class="linklib__title">Link Library <span class="linklib__count" id="links-count">{{ n_links }} links</span></h2>
-    <p class="linklib__tagline">Labs, code, benchmarks and people I follow, kept here so a bookmark bar does not have to remember them. Private accounts and logins are filtered out on import.</p>
-  </header>
-
-  <div class="linklib__toolbar">
-    <div class="linklib__filters" role="group" aria-label="Filter by section">
-      <button type="button" class="dl-pill is-active" data-lfilter="all"><span class="dl-pill__dot dl-pill__dot--all"></span> All <span class="dl-pill__count">{{ n_links }}</span></button>
-      {% for g in lib.groups %}
-      {% assign in_group = links | where: "group", g.id | size %}
-      {% if in_group > 0 %}
-      <button type="button" class="dl-pill" data-lfilter="{{ g.id }}" style="--idea-color: {{ g.color }}" title="{{ g.blurb | escape }}">
-        <span class="dl-pill__dot idea-dot"></span> {{ g.label }} <span class="dl-pill__count">{{ in_group }}</span>
-      </button>
-      {% endif %}
-      {% endfor %}
-    </div>
-
-    <div class="linklib__tools">
-      <label class="dl-search" for="link-search">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input type="search" id="link-search" placeholder="Search labs, repos, people" autocomplete="off" aria-label="Search the link library by name, site or note">
-      </label>
-
-      <div class="dl-segment" role="group" aria-label="Filter by link type">
-        <button type="button" class="dl-seg is-active" data-lkind="all">All</button>
-        {% assign kinds = "lab,code,people,dataset,reading,position,course,tool" | split: "," %}
-        {% for k in kinds %}
-        {% assign in_kind = links | where: "kind", k | size %}
-        {% if in_kind > 0 %}
-        <button type="button" class="dl-seg" data-lkind="{{ k }}">{{ k | capitalize }} <span class="dl-seg__count">{{ in_kind }}</span></button>
-        {% endif %}
-        {% endfor %}
-      </div>
-
-      <button type="button" class="dl-toggle" id="links-collapse" aria-pressed="false">
-        <i class="fas fa-compress-alt" aria-hidden="true"></i> Collapse all
-      </button>
-    </div>
-  </div>
-
-  <div class="linklib__groups" id="links-groups">
-    {% for g in lib.groups %}
-    {% assign rows = links | where: "group", g.id %}
-    {% if rows.size > 0 %}
-    <section class="lg" id="links-{{ g.id }}" data-group="{{ g.id }}" style="--lg-color: {{ g.color }}">
-      <button type="button" class="lg__head js-lg-toggle" aria-expanded="true" aria-controls="links-{{ g.id }}-body">
-        <span class="lg__icon"><i class="fas {{ g.icon }}" aria-hidden="true"></i></span>
-        <span class="lg__id">
-          <span class="lg__label">{{ g.label }} <span class="lg__count" data-lg-count>{{ rows.size }}</span></span>
-          <span class="lg__blurb">{{ g.blurb }}</span>
-        </span>
-        <i class="fas fa-chevron-down lg__chev" aria-hidden="true"></i>
-      </button>
-
-      <div class="lg__body" id="links-{{ g.id }}-body">
-        {% for l in rows %}
-        {% capture lhay %}{{ l.title }} {{ l.note }} {{ l.site }} {{ l.kind }} {{ g.label }}{% endcapture %}
-        <a class="lk lk--{{ l.kind }}" id="link-{{ l.id }}" href="{{ l.url }}" target="_blank" rel="noopener"
-           data-kind="{{ l.kind }}" data-search="{{ lhay | strip_newlines | escape }}">
-          <span class="lk__icon" aria-hidden="true"></span>
-          <span class="lk__text">
-            <span class="lk__title">{{ l.title }}</span>
-            {% if l.note %}<span class="lk__note">{{ l.note }}</span>{% endif %}
-          </span>
-          <span class="lk__site">{{ l.site }}</span>
-        </a>
-        {% endfor %}
-      </div>
-    </section>
-    {% endif %}
-    {% endfor %}
-  </div>
-
-  <p class="linklib__empty" id="links-empty" hidden>No link matches those filters.</p>
-
-  <p class="linklib__foot">
-    <i class="fas fa-info-circle" aria-hidden="true"></i>
-    A reading list, not an endorsement. Re-import an updated export with
-    <code>./scripts/manage.py import-bookmarks --file bookmarks.html</code>:
-    existing entries and hand edits survive, new URLs are appended, and
-    anything behind a login stays out.
-  </p>
 </section>

@@ -1806,8 +1806,8 @@
     }
   }
 
-  /* ---- Link Library --------------------------------------------------- */
-  // The directory below the idea board on /research-ideas/, rendered by Jekyll
+  /* ---- Resources Library ---------------------------------------------- */
+  // The boxed directory at the top of /research-ideas/, rendered by Jekyll
   // from _data/link_library.yml. Filters by section, by kind and by text, keeps
   // the per-section counts honest, and collapses sections that go empty.
   function initLinkLibrary() {

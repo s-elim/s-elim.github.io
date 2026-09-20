@@ -656,17 +656,75 @@
 }
 
 // ==========================================================================
-//  Link Library - directory below the idea board on /research-ideas/
+//  Resources Library - boxed directory at the top of /research-ideas/
 //  Content in _data/link_library.yml, behaviour in initLinkLibrary().
-//  Group colour arrives as --lg-color; the kind icon is set here from the
-//  .lk--<kind> class so the template carries no icon branching.
+//  Group colour arrives as --lg-color; every icon fills with a gradient mixed
+//  from it, and the kind glyph is set here from the .lk--<kind> class so the
+//  template carries no icon branching.
 // ==========================================================================
 
+// One gradient recipe, used by every icon in the section. A group tints it
+// with its own colour; the section mark uses the site-wide sweep.
+@mixin lib-gradient($from) {
+  background-image: linear-gradient(135deg, #{$from}, color-mix(in srgb, #{$from} 35%, var(--accent)));
+}
+
 .linklib {
-  margin: 3rem 0 2rem;
+  margin: 0 0 2rem;
   scroll-margin-top: 5.5rem;
 }
-.linklib__head { margin-bottom: .9rem; }
+
+// The box: the library opens the page, so it has to read as one contained
+// object rather than as a second, competing page section.
+.linklib--box {
+  position: relative;
+  padding: 1.15rem 1.25rem 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 58%),
+    var(--card-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.linklib__head {
+  display: flex;
+  align-items: flex-start;
+  gap: .8rem;
+  margin-bottom: .9rem;
+}
+.linklib__headtext { flex: 1; min-width: 0; }
+.linklib__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background-image: linear-gradient(135deg, #10b981, #3b82f6 52%, #f97316);
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, .28);
+}
+.linklib__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  flex-shrink: 0;
+  padding: .3rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-family: var(--font-head);
+  font-size: .76rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+
+  &:hover { border-color: var(--accent); transform: translateY(-1px); }
+}
 .linklib__title {
   display: flex;
   flex-wrap: wrap;
@@ -694,15 +752,6 @@
   font-size: var(--fs-sm);
   color: var(--muted);
 }
-.ideas__jump {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  margin-left: .4rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
 .linklib__toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -731,7 +780,7 @@
 .linklib__groups {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: .55rem;
 }
 .lg {
   border: 1px solid var(--border);
@@ -764,9 +813,10 @@
   height: 30px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--lg-color, #2563eb) 16%, transparent);
-  color: var(--lg-color, var(--accent));
+  @include lib-gradient(var(--lg-color, #2563eb));
+  color: #fff;
   font-size: .82rem;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--lg-color, #2563eb) 32%, transparent);
 }
 .lg__id { flex: 1; min-width: 0; }
 .lg__label {
@@ -856,6 +906,17 @@
     content: "\f19c";            // university, the default for a lab or group
   }
 }
+
+// The glyph itself carries the gradient. Guarded, because without
+// background-clip a transparent colour would erase the icon.
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .lk__icon::before {
+    @include lib-gradient(var(--lg-color, #2563eb));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
 .lk--code    .lk__icon::before { content: "\f126"; }  // code-branch
 .lk--reading .lk__icon::before { content: "\f15c"; }  // file-alt
 .lk--dataset .lk__icon::before { content: "\f1c0"; }  // database
@@ -920,6 +981,9 @@
 @media (max-width: $bp-md) {
   .lg__body { grid-template-columns: 1fr; }
   .lg__blurb { display: none; }
+  .linklib--box { padding: 1rem .8rem 1.1rem; }
+  .linklib__head { flex-wrap: wrap; }
+  .linklib__jump { order: 3; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lk:hover { transform: none; }
