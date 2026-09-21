@@ -66,7 +66,7 @@ redirect_from:
       {%- for t in c.timeline -%}
         {%- if t.date and t.date != 'tba' -%}
           {%- unless dl_first %},{% endunless %}{% assign dl_first = false %}
-          {"n":{{ c.name | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }}}
+          {"n":{{ c.name | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }},"z":{{ t.tz | default: "" | jsonify }}}
         {%- endif -%}
       {%- endfor -%}
     {%- endfor -%}

@@ -20,7 +20,12 @@
 #               label  Stage name (Paper Submission, Rebuttal Ends, ...).
 #               date   YYYY-MM-DD, or "tba" when the call is not out yet.
 #               time   Optional clock time "HH:MM" (defaults to 23:59).
-#               tz     Optional timezone label shown to the reader, e.g. AoE.
+#               tz     Optional timezone, shown after the date. The countdown
+#                      reads date and time in this zone, so it ends at the same
+#                      instant for every viewer. Understood: AoE, UTC, GMT,
+#                      UTC+H or UTC-H[:MM], PST, PDT, PT, EST, EDT, ET, CET,
+#                      CEST, BST, JST, KST. Without tz, or with any other
+#                      label, the viewer's own clock is used.
 #
 #  The card counts down to the FIRST stage still in the future. Earlier stages
 #  render as done, later ones as upcoming. Adding an abstract, rebuttal or

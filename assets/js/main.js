@@ -590,6 +590,56 @@
 
   function dlPad(n) { return n < 10 ? "0" + n : String(n); }
 
+  // A stage's date and clock time are read in the timezone its data names, so
+  // a deadline lands on the same instant for every viewer. Minutes east of UTC
+  // for the fixed labels; PT and ET follow daylight saving through Intl. A
+  // stage with no tz, or a label not listed here, is read on the viewer's own
+  // clock.
+  var DL_FIXED_TZ = {
+    AOE: -720, UTC: 0, GMT: 0, PST: -480, PDT: -420, EST: -300, EDT: -240,
+    CET: 60, CEST: 120, BST: 60, JST: 540, KST: 540
+  };
+  var DL_ZONE_TZ = { PT: "America/Los_Angeles", ET: "America/New_York" };
+
+  // Minutes east of UTC for an IANA zone at the instant `ms`.
+  function dlZoneOffset(zone, ms) {
+    var p = {};
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: zone, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric",
+      hour: "numeric", minute: "numeric", second: "numeric"
+    }).formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = x.value; });
+    return (Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second) - ms) / 60000;
+  }
+
+  // ("2026-11-16", "23:59", "AoE") -> epoch ms; null when the date is not
+  // YYYY-MM-DD (a "tba" stage). The time defaults to 23:59.
+  function dlInstant(date, time, tz) {
+    var d = String(date || "").split("-");
+    if (d.length !== 3) return null;
+    var t = String(time || "23:59").split(":");
+    var y = parseInt(d[0], 10), mo = parseInt(d[1], 10) - 1, day = parseInt(d[2], 10);
+    var h = parseInt(t[0], 10) || 0, mi = parseInt(t[1], 10) || 0;
+    // The wall-clock reading as if it were UTC; each zone shifts it by its offset.
+    var wall = Date.UTC(y, mo, day, h, mi, 0);
+    var key = String(tz || "").trim().toUpperCase();
+
+    var num = /^(?:UTC|GMT)\s*([+-])\s*(\d{1,2})(?::?(\d{2}))?$/.exec(key);
+    if (num) {
+      var mins = parseInt(num[2], 10) * 60 + (parseInt(num[3], 10) || 0);
+      return wall - (num[1] === "-" ? -mins : mins) * 60000;
+    }
+    if (DL_FIXED_TZ.hasOwnProperty(key)) return wall - DL_FIXED_TZ[key] * 60000;
+    if (DL_ZONE_TZ.hasOwnProperty(key) && window.Intl) {
+      try {
+        // Two passes so a date near a daylight-saving switch takes the offset
+        // in force at the deadline itself.
+        var guess = wall - dlZoneOffset(DL_ZONE_TZ[key], wall) * 60000;
+        return wall - dlZoneOffset(DL_ZONE_TZ[key], guess) * 60000;
+      } catch (e) { /* no zone data: fall back to the viewer's clock */ }
+    }
+    return new Date(y, mo, day, h, mi, 0).getTime();
+  }
+
   // Coarse above a day, live clock below it - the same read on both pages.
   function dlHumanGap(ms) {
     var days = Math.floor(ms / DL_MS_DAY);
@@ -627,18 +677,8 @@
     // ---- Parse the Liquid-rendered stages once -----------------------------
     var models = cards.map(function (card) {
       var stages = Array.prototype.slice.call(card.querySelectorAll(".dl-stage")).map(function (el) {
-        var raw = el.getAttribute("data-date");
-        var when = null;
-        if (raw && raw !== "tba") {
-          var p = raw.split("-");
-          if (p.length === 3) {
-            var t = (el.getAttribute("data-time") || "23:59").split(":");
-            when = new Date(
-              parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10),
-              parseInt(t[0], 10) || 23, parseInt(t[1], 10) || 59, 0
-            );
-          }
-        }
+        var at = dlInstant(el.getAttribute("data-date"), el.getAttribute("data-time"), el.getAttribute("data-tz"));
+        var when = at === null ? null : new Date(at);
         return { el: el, when: when, label: el.querySelector(".dl-stage__label").textContent.trim() };
       });
       return {
@@ -958,19 +998,11 @@
     }
     if (!raw || !raw.length) return;
 
-    // Local time, matching how the tracker reads the same dates.
+    // Read exactly as the tracker reads the same stages.
     var stages = [];
     raw.forEach(function (s) {
-      var d = String(s.d || "").split("-");
-      if (d.length !== 3) return;
-      var t = String(s.t || "23:59").split(":");
-      stages.push({
-        name: s.n || "",
-        when: new Date(
-          parseInt(d[0], 10), parseInt(d[1], 10) - 1, parseInt(d[2], 10),
-          parseInt(t[0], 10) || 0, parseInt(t[1], 10) || 0, 0
-        ).getTime()
-      });
+      var at = dlInstant(s.d, s.t, s.z);
+      if (at !== null) stages.push({ name: s.n || "", when: at });
     });
     if (!stages.length) return;
 

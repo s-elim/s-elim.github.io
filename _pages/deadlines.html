@@ -73,7 +73,7 @@ description: "Live countdown tracker for 60 CORE A* and A conference deadlines a
           <span class="dl-stage__dot" aria-hidden="true"></span>
           <span class="dl-stage__label">{{ t.label }}</span>
           <span class="dl-stage__date">
-            {%- if t.date == 'tba' -%}TBA{%- else -%}{{ t.date | date: "%b %-d, %Y" }}{%- endif -%}
+            {%- if t.date == 'tba' -%}TBA{%- else -%}{{ t.date | date: "%b %-d, %Y" }}{% if t.time %} {{ t.time }}{% endif %}{% if t.tz %} {{ t.tz }}{% endif %}{%- endif -%}
           </span>
         </li>
         {% endfor %}
