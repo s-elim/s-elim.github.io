@@ -1,0 +1,52 @@
+---
+# A standalone document: opt out of the site-wide `layout: single` default
+# in _config.yml so this page is not wrapped in the portfolio chrome.
+layout: null
+permalink: /notes/atlas/
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Atlas Teardown · Md Selim Sarowar</title>
+  <meta name="description" content="An interactive teardown of World Labs' Atlas: what a world model has to do, how a multimodal autoregressive diffusion transformer works end to end, and which claims the published evidence actually supports.">
+  <link rel="canonical" href="{{ '/notes/atlas/' | absolute_url }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Atlas Teardown">
+  <meta property="og:description" content="World models end to end, using World Labs' Atlas as the case study, with every claim marked by its provenance.">
+  <meta property="og:url" content="{{ '/notes/atlas/' | absolute_url }}">
+  <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
+  {%- comment -%}
+    The explainer ships its own styles and script so the same file can be
+    published as a standalone artifact. This wrapper adds only the document
+    shell, the portfolio's saved theme, and a way back.
+  {%- endcomment -%}
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+  <style>
+    :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+    body { margin: 0; }
+    img { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .backbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: 1120px; margin: 0 auto; padding: .7rem 20px 0;
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .74rem;
+    }
+    .backbar a { color: var(--accent, #0d7a72); text-decoration: none; }
+    .backbar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <nav class="backbar">
+    <a href="{{ '/research-ideas/' | relative_url }}">← Research ideas</a>
+    <a href="{{ '/' | relative_url }}">s-elim.github.io</a>
+  </nav>
+  {% include atlas-explainer.html %}
+</body>
+</html>

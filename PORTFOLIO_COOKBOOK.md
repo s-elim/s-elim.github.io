@@ -131,6 +131,13 @@ Directory boxed at the top of `/research-ideas/`, above the idea board. Generate
   * `kind` is `lab` | `code` | `reading` | `dataset` | `people` | `course` | `position` | `talk` | `tool`. It drives the row icon, set in `_research-ideas.scss` from the `.lk--<kind>` class, and the type filter.
   * Re-sorting a link is a one-word edit to its `group`. A re-import will not undo it: merging is keyed on the URL.
 
+### 🔬 `deep_dives.yml`
+Long reads about someone else's system, one box each at the top of `/research-ideas/`, under the Resources Library.
+* **Fields**: `id`, `title`, `subtitle`, `kicker`, `read`, `summary`, `verdict`, `highlights`, `page`, `tags`, `source` (label/url/date), `links`, `idea`.
+* `page` points at the interactive explainer that ships with the dive. The Atlas one lives in `_includes/atlas-explainer.html`, wrapped by `_pages/atlas.html` at `/notes/atlas/`.
+* The explainer is self-contained (its own styles and script, no site CSS) so the identical body can be published as a standalone artifact. After editing the include, rebuild the artifact copy from it rather than editing two files.
+* `idea` names the `research_ideas.yml` entry the report produced; the box links to that card's anchor.
+
 ### 🏆 `awards.yml`
 Scholarships, medals, and academic awards.
 * **Fields**:

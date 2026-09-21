@@ -1,0 +1,78 @@
+# ==========================================================================
+#  Deep Dives - long reads that get their own box on /research-ideas/
+# ==========================================================================
+#
+#  Rendered by _pages/research-ideas.html, styled in _sass/theme/_research-ideas.scss.
+#  A dive is a report I wrote about someone else's system: what it is, what the
+#  evidence supports, and what it would take to change the verdict. The idea it
+#  raises lives in research_ideas.yml and links back here.
+#
+#  id        Stable slug, used by the anchor.
+#  title     The system under the microscope.
+#  subtitle  One line naming what it is, no hype.
+#  kicker    Short label: domain, then the date I wrote it.
+#  read      Rough reading time.
+#  summary   Two or three sentences. What the report covers.
+#  verdict   The calibrated read. What the evidence does and does not support.
+#  highlights Three or four findings, each one sentence.
+#  page      Where the interactive explainer lives on this site.
+#  tags      Free keywords.
+#  source    The primary source: label, url, date.
+#  links     Further reading, as label/url pairs.
+#  idea      id of the research_ideas.yml entry this report produced, if any.
+# ==========================================================================
+
+dives:
+  - id: world-labs-atlas
+    title: World Labs Atlas
+    subtitle: The world model World Labs says will power future versions of Marble
+    kicker: World model · 21 Sep 2026
+    read: 15 min
+    summary: >-
+      World Labs released Atlas as a blog post with no paper, no code and no evaluation
+      artifacts. This teardown walks the whole machine anyway, from what a world model is
+      asked to do, through a multimodal autoregressive diffusion transformer and its
+      rectified-flow sampler, to the splat a robot is driven through, and marks every claim
+      as disclosed, inferred or speculative.
+    verdict: >-
+      The evidence supports two things: native pose conditioning beats text-prompted camera
+      control, and Atlas is competitive to modestly better at posed sparse-view pointmap
+      prediction. It does not support drift-free generation, general superiority over the
+      reconstruction baselines, or dynamics simulation. Atlas has no action input, so it is a
+      geometry-grounded renderer and state estimator rather than an interactive simulator,
+      and the articulated and deformable behaviour in the demos belongs to a separate physics
+      layer.
+    highlights:
+      - >-
+        The preference study gave Atlas native camera paths and every baseline a text
+        description of the path, which World Labs acknowledges, so it measures the input
+        format as much as the generator.
+      - >-
+        Only one reconstruction baseline is labelled as posed, and against that one the
+        margin is 25.3 against 28.7 with a tie on Tanks and Temples.
+      - >-
+        No consistency metric is reported for the one-minute demo: no revisit PSNR, no
+        loop-closure error. A controlled revisit test would settle it.
+      - >-
+        At roughly 14,400 tokens per 1440p frame, a minute of video is about 5.2M tokens, so
+        the scene has to be produced in chunks from a selected context.
+    page: /notes/atlas/
+    tags:
+      - world models
+      - rectified flow
+      - 3D Gaussian splatting
+      - novel view synthesis
+      - real-to-sim
+      - evaluation
+    source:
+      label: Atlas, A World Model for Spatial Intelligence
+      url: https://www.worldlabs.ai/blog/atlas
+      date: 1 Sep 2026
+    links:
+      - label: Building Worlds That Train Robots
+        url: https://www.worldlabs.ai/blog/real-to-sim-to-real
+      - label: A Functional Taxonomy of World Models
+        url: https://www.worldlabs.ai/blog/taxonomy-of-world-models
+      - label: From Words to Worlds (Fei-Fei Li)
+        url: https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence
+    idea: generative-fidelity-vs-policy

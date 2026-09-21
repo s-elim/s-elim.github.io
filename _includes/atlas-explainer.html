@@ -1,0 +1,1297 @@
+{%- comment -%}
+  Atlas Teardown - the interactive explainer.
+
+  One source, two hosts: _pages/atlas.html wraps this in a standalone document
+  for the portfolio, and the same body is published as a Claude artifact. Keep
+  it self-contained: no site CSS, no site JS, no Liquid outside this comment,
+  and no <title> (each host supplies its own).
+
+  Every claim carries its provenance: data-ev="wl" for what World Labs stated,
+  "inf" for inference, "spec" for speculation. The filter in the masthead reads
+  those attributes, so a new paragraph only needs the right value to join in.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+:root {
+  --ground: #f4f5f2;
+  --surface: #ffffff;
+  --surface-2: #eceee9;
+  --ink: #16211f;
+  --ink-2: #4c5b57;
+  --ink-3: #78877f;
+  --line: #d8ddd6;
+  --line-strong: #b9c2ba;
+  --accent: #0d7a72;
+  --accent-soft: rgba(13, 122, 114, .1);
+  --infer: #a35b07;
+  --infer-soft: rgba(163, 91, 7, .1);
+  --spec: #6b4ea8;
+  --spec-soft: rgba(107, 78, 168, .1);
+  --warn: #b3261e;
+  --grid: rgba(22, 33, 31, .055);
+  --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0e1513;
+    --surface: #151f1d;
+    --surface-2: #1c2725;
+    --ink: #e8eeec;
+    --ink-2: #9db0ab;
+    --ink-3: #74867f;
+    --line: #2a3a37;
+    --line-strong: #3d524e;
+    --accent: #57cfc2;
+    --accent-soft: rgba(87, 207, 194, .14);
+    --infer: #e6a355;
+    --infer-soft: rgba(230, 163, 85, .14);
+    --spec: #b69ce8;
+    --spec-soft: rgba(182, 156, 232, .14);
+    --warn: #f08b82;
+    --grid: rgba(232, 238, 236, .05);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0e1513;
+  --surface: #151f1d;
+  --surface-2: #1c2725;
+  --ink: #e8eeec;
+  --ink-2: #9db0ab;
+  --ink-3: #74867f;
+  --line: #2a3a37;
+  --line-strong: #3d524e;
+  --accent: #57cfc2;
+  --accent-soft: rgba(87, 207, 194, .14);
+  --infer: #e6a355;
+  --infer-soft: rgba(230, 163, 85, .14);
+  --spec: #b69ce8;
+  --spec-soft: rgba(182, 156, 232, .14);
+  --warn: #f08b82;
+  --grid: rgba(232, 238, 236, .05);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    repeating-linear-gradient(0deg, var(--grid) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px 64px),
+    var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 0 4rem; }
+.col { max-width: 66ch; }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0 0 1rem; }
+a { color: var(--accent); text-underline-offset: 3px; }
+code, .mono { font-family: var(--mono); font-size: .88em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+/* ---- masthead ---------------------------------------------------------- */
+.head { padding-block: 3.2rem 1.6rem; border-bottom: 1px solid var(--line); }
+.plate {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.head h1 { font-size: clamp(2.3rem, 6vw, 3.6rem); font-weight: 800; margin: .5rem 0 .7rem; letter-spacing: -.02em; }
+.lede { font-size: 1.16rem; color: var(--ink-2); max-width: 60ch; }
+.byline {
+  display: flex; flex-wrap: wrap; gap: .4rem 1.2rem;
+  font-family: var(--mono); font-size: .76rem; color: var(--ink-3);
+  margin-top: 1rem;
+}
+
+/* ---- provenance filter ------------------------------------------------- */
+.filter {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 40;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem;
+  margin-block: 1.4rem 0;
+  padding: .6rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+.filter__label { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.sw {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .26rem .6rem .26rem .45rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--mono); font-size: .74rem; font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.sw input { position: absolute; opacity: 0; width: 0; height: 0; }
+.sw__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line-strong); }
+.sw--wl .sw__dot { background: var(--accent); }
+.sw--inf .sw__dot { background: var(--infer); }
+.sw--spec .sw__dot { background: var(--spec); }
+.sw:has(input:not(:checked)) { opacity: .48; }
+.sw:has(input:not(:checked)) .sw__dot { background: var(--line-strong); }
+.sw:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter__note { font-family: var(--mono); font-size: .7rem; color: var(--ink-3); margin-left: auto; }
+
+[data-ev] { transition: opacity .18s ease; }
+.is-muted { opacity: .22; }
+
+/* ---- tags -------------------------------------------------------------- */
+.ev {
+  display: inline-block;
+  padding: 0 .38em;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: .68em;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  vertical-align: .12em;
+  white-space: nowrap;
+}
+.ev--wl { color: var(--accent); background: var(--accent-soft); }
+.ev--inf { color: var(--infer); background: var(--infer-soft); }
+.ev--spec { color: var(--spec); background: var(--spec-soft); }
+
+/* ---- sections ---------------------------------------------------------- */
+section { padding-block: 2.6rem; border-bottom: 1px solid var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: .9rem; margin-bottom: 1.1rem; }
+.sec-head .num {
+  font-family: var(--mono); font-size: .78rem; font-weight: 600;
+  color: var(--accent); padding-top: .25rem;
+}
+.sec-head h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; letter-spacing: -.015em; }
+h3 { font-size: 1.12rem; font-weight: 600; margin: 1.6rem 0 .5rem; }
+.kicker {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: .4rem;
+}
+
+/* ---- panels ------------------------------------------------------------ */
+.panel {
+  margin: 1.4rem 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.panel__head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem;
+  padding: .7rem 1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.panel__body { padding: 1rem; }
+.panel__foot {
+  padding: .6rem 1rem; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: .72rem; color: var(--ink-3);
+}
+
+/* ---- taxonomy ---------------------------------------------------------- */
+.tax { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .6rem; }
+.tax button {
+  display: block; width: 100%; text-align: left;
+  padding: .8rem .9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.tax button:hover { border-color: var(--accent); }
+.tax button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.tax__name { font-family: var(--display); font-weight: 600; display: block; }
+.tax__out { font-family: var(--mono); font-size: .72rem; color: var(--ink-3); }
+.tax__detail { margin-top: .9rem; padding: .9rem 1rem; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 8px 8px 0; }
+.tax__detail p:last-child { margin-bottom: 0; }
+
+/* ---- pipeline ---------------------------------------------------------- */
+.pipe__rail { display: flex; flex-wrap: wrap; gap: .35rem; }
+.pipe__step {
+  flex: 1 1 88px;
+  padding: .5rem .4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--mono); font-size: .68rem; line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+}
+.pipe__step b { display: block; font-size: .78rem; color: var(--accent); font-weight: 600; }
+.pipe__step[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.pipe__stage { margin-top: 1rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.pipe__art { border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); padding: .6rem; }
+.pipe__art svg { display: block; width: 100%; height: auto; }
+.pipe__txt h4 { font-size: 1rem; margin-bottom: .4rem; }
+.pipe__txt p { font-size: .95rem; }
+.pipe__nav { display: flex; gap: .4rem; margin-top: .8rem; }
+
+/* ---- generic controls -------------------------------------------------- */
+.btn {
+  padding: .35rem .8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--mono); font-size: .74rem;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.ctrl label { font-family: var(--mono); font-size: .74rem; color: var(--ink-2); display: inline-flex; align-items: center; gap: .45rem; }
+input[type="range"] { accent-color: var(--accent); width: 130px; }
+.readout { font-family: var(--mono); font-size: .74rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* ---- flow canvas ------------------------------------------------------- */
+.flow__canvas { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface-2); }
+.formula {
+  font-family: var(--mono); font-size: .8rem; color: var(--ink-2);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: .6rem .8rem; margin: .8rem 0;
+  overflow-x: auto; white-space: nowrap;
+}
+
+/* ---- attention grid ---------------------------------------------------- */
+.att { display: grid; gap: 2px; font-family: var(--mono); font-size: .62rem; }
+.att__cell { aspect-ratio: 1; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--line); }
+.att__cell.on { background: var(--accent); border-color: var(--accent); }
+.att__cell.self { background: var(--infer); border-color: var(--infer); }
+.att__row-label, .att__col-label { color: var(--ink-3); display: flex; align-items: center; justify-content: center; text-align: center; }
+
+/* ---- tables ------------------------------------------------------------ */
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+th, td { padding: .42rem .55rem; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th {
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink-3); cursor: pointer; user-select: none; border-bottom: 1px solid var(--line-strong);
+}
+thead th[aria-sort="ascending"], thead th[aria-sort="descending"] { color: var(--accent); }
+td { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tr.best td { background: var(--accent-soft); }
+tr.best td:first-child { font-weight: 600; }
+td.lead { color: var(--accent); font-weight: 600; }
+
+/* ---- callouts ---------------------------------------------------------- */
+.note {
+  margin: 1.1rem 0;
+  padding: .8rem 1rem;
+  border-left: 3px solid var(--infer);
+  background: var(--infer-soft);
+  border-radius: 0 8px 8px 0;
+  font-size: .95rem;
+}
+.note--warn { border-left-color: var(--warn); background: color-mix(in srgb, var(--warn) 9%, transparent); }
+.note--wl { border-left-color: var(--accent); background: var(--accent-soft); }
+.note p:last-child { margin-bottom: 0; }
+.note b { font-family: var(--display); }
+
+/* ---- lists ------------------------------------------------------------- */
+.checks { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.checks li { position: relative; padding-left: 1.5rem; font-size: .96rem; }
+.checks li::before {
+  content: ""; position: absolute; left: 0; top: .42em;
+  width: 11px; height: 11px; border: 1.5px solid var(--line-strong); border-radius: 3px;
+}
+.acc { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.acc + .acc { margin-top: .45rem; }
+.acc__head {
+  display: flex; align-items: center; gap: .7rem; width: 100%;
+  padding: .7rem .9rem; border: 0; background: none; color: var(--ink);
+  font-family: var(--display); font-size: .98rem; font-weight: 600; text-align: left; cursor: pointer;
+}
+.acc__head .n { font-family: var(--mono); font-size: .74rem; color: var(--accent); }
+.acc__head .chev { margin-left: auto; color: var(--ink-3); transition: transform .18s ease; }
+.acc__head[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.acc__body { padding: 0 .9rem .9rem 2.3rem; font-size: .95rem; color: var(--ink-2); }
+.acc__body p:last-child { margin-bottom: 0; }
+
+/* ---- glossary ---------------------------------------------------------- */
+.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .6rem; }
+.gcard {
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+  padding: .8rem .9rem; cursor: pointer;
+}
+.gcard:hover { border-color: var(--accent); }
+.gcard h4 { font-size: .98rem; margin-bottom: .3rem; }
+.gcard p { font-size: .9rem; color: var(--ink-2); margin: 0; }
+.gcard__flip { margin-top: .5rem; padding-top: .5rem; border-top: 1px dashed var(--line); font-style: italic; color: var(--ink-2); font-size: .9rem; }
+.gcard__cue { font-family: var(--mono); font-size: .68rem; color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
+
+/* ---- two-up ------------------------------------------------------------ */
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.foot { padding-block: 2rem; font-size: .88rem; color: var(--ink-2); }
+.foot ul { padding-left: 1.1rem; margin: .5rem 0 0; }
+.foot li { margin-bottom: .3rem; }
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .pipe__stage { grid-template-columns: 1fr; }
+  .filter__note { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="head">
+    <div class="plate">Teardown · World model · 2026-09-21</div>
+    <h1>Atlas, taken apart</h1>
+    <p class="lede">
+      World Labs released Atlas as a blog post: no paper, no code, no evaluation artifacts.
+      This page walks the whole machine anyway, from what a world model is supposed to do to
+      where this one stops, and it marks every claim with where the claim came from.
+    </p>
+    <div class="byline">
+      <span>Source: <a href="https://www.worldlabs.ai/blog/atlas" target="_blank" rel="noopener">World Labs, Atlas (2026-09-01)</a></span>
+      <span>Reading: 15 min</span>
+      <span>Notes by Md Selim Sarowar</span>
+    </div>
+
+    <div class="filter" id="filter">
+      <span class="filter__label">Provenance</span>
+      <label class="sw sw--wl"><input type="checkbox" id="ev-wl" checked><span class="sw__dot"></span> Stated by World Labs</label>
+      <label class="sw sw--inf"><input type="checkbox" id="ev-inf" checked><span class="sw__dot"></span> Inference</label>
+      <label class="sw sw--spec"><input type="checkbox" id="ev-spec" checked><span class="sw__dot"></span> Speculation</label>
+      <span class="filter__note" id="filter-note">All three shown</span>
+    </div>
+  </header>
+
+  <!-- 1 ------------------------------------------------------------------ -->
+  <section id="s1">
+    <div class="sec-head"><span class="num">01</span><h2>What a world model is asked to do</h2></div>
+    <div class="col">
+      <p data-ev="wl">
+        Fei-Fei Li's framing sets three requirements: a world model should be <b>generative</b>, producing
+        worlds that are perceptually, geometrically and physically consistent; <b>multimodal</b>, taking
+        images, text, gestures and actions; and <b>interactive</b>, outputting "the next states based on
+        input actions". <span class="ev ev--wl">WL</span>
+      </p>
+      <p data-ev="wl">
+        World Labs' own taxonomy sorts models by what they emit inside the agent loop. Pick a class to see
+        what it produces and who sits there.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Functional taxonomy · agent → action → state → observation</div>
+      <div class="panel__body">
+        <div class="tax" id="tax">
+          <button type="button" data-tax="renderer" aria-pressed="false">
+            <span class="tax__name">Renderer</span>
+            <span class="tax__out">outputs observations</span>
+          </button>
+          <button type="button" data-tax="simulator" aria-pressed="true">
+            <span class="tax__name">Simulator</span>
+            <span class="tax__out">outputs state</span>
+          </button>
+          <button type="button" data-tax="planner" aria-pressed="false">
+            <span class="tax__name">Planner</span>
+            <span class="tax__out">outputs actions</span>
+          </button>
+        </div>
+        <div class="tax__detail" id="tax-detail"></div>
+      </div>
+      <div class="panel__foot">World Labs calls the simulator "the linchpin".</div>
+    </div>
+
+    <div class="col">
+      <div class="note" data-ev="inf">
+        <p><b>Where Atlas actually sits.</b> Its published inputs are text, images, camera poses and depth
+        maps. There is no action input and no force input, so a camera pose moves a disembodied viewpoint
+        rather than acting on the world. As disclosed, Atlas is a geometry-grounded renderer plus a state
+        estimator, not a dynamics simulator, and on the interactive axis it sits behind action-conditioned
+        models such as Genie 3. <span class="ev ev--inf">inf</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 ------------------------------------------------------------------ -->
+  <section id="s2">
+    <div class="sec-head"><span class="num">02</span><h2>Why the two obvious approaches fall short</h2></div>
+    <div class="col">
+      <p>
+        The honest version of this argument is not that language models and video models fail. It is that
+        neither carries a structural guarantee of physical fidelity: nothing in either objective is
+        violated by a scene that cannot exist.
+      </p>
+    </div>
+
+    <div class="two">
+      <div class="panel">
+        <div class="panel__head">Language models</div>
+        <div class="panel__body" data-ev="inf">
+          <p>State is a one-dimensional token sequence with no SE(3) structure and no metric grounding, so
+          spatial relations have to be rebuilt out of linguistic regularity. Li cites near-chance distance
+          estimation. This is an inductive-bias mismatch, not a scale problem. <span class="ev ev--inf">inf</span></p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel__head">Video diffusion</div>
+        <div class="panel__body" data-ev="inf">
+          <p>The model learns <span class="mono">p(x<sub>1:T</sub> | c)</span> with an unobserved camera, so
+          ego-motion and scene content stay entangled. There is no global frame, and memory is a bounded
+          temporal window: a place revisited after it leaves the window is regenerated rather than recalled.
+          Geometry is emergent, and dynamics learned from passive video leave
+          <span class="mono">p(s<sub>t+1</sub> | s<sub>t</sub>, a<sub>t</sub>)</span> unidentifiable without
+          action labels. <span class="ev ev--inf">inf</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="note note--warn" data-ev="inf">
+        <p><b>The counter-evidence, kept in view.</b> Large video models do show emergent 3D consistency,
+        with outputs that are often reconstructible by structure from motion, and Wiedemer et al. (2025)
+        reported zero-shot physical reasoning in Veo 3. The defensible distinction for Atlas is narrower:
+        explicit pose conditioning removes one source of drift. It says nothing about dynamics.
+        <span class="ev ev--inf">inf</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 ------------------------------------------------------------------ -->
+  <section id="s3">
+    <div class="sec-head"><span class="num">03</span><h2>Four words, one machine</h2></div>
+    <div class="col">
+      <p data-ev="wl">
+        World Labs describes Atlas as a <b>multimodal autoregressive diffusion transformer</b>. Each word
+        carries a specific commitment. <span class="ev ev--wl">WL</span>
+      </p>
+    </div>
+
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="true"><span class="n">01</span> Multimodal <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>Text, images, camera poses and depth maps, with video treated as a sequence of images. Every
+        image and depth map is conditioned on an explicit camera pose, which is the whole trick: geometry
+        is an input type, not something the model has to infer from pixels. <span class="ev ev--wl">WL</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">02</span> Autoregressive <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>The unit is an <i>element</i>, a whole image or depth map or pose, not a token. Each output is
+        generated one at a time, conditioned on what came before, so a task is a sequence of inputs
+        followed by outputs. Within an element, generation is diffusion; across elements, it is
+        autoregressive. That places Atlas beside MAR, Transfusion and Diffusion Forcing rather than beside
+        a plain video diffusion model. <span class="ev ev--wl">WL</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">03</span> Diffusion <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>A rectified-flow latent diffusion model, with distillation, classifier-free guidance, shifted
+        noise schedules and VAE improvements named as compatible techniques. Section 04 makes the flow part
+        interactive. <span class="ev ev--wl">WL</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">04</span> Transformer <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>Which buys the serving stack that language models already have: KV caching, cache-aware routing,
+        disaggregated serving. That detail is also a tell about the attention mask, below.
+        <span class="ev ev--wl">WL</span></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <span>What KV caching implies about attention</span>
+        <button type="button" class="btn" id="att-toggle" style="margin-left:auto">Show full attention</button>
+      </div>
+      <div class="panel__body">
+        <div class="att" id="att"></div>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        A cache is only valid if earlier elements never attend to later ones and the cached context stays
+        fixed. That implies a block-causal mask: bidirectional inside the element being generated, causal to
+        everything before it. World Labs has not published the mask. <span class="ev ev--inf">inf</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 ------------------------------------------------------------------ -->
+  <section id="s4">
+    <div class="sec-head"><span class="num">04</span><h2>Rectified flow, by hand</h2></div>
+    <div class="col">
+      <p>
+        A diffusion model has to carry noise to data. Rectified flow does it along paths that are as close
+        to straight as training can make them, which is why so few integration steps are needed and why the
+        model distils well. Drag the slider: every particle travels its own straight line from a noise
+        sample to a data point.
+      </p>
+      <div class="formula">z(t) = (1 − t)·z<sub>data</sub> + t·ε &nbsp;&nbsp;|&nbsp;&nbsp; target velocity = ε − z<sub>data</sub> &nbsp;&nbsp;|&nbsp;&nbsp; loss = ‖ v<sub>θ</sub>(z(t), t | context) − (ε − z<sub>data</sub>) ‖²</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <span>Noise → data, K steps</span>
+        <span class="readout" id="flow-read" style="margin-left:auto">t = 1.00 · pure noise</span>
+      </div>
+      <div class="panel__body">
+        <canvas class="flow__canvas" id="flow" width="880" height="330" aria-label="Particles travelling from a noise cloud to two data clusters along straight paths"></canvas>
+        <div class="ctrl" style="margin-top:.8rem">
+          <label>t <input type="range" id="flow-t" min="0" max="100" value="100"></label>
+          <label>steps K <input type="range" id="flow-k" min="1" max="24" value="6"></label>
+          <span class="readout" id="flow-k-read">K = 6</span>
+          <button type="button" class="btn" id="flow-play">Play the sampler</button>
+          <button type="button" class="btn" id="flow-paths" aria-pressed="true">Hide paths</button>
+        </div>
+      </div>
+      <div class="panel__foot">
+        Straight paths mean a coarse step lands near the true trajectory, so K can be small. Curved paths,
+        as in a classical diffusion schedule, need many more. The shifted timestep schedule World Labs
+        mentions biases training toward the high-noise end, which matters at 1440p because a higher
+        resolution keeps more signal at the same t. <span class="ev ev--wl">WL</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 ------------------------------------------------------------------ -->
+  <section id="s5">
+    <div class="sec-head"><span class="num">05</span><h2>Spatial context, and why it has to be managed</h2></div>
+    <div class="col">
+      <p data-ev="wl">
+        Every image is grounded at a 3D position, and those posed images form the spatial context. The
+        context holds more than 100 images, and two unrelated photographs placed in 3D produce a world that
+        interpolates between them. Memory is organised by <i>where</i>, not by <i>when</i>.
+        <span class="ev ev--wl">WL</span>
+      </p>
+      <p data-ev="inf">
+        How poses are encoded is not published. The two live candidates are Plücker ray maps, which attach a
+        six-vector per pixel and need a canonical world frame, and relative projective attention, which
+        injects the relative transform between two views into the attention logits and stays invariant to
+        the choice of world frame. Pixel-perfect control over 100+ views favours the relative family, but
+        the evidence cannot settle it. <span class="ev ev--inf">inf</span>
+      </p>
+      <div class="note note--warn" data-ev="spec">
+        <p><b>Not "attention in 3D Euclidean space".</b> Dot-product attention is not distance-aware by
+        itself. Geometry enters through the pose encoding. A literal 3D mechanism, rotary embeddings over
+        unprojected coordinates or k-nearest-neighbour attention, is possible but unsupported by anything
+        published. <span class="ev ev--spec">spec</span></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Token budget for the one-minute demo</span><span class="readout" id="tok-total" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <div class="ctrl">
+          <label>resolution
+            <select id="tok-res" style="font-family:var(--mono);font-size:.74rem;padding:.2rem .3rem">
+              <option value="1280x720">1280 × 720</option>
+              <option value="1920x1080">1920 × 1080</option>
+              <option value="2560x1440" selected>2560 × 1440</option>
+            </select>
+          </label>
+          <label>fps <input type="range" id="tok-fps" min="8" max="30" step="2" value="24"></label>
+          <span class="readout" id="tok-fps-read">24 fps</span>
+          <label>seconds <input type="range" id="tok-sec" min="5" max="60" step="5" value="60"></label>
+          <span class="readout" id="tok-sec-read">60 s</span>
+        </div>
+        <div style="margin-top:.9rem;height:14px;border-radius:7px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)">
+          <div id="tok-bar" style="height:100%;width:100%;background:var(--accent)"></div>
+        </div>
+        <p class="mono" id="tok-detail" style="margin:.6rem 0 0;font-size:.76rem;color:var(--ink-2)"></p>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        Assuming 8× spatial compression, 2×2 patches and 4× temporal compression. The bar is scaled against
+        a one-million-token reference. A single forward pass over the full minute is not on the table, so
+        the video has to be produced in chunks from a selected context, which is what "spatial context
+        management" has to mean. <span class="ev ev--inf">inf</span>
+      </div>
+    </div>
+
+    <h3>What holds a minute together</h3>
+    <div class="col">
+      <ol class="checks" style="list-style:decimal;padding-left:1.2rem" data-ev="inf">
+        <li style="padding-left:0"><b>Exogenous poses.</b> The trajectory is given rather than predicted, so pose error cannot accumulate. This is the structural advantage over text-prompted video.</li>
+        <li style="padding-left:0"><b>Persistent anchors.</b> Reference images stay in context instead of ageing out of a temporal window.</li>
+        <li style="padding-left:0"><b>Spatial retrieval.</b> Context selected by co-visibility rather than recency, so a revisit conditions on frames that saw the same surface.</li>
+        <li style="padding-left:0"><b>Joint depth.</b> Generating depth alongside RGB pushes the output toward geometric self-consistency.</li>
+      </ol>
+      <div class="note note--warn">
+        <p><b>"No drift" is unproven.</b> World Labs showed one hand-designed one-minute 1440p path and
+        several paths through one scene. No revisit PSNR, no reprojection or loop-closure error, no MEt3R.
+        The expected failure modes are retrieval misses on revisit, hallucinated content hardening once a
+        generated frame becomes context, scale ambiguity from a single reference image, and dynamic content,
+        for which static-scene consistency says nothing. A controlled revisit test would settle it in an
+        afternoon. <span class="ev ev--inf">inf</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 ------------------------------------------------------------------ -->
+  <section id="s6">
+    <div class="sec-head"><span class="num">06</span><h2>End to end, one stage at a time</h2></div>
+    <div class="col">
+      <p>
+        This is the whole path from a handful of phone photographs to a scene a robot can be driven through.
+        Step through it; each stage says what is disclosed and what is a reasonable guess.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Pipeline</span><span class="readout" id="pipe-count" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <div class="pipe__rail" id="pipe-rail"></div>
+        <div class="pipe__stage">
+          <div class="pipe__art" id="pipe-art"></div>
+          <div class="pipe__txt" id="pipe-txt"></div>
+        </div>
+        <div class="pipe__nav">
+          <button type="button" class="btn" id="pipe-prev">← Previous</button>
+          <button type="button" class="btn" id="pipe-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 ------------------------------------------------------------------ -->
+  <section id="s7">
+    <div class="sec-head"><span class="num">07</span><h2>Does the evidence carry the claims?</h2></div>
+
+    <h3>Camera-controlled generation</h3>
+    <div class="col">
+      <p data-ev="wl">
+        Human raters preferred Atlas over MiniMax H3 (75%), Gemini Omni Flash (81%), Happy Horse 1.1 (86%),
+        FLUX 3 (93%) and Seedance 2.5 (94%). <span class="ev ev--wl">WL</span>
+      </p>
+      <div class="note note--warn">
+        <p><b>What that comparison actually measures.</b> Atlas received native camera paths; every baseline
+        received a text description of the path, which World Labs acknowledges. The result supports "native
+        pose input beats prompting for camera control". It does not support "Atlas is the better generator".
+        Rater counts and confidence intervals are not reported. <span class="ev ev--inf">inf</span></p>
+      </div>
+    </div>
+
+    <h3>3D reconstruction</h3>
+    <div class="col">
+      <p data-ev="wl">
+        Mean pointmap AbsRel error, ×10⁻³, lower is better. Click a column to sort.
+        <span class="ev ev--wl">WL</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__head"><span>Pointmap error by dataset</span><span class="readout" style="margin-left:auto">sorted by Avg</span></div>
+      <div class="panel__body">
+        <div class="tablewrap">
+          <table id="bench">
+            <thead>
+              <tr>
+                <th scope="col" data-key="0" data-type="text">Method</th>
+                <th scope="col" data-key="1" aria-sort="ascending">Avg</th>
+                <th scope="col" data-key="2">DTU</th>
+                <th scope="col" data-key="3">ETH3D</th>
+                <th scope="col" data-key="4">KITTI</th>
+                <th scope="col" data-key="5">NRGBD</th>
+                <th scope="col" data-key="6">7-Scenes</th>
+                <th scope="col" data-key="7">T&amp;T</th>
+                <th scope="col" data-key="8">ScanNet</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel__foot">Atlas's seven per-dataset values average to exactly 25.3, which confirms the numbers were read correctly from the page.</div>
+    </div>
+
+    <div class="col">
+      <div class="note note--warn">
+        <p><b>Protocol gaps that matter.</b> Atlas receives images <i>and</i> their camera poses. Only Pi3X
+        is labelled posed; if the others ran unposed they solved a harder problem, and that is undisclosed.
+        Against the one confirmed posed baseline the margin is modest: 25.3 against 28.7, a tie on Tanks and
+        Temples, 60.0 against 60.2 on KITTI. Views per trial, alignment, seeds and variance are unreported,
+        there is no third-party reproduction, and one outlet reports a prior contamination warning for
+        VGGT-Ω <span class="ev ev--spec">unverified</span>. <span class="ev ev--inf">inf</span></p>
+        <p><b>What the evidence does support:</b> native pose conditioning beats text-prompted camera
+        control, and Atlas is competitive to modestly better at posed sparse-view pointmap prediction.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 ------------------------------------------------------------------ -->
+  <section id="s8">
+    <div class="sec-head"><span class="num">08</span><h2>The robotics claim, measured</h2></div>
+    <div class="col">
+      <p data-ev="wl">
+        As a simulated robot moves, Atlas generates the RGB and depth its sensors would observe. Two large
+        environments were reconstructed from 24 phone-video frames each, and views were generated from
+        body-mounted cameras. <span class="ev ev--wl">WL</span>
+      </p>
+      <p data-ev="inf">
+        The simulator supplies the base pose; forward kinematics and the camera mount give
+        <span class="mono">T<sup>w</sup><sub>cam</sub> = T<sup>w</sup><sub>base</sub> · T<sup>base</sup><sub>link</sub>(q) · T<sup>link</sup><sub>cam</sub></span>,
+        which becomes an Atlas query pose with matched intrinsics. <span class="ev ev--inf">inf</span>
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Two ways to use it, and only one is practical at training scale</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">&nbsp;</th><th scope="col">Render from the Atlas-built splat</th><th scope="col">Query Atlas per frame</th></tr></thead>
+          <tbody>
+            <tr><td>Latency</td><td>milliseconds, real time</td><td>seconds, K flow steps per chunk</td></tr>
+            <tr><td>Determinism</td><td>deterministic</td><td>stochastic unless the seed is pinned</td></tr>
+            <tr><td>Unseen regions</td><td>holes or blur</td><td>plausible hallucination</td></tr>
+            <tr><td>Dynamics</td><td>static</td><td>static, there is no action input</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        The post does not say which mode the navigation demos use. For training at scale only the first is
+        practical today. <span class="ev ev--inf">inf</span>
+      </div>
+    </div>
+
+    <h3>Six limits on closed-loop policy training</h3>
+    <div id="limits"></div>
+
+    <div class="col">
+      <div class="note">
+        <p><b>Who does the physics.</b> Atlas "aids in building a simulation"; the articulated and
+        deformable behaviour in the demos is credited to the real-to-sim workflow, not to Atlas. The likely
+        division is appearance and geometry from Atlas, dynamics from a physics layer with system-identified
+        mass, friction and joint axes, validated by matched open-loop replay of identical action sequences
+        in simulation and reality. <span class="ev ev--inf">inf</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 ------------------------------------------------------------------ -->
+  <section id="s9">
+    <div class="sec-head"><span class="num">09</span><h2>The vocabulary, with something to hold on to</h2></div>
+    <div class="col"><p>Every card has a plain definition and, underneath, the analogy that makes it stick. Click to flip.</p></div>
+    <div class="gloss" id="gloss"></div>
+    <div class="col">
+      <div class="note note--wl" style="margin-top:1.2rem">
+        <p><b>How the pieces combine.</b> Bricks, the autoregressive elements, are laid on a surveyor's map,
+        the spatial context. Each brick is driven out of the fog by rectified flow, its placement fixed by
+        six numbers and its shape read off a pin bed of depth. The finished wall is converted into soap
+        bubbles, the Gaussian splat, for real-time viewing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 ----------------------------------------------------------------- -->
+  <section id="s10">
+    <div class="sec-head"><span class="num">10</span><h2>What I would want next</h2></div>
+    <div class="col">
+      <p>
+        The gap between this and an interactive simulator is one input: actions. Everything else in the
+        spatial-context design, posed elements and depth as a first-class modality, is already close to
+        geometry-aware policy work.
+      </p>
+      <ul class="checks">
+        <li>A technical report with the pose protocol stated for <i>every</i> reconstruction baseline.</li>
+        <li>A long-horizon revisit metric, so "consistent for a minute" becomes a number rather than a demo.</li>
+        <li>Inference throughput, which decides whether generative querying can ever sit inside a training loop.</li>
+        <li>A multi-task sim-to-real rank correlation, not one task at one checkpoint.</li>
+        <li>A plain splat reconstruction from the same 24 frames as a baseline, to isolate what generative gap-filling adds.</li>
+      </ul>
+      <p style="margin-top:1.1rem">
+        The testable question underneath all of it: does open-loop generative fidelity predict closed-loop
+        policy success? Report the two as separate axes, with three or more seeds, and the answer is worth a
+        paper on its own.
+      </p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="plate">Sources</div>
+    <ul>
+      <li><a href="https://www.worldlabs.ai/blog/atlas" target="_blank" rel="noopener">Atlas: A World Model for Spatial Intelligence</a> · World Labs, 2026-09-01</li>
+      <li><a href="https://www.worldlabs.ai/blog/real-to-sim-to-real" target="_blank" rel="noopener">Building Worlds That Train Robots</a> · World Labs, 2026-07-28</li>
+      <li><a href="https://www.worldlabs.ai/blog/taxonomy-of-world-models" target="_blank" rel="noopener">A Functional Taxonomy of World Models</a> · World Labs, 2026-06-03</li>
+      <li><a href="https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence" target="_blank" rel="noopener">From Words to Worlds: Spatial Intelligence</a> · Fei-Fei Li, 2025-11-10</li>
+    </ul>
+    <p style="margin-top:1rem;font-size:.82rem;color:var(--ink-3)">
+      Literature named from prior knowledge, not re-verified here: rectified flow (Liu et al. 2022),
+      shifted schedules (Esser et al. 2024), MAR (Li et al. 2024), Transfusion (Zhou et al. 2024),
+      Diffusion Forcing (Chen et al. 2024), CausVid (Yin et al. 2025), CameraCtrl (He et al. 2024),
+      CAT3D (Gao et al. 2024), GTA (Miyato et al. 2024), PRoPE (Li et al. 2025), Gen3C (Ren et al. 2025),
+      Voyager (Huang et al. 2025), PhysTwin (Jiang et al. 2025), 3DGS (Kerbl et al. 2023).
+    </p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function $(s, r) { return (r || document).querySelector(s); }
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+  function css(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  /* ---- provenance filter ---------------------------------------------- */
+  (function () {
+    var boxes = { wl: $("#ev-wl"), inf: $("#ev-inf"), spec: $("#ev-spec") };
+    var note = $("#filter-note");
+    var blocks = Array.prototype.slice.call(document.querySelectorAll("[data-ev]"));
+    function apply() {
+      var off = [];
+      Object.keys(boxes).forEach(function (k) { if (!boxes[k].checked) off.push(k); });
+      blocks.forEach(function (b) {
+        b.classList.toggle("is-muted", off.indexOf(b.getAttribute("data-ev")) !== -1);
+      });
+      note.textContent = off.length === 0 ? "All three shown"
+        : off.length === 3 ? "Everything dimmed, which is the point"
+        : "Dimmed: " + off.join(", ");
+    }
+    Object.keys(boxes).forEach(function (k) { boxes[k].addEventListener("change", apply); });
+    apply();
+  })();
+
+  /* ---- taxonomy -------------------------------------------------------- */
+  (function () {
+    var detail = $("#tax-detail");
+    var copy = {
+      renderer: "<p><b>Output: observations.</b> Pixels for human eyes. Text-to-video models and Genie 3 sit here. The world only has to look right from the camera it happens to be showing you.</p>",
+      simulator: "<p><b>Output: state.</b> A representation that is geometrically, physically or dynamically faithful, which other systems can then query. World Labs puts Marble here and calls this class the linchpin.</p><p>Atlas produces geometry and appearance for this class, but it has no action input, so it does not close the loop a dynamics simulator has to close.</p>",
+      planner: "<p><b>Output: actions.</b> Vision-language-action models and world action models. The model is no longer describing the world, it is deciding what to do in it.</p>"
+    };
+    var btns = Array.prototype.slice.call(document.querySelectorAll("[data-tax]"));
+    function pick(key) {
+      btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-tax") === key)); });
+      detail.innerHTML = copy[key];
+    }
+    btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.getAttribute("data-tax")); }); });
+    pick("simulator");
+  })();
+
+  /* ---- accordions ------------------------------------------------------ */
+  function wireAccordion(scope) {
+    Array.prototype.slice.call(scope.querySelectorAll(".acc__head")).forEach(function (head) {
+      var body = head.nextElementSibling;
+      body.hidden = head.getAttribute("aria-expanded") !== "true";
+      head.addEventListener("click", function () {
+        var open = head.getAttribute("aria-expanded") === "true";
+        head.setAttribute("aria-expanded", String(!open));
+        body.hidden = open;
+      });
+    });
+  }
+  wireAccordion(document);
+
+  /* ---- attention mask -------------------------------------------------- */
+  (function () {
+    var grid = $("#att"), toggle = $("#att-toggle");
+    if (!grid) return;
+    var els = ["text", "img@T₁", "dep@T₁", "img@T₂", "dep@T₂", "img@T₃"];
+    var n = els.length, full = false;
+    function draw() {
+      grid.innerHTML = "";
+      grid.style.gridTemplateColumns = "minmax(52px, .8fr) repeat(" + n + ", 1fr)";
+      grid.appendChild(el("div", "att__col-label", ""));
+      els.forEach(function (name) { grid.appendChild(el("div", "att__col-label", name)); });
+      for (var i = 0; i < n; i++) {
+        grid.appendChild(el("div", "att__row-label", els[i]));
+        for (var j = 0; j < n; j++) {
+          var cell = el("div", "att__cell");
+          if (i === j) cell.classList.add("self");
+          else if (full || j < i) cell.classList.add("on");
+          cell.title = els[i] + (full || j <= i ? " attends to " : " cannot attend to ") + els[j];
+          grid.appendChild(cell);
+        }
+      }
+    }
+    toggle.addEventListener("click", function () {
+      full = !full;
+      toggle.textContent = full ? "Show block-causal" : "Show full attention";
+      draw();
+    });
+    draw();
+  })();
+
+  /* ---- rectified flow -------------------------------------------------- */
+  (function () {
+    var cv = $("#flow");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var tIn = $("#flow-t"), kIn = $("#flow-k"), read = $("#flow-read"),
+        kRead = $("#flow-k-read"), play = $("#flow-play"), pathBtn = $("#flow-paths");
+    var W = 880, H = 330, N = 240, showPaths = true, t = 1, K = 6, anim = null;
+
+    // Deterministic pseudo-random, so the picture is the same for every reader.
+    var seed = 7;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+    function gauss() { return (rnd() + rnd() + rnd() + rnd() - 2) * 0.9; }
+
+    var pts = [];
+    for (var i = 0; i < N; i++) {
+      var left = i % 2 === 0;
+      pts.push({
+        dx: (left ? W * 0.34 : W * 0.66) + gauss() * 42,
+        dy: H * 0.5 + gauss() * 46 + (left ? -22 : 22),
+        nx: W * 0.5 + gauss() * 150,
+        ny: H * 0.5 + gauss() * 78
+      });
+    }
+
+    function fit() {
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var w = cv.clientWidth || W;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(w * (H / W) * dpr);
+      ctx.setTransform(dpr * (w / W), 0, 0, dpr * (w / W), 0, 0);
+      draw();
+    }
+
+    function draw() {
+      var accent = css("--accent") || "#0d7a72";
+      var ink3 = css("--ink-3") || "#78877f";
+      var line = css("--line-strong") || "#b9c2ba";
+      ctx.clearRect(0, 0, W, H);
+
+      if (showPaths) {
+        ctx.strokeStyle = line;
+        ctx.globalAlpha = 0.28;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        for (var p = 0; p < pts.length; p += 3) {
+          ctx.moveTo(pts[p].nx, pts[p].ny);
+          ctx.lineTo(pts[p].dx, pts[p].dy);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // step markers on five tracked particles, to show what K buys
+      ctx.fillStyle = ink3;
+      for (var s = 0; s < 5; s++) {
+        var q = pts[s * 17];
+        for (var k = 0; k <= K; k++) {
+          var tk = k / K;
+          ctx.globalAlpha = 0.5;
+          ctx.beginPath();
+          ctx.arc(q.dx + (q.nx - q.dx) * tk, q.dy + (q.ny - q.dy) * tk, 1.8, 0, 6.283);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      for (var m = 0; m < pts.length; m++) {
+        var pt = pts[m];
+        var x = pt.dx + (pt.nx - pt.dx) * t;
+        var y = pt.dy + (pt.ny - pt.dy) * t;
+        var mix = 1 - t;
+        ctx.fillStyle = accent;
+        ctx.globalAlpha = 0.25 + 0.65 * mix;
+        ctx.beginPath();
+        ctx.arc(x, y, 1.9 + 1.1 * mix, 0, 6.283);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      ctx.font = "500 11px " + (css("--mono") || "monospace");
+      ctx.fillStyle = ink3;
+      ctx.fillText("noise  z(1) = ε", 12, 20);
+      ctx.fillText("data  z(0)", 12, H - 12);
+    }
+
+    function setT(v) {
+      t = Math.max(0, Math.min(1, v));
+      tIn.value = String(Math.round(t * 100));
+      read.textContent = "t = " + t.toFixed(2) + (t > 0.85 ? " · pure noise" : t < 0.12 ? " · data" : " · in transit");
+      draw();
+    }
+
+    tIn.addEventListener("input", function () { stop(); setT(tIn.value / 100); });
+    kIn.addEventListener("input", function () { K = +kIn.value; kRead.textContent = "K = " + K; draw(); });
+    pathBtn.addEventListener("click", function () {
+      showPaths = !showPaths;
+      pathBtn.textContent = showPaths ? "Hide paths" : "Show paths";
+      pathBtn.setAttribute("aria-pressed", String(showPaths));
+      draw();
+    });
+
+    function stop() { if (anim) { clearInterval(anim); anim = null; play.textContent = "Play the sampler"; } }
+    play.addEventListener("click", function () {
+      if (anim) { stop(); return; }
+      var step = 0;
+      setT(1);
+      play.textContent = "Stop";
+      anim = setInterval(function () {
+        step++;
+        setT(1 - step / K);
+        if (step >= K) stop();
+      }, reduced ? 40 : 460 / Math.max(1, Math.min(8, K)) + 90);
+    });
+
+    window.addEventListener("resize", fit);
+    if (window.matchMedia) {
+      var mq = window.matchMedia("(prefers-color-scheme: dark)");
+      if (mq.addEventListener) mq.addEventListener("change", draw);
+    }
+    fit();
+    setT(1);
+  })();
+
+  /* ---- token budget ---------------------------------------------------- */
+  (function () {
+    var res = $("#tok-res"), fps = $("#tok-fps"), sec = $("#tok-sec");
+    var total = $("#tok-total"), bar = $("#tok-bar"), detail = $("#tok-detail");
+    var fpsRead = $("#tok-fps-read"), secRead = $("#tok-sec-read");
+    if (!res) return;
+    function calc() {
+      var wh = res.value.split("x");
+      var perFrame = Math.round((wh[0] / 8 / 2) * (wh[1] / 8 / 2));
+      var frames = Math.round((+fps.value * +sec.value) / 4);
+      var tokens = perFrame * frames;
+      fpsRead.textContent = fps.value + " fps";
+      secRead.textContent = sec.value + " s";
+      total.textContent = (tokens / 1e6).toFixed(2) + "M tokens";
+      bar.style.width = Math.min(100, (tokens / 1e6) * 18) + "%";
+      bar.style.background = tokens > 1e6 ? css("--warn") : css("--accent");
+      detail.textContent = perFrame.toLocaleString() + " tokens per latent frame × " +
+        frames.toLocaleString() + " latent frames (" + (+fps.value * +sec.value).toLocaleString() +
+        " rendered frames ÷ 4) = " + tokens.toLocaleString() + " tokens" +
+        (tokens > 1e6 ? " · beyond a single full-attention pass" : "");
+    }
+    [res, fps, sec].forEach(function (c) { c.addEventListener("input", calc); c.addEventListener("change", calc); });
+    calc();
+  })();
+
+  /* ---- pipeline -------------------------------------------------------- */
+  (function () {
+    var rail = $("#pipe-rail"), art = $("#pipe-art"), txt = $("#pipe-txt"), count = $("#pipe-count");
+    if (!rail) return;
+    var A = 'stroke="currentColor" fill="none" stroke-width="1.4"';
+    var stages = [
+      {
+        tag: "Inputs", ev: "wl",
+        title: "Text, posed images, a target trajectory",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<rect x="12" y="14" width="74" height="22" rx="5" ' + A + '/><text x="22" y="29" font-size="10" fill="currentColor">text prompt</text>' +
+             '<rect x="12" y="46" width="74" height="22" rx="5" ' + A + '/><text x="22" y="61" font-size="10" fill="currentColor">images 1..100+</text>' +
+             '<rect x="12" y="78" width="74" height="22" rx="5" ' + A + '/><text x="26" y="93" font-size="10" fill="currentColor">K, R, t</text>' +
+             '<path d="M90 25 L150 60 M90 57 L150 62 M90 89 L150 66" ' + A + '/>' +
+             '<rect x="152" y="46" width="94" height="36" rx="6" ' + A + ' stroke-width="2"/>' +
+             '<text x="163" y="69" font-size="11" fill="currentColor">spatial context</text></svg>',
+        body: "<p>Text, reference images, camera intrinsics and extrinsics, optionally a video, and the camera trajectory you want rendered. Video is just a sequence of images. <span class='ev ev--wl'>WL</span></p><p>For casual phone footage with no poses, where the poses come from, external structure-from-motion or an internal prediction, is undisclosed.</p>"
+      },
+      {
+        tag: "Context", ev: "inf",
+        title: "Every element placed in one world frame",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<path d="M20 100 L240 100 M20 100 L60 60 M240 100 L200 60 M60 60 L200 60" ' + A + ' stroke-dasharray="3 4"/>' +
+             '<circle cx="78" cy="78" r="6" ' + A + '/><circle cx="130" cy="66" r="6" ' + A + '/><circle cx="186" cy="80" r="6" ' + A + '/>' +
+             '<path d="M78 78 l14 -9 M130 66 l15 -6 M186 80 l14 -10" ' + A + '/>' +
+             '<text x="20" y="28" font-size="10" fill="currentColor">KV-cached, clean, addressed by where</text></svg>',
+        body: "<p>The context is a set of posed elements rather than a recent-frames window, so memory is indexed by location. More than 100 images fit, and two unrelated photographs placed in 3D produce a world that interpolates between them. <span class='ev ev--wl'>WL</span></p><p>Which elements are retrieved for a given query, co-visibility or frustum overlap being the natural choices, is not published. <span class='ev ev--inf'>inf</span></p>"
+      },
+      {
+        tag: "Generate", ev: "wl",
+        title: "One element at a time, K flow steps each",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<rect x="14" y="52" width="40" height="30" rx="5" ' + A + '/><text x="20" y="71" font-size="9" fill="currentColor">ctx</text>' +
+             '<path d="M58 67 L86 67" ' + A + ' marker-end="url(#ar)"/>' +
+             '<circle cx="110" cy="67" r="16" ' + A + ' stroke-dasharray="2 3"/><text x="100" y="70" font-size="9" fill="currentColor">z~N</text>' +
+             '<path d="M130 67 L160 67" ' + A + '/><text x="130" y="58" font-size="9" fill="currentColor">K steps</text>' +
+             '<rect x="162" y="48" width="38" height="38" rx="5" ' + A + ' stroke-width="2"/><text x="170" y="71" font-size="9" fill="currentColor">img</text>' +
+             '<rect x="206" y="48" width="38" height="38" rx="5" ' + A + '/><text x="212" y="71" font-size="9" fill="currentColor">depth</text></svg>',
+        body: "<p>For each target pose, sample noise and integrate the learned velocity field for K steps, conditioned on the context and that pose, with classifier-free guidance. The finished element is appended to the context and the next pose begins. <span class='ev ev--wl'>WL</span></p><p>Generated frames become context, which is also how a hallucination hardens and propagates. <span class='ev ev--inf'>inf</span></p>"
+      },
+      {
+        tag: "Decode", ev: "wl",
+        title: "RGB up to 1440p, plus pixel-aligned depth",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<rect x="16" y="40" width="48" height="48" rx="5" ' + A + '/><text x="20" y="104" font-size="9" fill="currentColor">latents</text>' +
+             '<path d="M70 64 L100 64" ' + A + '/><text x="70" y="56" font-size="9" fill="currentColor">VAE</text>' +
+             '<rect x="104" y="30" width="66" height="44" rx="4" ' + A + ' stroke-width="2"/><text x="112" y="56" font-size="10" fill="currentColor">RGB</text>' +
+             '<rect x="104" y="80" width="66" height="30" rx="4" ' + A + '/><text x="112" y="99" font-size="10" fill="currentColor">depth</text>' +
+             '<text x="182" y="60" font-size="9" fill="currentColor">1 min</text><text x="182" y="74" font-size="9" fill="currentColor">1440p</text></svg>',
+        body: "<p>The decoder returns frames and, for 3D tasks, a depth map per frame in the same camera. The reconstruction benchmark confirms the geometry output is pixel-aligned: a 3D point for every input pixel. <span class='ev ev--wl'>WL</span></p>"
+      },
+      {
+        tag: "Lift", ev: "wl",
+        title: "Unproject depth into a fused point cloud",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<path d="M30 100 L30 30 L96 30 L96 100 Z" ' + A + ' stroke-dasharray="3 3"/>' +
+             '<circle cx="30" cy="100" r="3" fill="currentColor"/>' +
+             '<path d="M30 100 L150 46 M30 100 L166 72 M30 100 L146 96" ' + A + '/>' +
+             '<circle cx="150" cy="46" r="2.6" fill="currentColor"/><circle cx="166" cy="72" r="2.6" fill="currentColor"/><circle cx="146" cy="96" r="2.6" fill="currentColor"/>' +
+             '<text x="112" y="24" font-size="9" fill="currentColor">X = R K⁻¹[u,v,1]ᵀ D + o</text></svg>',
+        body: "<p>Depth plus a known pose gives a pointmap by unprojection, and per-frame pointmaps are fused into one cloud. This is the step that turns a video model into a reconstruction system. <span class='ev ev--wl'>WL</span></p>"
+      },
+      {
+        tag: "Splat", ev: "spec",
+        title: "Gaussians, gap filling, real-time rendering",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<ellipse cx="70" cy="60" rx="20" ry="11" ' + A + ' transform="rotate(-18 70 60)"/>' +
+             '<ellipse cx="102" cy="78" rx="16" ry="9" ' + A + ' transform="rotate(12 102 78)"/>' +
+             '<ellipse cx="128" cy="54" rx="22" ry="12" ' + A + ' transform="rotate(-6 128 54)"/>' +
+             '<ellipse cx="158" cy="80" rx="14" ry="8" ' + A + ' transform="rotate(24 158 80)"/>' +
+             '<text x="60" y="112" font-size="9" fill="currentColor">μ, Σ = RSSᵀRᵀ, α, SH colour</text></svg>',
+        body: "<p>Points initialise Gaussians, Atlas \"fills the remaining gaps\" and the result is a complete splat scene in the Marble representation, rendered on-device by Spark. <span class='ev ev--wl'>WL</span></p><p>Whether gap filling is feed-forward splat prediction or per-scene optimisation supervised by extra generated views is undisclosed; the Marble lineage suggests the latter. <span class='ev ev--spec'>spec</span></p>"
+      },
+      {
+        tag: "Robot", ev: "inf",
+        title: "A virtual RGB-D sensor on a simulated robot",
+        art: '<svg viewBox="0 0 260 130" color="currentColor" aria-hidden="true">' +
+             '<rect x="26" y="70" width="44" height="30" rx="5" ' + A + '/><circle cx="36" cy="104" r="5" ' + A + '/><circle cx="60" cy="104" r="5" ' + A + '/>' +
+             '<path d="M48 70 L48 44 L84 44" ' + A + '/><rect x="84" y="34" width="20" height="20" rx="3" ' + A + ' stroke-width="2"/>' +
+             '<path d="M108 44 L150 30 M108 44 L150 58" ' + A + ' stroke-dasharray="3 3"/>' +
+             '<rect x="152" y="24" width="42" height="30" rx="4" ' + A + '/><text x="158" y="43" font-size="9" fill="currentColor">RGB</text>' +
+             '<rect x="152" y="62" width="42" height="26" rx="4" ' + A + '/><text x="158" y="79" font-size="9" fill="currentColor">depth</text></svg>',
+        body: "<p>Forward kinematics turn the simulator's base pose into a camera pose, which becomes an Atlas query. Two environments were rebuilt from 24 phone-video frames each. <span class='ev ev--wl'>WL</span></p><p>The loop is still open: there is no action input, so the dynamics come from a separate physics layer and Atlas supplies only what the sensor would see. <span class='ev ev--inf'>inf</span></p>"
+      }
+    ];
+    var at = 0;
+    function show(i) {
+      at = (i + stages.length) % stages.length;
+      var s = stages[at];
+      Array.prototype.slice.call(rail.children).forEach(function (b, n) {
+        b.setAttribute("aria-pressed", String(n === at));
+      });
+      art.innerHTML = s.art;
+      txt.innerHTML = "<h4>" + s.title + "</h4>" + s.body;
+      txt.setAttribute("data-ev", s.ev);
+      count.textContent = "stage " + (at + 1) + " of " + stages.length;
+      document.getElementById("ev-" + s.ev) &&
+        txt.classList.toggle("is-muted", !document.getElementById("ev-" + s.ev).checked);
+    }
+    stages.forEach(function (s, i) {
+      var b = el("button", "pipe__step", "<b>" + (i + 1) + "</b>" + s.tag);
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function () { show(i); });
+      rail.appendChild(b);
+    });
+    $("#pipe-prev").addEventListener("click", function () { show(at - 1); });
+    $("#pipe-next").addEventListener("click", function () { show(at + 1); });
+    show(0);
+  })();
+
+  /* ---- benchmark table -------------------------------------------------- */
+  (function () {
+    var table = $("#bench");
+    if (!table) return;
+    var rows = [
+      ["Atlas", 25.3, 8.6, 9.3, 60.0, 6.5, 37.8, 42.4, 12.4],
+      ["Pi3X (posed)", 28.7, 11.1, 18.7, 60.2, 13.3, 39.3, 42.4, 15.7],
+      ["π³", 34.7, 16.2, 25.4, 74.8, 17.5, 44.4, 47.0, 17.4],
+      ["VGGT-Ω 1B", 36.4, 9.7, 11.4, 101.4, 10.5, 45.2, 40.2, 36.6],
+      ["Depth Anything 3", 39.3, 11.9, 23.8, 93.3, 11.3, 50.8, 55.1, 29.0],
+      ["MapAnything", 47.7, 18.2, 34.8, 115.3, 20.2, 47.4, 60.8, 37.0]
+    ];
+    var body = table.querySelector("tbody");
+    var best = [];
+    for (var c = 1; c <= 8; c++) {
+      best[c] = rows.reduce(function (m, r) { return Math.min(m, r[c]); }, Infinity);
+    }
+    function render() {
+      body.innerHTML = "";
+      rows.forEach(function (r) {
+        var tr = el("tr");
+        if (r[0] === "Atlas") tr.className = "best";
+        r.forEach(function (v, i) {
+          var td = el("td", i > 0 && v === best[i] ? "lead" : "", i === 0 ? v : v.toFixed(1));
+          tr.appendChild(td);
+        });
+        body.appendChild(tr);
+      });
+    }
+    var dir = 1, key = 1;
+    Array.prototype.slice.call(table.querySelectorAll("thead th")).forEach(function (th, i) {
+      th.addEventListener("click", function () {
+        dir = key === i ? -dir : 1;
+        key = i;
+        rows.sort(function (a, b) {
+          return i === 0 ? dir * String(a[0]).localeCompare(String(b[0])) : dir * (a[i] - b[i]);
+        });
+        Array.prototype.slice.call(table.querySelectorAll("thead th")).forEach(function (h) { h.removeAttribute("aria-sort"); });
+        th.setAttribute("aria-sort", dir > 0 ? "ascending" : "descending");
+        render();
+      });
+    });
+    render();
+  })();
+
+  /* ---- six limits ------------------------------------------------------- */
+  (function () {
+    var host = $("#limits");
+    if (!host) return;
+    var items = [
+      ["No action conditioning", "Atlas cannot model p(o<sub>t+1</sub> | o<sub>≤t</sub>, a<sub>t</sub>). Closed-loop training depends entirely on the external physics engine.", "wl"],
+      ["Latency and throughput", "No inference numbers are published. With roughly 14,400 tokens per 1440p frame, K flow steps and a multi-billion-parameter transformer, generative querying is orders of magnitude slower than batched rasterised simulators running at 10⁴ to 10⁶ frames per second. On-policy reinforcement learning through it is infeasible; distillation and low-resolution robot cameras narrow the gap without closing it.", "inf"],
+      ["Stochasticity", "The same state can render to different pixels, which harms reproducible evaluation unless seeds are pinned and adds label noise between observation and state.", "inf"],
+      ["Depth fidelity", "An average AbsRel of 25.3 × 10⁻³ is about 2.5 percent relative error, roughly 2.5 cm at one metre, on mostly static scenes. That is marginal for tight-tolerance grasping. Generated depth also lacks real sensor artefacts, so a policy can overfit to unnaturally clean depth.", "inf"],
+      ["Causality versus plausibility", "Generated views carry no guarantee of contact consistency, object permanence under gripper occlusion, or conservation. Violations are rare, and policies exploit rare exploitable things systematically.", "inf"],
+      ["Scope of the sim-to-real evidence", "One task, an ALOHA cube handover, with 2,000 simulated and 100 real trials per checkpoint and no rank-correlation statistic in the text. \"Zero real-world training data\" describes the policy: real demonstrations were still captured to build the simulation. Robustness evidence covers lighting only, and out-of-distribution means held-out cube positions.", "inf"]
+    ];
+    items.forEach(function (it, i) {
+      var box = el("div", "acc");
+      box.innerHTML =
+        '<button type="button" class="acc__head" aria-expanded="' + (i === 0 ? "true" : "false") + '">' +
+        '<span class="n">0' + (i + 1) + '</span> ' + it[0] +
+        ' <span class="ev ev--' + it[2] + '" style="margin-left:.4rem">' + (it[2] === "wl" ? "WL" : it[2]) + '</span>' +
+        '<span class="chev">›</span></button>' +
+        '<div class="acc__body" data-ev="' + it[2] + '"><p>' + it[1] + '</p></div>';
+      host.appendChild(box);
+    });
+    wireAccordion(host);
+  })();
+
+  /* ---- glossary --------------------------------------------------------- */
+  (function () {
+    var host = $("#gloss");
+    if (!host) return;
+    var cards = [
+      ["6-DoF pose", "Full camera placement: three translations and three rotations, T = [R | t] in SE(3).", "A camera on an industrial arm. Three sliders place the mount, three joints aim the lens; six numbers fix what the lens sees."],
+      ["Depth map", "An image in which each pixel stores the distance to the surface along its ray.", "A pin bed pressed against the scene. Each pin's extension is the depth, and with the pose known, pushing every pin into space recovers 3D points."],
+      ["Spatial context", "Model memory organised by where each observation was taken, not when.", "A surveyor's map with photographs pinned at the exact spot and heading each was shot from. To draw a new view you consult the nearby photographs, not the most recent ones."],
+      ["Novel view synthesis", "Rendering a scene from a camera pose nobody photographed.", "Seeing a sculpture from three angles and sketching it from a fourth. Whatever no photograph covered has to be guessed, which is where the generative prior enters."],
+      ["3D Gaussian splatting", "A scene as millions of translucent coloured ellipsoids with position, shape, opacity and view-dependent colour, projected and alpha-blended front to back.", "A room filled with tinted soap bubbles. From any viewpoint, stacking the bubbles along each line of sight gives the pixel colour. It is fast because it is sorting and blending, not ray marching."],
+      ["Autoregression", "Producing a sequence one piece at a time, each conditioned on everything before it.", "A bricklayer setting each brick against the courses already laid. In Atlas, each brick is an entire frame or depth map."],
+      ["Rectified flow", "A generative model that learns a velocity field carrying noise to data along near-straight paths.", "A compass that knows the straight-line heading from anywhere in the fog to the nearest real destination. Straighter paths need fewer steps, which is why it distils so well."]
+    ];
+    cards.forEach(function (c) {
+      var card = el("div", "gcard");
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.innerHTML = "<h4>" + c[0] + "</h4><p>" + c[1] + "</p>" +
+        '<div class="gcard__flip" hidden><span class="gcard__cue">picture it</span><br>' + c[2] + "</div>";
+      function flip() {
+        var f = card.querySelector(".gcard__flip");
+        f.hidden = !f.hidden;
+      }
+      card.addEventListener("click", flip);
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); }
+      });
+      host.appendChild(card);
+    });
+  })();
+})();
+</script>

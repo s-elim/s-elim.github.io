@@ -18,6 +18,10 @@ layout: none
 ,{"t":"Conference Deadlines","k":"Page","u":{{ "/deadlines/" | relative_url | jsonify }},"s":"conference deadlines call for papers submission countdown CORE rank"}
 ,{"t":"Top Journals","k":"Page","u":{{ "/journals/" | relative_url | jsonify }},"s":"journals SCIE Q1 impact factor robotics vision AI"}
 ,{"t":"Research Ideas","k":"Page","u":{{ "/research-ideas/" | relative_url | jsonify }},"s":"research ideas mind map physical AI directions backlog"}
+{%- comment -%} Deep dives: the explainer pages {%- endcomment -%}
+{%- for d in site.data.deep_dives.dives -%}
+,{"t":{{ d.title | jsonify }},"k":"Deep dive","u":{{ d.page | relative_url | jsonify }},"s":{{ d.subtitle | append: " " | append: d.summary | strip_newlines | jsonify }},"m":{{ d.kicker | jsonify }}}
+{%- endfor -%}
 ,{"t":"Resources Library","k":"Page","u":{{ "/research-ideas/#links" | relative_url | jsonify }},"s":"links bookmarks labs robotics computer vision benchmarks researchers directory resources"}
 
 {%- comment -%} Conferences: deep-link to the card on the deadlines page {%- endcomment -%}

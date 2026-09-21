@@ -116,6 +116,69 @@ description: "Running log of Physical AI research ideas tracked by Md Selim Saro
 {% assign n_shaping = ideas | where: "status", "shaping" | size %}
 {% assign n_active = ideas | where: "status", "active" | size %}
 
+{%- comment -%}
+  ---- Deep dives ----
+  Long reads about someone else's system, one box each, from _data/deep_dives.yml.
+  Static markup: the interactive part lives on the explainer page each box links to.
+{%- endcomment -%}
+{% assign dives = site.data.deep_dives.dives %}
+{% if dives %}
+<section class="dives reveal" id="dives" aria-label="Deep dives">
+  {% for d in dives %}
+  <article class="dive" id="dive-{{ d.id }}">
+    <header class="dive__head">
+      <span class="dive__mark" aria-hidden="true"><i class="fas fa-microscope"></i></span>
+      <div class="dive__id">
+        <p class="dive__kicker">{{ d.kicker }}{% if d.read %} · {{ d.read }} read{% endif %}</p>
+        <h2 class="dive__title">{{ d.title }}</h2>
+        <p class="dive__sub">{{ d.subtitle }}</p>
+      </div>
+      {% if d.page %}
+      <a class="dive__cta" href="{{ d.page | relative_url }}">
+        <i class="fas fa-cube" aria-hidden="true"></i> Open the teardown <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      </a>
+      {% endif %}
+    </header>
+
+    <p class="dive__summary">{{ d.summary }}</p>
+
+    {% if d.verdict %}
+    <div class="dive__verdict">
+      <span class="dive__label">Calibrated verdict</span>
+      <p>{{ d.verdict }}</p>
+    </div>
+    {% endif %}
+
+    {% if d.highlights %}
+    <ul class="dive__points">
+      {% for h in d.highlights %}<li>{{ h }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if d.tags %}
+    <div class="idea-chips idea-chips--tags">
+      {% for t in d.tags %}<span class="idea-chip idea-chip--tag">#{{ t }}</span>{% endfor %}
+    </div>
+    {% endif %}
+
+    <footer class="dive__foot">
+      {% if d.source %}
+      <a class="idea-link" href="{{ d.source.url }}" target="_blank" rel="noopener">
+        <i class="fas fa-external-link-alt" aria-hidden="true"></i> {{ d.source.label }}{% if d.source.date %} · {{ d.source.date }}{% endif %}
+      </a>
+      {% endif %}
+      {% for l in d.links %}
+      <a class="idea-link" href="{{ l.url }}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> {{ l.label }}</a>
+      {% endfor %}
+      {% if d.idea %}
+      <a class="idea-link idea-link--own" href="#idea-{{ d.idea }}"><i class="fas fa-lightbulb" aria-hidden="true"></i> The idea it raised</a>
+      {% endif %}
+    </footer>
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
 <div class="stat-row reveal">
   <div class="stat"><div class="stat__num">{{ total }}</div><div class="stat__label">Ideas Logged</div></div>
   <div class="stat stat--research"><div class="stat__num">{{ n_spark }}</div><div class="stat__label">Sparks</div></div>
