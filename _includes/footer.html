@@ -1,12 +1,21 @@
 {% assign p = site.data.profiles %}
+{% assign contact = site.contact %}
+{% if contact.endpoint and contact.endpoint != "" and contact.turnstile_sitekey and contact.turnstile_sitekey != "" %}{% assign contact_on = true %}{% else %}{% assign contact_on = false %}{% endif %}
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <div class="site-footer__social">
-      {% if p.scholar %}<a href="{{ p.scholar }}" target="_blank" rel="noopener" aria-label="Google Scholar"><i class="fas fa-graduation-cap" aria-hidden="true"></i></a>{% endif %}
-      {% if p.github %}<a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
-      {% if p.linkedin %}<a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>{% endif %}
-      {% if p.researchgate %}<a href="{{ p.researchgate }}" target="_blank" rel="noopener" aria-label="ResearchGate"><i class="fab fa-researchgate" aria-hidden="true"></i></a>{% endif %}
-      {% if p.email %}<a href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}" target="_blank" rel="noopener" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+    <div class="site-footer__start">
+      <div class="site-footer__social">
+        {% if p.scholar %}<a href="{{ p.scholar }}" target="_blank" rel="noopener" aria-label="Google Scholar"><i class="fas fa-graduation-cap" aria-hidden="true"></i></a>{% endif %}
+        {% if p.github %}<a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
+        {% if p.linkedin %}<a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>{% endif %}
+        {% if p.researchgate %}<a href="{{ p.researchgate }}" target="_blank" rel="noopener" aria-label="ResearchGate"><i class="fab fa-researchgate" aria-hidden="true"></i></a>{% endif %}
+        {% if p.email %}<a href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}" target="_blank" rel="noopener" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+      </div>
+      {% if contact_on %}
+      <button type="button" class="footer-message js-modal-open" data-modal-target="#message-modal">
+        <i class="fas fa-paper-plane" aria-hidden="true"></i> Send an anonymous message
+      </button>
+      {% endif %}
     </div>
     <div class="site-footer__meta">
       &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>
@@ -21,6 +30,44 @@
     </div>
   </div>
 </footer>
+
+{% if contact_on %}
+<div class="modal" id="message-modal" role="dialog" aria-modal="true" aria-labelledby="message-modal-title">
+  <div class="modal__dialog">
+    <div class="modal__head">
+      <h3 class="modal__title" id="message-modal-title"><i class="fas fa-paper-plane" aria-hidden="true"></i> Send Selim a message</h3>
+      <button type="button" class="modal__close js-modal-close" aria-label="Close message form">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="modal__body">
+      <form class="message-form" id="message-form" novalidate
+            data-endpoint="{{ contact.endpoint | escape }}" data-sitekey="{{ contact.turnstile_sitekey | escape }}">
+        <p class="message-form__intro">No sign-in needed. Your message goes straight to Selim's inbox and nothing is stored on this site. Leave a way to reach you only if you want a reply.</p>
+        <label class="message-form__label" for="message-text">Message</label>
+        <textarea class="message-form__field" id="message-text" name="message" rows="6" minlength="10" maxlength="2000" required></textarea>
+        <div class="message-form__count" id="message-count" aria-live="off">0 / 2000</div>
+        <label class="message-form__label" for="message-contact">How to reach you <span class="message-form__optional">(optional)</span></label>
+        <input class="message-form__field" id="message-contact" name="contact" type="text" maxlength="200" autocomplete="email" placeholder="Email, LinkedIn, or leave blank">
+        <div class="message-form__hp" aria-hidden="true">
+          <label for="message-website">Website</label>
+          <input id="message-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="message-form__check" id="message-turnstile"></div>
+        <div class="message-form__actions">
+          <button type="submit" class="btn btn--primary message-form__send" id="message-send" disabled>Send message</button>
+          <p class="message-form__status" id="message-status" role="status" aria-live="polite">Running a quick spam check…</p>
+        </div>
+      </form>
+      <div class="message-sent" id="message-sent" hidden>
+        <p class="message-sent__title"><i class="fas fa-check-circle" aria-hidden="true"></i> Sent. Thank you.</p>
+        <p>It is on its way to Selim's inbox. If you left a way to reach you, that is where a reply would go.</p>
+        <button type="button" class="btn btn--ghost" id="message-again">Send another message</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <!-- Floating Back to Top Button & Copy Toast Notification -->
 <button id="back-to-top" class="back-to-top" type="button" aria-label="Scroll back to top">

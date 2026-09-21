@@ -550,7 +550,7 @@
       var lastFocused = null;
 
       function focusable() {
-        return modal.querySelectorAll('a[href], button:not([disabled])');
+        return modal.querySelectorAll('a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled])');
       }
       function open() {
         lastFocused = document.activeElement;
@@ -3203,6 +3203,114 @@
     document.addEventListener("visibilitychange", onVisibilityChange);
   }
 
+  /* ---- Anonymous message form (footer) ------------------------------- */
+  // Posts to the Cloudflare Worker in workers/contact. Turnstile loads only when
+  // the dialog opens, so pages that never open it make no third-party request.
+  function initMessageForm() {
+    var form = document.getElementById("message-form");
+    var opener = document.querySelector('[data-modal-target="#message-modal"]');
+    if (!form || !opener) return;
+    var endpoint = form.getAttribute("data-endpoint");
+    var sitekey = form.getAttribute("data-sitekey");
+    var text = document.getElementById("message-text");
+    var contact = document.getElementById("message-contact");
+    var honeypot = document.getElementById("message-website");
+    var count = document.getElementById("message-count");
+    var send = document.getElementById("message-send");
+    var status = document.getElementById("message-status");
+    var sent = document.getElementById("message-sent");
+    var again = document.getElementById("message-again");
+    var box = document.getElementById("message-turnstile");
+    var MIN = 10, MAX = 2000;
+    var token = "", widget = null, loading = false, busy = false;
+
+    function say(msg, isError) {
+      status.textContent = msg;
+      status.classList.toggle("is-error", !!isError);
+    }
+    function refresh() {
+      var n = text.value.trim().length;
+      count.textContent = text.value.length + " / " + MAX;
+      send.disabled = busy || !token || n < MIN;
+    }
+    function render() {
+      if (widget !== null || !window.turnstile) return;
+      widget = window.turnstile.render(box, {
+        sitekey: sitekey,
+        theme: root.getAttribute("data-theme") === "dark" ? "dark" : "light",
+        callback: function (t) { token = t; say(""); refresh(); },
+        "expired-callback": function () { token = ""; say("The spam check expired. It will renew in a moment."); refresh(); },
+        "error-callback": function () { token = ""; say("The spam check could not load. Check your connection or disable a blocker, then reopen this form.", true); refresh(); }
+      });
+    }
+    function loadTurnstile() {
+      if (window.turnstile) { render(); return; }
+      if (loading) return;
+      loading = true;
+      window.onMessageTurnstile = render;
+      var s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onMessageTurnstile";
+      s.async = true;
+      s.onerror = function () { loading = false; say("The spam check could not load. Check your connection or disable a blocker, then reopen this form.", true); };
+      document.head.appendChild(s);
+    }
+    function resetCheck() {
+      token = "";
+      if (widget !== null && window.turnstile) window.turnstile.reset(widget);
+      refresh();
+    }
+
+    opener.addEventListener("click", function () {
+      loadTurnstile();
+      window.setTimeout(function () { if (!sent.hidden) again.focus(); else text.focus(); }, 60);
+    });
+    text.addEventListener("input", refresh);
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var msg = text.value.trim();
+      if (msg.length < MIN) { say("Write at least " + MIN + " characters.", true); text.focus(); return; }
+      if (!token) { say("The spam check has not finished. Wait a moment and send again.", true); return; }
+      busy = true; refresh();
+      say("Sending…");
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 15000) : null;
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg, contact: contact.value.trim(), website: honeypot.value, token: token, page: window.location.pathname }),
+        signal: ctrl ? ctrl.signal : undefined
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok && j.ok, error: j.error }; });
+      }).then(function (res) {
+        if (res.ok) {
+          form.reset();
+          form.hidden = true;
+          sent.hidden = false;
+          say("");
+          again.focus();
+        } else {
+          say(res.error || "The message could not be sent. Please try again.", true);
+        }
+      }).catch(function () {
+        say("The message could not be sent. Check your connection and try again.", true);
+      }).then(function () {
+        if (timer) window.clearTimeout(timer);
+        busy = false;
+        resetCheck();
+      });
+    });
+
+    again.addEventListener("click", function () {
+      sent.hidden = true;
+      form.hidden = false;
+      refresh();
+      if (!token) say("Running a quick spam check…");
+      text.focus();
+    });
+    refresh();
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
@@ -3222,6 +3330,7 @@
     safe(initUpdatesScroll);
     safe(initLightbox);
     safe(initModals);
+    safe(initMessageForm);
     safe(initDeadlineTracker);
     safe(initDeadlineBadge);
     safe(initJournalExplorer);

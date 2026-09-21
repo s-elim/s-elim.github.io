@@ -1,0 +1,128 @@
+// ==========================================================================
+//  Anonymous message: footer button and the form inside #message-modal
+// ==========================================================================
+
+.site-footer__start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem .9rem;
+}
+
+.footer-message {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  height: 38px;
+  padding: 0 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-head);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease);
+
+  i { color: var(--accent); font-size: .9em; }
+
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  &:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+}
+
+.message-form { display: grid; gap: .35rem; }
+.message-form[hidden] { display: none; }
+
+.message-form__intro {
+  margin: 0 0 .6rem;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.message-form__label {
+  margin-top: .45rem;
+  font-family: var(--font-head);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.message-form__optional { font-weight: 400; color: var(--muted); }
+
+.message-form__field {
+  width: 100%;
+  padding: .65rem .8rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+
+  &::placeholder { color: var(--muted); opacity: .8; }
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+}
+textarea.message-form__field { resize: vertical; min-height: 8rem; }
+
+.message-form__count {
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// Honeypot: present for bots, invisible and unreachable for people.
+.message-form__hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.message-form__check { min-height: 65px; margin-top: .6rem; }
+
+.message-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1rem;
+  margin-top: .4rem;
+}
+.message-form__send:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+.message-form__status {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  &.is-error { color: var(--red); }
+}
+
+.message-sent[hidden] { display: none; }
+.message-sent__title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--font-head);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--text-strong);
+  i { color: var(--good); }
+}
+
+@media (max-width: $bp-sm) {
+  .footer-message { width: 100%; justify-content: center; }
+}

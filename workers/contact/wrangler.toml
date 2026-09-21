@@ -1,0 +1,13 @@
+# Only needed if you deploy from a terminal with `npx wrangler deploy`.
+# The dashboard route in README.md needs no local tooling at all.
+name = "homepage-contact"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://s-elim.github.io"
+
+# Secrets are never written here. Set them with:
+#   npx wrangler secret put TURNSTILE_SECRET
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put TO_EMAIL
