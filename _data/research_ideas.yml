@@ -220,6 +220,86 @@ themes:
     color: '#ef4444'
     blurb: Where the data comes from and whether the metric measures anything.
 ideas:
+  - id: video-for-policy-wam
+    title: Does the imagined future help the action?
+    theme: vla
+    also:
+      - world-models
+      - data-benchmarks
+      - embodied
+    status: spark
+    priority: 4
+    added: '2026-09-22'
+    effort: high
+    risk: medium
+    venue: CoRL 2027, or an evaluation paper at ICRA 2028
+    summary: >-
+      World-action models such as Cosmos3-Nano-Policy-DROID denoise future video alongside every action
+      chunk, then discard the video at inference. Whether those video tokens improve the action, or only
+      cost compute, has not been tested at matched compute.
+    why: >-
+      The case for world-action models over plain VLAs rests on the claim that predicting consequences
+      improves acting. Cosmos 3 reports a large RoboLab gain over π0.5, but that comparison changes the
+      backbone, the pre-training and the output head at once, and its only test of synergy between modes is
+      one Push-T run with the Edge model. A matched ablation (same backbone and data, video loss on or off,
+      video tokens present or absent at inference) isolates the one variable the architecture is built around.
+      If the video does not help, the compute it costs at every control step is waste; if it does, the size of
+      the gain prices a world model for a policy.
+    angle: >-
+      Run it where evaluation is cheap and repeatable before touching a real robot: RoboLab or LIBERO with three
+      seeds, success reported by instruction level and difficulty, plus action-following fidelity measured by
+      replaying predicted actions in the simulator and comparing with the predicted video. Add a counterfactual
+      probe, the same start frame under several action chunks, to check that the predicted video responds to the
+      action rather than to the visual prior. The obvious objection is compute, since Nano is 16B; the answer is
+      to run the grid on Cosmos3-Edge (4B) and confirm only the winning arm at Nano scale.
+    facts:
+      - label: Policy output
+        value: 32 absolute joint positions at 15 Hz plus auxiliary RGB frames (Report §4.2.5)
+      - label: Inference
+        value: 4 denoising steps, guidance 3, video latents not decoded, two RTX Pro 6000 GPUs (Report §4.2.5)
+      - label: RoboLab, specific instructions
+        value: 39.7% against 28.1% for π0.5, 120 tasks × 10 rollouts (Report Tab. 19)
+      - label: Mode-synergy ablation
+        value: Push-T only, Edge model, one run; joint training cut inverse-dynamics MSE by 72% (Report App. E.4)
+      - label: Video-action consistency
+        value: 23.19 dB third-person and 17.33 dB wrist, predicted video against a simulator replay (Report App. E.5)
+    questions:
+      - Does removing the video loss, at matched compute and data, change closed-loop success, and at which instruction level?
+      - Does the predicted video respond to counterfactual actions, or mostly follow the visual prior of the start frame?
+      - Is there a cheaper auxiliary target, such as frozen latent features instead of VAE latents, that gives the same gain?
+    next:
+      - Reproduce Cosmos3-Edge-Policy-DROID inference on RoboLab and record per-chunk latency before any ablation.
+      - Write the matched ablation grid (video loss, video tokens at inference, seeds) as the experiment plan.
+      - Build the counterfactual action-chunk probe on a handful of RoboLab start states.
+    source:
+      kind: self
+      author: Md Selim Sarowar
+      label: Missing experiment 1 in my Cosmos 3 teardown
+      url: https://s-elim.github.io/notes/cosmos3/
+      captured: '2026-09-22'
+    links:
+      - label: Cosmos 3 teardown
+        url: https://s-elim.github.io/notes/cosmos3/
+      - label: Cosmos 3 report (arXiv 2606.02800)
+        url: https://arxiv.org/abs/2606.02800
+      - label: 'Weights: Cosmos3-Edge-Policy-DROID'
+        url: https://huggingface.co/nvidia/Cosmos3-Edge-Policy-DROID
+    connects:
+      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
+      - 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
+      - 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
+    related:
+      - generative-fidelity-vs-policy
+      - action-sensitivity-jepa
+    tags:
+      - world-action models
+      - VLA
+      - Cosmos 3
+      - ablation
+      - controllability
+      - evaluation
+    note: >-
+      Figures come from the Cosmos 3 report v4 and the NVIDIA/cosmos repository, read on 22 Sep 2026.
   - id: action-sensitivity-jepa
     title: Regularise latent world models for action sensitivity
     theme: world-models

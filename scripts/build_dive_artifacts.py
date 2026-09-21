@@ -18,6 +18,7 @@ INCLUDES = os.path.join(BASE, '_includes')
 DIVES = [
     ('atlas-explainer.html', 'Atlas Teardown', 'atlas_teardown.html'),
     ('vjepa-explainer.html', 'V-JEPA Teardown', 'vjepa_teardown.html'),
+    ('cosmos3-explainer.html', 'Cosmos 3 Teardown', 'cosmos3_teardown.html'),
 ]
 
 COMMENT = re.compile(r"\{%-?\s*comment\s*-?%\}.*?\{%-?\s*endcomment\s*-?%\}\s*", re.S)

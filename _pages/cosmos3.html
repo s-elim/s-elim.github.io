@@ -1,0 +1,47 @@
+---
+# A standalone document: opt out of the site-wide `layout: single` default
+# in _config.yml so this page is not wrapped in the portfolio chrome.
+layout: null
+permalink: /notes/cosmos3/
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cosmos 3 Teardown · Md Selim Sarowar</title>
+  <meta name="description" content="An interactive teardown of NVIDIA Cosmos 3: the Mixture-of-Transformers layer, token layout, flow matching, the unified action space, and an audit of every benchmark claim, with a fourteen-step 3D tour.">
+  <link rel="canonical" href="{{ '/notes/cosmos3/' | absolute_url }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Cosmos 3 Teardown">
+  <meta property="og:description" content="One set of weights for a VLM, a video and audio generator, forward and inverse dynamics, and a robot policy, taken apart token by token and audited claim by claim.">
+  <meta property="og:url" content="{{ '/notes/cosmos3/' | absolute_url }}">
+  <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+  <style>
+    :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+    body { margin: 0; }
+    img { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .backbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: 1120px; margin: 0 auto; padding: .7rem 20px 0;
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .74rem;
+    }
+    .backbar a { color: var(--accent, #0d7a72); text-decoration: none; }
+    .backbar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <nav class="backbar">
+    <a href="{{ '/research-ideas/' | relative_url }}">← Research ideas</a>
+    <a href="{{ '/' | relative_url }}">s-elim.github.io</a>
+  </nav>
+  {% include cosmos3-explainer.html %}
+</body>
+</html>

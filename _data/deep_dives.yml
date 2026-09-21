@@ -23,6 +23,63 @@
 # ==========================================================================
 
 dives:
+  - id: nvidia-cosmos-3
+    title: NVIDIA Cosmos 3
+    subtitle: One Mixture-of-Transformers for a VLM, a video and audio generator, forward and inverse
+      dynamics, and a robot policy
+    kicker: 'World-action models · 22 Sep 2026'
+    read: 35 min
+    summary: >-
+      Cosmos 3 folds NVIDIA's Predict, Transfer and Reason model lines into one set of weights and makes
+      action a first-class modality. This teardown walks the mechanism token by token: two parameter towers
+      that meet only in attention, a causal-and-full attention mask, a frozen video VAE at 4×32×32, a 3D RoPE
+      whose clock puts video, audio and action on one physical time axis, rectified flow matching with a noise
+      level per modality, and one action interface for six embodiments. It ends in a fourteen-step 3D tour
+      and a story-mode run.
+    verdict: >-
+      The architecture is well documented and the policy result holds on its own terms: 39.7% against 28.1%
+      for π0.5 on 120 RoboLab tasks, and first place on RoboArena and MolmoSpaces, all on the Franka-DROID
+      embodiment it trained on. The generation claims rest on margins under one point, a swapped judge,
+      LLM-rewritten prompts and snapshot arenas, and human raters still rank Veo 3.1 above it. Nothing in the
+      report measures what the world-model framing promises: no policy trained on generated data, no
+      simulator-versus-real rank correlation, and no test of whether the video the policy predicts helps the
+      action it takes. As a simulator, Nano runs about 4× slower than real time at 480p on a B200.
+    highlights:
+      - >-
+        Reasoner and generator are trained in stages, not jointly, and the generator reads the reasoner only
+        through cached keys and values; "think before it acts" is the causal mask plus an optional prompt
+        upsampler.
+      - >-
+        A 5-second 720p clip is 31 latent frames of 23×40 tokens, 28,520 in all, because the released pipeline
+        rounds the odd 45-row latent height up; the 74,000-token context caps 720p at 300 frames.
+      - >-
+        The #1 open-weight text-to-image arena entry was a loop with GPT-5.5 rewriting prompts and Gemini 3.1
+        Pro judging, not the checkpoint alone.
+      - >-
+        The DROID policy denoises future video alongside every 32-step action chunk and then discards it; the
+        report never trains the policy without it.
+    page: /notes/cosmos3/
+    tags:
+      - world models
+      - world-action models
+      - VLA
+      - mixture-of-transformers
+      - flow matching
+      - evaluation
+    source:
+      label: 'Cosmos 3: Omnimodal World Models for Physical AI (arXiv 2606.02800v4)'
+      url: https://arxiv.org/abs/2606.02800
+      date: 23 Jun 2026
+    links:
+      - label: 'Code: NVIDIA/cosmos'
+        url: https://github.com/nvidia/cosmos
+      - label: 'Weights: Cosmos3-Nano'
+        url: https://huggingface.co/nvidia/Cosmos3-Nano
+      - label: 'Weights: Cosmos3-Nano-Policy-DROID'
+        url: https://huggingface.co/nvidia/Cosmos3-Nano-Policy-DROID
+      - label: Project page
+        url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/
+    idea: video-for-policy-wam
   - id: v-jepa-latent-world-models
     title: V-JEPA
     subtitle: From masked video pretraining to action-conditioned latent world models, with DINO-WM
