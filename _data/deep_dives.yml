@@ -81,63 +81,62 @@ dives:
         url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/
     idea: video-for-policy-wam
   - id: v-jepa-latent-world-models
-    title: V-JEPA
-    subtitle: From masked video pretraining to action-conditioned latent world models, with DINO-WM
-      and LeWM alongside
-    kicker: 'Latent world models · 21 Sep 2026'
-    read: 20 min
+    title: V-JEPA 2 and V-JEPA 2-AC
+    subtitle: Masked video prediction in feature space, then an action-conditioned predictor that plans on
+      a real Franka arm
+    kicker: 'Latent world models · 22 Sep 2026'
+    read: 40 min
     summary: >-
-      A joint-embedding predictive architecture predicts in a space it invented, which is why
-      it is cheap to run and hard to evaluate. This teardown walks the line from I-JEPA to V-JEPA
-      2-AC and LeWM: what tube masking actually forces the encoder to learn, how collapse is avoided
-      and what each mechanism costs, how actions get into the predictor, how rollout error compounds,
-      and what planning costs on the hardware you own.
+      V-JEPA 2 learns a video encoder by predicting masked tubes of video in a feature space it invents;
+      V-JEPA 2-AC freezes that encoder, trains a 300M block-causal predictor on under 62 hours of DROID and
+      plans with the cross-entropy method on Franka arms in two unseen labs. This teardown checks every number
+      against the paper, the released code and V-JEPA 2.1, measures what the masking sampler actually hides,
+      audits the robot evidence with the intervals the paper leaves out, ends in a sixteen-step 3D tour with a
+      story mode, and turns the setup's eight assumptions into research directions for dexterous hands,
+      bimanual arms, mobile manipulators and humanoids.
     verdict: >-
-      The efficiency claims are well supported and the generality claims are not. V-JEPA pretraining
-      yields a state encoder, not a transition model, and the world model only appears at the
-      action-conditioned stage. Low latent prediction error certifies nothing on its own: it is
-      measured in a space the model chose, it weights every dimension equally, and it says nothing
-      about the off-manifold behaviour a planner will find and exploit. Latent fidelity, controllability,
-      energy-landscape quality and closed-loop success are four separate axes, and papers in this
-      line routinely report only the first.
+      The representation claims are well supported where the protocol is shared: a 20-point frozen-probe lead
+      on SSv2 over the best image encoder. The planning claims are real and thin: 10 trials per cell, one model,
+      a camera position tuned by hand, a planner that looks one step ahead, and sub-goal images supplied by a
+      person for the only multi-stage task. At n = 20 per task, V-JEPA 2-AC separates from Octo on four of seven
+      tasks. The world model infers its action frame from a fixed view with an error that grows linearly with
+      camera angle, which is the assumption that blocks mobile and humanoid use first.
     highlights:
       - >-
-        Tube masking is an anti-shortcut device: the page computes, live, what fraction of masked
-        tokens could simply be copied from t plus or minus one under each strategy.
+        Running the released sampler: the short-range and long-range masks hide 62% and 81% of tokens per clip,
+        and after the collator truncates to the batch minimum the encoder sees 25% and 6%, not the "about 90%"
+        usually quoted.
       - >-
-        SIGReg removes the EMA, the stop-gradient and the pretrained encoder, at the price of
-        forcing every latent dimension to carry unit variance, which is why LeWM underperforms
-        on Two-Room.
+        V-JEPA 2 fixes the EMA at 0.99925; every deployed plan uses horizon 1 with 800 samples, top 10 and 10
+        iterations, about 1.2e15 FLOPs and 16 s per action on an RTX 4090.
       - >-
-        Teacher forcing trains the predictor only on the data manifold, so the Lipschitz constant
-        off it, the thing that governs drift, is uncontrolled. Everyone hides this behind short
-        horizons and replanning.
+        The Epic-Kitchens anticipation gain is mostly encoder semantics (39.1 from the encoder alone, 39.7 with
+        the predictor), and PerceptionTest 84.0 is fine-tuned while its comparison rows are zero-shot.
       - >-
-        The planning budget is arithmetic, not opinion: roughly 2.5e15 FLOPs per action for V-JEPA
-        2-AC under illustrative CEM settings against about 2.7e12 for LeWM, which is the whole
-        edge-deployment story in two numbers.
+        The one energy landscape in the paper has its minimum on the edge of the swept square and spans about
+        10% of its level, and the paper's "L1-ball of radius 0.075" only yields its stated 13 cm step if it is
+        the per-axis box the code implements.
     page: /notes/v-jepa/
     tags:
       - JEPA
       - world models
       - V-JEPA 2
-      - LeWM
-      - DINO-WM
-      - SIGReg
+      - V-JEPA 2-AC
       - CEM
-      - sim-to-real
+      - MPC
+      - humanoids
       - evaluation
     source:
-      label: 'V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning'
+      label: 'V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning (arXiv 2506.09985v1)'
       url: https://arxiv.org/abs/2506.09985
-      date: '2025'
+      date: 11 Jun 2025
     links:
       - label: 'Code: facebookresearch/vjepa2'
         url: https://github.com/facebookresearch/vjepa2
-      - label: 'Code: facebookresearch/jepa'
-        url: https://github.com/facebookresearch/jepa
-      - label: 'Code: gaoyuezhou/dino_wm'
-        url: https://github.com/gaoyuezhou/dino_wm
+      - label: 'V-JEPA 2.1 (arXiv 2603.14482)'
+        url: https://arxiv.org/abs/2603.14482
+      - label: 'IntPhys 2 (arXiv 2506.09849)'
+        url: https://arxiv.org/abs/2506.09849
       - label: DINO-WM paper
         url: https://arxiv.org/abs/2411.04983
     idea: action-sensitivity-jepa

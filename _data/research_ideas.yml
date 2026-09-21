@@ -378,8 +378,8 @@ ideas:
       - LeWM
       - evaluation
     note: >-
-      Numbers cited in the teardown come from my AVI Lab note of 21 Sep 2026; the V-JEPA
-      2.1 and LeWM figures are pending verification against the primary sources.
+      The teardown was rebuilt on 22 Sep 2026 against the V-JEPA 2 paper, the released code, V-JEPA 2.1,
+      IntPhys 2, LeWM and DINO-WM; the figures quoted there are now checked against those sources.
   - id: generative-fidelity-vs-policy
     title: Does generative real-to-sim fidelity predict policy success?
     theme: world-models
