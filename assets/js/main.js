@@ -3239,6 +3239,7 @@
         sitekey: sitekey,
         theme: root.getAttribute("data-theme") === "dark" ? "dark" : "light",
         callback: function (t) { token = t; say(""); refresh(); },
+        "before-interactive-callback": function () { say("Tick the box above to confirm you are human."); },
         "expired-callback": function () { token = ""; say("The spam check expired. It will renew in a moment."); refresh(); },
         "error-callback": function () { token = ""; say("The spam check could not load. Check your connection or disable a blocker, then reopen this form.", true); refresh(); }
       });
