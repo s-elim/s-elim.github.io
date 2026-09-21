@@ -1,0 +1,1258 @@
+{%- comment -%}
+  V-JEPA Teardown - the interactive explainer.
+
+  Same contract as the Atlas one: _pages/vjepa.html wraps this in a standalone
+  document, and the identical body is published as a Claude artifact. Shared
+  look comes from dive-styles.html; only this page's own interactive pieces are
+  styled below. No Liquid outside this comment and the one include, and no
+  <title> (each host supplies its own).
+
+  Provenance on this page follows the source note's own tags:
+    data-ev="wl"   [E] established and citable   (teal)
+    data-ev="inf"  [I] inference                 (amber)
+    data-ev="spec" [S] speculation               (violet)
+    data-ev="unv"  [unverified] against the primary source (red)
+  The class names are the shared ones; the labels are what this page calls them.
+{%- endcomment -%}
+{% include dive-styles.html %}
+
+<style>
+/* ---- V-JEPA teardown: its own interactive pieces ---- */
+
+.sw--unv .sw__dot { background: var(--warn); }
+.ev--unv { color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+
+/* token cube */
+.cube__canvas {
+  width: 100%; height: auto; display: block;
+  border-radius: 8px; background: var(--surface-2);
+  cursor: grab; touch-action: pan-y;
+}
+.cube__canvas.is-dragging { cursor: grabbing; }
+.cube__stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .5rem; margin-top: .8rem;
+}
+.stat-tile {
+  padding: .55rem .7rem; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface-2);
+}
+.stat-tile__v {
+  font-family: var(--mono); font-size: 1.15rem; font-weight: 600;
+  color: var(--accent); font-variant-numeric: tabular-nums;
+}
+.stat-tile__v.warn { color: var(--warn); }
+.stat-tile__k {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; }
+.seg button {
+  padding: .3rem .75rem; border: 0; background: var(--surface);
+  color: var(--ink-2); font-family: var(--mono); font-size: .72rem; cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--line-strong); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--ground); }
+
+/* shape calculator */
+.shapes { display: grid; gap: .3rem; font-family: var(--mono); font-size: .78rem; }
+.shapes div { display: flex; justify-content: space-between; gap: 1rem; padding: .28rem .5rem; border-radius: 6px; }
+.shapes div:nth-child(odd) { background: var(--surface-2); }
+.shapes b { color: var(--accent); font-weight: 600; }
+
+/* collapse simulator */
+.sim__canvas { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface-2); }
+
+/* drift chart */
+.drift__canvas { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface-2); }
+
+/* code block */
+pre.code {
+  margin: 0; padding: .8rem 1rem; overflow-x: auto;
+  font-family: var(--mono); font-size: .74rem; line-height: 1.6;
+  color: var(--ink-2); background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+pre.code b { color: var(--accent); font-weight: 600; }
+pre.code i { color: var(--ink-3); font-style: normal; }
+
+/* repo list */
+.repos { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .5rem; }
+.repo {
+  display: block; padding: .7rem .8rem; border: 1px solid var(--line);
+  border-radius: 9px; background: var(--surface); text-decoration: none; color: var(--ink);
+}
+.repo:hover { border-color: var(--accent); }
+.repo__n { font-family: var(--display); font-weight: 600; font-size: .95rem; display: block; }
+.repo__u { font-family: var(--mono); font-size: .7rem; color: var(--ink-3); word-break: break-all; }
+</style>
+
+<div class="wrap">
+
+  <header class="head">
+    <div class="plate">Teardown · Latent world models · 2026-09-21</div>
+    <h1>V-JEPA, and what it takes to steer one</h1>
+    <p class="lede">
+      A joint-embedding predictive architecture predicts in a space it invented, which is why it
+      is cheap and why it is hard to evaluate. This walks the line from I-JEPA to action-conditioned
+      latent world models, with the 3D masking cube, the drift arithmetic and the planning budget
+      you can move yourself.
+    </p>
+    <div class="byline">
+      <span>From my AVI Lab note, 21 Sep 2026</span>
+      <span>Reading: 20 min</span>
+      <span>Code: all open source</span>
+    </div>
+
+    <div class="filter" id="filter">
+      <span class="filter__label">Provenance</span>
+      <label class="sw sw--wl"><input type="checkbox" id="ev-wl" checked><span class="sw__dot"></span> [E] established</label>
+      <label class="sw sw--inf"><input type="checkbox" id="ev-inf" checked><span class="sw__dot"></span> [I] inference</label>
+      <label class="sw sw--spec"><input type="checkbox" id="ev-spec" checked><span class="sw__dot"></span> [S] speculation</label>
+      <label class="sw sw--unv"><input type="checkbox" id="ev-unv" checked><span class="sw__dot"></span> unverified</label>
+      <span class="filter__note" id="filter-note">All shown</span>
+    </div>
+  </header>
+
+  <!-- 1 ------------------------------------------------------------------ -->
+  <section id="s1">
+    <div class="sec-head"><span class="num">01</span><h2>Predict the pixels, or predict a space you chose</h2></div>
+    <div class="col">
+      <p>
+        A generative world model puts a density over observations and is charged for every bit of the
+        next frame it fails to explain. A JEPA puts no density over anything. It learns an encoder
+        <span class="mono">f</span> and a predictor <span class="mono">g</span> so that
+        <span class="mono">g(f(x_ctx), ξ) ≈ f(x_tgt)</span>, and is charged only for the part of the
+        target that survives <span class="mono">f</span>. Everything downstream follows from that one
+        choice.
+      </p>
+      <div class="formula">E‖x − x̂‖² = irreducible (aleatoric) + reducible (epistemic)</div>
+      <p data-ev="inf">
+        For natural video the conditional entropy is dominated by content nothing can predict: sensor
+        noise, specular highlights, leaf motion, fine texture. A likelihood objective hands out gradient
+        in proportion to per-dimension error, so capacity goes to the nuisance term. Littwin et al.
+        (2024) prove the matching statement for deep linear networks: a latent objective prioritises
+        features with large regression coefficients, a reconstruction objective prioritises high-variance
+        features. <span class="ev ev--wl">E</span> for the linear case, <span class="ev ev--inf">I</span>
+        for the transfer to ViTs.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Two families, side by side</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">Axis</th><th scope="col">Generative (pixel or VAE latent)</th><th scope="col">JEPA</th></tr></thead>
+          <tbody>
+            <tr><td>Target</td><td>x, or a frozen autoencoder's latent</td><td>learned f(x)</td></tr>
+            <tr><td>Uncertainty</td><td>explicit sampling</td><td>point prediction, uncertainty discarded by f</td></tr>
+            <tr><td>Failure mode</td><td>compute spent on texture, sampling cost</td><td>representation collapse, uninterpretable latents</td></tr>
+            <tr><td>Cost per step</td><td>many denoising steps, or O(N) tokens</td><td>one forward pass</td></tr>
+            <tr><td>Evaluation</td><td>FVD, PSNR, human preference</td><td>only through probes or control</td></tr>
+            <tr><td>Counterfactual video</td><td>yes</td><td>no, not without a decoder</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="wl">
+        The efficiency claim has a clean measurement behind it: swapping SD-VAE latents for V-JEPA 2.1
+        features in an NWM-style CDiT planner cut denoising steps from at least 128 to 8 and planning
+        time from 103.2 s to 10.6 s at equal or lower ATE. <span class="ev ev--wl">E</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="note note--warn" data-ev="inf">
+        <p><b>The caveat the motivation glosses over.</b> A deterministic JEPA predictor trained with
+        ℓ2 converges to E[S<sub>y</sub> | S<sub>x</sub>], and with ℓ1 to the coordinate-wise median.
+        Moving to latent space does not remove multimodality. It helps only if f maps the distinct modes
+        to nearby points, which means f has discarded the stochastic factor. In manipulation that factor
+        is often the thing that matters: does the object slip or not. <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 ------------------------------------------------------------------ -->
+  <section id="s2">
+    <div class="sec-head"><span class="num">02</span><h2>Why it does not collapse, and what that costs</h2></div>
+    <div class="col">
+      <p>
+        The prediction term alone is minimised by a constant encoder. Every JEPA is therefore a
+        prediction loss plus a mechanism that keeps the representation from going flat. Turn the
+        regulariser off below and watch the embeddings fall into a point.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <span>Embedding batch under a prediction pull</span>
+        <span class="readout" id="sim-read" style="margin-left:auto"></span>
+      </div>
+      <div class="panel__body">
+        <canvas class="sim__canvas" id="sim" width="880" height="300" aria-label="A batch of embeddings collapsing to a point, or held isotropic by the regulariser"></canvas>
+        <div class="ctrl" style="margin-top:.8rem">
+          <button type="button" class="btn" id="sim-run">Run 200 steps</button>
+          <button type="button" class="btn" id="sim-reset">Reset</button>
+          <div class="seg" role="group" aria-label="Collapse control">
+            <button type="button" data-sim="none" aria-pressed="true">no regulariser</button>
+            <button type="button" data-sim="sigreg" aria-pressed="false">SIGReg</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel__foot">
+        The pull is the prediction term, which is happiest when every embedding is the same point. SIGReg
+        answers it with a distributional constraint rather than a negative pair: keep the batch isotropic
+        Gaussian, tested through 1-D projections. A constant batch has a degenerate characteristic
+        function, so the statistic blows up and collapse is excluded by construction.
+        <span class="ev ev--wl">E</span>
+      </div>
+    </div>
+
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="true"><span class="n">a</span> EMA target with stop-gradient <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>BYOL, I-JEPA, V-JEPA. The collapsed solution is a fixed point but not the attractor. Tian,
+        Chen and Ganguli (ICML 2021) show for the linear case that the predictor comes to share
+        eigenvectors with the representation correlation matrix, and eigenmodes above a threshold set by
+        weight decay and EMA rate grow instead of decaying. Three ingredients carry it: the predictor
+        gives the online branch a degree of freedom the target lacks, the stop-gradient removes the term
+        that would pull the target toward the prediction, and the EMA makes the target a lagged,
+        non-degenerate function. <span class="ev ev--wl">E</span></p>
+        <p>There is no guarantee. Partial dimensional collapse, where the representation occupies a
+        low-rank subspace, is common in non-contrastive methods. V-JEPA's robustness here is empirical.
+        <span class="ev ev--wl">E</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">b</span> Masked prediction as a bottleneck on the query <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="inf">
+        <p>A constant f still scores zero loss, so masking does not prevent collapse by itself. What it
+        does is shape which non-trivial solutions are reachable: the predictor must produce a different
+        output per masked position, so a slightly non-constant encoder immediately becomes useful.
+        <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">c</span> Variance and covariance terms (VICReg, PLDM) <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>Hinge the per-dimension standard deviation above γ and drive off-diagonal covariance to zero.
+        Sample-contrastive in effect, with no explicit negatives. <span class="ev ev--wl">E</span></p>
+      </div>
+    </div>
+    <div class="acc" data-acc>
+      <button type="button" class="acc__head" aria-expanded="false"><span class="n">d</span> Distribution matching (SIGReg, LeJEPA, used by LeWM) <span class="chev">›</span></button>
+      <div class="acc__body" data-ev="wl">
+        <p>Constrain the batch to be isotropic Gaussian. Testing d-dimensional Gaussianity directly is
+        expensive, so SIGReg uses Cramér-Wold: a distribution is fixed by its 1-D projections. Draw M unit
+        directions, project, and apply the Epps-Pulley statistic against the standard normal
+        characteristic function, evaluated by quadrature. Cost is O(BMK) and it is differentiable. LeWM
+        uses M = 1024 and weight 0.1. This is what removes the EMA, the stop-gradient and the pretrained
+        encoder, and it is the enabling change for end-to-end training from pixels.
+        <span class="ev ev--wl">E</span></p>
+        <p><b>The price.</b> SIGReg forces all d dimensions to carry unit variance. When the true state
+        manifold has intrinsic dimension far below d, a point mass in a room has about two, the encoder is
+        pushed to spread information into nuisance directions. LeWM reports exactly this on Two-Room. The
+        EMA route has the opposite bias: it tolerates dimensional collapse, which is harmless at low
+        intrinsic dimension and costly at high. <span class="ev ev--wl">E</span> for the report,
+        <span class="ev ev--inf">I</span> for the symmetry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 ------------------------------------------------------------------ -->
+  <section id="s3">
+    <div class="sec-head"><span class="num">03</span><h2>The masking cube</h2></div>
+    <div class="col">
+      <p>
+        This is the part worth turning over in your hands. A clip becomes a grid of spatio-temporal
+        tokens: tubelets of 2 frames by 16 by 16 pixels, so 16 frames at 224 square give 8 × 14 × 14 =
+        1568 tokens. V-JEPA masks about nine tenths of them, and <i>how</i> it picks them decides what
+        the encoder is forced to learn.
+      </p>
+      <p>
+        Drag to rotate. Switch the strategy and watch the two numbers underneath: they are computed from
+        the mask, not asserted.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <span>Token grid, 8 temporal slices × 8 × 8 (scaled down from 14 × 14 so you can see through it)</span>
+      </div>
+      <div class="panel__body">
+        <canvas class="cube__canvas" id="cube" width="880" height="420" aria-label="A rotatable 3D grid of video tokens showing which are masked"></canvas>
+        <div class="ctrl" style="margin-top:.8rem">
+          <div class="seg" role="group" aria-label="Masking strategy">
+            <button type="button" data-mask="tube" aria-pressed="true">tube</button>
+            <button type="button" data-mask="random" aria-pressed="false">random token</button>
+            <button type="button" data-mask="frame" aria-pressed="false">whole frame</button>
+          </div>
+          <label>mask ratio <input type="range" id="cube-ratio" min="30" max="95" step="5" value="90"></label>
+          <span class="readout" id="cube-ratio-read">0.90</span>
+          <button type="button" class="btn" id="cube-resample">Resample</button>
+          <button type="button" class="btn" id="cube-spin" aria-pressed="true">Pause</button>
+        </div>
+        <div class="cube__stats" id="cube-stats"></div>
+      </div>
+      <div class="panel__foot">
+        A masked token whose neighbour at t±1 is visible can be copied rather than inferred, because
+        adjacent frames are nearly redundant. Tube masking removes the same spatial region in every
+        frame, which drives that number to zero and forces the region to be inferred from elsewhere in
+        the scene. In V-JEPA's ablation, tubes beat random and causal-frame masking under frozen
+        evaluation. <span class="ev ev--wl">E</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="note" data-ev="inf">
+        <p><b>What tube masking is not.</b> It is an anti-shortcut spatial inpainting objective. The
+        context contains frames on both sides of any masked step, so the task is interpolation, not
+        extrapolation. Motion understanding comes in sideways: the content inside a tube depends on the
+        trajectory visible around it. The explicit predict-the-future objective appears only at the
+        action-conditioned stage. V-JEPA pretraining produces a <b>state encoder</b>, not a transition
+        model, and calling the pretrained model a world model blurs exactly that.
+        <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Forward pass, with the shapes</span><span class="readout" id="shape-tokens" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <div class="ctrl" style="margin-bottom:.8rem">
+          <label>frames T <input type="range" id="sh-t" min="8" max="64" step="8" value="16"></label>
+          <label>side <input type="range" id="sh-res" min="128" max="384" step="32" value="224"></label>
+          <label>patch <input type="range" id="sh-p" min="8" max="32" step="8" value="16"></label>
+          <label>mask <input type="range" id="sh-m" min="50" max="95" step="5" value="90"></label>
+        </div>
+        <div class="shapes" id="shapes"></div>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        The encoder only ever sees the context tokens, which is where the training efficiency comes from.
+        The predictor runs over all N positions but at width 384 against the encoder's 1024, so per token
+        it costs roughly (384/1024)² ≈ 0.14 of a ViT-L block. <span class="ev ev--inf">I</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 ------------------------------------------------------------------ -->
+  <section id="s4">
+    <div class="sec-head"><span class="num">04</span><h2>The objective, and the lag that keeps it honest</h2></div>
+    <div class="col">
+      <div class="formula">L = (1/|M|) Σ<sub>k∈M</sub> ‖ P<sub>φ</sub>(E<sub>θ</sub>(x<sub>ctx</sub>), pos(M))<sub>k</sub> − sg(LN(E<sub>θ̄</sub>(x))<sub>k</sub>) ‖<sub>1</sub></div>
+      <p data-ev="wl">
+        ℓ1 rather than ℓ2, reported as more stable in the V-JEPA ablations and kept by V-JEPA 2 and
+        2-AC. The ℓ1 minimiser is the coordinate-wise conditional median, less sensitive to heavy-tailed
+        target error early in training. The target branch carries a stop-gradient, and the target encoder
+        is an exponential moving average of the online one on a linear schedule from 0.998 to 1.0.
+        <span class="ev ev--wl">E</span>
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>What the EMA rate means in steps</span><span class="readout" id="ema-read" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <div class="ctrl">
+          <label>m <input type="range" id="ema-m" min="900" max="9999" step="1" value="998"></label>
+          <span class="readout" id="ema-h"></span>
+        </div>
+        <p style="margin:.8rem 0 0;font-size:.9rem;color:var(--ink-2)" id="ema-note"></p>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        Linearising around a slowly varying trajectory, the target lags the online network by about
+        m/(1−m) steps. Too fast and the lag that breaks the collapse symmetry disappears; too slow, too
+        early, and the online network spends its time regressing a frozen random target. The increasing
+        schedule walks between the two. <span class="ev ev--inf">I</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="note note--wl" data-ev="wl">
+        <p><b>V-JEPA 2.1, the dense fix.</b> A dense predictive loss that supervises visible tokens as
+        well as masked ones, plus deep self-supervision at intermediate layers, aimed at the weak local
+        spatial structure of V-JEPA 2 features. It reports 0.307 RMSE on the NYUv2 depth linear probe and
+        a 20 point grasp-success gain over V-JEPA 2-AC on real Franka arms. <span class="ev ev--wl">E</span>
+        Check the seed and trial counts before that delta goes in a manuscript.
+        <span class="ev ev--unv">unverified</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 ------------------------------------------------------------------ -->
+  <section id="s5">
+    <div class="sec-head"><span class="num">05</span><h2>Bolting on actions</h2></div>
+    <div class="col">
+      <p>
+        A latent world model is the triple (f, g, A): encode the observation, predict the next latent
+        given a history of latents and actions, and plan actions against a cost on the predicted latent.
+        Three systems make three different bets about what the state is and how the action gets in.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Three instantiations</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">&nbsp;</th><th scope="col">V-JEPA 2-AC</th><th scope="col">DINO-WM</th><th scope="col">LeWM</th></tr></thead>
+          <tbody>
+            <tr><td>Encoder</td><td>frozen V-JEPA 2 ViT-g</td><td>frozen DINOv2</td><td>trained end to end, ViT-tiny ~5M</td></tr>
+            <tr><td>State</td><td>patch grid, 256 tokens</td><td>patch grid</td><td>one vector</td></tr>
+            <tr><td>Predictor</td><td>~300M, block-causal</td><td>ViT, causal over frames</td><td>6 layers, ~10M</td></tr>
+            <tr><td>Action enters</td><td>interleaved tokens</td><td>concatenated per patch</td><td>AdaLN, zero-init</td></tr>
+            <tr><td>Collapse control</td><td>frozen encoder</td><td>frozen encoder</td><td>SIGReg</td></tr>
+            <tr><td>Loss</td><td>ℓ1, teacher forcing + rollout</td><td>ℓ2 teacher forcing</td><td>ℓ2 + 0.1 SIGReg</td></tr>
+            <tr><td>Data</td><td>&lt;62 h DROID, 4 fps</td><td>per environment, offline</td><td>per environment, offline</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot">
+        V-JEPA 2-AC and LeWM rows are from the papers <span class="ev ev--wl">E</span>; the DINO-WM
+        concatenation detail is as I recall it at the level of exact dimensions
+        <span class="ev ev--unv">unverified</span>.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <span>How the action gets in</span>
+        <div class="seg" role="group" aria-label="Conditioning mechanism" style="margin-left:auto">
+          <button type="button" data-cond="tok" aria-pressed="true">interleaved tokens</button>
+          <button type="button" data-cond="adaln" aria-pressed="false">AdaLN</button>
+          <button type="button" data-cond="cat" aria-pressed="false">concatenation</button>
+        </div>
+      </div>
+      <div class="panel__body" id="cond-body"></div>
+    </div>
+
+    <div class="col">
+      <div class="note" data-ev="inf">
+        <p><b>Is this a Markov state?</b> A latent from one frame is not, for anything involving
+        velocity, occlusion or force. A history window inside g is a partial fix: it approximates the
+        belief with a finite window, and there is no recurrent belief state as in an RSSM, so anything
+        older than the window is gone. <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 ------------------------------------------------------------------ -->
+  <section id="s6">
+    <div class="sec-head"><span class="num">06</span><h2>Drift, and the arithmetic that bounds it</h2></div>
+    <div class="col">
+      <p>
+        Roll the predictor on its own outputs and the error compounds. With a locally Lipschitz g and a
+        one-step error ε, the k-step error is bounded by a geometric series. Move L across 1 and the
+        whole character of the model changes.
+      </p>
+      <div class="formula">‖e<sub>k</sub>‖ ≤ ε · (L<sup>k</sup> − 1)/(L − 1) &nbsp;&nbsp;→&nbsp;&nbsp; saturates at ε/(1−L) when L &lt; 1, grows geometrically when L &gt; 1</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Compounding error over a rollout</span><span class="readout" id="drift-read" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <canvas class="drift__canvas" id="drift" width="880" height="300" aria-label="Error growth across rollout steps for three Lipschitz constants"></canvas>
+        <div class="ctrl" style="margin-top:.8rem">
+          <label>one-step error ε <input type="range" id="drift-e" min="1" max="50" value="10"></label>
+          <label>Lipschitz L <input type="range" id="drift-l" min="70" max="140" value="105"></label>
+          <label>steps <input type="range" id="drift-k" min="5" max="60" step="5" value="30"></label>
+        </div>
+      </div>
+      <div class="panel__foot" data-ev="wl">
+        Teacher forcing only ever trains g on the data manifold, so L off-manifold is uncontrolled. That
+        is the exposure-bias problem, and it is why every one of these systems plans short and replans
+        often. <span class="ev ev--wl">E</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>What the papers actually do about it</h3>
+      <ol class="checks" style="list-style:decimal;padding-left:1.2rem">
+        <li style="padding-left:0" data-ev="wl"><b>Rollout loss.</b> V-JEPA 2-AC unrolls on its own outputs and supervises the last step, with teacher forcing at T = 15 and the rollout term at T = 2. Two steps controls the first-order drift term and no more. <span class="ev ev--wl">E</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Multi-step curriculum.</b> Grow the unroll during training. Memory grows linearly with unroll length for patch-grid states, and is free for vector states. <span class="ev ev--inf">I</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Latent normalisation.</b> Re-apply the encoder's final LayerNorm, or project onto a norm ball each step, to stop norm blow-up. <span class="ev ev--inf">I</span></li>
+        <li style="padding-left:0" data-ev="spec"><b>Distributional anchoring.</b> SIGReg-trained latents sit near an isotropic Gaussian shell, so the Epps-Pulley statistic of a predicted batch could serve as an off-manifold detector during rollout. I have not seen this used. <span class="ev ev--spec">S</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Short horizon plus MPC.</b> The fix everyone actually ships: plan short, execute one action, re-encode the real observation, replan. Closed-loop feedback resets the error each step, which hides drift rather than solving it and caps the achievable task horizon. <span class="ev ev--inf">I</span></li>
+      </ol>
+      <div class="note note--warn" data-ev="inf">
+        <p><b>Nothing enforces consistency with the encoder.</b> The autoregressive structure makes
+        rollout composition trivially consistent, so the non-trivial constraint is cycle-consistency with
+        f, and that needs a decoder or an inverse model. The absence of a decoder is the price of the
+        efficiency argument in section 01. <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 ------------------------------------------------------------------ -->
+  <section id="s7">
+    <div class="sec-head"><span class="num">07</span><h2>Planning, and what it costs on your hardware</h2></div>
+    <div class="col">
+      <p>
+        Planning is a sampling loop around the predictor: propose action sequences, roll them out in
+        latent space, score the terminal latent against the goal embedding, refit the proposal.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Latent MPC with the cross-entropy method</div>
+      <div class="panel__body">
+<pre class="code">s_g <b>←</b> f(o_g)
+<b>loop</b> every control step:
+    s <b>←</b> f(o[t-N+1 : t])              <i># re-encode the real observations</i>
+    μ <b>←</b> shift(μ_prev);  σ <b>←</b> σ₀
+    <b>for</b> i = 1..I:
+        A <b>~</b> clip(N(μ, σ²))            <i># (K, H, d_a)</i>
+        <b>for</b> h = 1..H:                 <i># sequential: this sets the latency floor</i>
+            ŝ <b>←</b> g(S[:, -N:], A[:, ..h])
+            S <b>←</b> concat(S, ŝ)
+        E <b>←</b> ‖S[:, -1] − s_g‖          <i># (K,)</i>
+        μ, σ <b>←</b> mean(A[elite]), std(A[elite])
+    execute μ[0 : k_exec];  μ_prev <b>←</b> μ</pre>
+      </div>
+      <div class="panel__foot">
+        Total work is I·H·K predictor calls, but the I·H depth is <i>sequential</i>, so it sets a latency
+        floor no amount of parallelism removes. MPPI swaps the elite refit for an exponentially weighted
+        average over all samples, which is smoother under noisy energies.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Planning budget calculator</span><span class="readout" id="cost-read" style="margin-left:auto"></span></div>
+      <div class="panel__body">
+        <div class="ctrl" style="margin-bottom:.7rem">
+          <div class="seg" role="group" aria-label="Preset">
+            <button type="button" data-cost="ac" aria-pressed="true">V-JEPA 2-AC</button>
+            <button type="button" data-cost="dino" aria-pressed="false">DINO-WM</button>
+            <button type="button" data-cost="lewm" aria-pressed="false">LeWM</button>
+          </div>
+        </div>
+        <div class="ctrl">
+          <label>samples K <input type="range" id="c-k" min="50" max="1000" step="50" value="800"></label>
+          <label>iterations I <input type="range" id="c-i" min="1" max="30" value="10"></label>
+          <label>horizon H <input type="range" id="c-h" min="1" max="20" value="1"></label>
+          <label>throughput
+            <select id="c-hw" style="font-family:var(--mono);font-size:.74rem;padding:.2rem .3rem">
+              <option value="70">desktop GPU, ~70 TFLOP/s achieved</option>
+              <option value="400">A100/H100 class, ~400 TFLOP/s achieved</option>
+              <option value="15">Jetson AGX Orin, ~15 TFLOP/s sustained</option>
+            </select>
+          </label>
+        </div>
+        <div class="cube__stats" id="cost-stats" style="margin-top:.9rem"></div>
+      </div>
+      <div class="panel__foot" data-ev="inf">
+        First-order FLOP estimates from reported architecture sizes, not measurements: forward cost per
+        token ≈ 2P. The V-JEPA 2-AC estimate lands at 30 to 40 s per action on a desktop GPU against a
+        paper figure on the order of 16 s <span class="ev ev--unv">unverified</span>, which is the factor
+        of two this kind of arithmetic is good for. LeWM reports planning under a second and 48× faster
+        than DINO-WM. <span class="ev ev--wl">E</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="note" data-ev="inf">
+        <p><b>The deployment shape that actually works at 20 to 50 Hz.</b> Hierarchical: a latent planner
+        at 2 to 10 Hz emitting an action chunk or a latent subgoal, and a low-level controller, impedance
+        or a small distilled policy, at the servo rate. What moves the numbers: CUDA-graph capture of the
+        H-step unroll to kill launch overhead, warm-started CEM with two or three iterations between
+        replans, TensorRT in FP16 or INT8 for the encoder, and running the encoder once per control step
+        while the predictor runs I·H·K times. On ROS 2, the planner belongs in its own node publishing
+        timestamped chunks, with the controller interpolating, so planning jitter never reaches the servo
+        loop. <span class="ev ev--inf">I</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 ------------------------------------------------------------------ -->
+  <section id="s8">
+    <div class="sec-head"><span class="num">08</span><h2>Why a low latent error certifies nothing</h2></div>
+    <div class="col">
+      <p>
+        This is the part that should change how the next paper in this line is evaluated, including mine.
+      </p>
+    </div>
+
+    <div id="reasons"></div>
+
+    <div class="panel">
+      <div class="panel__head">The four axes, reported separately</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">Axis</th><th scope="col">What it measures</th><th scope="col">Protocol</th></tr></thead>
+          <tbody>
+            <tr><td>Latent fidelity</td><td>open-loop k-step error</td><td>‖ŝ−s‖ against k, normalised by ‖s<sub>t+k</sub>−s<sub>t</sub>‖ so copy-last-frame scores 1; plus a linear probe for object pose from ŝ</td></tr>
+            <tr><td>Controllability</td><td>sensitivity to the action</td><td>action-sensitivity ratio; inverse-dynamics probe on predicted states</td></tr>
+            <tr><td>Planning quality</td><td>energy landscape</td><td>rank correlation between the planner energy and true achieved distance to goal</td></tr>
+            <tr><td>Policy utility</td><td>closed-loop success</td><td>3+ training seeds, ≥50 episodes per task, Wilson or bootstrap 95% intervals</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot">
+        The normalisation in row one is the minimum fix for the fact that latent error is measured in a
+        space the model chose. The pose probe is what makes a comparison across encoders mean anything,
+        because the target is then fixed.
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 ------------------------------------------------------------------ -->
+  <section id="s9">
+    <div class="sec-head"><span class="num">09</span><h2>Protocol traps, and the objections they invite</h2></div>
+    <div class="col">
+      <ul class="checks">
+        <li data-ev="wl"><b>Two different zero-shots.</b> V-JEPA 2-AC means no data from the deployment environment and no task reward, but it is post-trained on DROID. LeWM and DINO-WM are trained per environment and are zero-shot only with respect to reward and task. Mixing the two senses in one related-work paragraph is a reviewer flag. <span class="ev ev--wl">E</span></li>
+        <li data-ev="wl"><b>Goal-image leakage.</b> Goal images from the same camera, lighting and distractors make latent matching easy. Report success with a perturbed viewpoint or a goal from a different episode. V-JEPA 2 documents camera sensitivity. <span class="ev ev--wl">E</span></li>
+        <li data-ev="wl"><b>Horizon selection.</b> Latent MPC works on reach and single grasp. Those results do not transfer to multi-stage tasks, and long-horizon planning is listed as a limitation. <span class="ev ev--wl">E</span></li>
+        <li data-ev="wl"><b>Ten-trial real-robot results.</b> A 95% Wilson interval on 60% from 10 trials runs from about 31% to 83%. A 20 point difference at that sample size is not a result. <span class="ev ev--wl">E</span></li>
+        <li data-ev="wl"><b>Benchmark simplicity.</b> Push-T, Two-Room, Reacher, PointMaze and OGBench cubes are 2-D or single-object, fixed-camera, low-distractor domains. Nothing there tests contact-rich 3-D manipulation, articulation or clutter. <span class="ev ev--wl">E</span></li>
+        <li data-ev="unv"><b>Seeds.</b> LeWM's seed count is not stated in what I could access. Treat single-seed world-model results as anecdotal. <span class="ev ev--unv">unverified</span></li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">If I were reviewing the next one</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">Objection</th><th scope="col">Evidence that answers it</th></tr></thead>
+          <tbody>
+            <tr><td>Latent error is not control</td><td>closed-loop success with intervals across 3+ seeds, plus the four-axis table</td></tr>
+            <tr><td>Tasks are too simple</td><td>one contact-rich, multi-object 3-D task with 50+ episodes, versions pinned</td></tr>
+            <tr><td>Planning is too slow to matter</td><td>wall-clock per action on stated hardware, matched against a policy baseline</td></tr>
+            <tr><td>Missing baselines</td><td>DINO-WM, PLDM, V-JEPA 2-AC, a Dreamer-v3 or TD-MPC2 model, and a goal-conditioned BC or diffusion policy on the same data</td></tr>
+            <tr><td>Camera and goal overfitting</td><td>held-out camera extrinsics and cross-episode goal images</td></tr>
+            <tr><td>Is the energy exploited?</td><td>predicted against realised energy for executed plans; a gap that widens with CEM iterations is the evidence</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 ----------------------------------------------------------------- -->
+  <section id="s10">
+    <div class="sec-head"><span class="num">10</span><h2>Four things worth a paper</h2></div>
+    <div class="col">
+      <ol class="checks" style="list-style:decimal;padding-left:1.2rem">
+        <li style="padding-left:0" data-ev="spec"><b>Action-sensitivity regularised JEPA world models.</b> Add a term that lower-bounds the action-conditional variation of g relative to ‖a−a'‖, or an inverse-dynamics head on predicted states, to stop controllability collapse. Cheap to test at LeWM scale: one GPU, hours. The risk is that it trades against prediction fidelity, and the ablation is the four-axis table. <span class="ev ev--spec">S</span></li>
+        <li style="padding-left:0" data-ev="spec"><b>Stochastic predictors for contact.</b> A latent-variable predictor with a SIGReg-style prior on the noise, planned with risk-sensitive CEM over samples. This targets the median-of-modes failure at the exact moment that decides task success. <span class="ev ev--spec">S</span></li>
+        <li style="padding-left:0" data-ev="spec"><b>Geometry-aware latent state.</b> Replace the global vector or 2-D grid with a small set of 3-D-anchored tokens, so latent distance has metric meaning and a camera change becomes a known transform. The experiment that matters is success under held-out extrinsics. <span class="ev ev--spec">S</span></li>
+        <li style="padding-left:0" data-ev="spec"><b>Energy calibration as the headline metric.</b> A benchmark that scores world models by the rank correlation between planner energy and realised outcome, rather than by pixel or latent error. <span class="ev ev--spec">S</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 11 ----------------------------------------------------------------- -->
+  <section id="s11">
+    <div class="sec-head"><span class="num">11</span><h2>The code, all of it open</h2></div>
+    <div class="col"><p>Repository links checked on 21 Sep 2026. Papers are linked from the note's reference list; these are the implementations you can actually run.</p></div>
+    <div class="repos">
+      <a class="repo" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">
+        <span class="repo__n">V-JEPA 2, 2-AC and 2.1</span>
+        <span class="repo__u">github.com/facebookresearch/vjepa2</span>
+      </a>
+      <a class="repo" href="https://github.com/facebookresearch/jepa" target="_blank" rel="noopener">
+        <span class="repo__n">V-JEPA (original)</span>
+        <span class="repo__u">github.com/facebookresearch/jepa</span>
+      </a>
+      <a class="repo" href="https://github.com/gaoyuezhou/dino_wm" target="_blank" rel="noopener">
+        <span class="repo__n">DINO-WM</span>
+        <span class="repo__u">github.com/gaoyuezhou/dino_wm</span>
+      </a>
+      <a class="repo" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">
+        <span class="repo__n">V-JEPA 2 paper</span>
+        <span class="repo__u">arXiv:2506.09985</span>
+      </a>
+      <a class="repo" href="https://arxiv.org/abs/2402.05065" target="_blank" rel="noopener">
+        <span class="repo__n">V-JEPA paper</span>
+        <span class="repo__u">arXiv:2402.05065</span>
+      </a>
+      <a class="repo" href="https://arxiv.org/abs/2411.04983" target="_blank" rel="noopener">
+        <span class="repo__n">DINO-WM paper</span>
+        <span class="repo__u">arXiv:2411.04983</span>
+      </a>
+    </div>
+    <div class="col">
+      <div class="note note--warn" data-ev="unv">
+        <p>V-JEPA 2.1 (arXiv:2603.14482) and LeWorldModel (arXiv:2603.19312) are cited from my note; I did
+        not re-open either during this build, so treat their numbers as pending verification against the
+        primary source. <span class="ev ev--unv">unverified</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="s12">
+    <div class="sec-head"><span class="num">12</span><h2>Vocabulary</h2></div>
+    <div class="col"><p>Click a card for the picture that makes it stick.</p></div>
+    <div class="gloss" id="gloss"></div>
+  </section>
+
+  <footer class="foot">
+    <div class="plate">Source</div>
+    <p style="margin-top:.5rem">
+      Condensed from my own note, <i>From V-JEPA to Action-Conditioned Latent World Models: A Technical
+      Breakdown</i>, AVI Lab, 21 September 2026. Equations are in my notation. Where a hyperparameter is
+      not reported in what I could access, this page says so rather than filling it in.
+    </p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function $(s, r) { return (r || document).querySelector(s); }
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function tile(v, k, warn) {
+    return '<div class="stat-tile"><div class="stat-tile__v' + (warn ? " warn" : "") + '">' + v +
+           '</div><div class="stat-tile__k">' + k + "</div></div>";
+  }
+  function seg(scope, attr, onPick) {
+    var btns = Array.prototype.slice.call(document.querySelectorAll("[" + attr + "]"));
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        onPick(b.getAttribute(attr));
+      });
+    });
+  }
+
+  /* ---- provenance filter, four levels ---------------------------------- */
+  (function () {
+    var keys = ["wl", "inf", "spec", "unv"];
+    var label = { wl: "[E]", inf: "[I]", spec: "[S]", unv: "unverified" };
+    var boxes = {};
+    keys.forEach(function (k) { boxes[k] = $("#ev-" + k); });
+    var note = $("#filter-note");
+    var blocks = Array.prototype.slice.call(document.querySelectorAll("[data-ev]"));
+    function apply() {
+      var off = keys.filter(function (k) { return !boxes[k].checked; });
+      blocks.forEach(function (b) {
+        b.classList.toggle("is-muted", off.indexOf(b.getAttribute("data-ev")) !== -1);
+      });
+      note.textContent = off.length === 0 ? "All shown"
+        : "Dimmed: " + off.map(function (k) { return label[k]; }).join(", ");
+    }
+    keys.forEach(function (k) { boxes[k].addEventListener("change", apply); });
+    apply();
+  })();
+
+  /* ---- accordions ------------------------------------------------------ */
+  function wireAccordion(scope) {
+    Array.prototype.slice.call(scope.querySelectorAll(".acc__head")).forEach(function (head) {
+      var body = head.nextElementSibling;
+      body.hidden = head.getAttribute("aria-expanded") !== "true";
+      head.addEventListener("click", function () {
+        var open = head.getAttribute("aria-expanded") === "true";
+        head.setAttribute("aria-expanded", String(!open));
+        body.hidden = open;
+      });
+    });
+  }
+  wireAccordion(document);
+
+  /* ---- the masking cube (the 3D piece) ---------------------------------- */
+  (function () {
+    var cv = $("#cube");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var stats = $("#cube-stats"), ratioIn = $("#cube-ratio"), ratioRead = $("#cube-ratio-read");
+    var resample = $("#cube-resample"), spinBtn = $("#cube-spin");
+
+    var T = 8, S = 8, N = T * S * S;        // display grid, smaller than the real 8x14x14
+    var W = 880, H = 420;
+    var mask = new Uint8Array(N);           // 1 = masked
+    var strategy = "tube", ratio = 0.9;
+    var yaw = 0.62, pitch = -0.3, spinning = !reduced, raf = null, drag = null;
+    var seed = 11;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+    function idx(t, i, j) { return (t * S + i) * S + j; }
+
+    function build() {
+      mask.fill(0);
+      var target = Math.round(ratio * N), k;
+      if (strategy === "random") {
+        var order = [];
+        for (k = 0; k < N; k++) order.push(k);
+        for (k = N - 1; k > 0; k--) {
+          var s = Math.floor(rnd() * (k + 1));
+          var tmp = order[k]; order[k] = order[s]; order[s] = tmp;
+        }
+        for (k = 0; k < target; k++) mask[order[k]] = 1;
+      } else if (strategy === "frame") {
+        var slices = Math.round(ratio * T), picked = {}, done = 0;
+        while (done < slices) {
+          var t = Math.floor(rnd() * T);
+          if (picked[t]) continue;
+          picked[t] = 1; done++;
+          for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) mask[idx(t, i, j)] = 1;
+        }
+      } else {
+        // tube: blocks in the spatial plane, extended through every frame,
+        // the way V-JEPA samples short-range and long-range blocks
+        var plane = new Uint8Array(S * S), filled = 0, guard = 0;
+        var want = Math.round(ratio * S * S);
+        while (filled < want && guard++ < 400) {
+          var big = rnd() < 0.2;
+          var h = Math.max(1, Math.round((big ? 0.7 : 0.38) * S * (0.7 + 0.6 * rnd())));
+          var w = Math.max(1, Math.round((big ? 0.7 : 0.38) * S * (0.7 + 0.6 * rnd())));
+          var r0 = Math.floor(rnd() * (S - h + 1)), c0 = Math.floor(rnd() * (S - w + 1));
+          for (var r = r0; r < r0 + h; r++) {
+            for (var c = c0; c < c0 + w; c++) {
+              if (!plane[r * S + c]) { plane[r * S + c] = 1; filled++; }
+            }
+          }
+        }
+        for (var t2 = 0; t2 < T; t2++) {
+          for (var i2 = 0; i2 < S; i2++) {
+            for (var j2 = 0; j2 < S; j2++) if (plane[i2 * S + j2]) mask[idx(t2, i2, j2)] = 1;
+          }
+        }
+      }
+      report();
+    }
+
+    function report() {
+      var masked = 0, copyT = 0, nbr4 = 0;
+      for (var t = 0; t < T; t++) {
+        for (var i = 0; i < S; i++) {
+          for (var j = 0; j < S; j++) {
+            if (!mask[idx(t, i, j)]) continue;
+            masked++;
+            if ((t > 0 && !mask[idx(t - 1, i, j)]) || (t < T - 1 && !mask[idx(t + 1, i, j)])) copyT++;
+            if ((i > 0 && !mask[idx(t, i - 1, j)]) || (i < S - 1 && !mask[idx(t, i + 1, j)]) ||
+                (j > 0 && !mask[idx(t, i, j - 1)]) || (j < S - 1 && !mask[idx(t, i, j + 1)])) nbr4++;
+          }
+        }
+      }
+      var pc = function (x) { return masked ? Math.round((100 * x) / masked) + "%" : "0%"; };
+      stats.innerHTML =
+        tile(masked + " / " + N, "tokens masked") +
+        tile(pc(copyT), "masked, with a visible copy at t±1", copyT / Math.max(1, masked) > 0.05) +
+        tile(pc(nbr4), "masked, with a visible neighbour in frame") +
+        tile((N - masked), "tokens the encoder actually sees");
+    }
+
+    function draw() {
+      var accent = css("--accent") || "#0d7a72";
+      var line = css("--line-strong") || "#b9c2ba";
+      var ink3 = css("--ink-3") || "#78877f";
+      ctx.clearRect(0, 0, W, H);
+
+      var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      var g = 26, gz = 38, focal = 900;
+      var cells = [];
+      for (var t = 0; t < T; t++) {
+        for (var i = 0; i < S; i++) {
+          for (var j = 0; j < S; j++) {
+            var x = (j - (S - 1) / 2) * g, y = (i - (S - 1) / 2) * g, z = (t - (T - 1) / 2) * gz;
+            var x1 = x * cy + z * sy, z1 = z * cy - x * sy;
+            var y1 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+            var k = focal / Math.max(200, focal + z2);
+            cells.push({ x: W / 2 + x1 * k, y: H / 2 + y1 * k, k: k, z: z2, m: mask[idx(t, i, j)] });
+          }
+        }
+      }
+      cells.sort(function (a, b) { return b.z - a.z; });
+      for (var c = 0; c < cells.length; c++) {
+        var q = cells[c], s = 17 * q.k, fade = Math.max(0.12, Math.min(1, 1.25 - (q.z + 170) / 420));
+        ctx.globalAlpha = fade;
+        if (q.m) {
+          ctx.strokeStyle = line;
+          ctx.lineWidth = 0.8;
+          ctx.strokeRect(q.x - s / 2, q.y - s / 2, s, s);
+        } else {
+          ctx.fillStyle = accent;
+          ctx.fillRect(q.x - s / 2, q.y - s / 2, s, s);
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.font = "500 11px " + (css("--mono") || "monospace");
+      ctx.fillStyle = ink3;
+      ctx.fillText("filled = visible to the encoder · outline = masked target", 14, H - 14);
+      ctx.fillText("time →", 14, 22);
+    }
+
+    function fit() {
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var w = cv.clientWidth || W;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(w * (H / W) * dpr);
+      ctx.setTransform(dpr * (w / W), 0, 0, dpr * (w / W), 0, 0);
+      draw();
+    }
+    function tick() {
+      if (spinning && !drag) yaw += 0.004;
+      draw();
+      raf = window.requestAnimationFrame(tick);
+    }
+
+    seg(document, "data-mask", function (v) { strategy = v; build(); draw(); });
+    ratioIn.addEventListener("input", function () {
+      ratio = ratioIn.value / 100;
+      ratioRead.textContent = ratio.toFixed(2);
+      build(); draw();
+    });
+    resample.addEventListener("click", function () { build(); draw(); });
+    spinBtn.addEventListener("click", function () {
+      spinning = !spinning;
+      spinBtn.textContent = spinning ? "Pause" : "Spin";
+      spinBtn.setAttribute("aria-pressed", String(spinning));
+    });
+    cv.addEventListener("pointerdown", function (e) {
+      drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch };
+      cv.classList.add("is-dragging");
+      cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      yaw = drag.yaw + (e.clientX - drag.x) * 0.008;
+      pitch = Math.max(-1.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * 0.006));
+      draw();
+    });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) {
+      cv.addEventListener(ev, function () { drag = null; cv.classList.remove("is-dragging"); });
+    });
+    window.addEventListener("resize", fit);
+
+    build();
+    fit();
+    if (!reduced) tick(); else draw();
+  })();
+
+  /* ---- shape calculator ------------------------------------------------- */
+  (function () {
+    var host = $("#shapes");
+    if (!host) return;
+    var T = $("#sh-t"), R = $("#sh-res"), P = $("#sh-p"), M = $("#sh-m"), out = $("#shape-tokens");
+    function calc() {
+      var t = +T.value, res = +R.value, p = +P.value, m = M.value / 100, tp = 2;
+      var gt = Math.floor(t / tp), gs = Math.floor(res / p);
+      var n = gt * gs * gs;
+      var masked = Math.round(n * m), ctxn = n - masked;
+      out.textContent = n.toLocaleString() + " tokens";
+      host.innerHTML =
+        '<div><span>clip</span><b>(B, 3, ' + t + ', ' + res + ', ' + res + ')</b></div>' +
+        '<div><span>tubelet embed</span><b>Conv3d(3 → D, k=(' + tp + ',' + p + ',' + p + '), stride same)</b></div>' +
+        '<div><span>token grid</span><b>' + gt + ' × ' + gs + ' × ' + gs + ' = ' + n.toLocaleString() + '</b></div>' +
+        '<div><span>masked targets |M|</span><b>' + masked.toLocaleString() + '</b></div>' +
+        '<div><span>context into the encoder |C|</span><b>' + ctxn.toLocaleString() + '</b></div>' +
+        '<div><span>encoder work vs the full clip</span><b>' + Math.round(100 * ctxn / n) + '%</b></div>' +
+        '<div><span>predictor input</span><b>(B, ' + n.toLocaleString() + ', 384) → select |M|</b></div>';
+    }
+    [T, R, P, M].forEach(function (c) { c.addEventListener("input", calc); });
+    calc();
+  })();
+
+  /* ---- EMA lag ---------------------------------------------------------- */
+  (function () {
+    var m = $("#ema-m"), read = $("#ema-read"), h = $("#ema-h"), note = $("#ema-note");
+    if (!m) return;
+    function calc() {
+      var v = +m.value / 10000;
+      var horizon = 1 / (1 - v);
+      read.textContent = "m = " + v.toFixed(4);
+      h.textContent = "≈ " + Math.round(horizon).toLocaleString() + " steps of averaging";
+      note.textContent = v < 0.99
+        ? "Fast target. The lag that breaks the collapse symmetry is nearly gone, and the two branches track each other."
+        : v > 0.9995
+          ? "Effectively frozen. The online network is regressing a fixed target, which is stable and uninformative: this is where V-JEPA's schedule ends, not where it starts."
+          : "The working range. V-JEPA starts at 0.998, about 500 steps of averaging, and walks m to 1.0 across training.";
+    }
+    m.addEventListener("input", calc);
+    calc();
+  })();
+
+  /* ---- collapse simulator ----------------------------------------------- */
+  (function () {
+    var cv = $("#sim");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var read = $("#sim-read"), run = $("#sim-run"), reset = $("#sim-reset");
+    var W = 880, H = 300, B = 140, mode = "none", pts = [], timer = null, step = 0;
+    var seed = 3;
+    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+    function gauss() { return (rnd() + rnd() + rnd() + rnd() - 2) * 1.1; }
+
+    function init() {
+      pts = [];
+      for (var i = 0; i < B; i++) pts.push({ x: gauss(), y: gauss() });
+      step = 0;
+      draw();
+    }
+    function stats() {
+      var mx = 0, my = 0, i;
+      for (i = 0; i < B; i++) { mx += pts[i].x; my += pts[i].y; }
+      mx /= B; my /= B;
+      var vx = 0, vy = 0, cxy = 0;
+      for (i = 0; i < B; i++) {
+        vx += (pts[i].x - mx) * (pts[i].x - mx);
+        vy += (pts[i].y - my) * (pts[i].y - my);
+        cxy += (pts[i].x - mx) * (pts[i].y - my);
+      }
+      return { mx: mx, my: my, sx: Math.sqrt(vx / B), sy: Math.sqrt(vy / B), c: cxy / B };
+    }
+    function update() {
+      var s = stats(), i, p;
+      for (i = 0; i < B; i++) {
+        p = pts[i];
+        // the prediction term: every embedding is happiest at the batch mean
+        p.x += 0.045 * (s.mx - p.x);
+        p.y += 0.045 * (s.my - p.y);
+        if (mode === "sigreg") {
+          // stand-in for SIGReg: push the batch back to an isotropic unit shell
+          p.x += 0.10 * (p.x - s.mx) * (1 - s.sx) / Math.max(0.05, s.sx);
+          p.y += 0.10 * (p.y - s.my) * (1 - s.sy) / Math.max(0.05, s.sy);
+          p.x -= 0.08 * s.c * (p.y - s.my);
+          p.y -= 0.08 * s.c * (p.x - s.mx);
+        }
+      }
+      step++;
+    }
+    function draw() {
+      var accent = css("--accent") || "#0d7a72";
+      var warn = css("--warn") || "#b3261e";
+      var ink3 = css("--ink-3") || "#78877f";
+      var s = stats();
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = ink3;
+      ctx.globalAlpha = 0.25;
+      ctx.beginPath(); ctx.moveTo(W / 2, 14); ctx.lineTo(W / 2, H - 14);
+      ctx.moveTo(24, H / 2); ctx.lineTo(W - 24, H / 2); ctx.stroke();
+      ctx.globalAlpha = 1;
+      var k = 52;
+      var collapsed = s.sx < 0.18 && s.sy < 0.18;
+      ctx.fillStyle = collapsed ? warn : accent;
+      for (var i = 0; i < B; i++) {
+        ctx.globalAlpha = 0.72;
+        ctx.beginPath();
+        ctx.arc(W / 2 + pts[i].x * k, H / 2 + pts[i].y * k, 2.6, 0, 6.283);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      read.textContent = "step " + step + " · std " + s.sx.toFixed(2) + ", " + s.sy.toFixed(2) +
+        (collapsed ? " · collapsed" : "");
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; run.textContent = "Run 200 steps"; } }
+    run.addEventListener("click", function () {
+      if (timer) { stop(); return; }
+      var n = 0;
+      run.textContent = "Stop";
+      timer = setInterval(function () {
+        update(); draw();
+        if (++n >= 200) stop();
+      }, reduced ? 1 : 16);
+    });
+    reset.addEventListener("click", function () { stop(); init(); });
+    seg(document, "data-sim", function (v) { mode = v; stop(); init(); });
+    init();
+  })();
+
+  /* ---- conditioning tabs ------------------------------------------------- */
+  (function () {
+    var body = $("#cond-body");
+    if (!body) return;
+    var copy = {
+      tok: '<p><b>Token interleaving, V-JEPA 2-AC.</b> Project the action and the proprioceptive state into the predictor width and put them in the sequence beside the patch tokens of that frame, under a block-causal mask: every token in block t attends to all tokens in blocks up to t.</p>' +
+           '<div class="formula">X_t = [ W_a·a_t ; W_q·q_t ; W_s·s_t ] ∈ R^((2+n)×D_p)</div>' +
+           '<p>With n = 256 patches, the two extra tokens add under 1% to the sequence, and the action reaches each patch only through attention, which is what lets the model learn that the gripper region changes and the background does not. <span class="ev ev--inf">I</span> The state is 7-D: end-effector position, orientation as Euler angles, gripper. <span class="ev ev--wl">E</span></p>',
+      adaln: '<p><b>Adaptive LayerNorm, LeWM.</b> With a single latent vector per frame there is nothing to interleave, so the action modulates every block instead.</p>' +
+             '<div class="formula">h ← h + α_t ⊙ Block((1 + γ_t) ⊙ LN(h) + β_t),&nbsp;&nbsp; (γ, β, α) = MLP(e(a_t))</div>' +
+             '<p>The last layer of each MLP is zero-initialised, so the predictor starts life as an action-independent temporal model and learns the action pathway from there. Multiplicative interaction suits a global state vector, where the action has to touch every coordinate. <span class="ev ev--wl">E</span> for the zero-init, the gating form follows DiT.</p>',
+      cat: '<p><b>Concatenation, DINO-WM style.</b> Append an action embedding to every patch token and let attention do the spatial routing.</p>' +
+           '<div class="formula">s̃_t^(i) = [ s_t^(i) ; MLP(a_t) ] for every patch i</div>' +
+           '<p>Cheapest of the three and uniform across patches. <span class="ev ev--unv">unverified</span> at the level of exact dimensions.</p>' +
+           '<p><b>Chunking.</b> If control runs at f_c and the model at f_m, one model step covers k = f_c/f_m commands. Aggregate them into a single delta, or concatenate them into a k·d_a action. Aggregation throws away intra-step timing, which is exactly what contact onset depends on. <span class="ev ev--inf">I</span></p>'
+    };
+    function pick(k) { body.innerHTML = copy[k]; }
+    seg(document, "data-cond", pick);
+    pick("tok");
+  })();
+
+  /* ---- drift chart -------------------------------------------------------- */
+  (function () {
+    var cv = $("#drift");
+    if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext("2d");
+    var eIn = $("#drift-e"), lIn = $("#drift-l"), kIn = $("#drift-k"), read = $("#drift-read");
+    var W = 880, H = 300;
+
+    function series(eps, L, K) {
+      var out = [], v = 0;
+      for (var k = 1; k <= K; k++) {
+        v = Math.abs(L - 1) < 1e-6 ? eps * k : eps * (Math.pow(L, k) - 1) / (L - 1);
+        out.push(v);
+      }
+      return out;
+    }
+    function draw() {
+      var eps = +eIn.value / 100, L = +lIn.value / 100, K = +kIn.value;
+      var accent = css("--accent") || "#0d7a72";
+      var infer = css("--infer") || "#a35b07";
+      var warn = css("--warn") || "#b3261e";
+      var line = css("--line") || "#d8ddd6";
+      var ink3 = css("--ink-3") || "#78877f";
+      var main = series(eps, L, K), lo = series(eps, 0.9, K), hi = series(eps, 1.1, K);
+      var top = Math.max.apply(null, main.concat(lo, hi));
+      top = Math.min(top, eps * 60);
+      var pad = 38, w = W - pad * 2, h = H - pad * 2;
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.strokeStyle = line;
+      ctx.lineWidth = 1;
+      for (var g = 0; g <= 4; g++) {
+        var y = pad + (h * g) / 4;
+        ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W - pad, y); ctx.stroke();
+      }
+      ctx.fillStyle = ink3;
+      ctx.font = "500 10px " + (css("--mono") || "monospace");
+      ctx.fillText("‖e_k‖", pad - 26, pad - 10);
+      ctx.fillText("rollout step k", W / 2 - 34, H - 10);
+      for (var g2 = 0; g2 <= 4; g2++) {
+        ctx.fillText((top * (4 - g2) / 4).toFixed(2), 4, pad + (h * g2) / 4 + 3);
+      }
+
+      function path(vals, colour, width, dash) {
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = width;
+        ctx.setLineDash(dash || []);
+        ctx.beginPath();
+        vals.forEach(function (v, i) {
+          var x = pad + (w * i) / Math.max(1, vals.length - 1);
+          var y = pad + h - Math.min(1, v / top) * h;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      path(lo, infer, 1.2, [4, 4]);
+      path(hi, warn, 1.2, [4, 4]);
+      path(main, accent, 2.4);
+
+      if (L < 1) {
+        var sat = eps / (1 - L);
+        if (sat < top) {
+          var ys = pad + h - (sat / top) * h;
+          ctx.strokeStyle = accent;
+          ctx.globalAlpha = 0.45;
+          ctx.setLineDash([2, 5]);
+          ctx.beginPath(); ctx.moveTo(pad, ys); ctx.lineTo(W - pad, ys); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = accent;
+          ctx.fillText("saturates at ε/(1−L) = " + sat.toFixed(2), W - pad - 190, ys - 6);
+        }
+      }
+      ctx.fillStyle = infer; ctx.fillText("L = 0.90", W - pad - 66, pad + 12);
+      ctx.fillStyle = warn; ctx.fillText("L = 1.10", W - pad - 66, pad + 26);
+
+      read.textContent = "ε = " + eps.toFixed(2) + " · L = " + L.toFixed(2) + " · ‖e_" + K + "‖ ≈ " +
+        main[main.length - 1].toFixed(2) + (L < 1 ? " (bounded)" : L > 1 ? " (geometric)" : " (linear)");
+    }
+    function fit() {
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var w = cv.clientWidth || W;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(w * (H / W) * dpr);
+      ctx.setTransform(dpr * (w / W), 0, 0, dpr * (w / W), 0, 0);
+      draw();
+    }
+    [eIn, lIn, kIn].forEach(function (c) { c.addEventListener("input", draw); });
+    window.addEventListener("resize", fit);
+    fit();
+  })();
+
+  /* ---- planning budget ---------------------------------------------------- */
+  (function () {
+    var out = $("#cost-stats");
+    if (!out) return;
+    var K = $("#c-k"), I = $("#c-i"), Hh = $("#c-h"), hw = $("#c-hw"), read = $("#cost-read");
+    // FLOPs for one predictor call on one sample.
+    var presets = {
+      ac:   { c: 3.1e11, k: 800, i: 10, h: 1,  name: "V-JEPA 2-AC" },
+      dino: { c: 6.7e8,  k: 300, i: 10, h: 5,  name: "DINO-WM" },
+      lewm: { c: 6.0e7,  k: 300, i: 30, h: 5,  name: "LeWM" }
+    };
+    var cur = presets.ac;
+    function fmt(x) {
+      var e = Math.floor(Math.log10(x));
+      return (x / Math.pow(10, e)).toFixed(1) + "e" + e;
+    }
+    function calc() {
+      var k = +K.value, i = +I.value, h = +Hh.value, thr = +hw.value * 1e12;
+      var flops = k * i * h * cur.c;
+      var compute = flops / thr;
+      var depth = i * h;
+      var launch = depth * 0.0005;               // ~0.5 ms per sequential call
+      var wall = Math.max(compute, launch);
+      var hz = 1 / wall;
+      read.textContent = cur.name + " · " + fmt(cur.c) + " FLOPs per call";
+      out.innerHTML =
+        tile(fmt(flops), "FLOPs per action") +
+        tile(wall < 1 ? Math.round(wall * 1000) + " ms" : wall.toFixed(1) + " s", "wall clock per action", wall > 0.1) +
+        tile(depth, "sequential predictor calls") +
+        tile(hz > 1 ? hz.toFixed(1) + " Hz" : "1 per " + (1 / hz).toFixed(1) + " s", "replanning rate", hz < 2) +
+        tile(compute > launch ? "compute" : "launch latency", "what binds");
+    }
+    seg(document, "data-cost", function (v) {
+      cur = presets[v];
+      K.value = cur.k; I.value = cur.i; Hh.value = cur.h;
+      calc();
+    });
+    [K, I, Hh, hw].forEach(function (c) { c.addEventListener("input", calc); c.addEventListener("change", calc); });
+    calc();
+  })();
+
+  /* ---- the six reasons ---------------------------------------------------- */
+  (function () {
+    var host = $("#reasons");
+    if (!host) return;
+    var items = [
+      ["The metric lives in a space the model chose", "‖ŝ − s‖ is measured in the encoder's own space. A representation that throws away action-relevant information makes prediction easier and the number smaller; collapse makes it zero. Comparing latent prediction error <i>across encoders</i> is meaningless, and within one encoder it measures the predictor only.", "wl"],
+      ["Dimensions are not equally consequential", "A one percent error in the dimensions carrying gripper-object relative pose can flip the outcome; a twenty percent error in background dimensions changes nothing. A uniform ℓ1 over D dimensions weights them the same.", "inf"],
+      ["One-step error does not predict rollout error", "Teacher forcing only visits the data manifold, so on-manifold one-step error says nothing about the Lipschitz constant off it, which is what governs drift.", "wl"],
+      ["Accuracy is not controllability", "A model can track passive dynamics beautifully while being nearly insensitive to the action. If the action-conditional variation is small next to the state variation, the energy landscape is flat in a and the planner degenerates into random search. This is measurable, and it is rarely reported.", "inf"],
+      ["The planner exploits the model's errors", "Planning selects the action sequence with the lowest predicted energy, which biases it toward wherever the model is optimistically wrong. Average-case error does not bound that: it is the optimiser's curse, and it is well known in model-based RL.", "wl"],
+      ["The landscape matters more than the point", "Success depends on whether the energy is monotone in true task progress along the paths the optimiser actually explores, not on whether any single prediction was close.", "inf"]
+    ];
+    items.forEach(function (it, i) {
+      var box = el("div", "acc");
+      box.innerHTML =
+        '<button type="button" class="acc__head" aria-expanded="' + (i === 0 ? "true" : "false") + '">' +
+        '<span class="n">0' + (i + 1) + '</span> ' + it[0] +
+        ' <span class="ev ev--' + it[2] + '" style="margin-left:.4rem">' + (it[2] === "wl" ? "E" : it[2] === "inf" ? "I" : "S") + '</span>' +
+        '<span class="chev">›</span></button>' +
+        '<div class="acc__body" data-ev="' + it[2] + '"><p>' + it[1] + '</p></div>';
+      host.appendChild(box);
+    });
+    wireAccordion(host);
+  })();
+
+  /* ---- glossary ----------------------------------------------------------- */
+  (function () {
+    var host = $("#gloss");
+    if (!host) return;
+    var cards = [
+      ["JEPA", "An encoder and a predictor trained so that the prediction from context matches the encoding of the target, with no density over pixels anywhere.", "Two people describing the same room from different doorways. They are scored on whether their descriptions agree, not on whether either could repaint the wallpaper."],
+      ["Tube masking", "Remove the same spatial region from every frame of the clip, so the target cannot be copied from an adjacent frame.", "Punching a hole through a whole stack of photographs at once. No sheet underneath can tell you what was there."],
+      ["Teacher forcing and rollout loss", "Train the predictor on ground-truth history, or on its own output. The first is stable and optimistic; the second shows the model the error distribution it will actually face.", "Rehearsing with the score in front of you, versus rehearsing from memory. Only the second tells you where you will lose the thread."],
+      ["Cross-entropy method", "Sample action sequences, score them with the model, keep the best few, refit the sampling distribution, repeat.", "Throwing a handful of darts, keeping the closest, and aiming the next handful where those landed."],
+      ["SIGReg", "Keep the batch of embeddings isotropic Gaussian by testing 1-D projections against the normal characteristic function.", "Checking that a crowd fills the square evenly by looking down a few random streets. If everyone has bunched into one corner, every street shows it."],
+      ["Action sensitivity", "How much the predicted next latent actually moves when the action changes. Low sensitivity means a flat energy landscape and a planner reduced to guessing.", "A steering wheel with no linkage. The car drives fine; turning the wheel just does nothing."]
+    ];
+    cards.forEach(function (c) {
+      var card = el("div", "gcard");
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.innerHTML = "<h4>" + c[0] + "</h4><p>" + c[1] + "</p>" +
+        '<div class="gcard__flip" hidden><span class="gcard__cue">picture it</span><br>' + c[2] + "</div>";
+      function flip() { var f = card.querySelector(".gcard__flip"); f.hidden = !f.hidden; }
+      card.addEventListener("click", flip);
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); }
+      });
+      host.appendChild(card);
+    });
+  })();
+})();
+</script>

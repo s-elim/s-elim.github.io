@@ -135,7 +135,11 @@ Directory boxed at the top of `/research-ideas/`, above the idea board. Generate
 Long reads about someone else's system, one box each at the top of `/research-ideas/`, under the Resources Library.
 * **Fields**: `id`, `title`, `subtitle`, `kicker`, `read`, `summary`, `verdict`, `highlights`, `page`, `tags`, `source` (label/url/date), `links`, `idea`.
 * `page` points at the interactive explainer that ships with the dive. The Atlas one lives in `_includes/atlas-explainer.html`, wrapped by `_pages/atlas.html` at `/notes/atlas/`.
-* The explainer is self-contained (its own styles and script, no site CSS) so the identical body can be published as a standalone artifact. After editing the include, rebuild the artifact copy from it rather than editing two files.
+* Each explainer is self-contained (its own script, shared look from `_includes/dive-styles.html`, no site CSS) so the identical body can be published as a standalone artifact. After editing an include, rebuild the artifact copies rather than editing two files:
+  ```bash
+  python3 scripts/build_dive_artifacts.py /tmp/out    # resolves the include, writes <name>_teardown.html
+  ```
+* Current dives: `_includes/atlas-explainer.html` at `/notes/atlas/`, `_includes/vjepa-explainer.html` at `/notes/v-jepa/`. A new one needs an include, a wrapper page copied from `_pages/atlas.html` (keep `layout: null`), an entry in this data file, and a line in `scripts/build_dive_artifacts.py`.
 * `idea` names the `research_ideas.yml` entry the report produced; the box links to that card's anchor.
 
 ### 🏆 `awards.yml`

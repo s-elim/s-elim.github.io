@@ -1,0 +1,47 @@
+---
+# A standalone document: opt out of the site-wide `layout: single` default
+# in _config.yml so this page is not wrapped in the portfolio chrome.
+layout: null
+permalink: /notes/v-jepa/
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>V-JEPA Teardown · Md Selim Sarowar</title>
+  <meta name="description" content="An interactive teardown of V-JEPA and action-conditioned latent world models: the masking cube in 3D, collapse prevention, drift arithmetic, planning budgets, and why low latent error certifies nothing.">
+  <link rel="canonical" href="{{ '/notes/v-jepa/' | absolute_url }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="V-JEPA Teardown">
+  <meta property="og:description" content="From I-JEPA to action-conditioned latent world models, with the masking cube, the drift arithmetic and the planning budget you can move yourself.">
+  <meta property="og:url" content="{{ '/notes/v-jepa/' | absolute_url }}">
+  <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+  <style>
+    :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+    body { margin: 0; }
+    img { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .backbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: 1120px; margin: 0 auto; padding: .7rem 20px 0;
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .74rem;
+    }
+    .backbar a { color: var(--accent, #0d7a72); text-decoration: none; }
+    .backbar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <nav class="backbar">
+    <a href="{{ '/research-ideas/' | relative_url }}">← Research ideas</a>
+    <a href="{{ '/' | relative_url }}">s-elim.github.io</a>
+  </nav>
+  {% include vjepa-explainer.html %}
+</body>
+</html>

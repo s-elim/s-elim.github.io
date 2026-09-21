@@ -23,39 +23,98 @@
 # ==========================================================================
 
 dives:
+  - id: v-jepa-latent-world-models
+    title: V-JEPA
+    subtitle: From masked video pretraining to action-conditioned latent world models, with DINO-WM
+      and LeWM alongside
+    kicker: 'Latent world models · 21 Sep 2026'
+    read: 20 min
+    summary: >-
+      A joint-embedding predictive architecture predicts in a space it invented, which is why
+      it is cheap to run and hard to evaluate. This teardown walks the line from I-JEPA to V-JEPA
+      2-AC and LeWM: what tube masking actually forces the encoder to learn, how collapse is avoided
+      and what each mechanism costs, how actions get into the predictor, how rollout error compounds,
+      and what planning costs on the hardware you own.
+    verdict: >-
+      The efficiency claims are well supported and the generality claims are not. V-JEPA pretraining
+      yields a state encoder, not a transition model, and the world model only appears at the
+      action-conditioned stage. Low latent prediction error certifies nothing on its own: it is
+      measured in a space the model chose, it weights every dimension equally, and it says nothing
+      about the off-manifold behaviour a planner will find and exploit. Latent fidelity, controllability,
+      energy-landscape quality and closed-loop success are four separate axes, and papers in this
+      line routinely report only the first.
+    highlights:
+      - >-
+        Tube masking is an anti-shortcut device: the page computes, live, what fraction of masked
+        tokens could simply be copied from t plus or minus one under each strategy.
+      - >-
+        SIGReg removes the EMA, the stop-gradient and the pretrained encoder, at the price of
+        forcing every latent dimension to carry unit variance, which is why LeWM underperforms
+        on Two-Room.
+      - >-
+        Teacher forcing trains the predictor only on the data manifold, so the Lipschitz constant
+        off it, the thing that governs drift, is uncontrolled. Everyone hides this behind short
+        horizons and replanning.
+      - >-
+        The planning budget is arithmetic, not opinion: roughly 2.5e15 FLOPs per action for V-JEPA
+        2-AC under illustrative CEM settings against about 2.7e12 for LeWM, which is the whole
+        edge-deployment story in two numbers.
+    page: /notes/v-jepa/
+    tags:
+      - JEPA
+      - world models
+      - V-JEPA 2
+      - LeWM
+      - DINO-WM
+      - SIGReg
+      - CEM
+      - sim-to-real
+      - evaluation
+    source:
+      label: 'V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning'
+      url: https://arxiv.org/abs/2506.09985
+      date: '2025'
+    links:
+      - label: 'Code: facebookresearch/vjepa2'
+        url: https://github.com/facebookresearch/vjepa2
+      - label: 'Code: facebookresearch/jepa'
+        url: https://github.com/facebookresearch/jepa
+      - label: 'Code: gaoyuezhou/dino_wm'
+        url: https://github.com/gaoyuezhou/dino_wm
+      - label: DINO-WM paper
+        url: https://arxiv.org/abs/2411.04983
+    idea: action-sensitivity-jepa
   - id: world-labs-atlas
     title: World Labs Atlas
     subtitle: The world model World Labs says will power future versions of Marble
-    kicker: World model · 21 Sep 2026
+    kicker: 'World model · 21 Sep 2026'
     read: 15 min
     summary: >-
-      World Labs released Atlas as a blog post with no paper, no code and no evaluation
-      artifacts. This teardown walks the whole machine anyway, from what a world model is
-      asked to do, through a multimodal autoregressive diffusion transformer and its
-      rectified-flow sampler, to the splat a robot is driven through, and marks every claim
-      as disclosed, inferred or speculative.
+      World Labs released Atlas as a blog post with no paper, no code and no evaluation artifacts.
+      This teardown walks the whole machine anyway, from what a world model is asked to do, through
+      a multimodal autoregressive diffusion transformer and its rectified-flow sampler, to the
+      splat a robot is driven through, and marks every claim as disclosed, inferred or speculative.
     verdict: >-
-      The evidence supports two things: native pose conditioning beats text-prompted camera
-      control, and Atlas is competitive to modestly better at posed sparse-view pointmap
-      prediction. It does not support drift-free generation, general superiority over the
-      reconstruction baselines, or dynamics simulation. Atlas has no action input, so it is a
-      geometry-grounded renderer and state estimator rather than an interactive simulator,
-      and the articulated and deformable behaviour in the demos belongs to a separate physics
-      layer.
+      The evidence supports two things: native pose conditioning beats text-prompted camera control,
+      and Atlas is competitive to modestly better at posed sparse-view pointmap prediction. It
+      does not support drift-free generation, general superiority over the reconstruction baselines,
+      or dynamics simulation. Atlas has no action input, so it is a geometry-grounded renderer
+      and state estimator rather than an interactive simulator, and the articulated and deformable
+      behaviour in the demos belongs to a separate physics layer.
     highlights:
       - >-
-        The preference study gave Atlas native camera paths and every baseline a text
-        description of the path, which World Labs acknowledges, so it measures the input
-        format as much as the generator.
+        The preference study gave Atlas native camera paths and every baseline a text description
+        of the path, which World Labs acknowledges, so it measures the input format as much as
+        the generator.
       - >-
-        Only one reconstruction baseline is labelled as posed, and against that one the
-        margin is 25.3 against 28.7 with a tie on Tanks and Temples.
+        Only one reconstruction baseline is labelled as posed, and against that one the margin
+        is 25.3 against 28.7 with a tie on Tanks and Temples.
       - >-
-        No consistency metric is reported for the one-minute demo: no revisit PSNR, no
-        loop-closure error. A controlled revisit test would settle it.
+        No consistency metric is reported for the one-minute demo: no revisit PSNR, no loop-closure
+        error. A controlled revisit test would settle it.
       - >-
-        At roughly 14,400 tokens per 1440p frame, a minute of video is about 5.2M tokens, so
-        the scene has to be produced in chunks from a selected context.
+        At roughly 14,400 tokens per 1440p frame, a minute of video is about 5.2M tokens, so the
+        scene has to be produced in chunks from a selected context.
     page: /notes/atlas/
     tags:
       - world models
