@@ -18,6 +18,8 @@
 
 // Two-column shell: sticky profile sidebar + content
 .site-main {
+  position: relative;
+  z-index: 1;
   padding-block: 2.25rem 3rem;
 }
 
@@ -94,3 +96,20 @@
   white-space: nowrap;
 }
 .section-title__hint > i { color: inherit; font-size: 1em; }
+
+// Ambient background bubbles canvas
+.ambient-bubbles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-bubbles {
+    display: none;
+  }
+}

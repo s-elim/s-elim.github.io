@@ -3037,12 +3037,179 @@
     });
   }
 
+  /* ---- Ambient floating bubbles -------------------------------------- */
+  function initAmbientBubbles() {
+    var canvas = document.getElementById("ambient-bubbles");
+    if (!canvas || !canvas.getContext) return;
+    if (prefersReduced) return;
+
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    var width = 0;
+    var height = 0;
+    var dpr = window.devicePixelRatio || 1;
+    var particles = [];
+    var animId = null;
+    var mouse = { x: -1000, y: -1000, active: false };
+    var mouseTimer = null;
+
+    // Pastel palette sampled from the reference snapshot
+    var PALETTE = [
+      { r: 159, g: 191, b: 174 }, // sage
+      { r: 184, g: 222, b: 203 }, // mint
+      { r: 246, g: 207, b: 197 }, // peach
+      { r: 173, g: 197, b: 230 }, // periwinkle
+      { r: 250, g: 216, b: 212 }, // blush
+      { r: 228, g: 169, b: 155 }, // terracotta
+      { r: 247, g: 222, b: 215 }  // apricot
+    ];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function createParticle(initial) {
+      var col = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+      var rBase = Math.random();
+      var radius = rBase < 0.65 ? (2.6 + Math.random() * 2.8) : (5.6 + Math.random() * 3.8);
+      var speed = 0.12 + Math.random() * 0.22;
+      var angle = Math.random() * Math.PI * 2;
+      return {
+        x: initial ? Math.random() * width : (Math.random() < 0.5 ? -radius : width + radius),
+        y: initial ? Math.random() * height : Math.random() * height,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        radius: radius,
+        color: col,
+        alpha: 0.42 + Math.random() * 0.26,
+        phase: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.006 + Math.random() * 0.010
+      };
+    }
+
+    function initParticles() {
+      particles = [];
+      var targetCount = Math.max(20, Math.min(45, Math.floor((width * height) / 32000)));
+      for (var i = 0; i < targetCount; i++) {
+        particles.push(createParticle(true));
+      }
+    }
+
+    function update() {
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.phase += p.wobbleSpeed;
+
+        var curVx = p.vx + Math.cos(p.phase) * 0.08;
+        var curVy = p.vy + Math.sin(p.phase) * 0.08;
+
+        if (mouse.active) {
+          var dx = p.x - mouse.x;
+          var dy = p.y - mouse.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var repulseDist = 80;
+          if (dist < repulseDist && dist > 1) {
+            var push = (1 - dist / repulseDist) * 0.35;
+            curVx += (dx / dist) * push;
+            curVy += (dy / dist) * push;
+          }
+        }
+
+        p.x += curVx;
+        p.y += curVy;
+
+        var pad = p.radius + 15;
+        if (p.x < -pad) p.x = width + pad;
+        else if (p.x > width + pad) p.x = -pad;
+        if (p.y < -pad) p.y = height + pad;
+        else if (p.y > height + pad) p.y = -pad;
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+      var isDark = root.getAttribute("data-theme") === "dark";
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        var c = p.color;
+        var a = isDark ? Math.min(0.75, p.alpha * 1.15) : p.alpha;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(" + c.r + "," + c.g + "," + c.b + "," + a.toFixed(3) + ")";
+        ctx.fill();
+      }
+    }
+
+    function tick() {
+      update();
+      render();
+      animId = window.requestAnimationFrame(tick);
+    }
+
+    function onMouseMove(e) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+      if (mouseTimer) window.clearTimeout(mouseTimer);
+      mouseTimer = window.setTimeout(function () {
+        mouse.active = false;
+      }, 1200);
+    }
+
+    function onVisibilityChange() {
+      if (document.hidden) {
+        if (animId) {
+          window.cancelAnimationFrame(animId);
+          animId = null;
+        }
+      } else {
+        if (!animId) {
+          animId = window.requestAnimationFrame(tick);
+        }
+      }
+    }
+
+    var resizeTimer = null;
+    function onResize() {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function () {
+        var oldW = width || 1;
+        var oldH = height || 1;
+        resize();
+        for (var i = 0; i < particles.length; i++) {
+          particles[i].x = (particles[i].x / oldW) * width;
+          particles[i].y = (particles[i].y / oldH) * height;
+        }
+      }, 150);
+    }
+
+    resize();
+    initParticles();
+    animId = window.requestAnimationFrame(tick);
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mouseout", function (e) {
+      if (!e.relatedTarget) mouse.active = false;
+    });
+    document.addEventListener("visibilitychange", onVisibilityChange);
+  }
+
   /* ---- Boot ---------------------------------------------------------- */
   function safe(fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } }
   function boot() {
     // Reveal first so a later failure never leaves content invisible.
     safe(initReveal);
     safe(initTheme);
+    safe(initAmbientBubbles);
     safe(initMobileNav);
     safe(initAccordions);
     safe(initToggles);
