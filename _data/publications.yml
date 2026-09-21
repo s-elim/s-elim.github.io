@@ -9,6 +9,21 @@
 # `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
 
+- title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
+  venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition'
+  venue_short: "CVPR'28"
+  year: 2028
+  type: 'conference'
+  rank: 'A*'
+  status: 'In Preparation'
+  image: '/images/praxis-capability-vector.webp'
+  thumb: "PRAXIS"
+  url: 'https://physical-agi.github.io/PRAXIS/'
+  links:
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/PRAXIS/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/Physical-AGI/PRAXIS', kind: 'code' }
+
 - title: 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
   authors: 'Md Selim Sarowar, Taeung Kang, Soon Kwon, and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
@@ -58,21 +73,6 @@
     - { label: 'arXiv', url: 'https://arxiv.org/abs/2609.13235', kind: 'link' }
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2609.13235', kind: 'pdf' }
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
-
-- title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'
-  authors: 'Md Selim Sarowar and Sungho Kim*'
-  venue: 'IEEE/RSJ International Conference on Intelligent Robots and Systems'
-  venue_short: "IROS'27"
-  year: 2027
-  type: 'conference'
-  rank: 'A'
-  status: 'In Preparation'
-  image: '/images/praxis-capability-vector.webp'
-  thumb: "PRAXIS"
-  url: 'https://physical-agi.github.io/PRAXIS/'
-  links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/PRAXIS/', kind: 'project' }
-    - { label: 'Code', url: 'https://github.com/Physical-AGI/PRAXIS', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
