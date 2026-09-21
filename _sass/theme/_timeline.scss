@@ -627,6 +627,133 @@
   }
 }
 
+// ---- Home: Research Highlights beside Awards & Honors ----
+// Two equal columns on wide screens. The highlights column sets the row height
+// (map toolbar plus a --split-h stage); the awards carousel is absolutely
+// positioned inside .home-split__fill, so it takes that height without adding
+// its own. Every carousel in here stacks its cards in a column, and
+// initCarousels() reads that flex direction to scroll, drag, step and track
+// progress on the vertical axis. Below $bp-lg the columns stack and the awards
+// return to the horizontal carousel above.
+.home-split { margin-top: 2.25rem; }
+.home-split__col { min-width: 0; }
+
+@media screen and (min-width: $bp-lg + 1) {
+  .home-split {
+    --split-h: clamp(420px, 58vh, 620px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  .home-split__col {
+    display: flex;
+    flex-direction: column;
+  }
+  .home-split .rmap { margin-bottom: 0; }
+  .home-split .rmap__stage,
+  .home-split .highlight-carousel-container { height: var(--split-h); }
+  .home-split__fill {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 16rem;
+  }
+  // Scoped under .home-split so it outranks the position: relative that every
+  // carousel in here gets below.
+  .home-split .home-split__fill > [data-carousel] {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-split [data-carousel] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+
+    // Fade the end the track can still scroll towards.
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: auto;
+      bottom: auto;
+      width: auto;
+      height: 2.5rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .25s var(--ease);
+      z-index: 5;
+    }
+    &::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+    }
+    &::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg), transparent);
+    }
+    &.is-scrollable:not(.at-start)::before { opacity: 1; }
+    &.is-scrollable:not(.at-end)::after { opacity: 1; }
+  }
+
+  .home-split [data-carousel-track] {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    margin: 0;
+    // The right padding is a gutter for the arrows and the progress rail, so
+    // neither ever sits over card text.
+    padding: .5rem 2.4rem .5rem .25rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+    &.is-dragging { scroll-snap-type: none; }
+
+    .carousel-card {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+    }
+  }
+
+  // Gutter, top to bottom: up arrow, rail (fills downwards), down arrow.
+  .home-split .carousel-rail {
+    position: absolute;
+    top: 2.9rem;
+    bottom: 2.9rem;
+    right: calc(1.2rem - 1.5px);
+    width: 3px;
+    height: auto;
+    z-index: 6;
+  }
+  .home-split .carousel-rail__bar {
+    width: 100%;
+    height: 0;
+    transition: height .12s linear;
+  }
+  .home-split .carousel-btn {
+    width: 30px;
+    height: 30px;
+    transform: none;
+    &.prev,
+    &.next { left: auto; right: calc(1.2rem - 15px); }
+    &.prev { top: .5rem; }
+    &.next { top: auto; bottom: .5rem; }
+    &:hover:not(:disabled) { transform: scale(1.1); }
+    i { transform: rotate(90deg); }
+  }
+}
+@media screen and (min-width: $bp-lg + 1) and (prefers-reduced-motion: reduce) {
+  .home-split [data-carousel-track] { scroll-behavior: auto; }
+  .home-split .carousel-rail__bar { transition: none; }
+}
+
 // ---- Deadline countdown pills & category tags ----
 .deadline-pill {
   display: inline-flex;

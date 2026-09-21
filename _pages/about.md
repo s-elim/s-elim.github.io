@@ -85,21 +85,6 @@ redirect_from:
   </div>
 </section>
 
-<div class="quote-banner card reveal" id="quote-banner">
-  <i class="fas fa-quote-right quote-banner__bg-icon" aria-hidden="true"></i>
-  <div class="quote-banner__content">
-    <div class="quote-banner__header">
-      <span class="quote-banner__badge"><i class="fas fa-compass" aria-hidden="true"></i> Research Philosophy</span>
-    </div>
-    <blockquote class="quote-banner__quote">
-      <p class="quote-banner__text">&ldquo;In research, there is no free lunch&mdash;<span class="quote-banner__highlight">achieve brilliance or step aside.</span>&rdquo;</p>
-      <footer class="quote-banner__author">
-        &mdash; <span class="quote-banner__author-name">Md Selim Sarowar</span>
-      </footer>
-    </blockquote>
-  </div>
-</div>
-
 <div class="modal" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
   <div class="modal__dialog">
     <div class="modal__head">
@@ -213,12 +198,20 @@ redirect_from:
   </div>
 </div>
 
+{%- comment -%}
+  Research Highlights and Awards sit side by side on wide screens, each a
+  fixed-height column whose cards scroll vertically; below $bp-lg they stack
+  and the awards fall back to the horizontal carousel. The awards column is
+  sized by the highlights column, see .home-split__fill in _timeline.scss.
+{%- endcomment -%}
+<div class="home-split">
+<section class="home-split__col">
 <h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
 
 {%- comment -%}
   The three cards below are the content. initResearchMap() in assets/js/main.js
   reads them and builds the 3D orbit map from what is already in the DOM, then
-  reveals the stage and hides the grid. With JavaScript off the stage and its
+  reveals the stage and hides the cards. With JavaScript off the stage and its
   toolbar stay hidden and the cards render as they always did, so nothing here
   depends on the map running.
 {%- endcomment -%}
@@ -244,8 +237,12 @@ redirect_from:
     </aside>
   </div>
 
-<div class="highlight-grid" id="rmap-cards">
-  <article class="highlight-card card reveal" data-delay="1">
+<div class="highlight-carousel-container" id="rmap-cards" data-carousel>
+  <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll research highlights backwards">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+  <div class="highlight-grid" data-carousel-track tabindex="0" role="group" aria-label="Research highlights, scroll or use the arrow keys">
+  <article class="highlight-card card reveal carousel-card" data-delay="1">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI." aria-label="Zoom figure">
       {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -255,7 +252,7 @@ redirect_from:
       <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D AI Robotics</span></div>
     </div>
   </article>
-  <article class="highlight-card card reveal" data-delay="2">
+  <article class="highlight-card card reveal carousel-card" data-delay="2">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/c3g-vm6d-architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
       {% include figure-img.html src="/images/c3g-vm6d-architecture.webp" alt="6D pose estimation architecture" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -265,7 +262,7 @@ redirect_from:
       <div class="tag-list"><span class="tag">3D Vision</span><span class="tag">6D Pose</span><span class="tag">Spatial Intelligence</span></div>
     </div>
   </article>
-  <article class="highlight-card card reveal" data-delay="3">
+  <article class="highlight-card card reveal carousel-card" data-delay="3">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d-point-cloud-visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
       {% include figure-img.html src="/images/3d-point-cloud-visualization.webp" alt="Point cloud representation learning" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -275,16 +272,24 @@ redirect_from:
       <div class="tag-list"><span class="tag">Point Clouds</span><span class="tag">Representation Learning</span><span class="tag">Denoising</span></div>
     </div>
   </article>
+  </div>
+  <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll research highlights forwards">
+    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+  </button>
+  <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
 </div>
 </div>
+</section>
 
+<section class="home-split__col">
 <h2 class="section-title reveal"><i class="fas fa-award" aria-hidden="true"></i> Awards &amp; Honors</h2>
+<div class="home-split__fill">
 <div class="awards-carousel-container reveal" data-carousel>
   <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll awards backwards">
     <i class="fas fa-chevron-left" aria-hidden="true"></i>
   </button>
   
-  <div class="awards-carousel" id="awards-carousel" data-carousel-track tabindex="0" role="group" aria-label="Awards, scroll horizontally or use the arrow keys">
+  <div class="awards-carousel" id="awards-carousel" data-carousel-track tabindex="0" role="group" aria-label="Awards, scroll or use the arrow keys">
     {% for a in site.data.awards %}
     <div class="award-card carousel-card">
       <div class="xp-head">
@@ -314,6 +319,9 @@ redirect_from:
     <i class="fas fa-chevron-right" aria-hidden="true"></i>
   </button>
   <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
+</div>
+</div>
+</section>
 </div>
 
 <h2 class="section-title reveal"><i class="fas fa-tasks" aria-hidden="true"></i> Professional Activities</h2>

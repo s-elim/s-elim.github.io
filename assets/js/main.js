@@ -1942,6 +1942,7 @@
   var RM_FOCAL = 760;        // perspective distance in scene units
   var RM_R_TOPIC = 185;      // radius of the topic shell
   var RM_R_TAG = 96;         // radius of a tag shell around its topic
+  var RM_NARROW = 720;       // stage width (px) at or below which the panel docks at the bottom
   var RM_SPIN = 0.0032;      // radians per frame while idle
   var RM_COLORS = ["#ea7317", "#0891b2", "#8b5cf6"];
 
@@ -2091,14 +2092,20 @@
       // part of the way, so the labels stay readable on a phone.
       size.posFit = Math.max(0.3, Math.min(1, (0.46 * Math.min(size.w, size.h)) / reach));
       size.nodeFit = Math.min(1, 0.6 + 0.4 * size.posFit);
+      stage.classList.toggle("is-narrow", size.w <= RM_NARROW);
     }
 
     function render() {
       var cx = size.w / 2;
       var cy = size.h / 2;
-      // The panel covers the right of the stage, so slide the scene left when
-      // it is open instead of drawing behind it.
-      if (!panel.hidden && size.w > 720) cx = size.w * 0.34;
+      // An open panel covers part of the stage, so move the scene into what is
+      // left instead of drawing behind it: left of a side panel, or above one
+      // docked along the bottom of a narrow stage (.is-narrow in
+      // _research-map.scss, 62% of the height).
+      if (!panel.hidden) {
+        if (size.w > RM_NARROW) cx = size.w * 0.34;
+        else cy = size.h * 0.19;
+      }
       var fit = size.posFit || 1;
 
       nodes.forEach(function (n) {
@@ -2847,11 +2854,16 @@
     }
   }
 
-  /* ---- Carousels (awards / activities / teaching) --------------------- */
+  /* ---- Carousels (awards / activities / teaching / highlights) -------- */
   // One controller for every [data-carousel]. Replaces the inline onclick
   // handlers that scrolled a hardcoded 330-370px: the step is now derived from
-  // the real card width, the arrows disable at the ends instead of looking
+  // the real card size, the arrows disable at the ends instead of looking
   // broken, and the track takes keyboard and drag input.
+  //
+  // The axis follows the stylesheet: a track laid out as a flex column (the
+  // home page's side-by-side highlights and awards) scrolls vertically, any
+  // other track sideways. It is re-read on every call, so a track that swaps
+  // layout at a breakpoint swaps axis with it.
   function initCarousels() {
     document.querySelectorAll("[data-carousel]").forEach(function (box) {
       var track = box.querySelector("[data-carousel-track]");
@@ -2860,7 +2872,18 @@
       var next = box.querySelector("[data-carousel-next]");
       var bar = box.querySelector("[data-carousel-progress]");
 
+      function vertical() {
+        return getComputedStyle(track).flexDirection.indexOf("column") === 0;
+      }
+
+      function position() {
+        return vertical() ? track.scrollTop : track.scrollLeft;
+      }
+
+      // Cards in a column differ in height, so a vertical step pages by most
+      // of the visible track and lets scroll-snap settle on a card edge.
       function step() {
+        if (vertical()) return Math.round(track.clientHeight * 0.8);
         var card = track.querySelector(".carousel-card");
         if (!card) return Math.round(track.clientWidth * 0.8);
         var gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
@@ -2868,32 +2891,41 @@
       }
 
       function maxScroll() {
-        return Math.max(0, track.scrollWidth - track.clientWidth);
+        return vertical()
+          ? Math.max(0, track.scrollHeight - track.clientHeight)
+          : Math.max(0, track.scrollWidth - track.clientWidth);
       }
 
-      // The track carries horizontal padding so hover shadows are not clipped,
-      // and scroll-snap parks the first card against the content box, not the
-      // scrollport. So a track sitting at its start reads scrollLeft == its
-      // left padding, not 0. Derive the end tolerances from that padding rather
-      // than guessing a pixel constant.
+      // The track carries padding so hover shadows are not clipped, and
+      // scroll-snap parks the first card against the content box, not the
+      // scrollport. So a track sitting at its start reads a scroll offset equal
+      // to its leading padding, not 0. Derive the end tolerances from that
+      // padding rather than guessing a pixel constant.
       function edgeSlack() {
         var cs = getComputedStyle(track);
+        var v = vertical();
         return {
-          start: Math.max(2, (parseFloat(cs.paddingLeft) || 0) + 1),
-          end: Math.max(2, (parseFloat(cs.paddingRight) || 0) + 1)
+          start: Math.max(2, (parseFloat(v ? cs.paddingTop : cs.paddingLeft) || 0) + 1),
+          end: Math.max(2, (parseFloat(v ? cs.paddingBottom : cs.paddingRight) || 0) + 1)
         };
       }
 
+      function jumpTo(offset) {
+        var opts = { behavior: prefersReduced ? "auto" : "smooth" };
+        opts[vertical() ? "top" : "left"] = offset;
+        track.scrollTo(opts);
+      }
+
       function scrollBy(dir) {
-        track.scrollBy({
-          left: dir * step(),
-          behavior: prefersReduced ? "auto" : "smooth"
-        });
+        var opts = { behavior: prefersReduced ? "auto" : "smooth" };
+        opts[vertical() ? "top" : "left"] = dir * step();
+        track.scrollBy(opts);
       }
 
       function sync() {
+        var v = vertical();
         var max = maxScroll();
-        var at = track.scrollLeft;
+        var at = position();
         var slack = edgeSlack();
         var atStart = at <= slack.start;
         var atEnd = at >= max - slack.end;
@@ -2902,38 +2934,45 @@
         box.classList.toggle("at-end", atEnd);
         if (prev) prev.disabled = atStart;
         if (next) next.disabled = atEnd;
-        if (bar) bar.style.width = (max > 1 ? (at / max) * 100 : 100) + "%";
+        if (bar) {
+          var filled = (max > 1 ? (at / max) * 100 : 100) + "%";
+          bar.style.width = v ? "" : filled;
+          bar.style.height = v ? filled : "";
+        }
       }
 
       if (prev) prev.addEventListener("click", function () { scrollBy(-1); });
       if (next) next.addEventListener("click", function () { scrollBy(1); });
 
       track.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight") { e.preventDefault(); scrollBy(1); }
-        else if (e.key === "ArrowLeft") { e.preventDefault(); scrollBy(-1); }
-        else if (e.key === "Home") { e.preventDefault(); track.scrollTo({ left: 0, behavior: prefersReduced ? "auto" : "smooth" }); }
-        else if (e.key === "End") { e.preventDefault(); track.scrollTo({ left: maxScroll(), behavior: prefersReduced ? "auto" : "smooth" }); }
+        var v = vertical();
+        if (e.key === (v ? "ArrowDown" : "ArrowRight")) { e.preventDefault(); scrollBy(1); }
+        else if (e.key === (v ? "ArrowUp" : "ArrowLeft")) { e.preventDefault(); scrollBy(-1); }
+        else if (e.key === "Home") { e.preventDefault(); jumpTo(0); }
+        else if (e.key === "End") { e.preventDefault(); jumpTo(maxScroll()); }
       });
 
       // Click-drag on pointer devices. Touch keeps the browser's native
       // momentum scrolling, so it is deliberately left alone.
-      var dragging = false, startX = 0, startLeft = 0, moved = 0;
+      var dragging = false, dragV = false, startAt = 0, startScroll = 0, moved = 0;
       track.addEventListener("pointerdown", function (e) {
         if (e.pointerType === "touch" || e.button !== 0) return;
         if (e.target.closest("a, button")) return;
         dragging = true; moved = 0;
-        startX = e.clientX;
-        startLeft = track.scrollLeft;
+        dragV = vertical();
+        startAt = dragV ? e.clientY : e.clientX;
+        startScroll = position();
         track.classList.add("is-dragging");
       });
       track.addEventListener("pointermove", function (e) {
         if (!dragging) return;
-        var dx = e.clientX - startX;
-        moved = Math.max(moved, Math.abs(dx));
+        var d = (dragV ? e.clientY : e.clientX) - startAt;
+        moved = Math.max(moved, Math.abs(d));
         if (moved > 3 && track.setPointerCapture && e.pointerId != null) {
           try { track.setPointerCapture(e.pointerId); } catch (err) {}
         }
-        track.scrollLeft = startLeft - dx;
+        if (dragV) track.scrollTop = startScroll - d;
+        else track.scrollLeft = startScroll - d;
       });
       function endDrag() {
         if (!dragging) return;
