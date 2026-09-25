@@ -18,16 +18,16 @@ redirect_from:
     <p class="hero__availability"><a class="chip chip--open" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Research%20collaboration%20%2F%20PhD%20opportunity" target="_blank" rel="noopener" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
     <div class="hero__chips">
       <span class="chip">Causal Learning</span>
-      <span class="chip chip--glow">Spatial Intelligence</span>
+      <span class="chip">Spatial Intelligence</span>
       <span class="chip">Self Modeling</span>
       <span class="chip">VLAs</span>
       <span class="chip chip--glow">World Models</span>
       <span class="chip chip--long chip--glow">Joint Embedding Predictive Architecture (V-JEPA)</span>
-      <span class="chip chip--glow">Agentic Robotics</span>
+      <span class="chip">Agentic Robotics</span>
       <span class="chip">Robot Learning</span>
       <span class="chip">Test-Time Compute</span>
       <span class="chip">RL Fine-Tuning</span>
-      <span class="chip">5D AI Robotics</span>
+      <span class="chip chip--long chip--glow">5D Embodied AI &amp; Humanoids Robot</span>
     </div>
     {%- comment -%}
       Quick links: quieter than the interest chips above and the buttons below,
@@ -249,7 +249,7 @@ redirect_from:
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
-      <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D AI Robotics</span></div>
+      <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D Embodied AI &amp; Humanoids Robot</span></div>
     </div>
   </article>
   <article class="highlight-card card reveal carousel-card" data-delay="2">
