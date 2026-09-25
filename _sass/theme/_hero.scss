@@ -112,18 +112,18 @@ a.chip.chip--open:hover, a.chip.chip--open:focus-visible {
 }
 @keyframes hero-chip-glow-light {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(148, 163, 184, 0.55), 0 0 18px rgba(203, 213, 225, 0.50), inset 0 0 4px rgba(255, 255, 255, 0.90);
+    box-shadow: 0 0 8px rgba(185, 28, 28, 0.45), 0 0 18px rgba(220, 38, 38, 0.28), inset 0 0 4px rgba(239, 68, 68, 0.15);
   }
   50% {
-    box-shadow: 0 0 14px rgba(148, 163, 184, 0.80), 0 0 28px rgba(203, 213, 225, 0.70), inset 0 0 6px rgba(255, 255, 255, 1.0);
+    box-shadow: 0 0 14px rgba(185, 28, 28, 0.70), 0 0 28px rgba(220, 38, 38, 0.45), inset 0 0 6px rgba(239, 68, 68, 0.25);
   }
 }
 @keyframes hero-chip-glow-dark {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(226, 232, 240, 0.65), 0 0 22px rgba(148, 163, 184, 0.45), inset 0 0 4px rgba(255, 255, 255, 0.40);
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.60), 0 0 22px rgba(185, 28, 28, 0.40), inset 0 0 4px rgba(239, 68, 68, 0.25);
   }
   50% {
-    box-shadow: 0 0 18px rgba(248, 250, 252, 0.90), 0 0 32px rgba(203, 213, 225, 0.65), inset 0 0 8px rgba(255, 255, 255, 0.55);
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.85), 0 0 32px rgba(220, 38, 38, 0.55), inset 0 0 8px rgba(239, 68, 68, 0.40);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -170,7 +170,7 @@ a.chip.chip--open:hover .chip__cta, a.chip.chip--open:focus-visible .chip__cta {
   box-shadow: var(--chip-shadow-hover) !important;
   animation-play-state: paused;
 }
-// Featured interest chips with continuous, radiant silver glow across light and dark themes.
+// Featured interest chips with continuous, radiant dark red glow across light and dark themes.
 .hero__chips .chip--glow {
   font-weight: 800 !important;
   color: var(--hero-glow-fg) !important;
