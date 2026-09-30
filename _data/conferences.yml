@@ -44,7 +44,7 @@
 #  `tba` stage and a note recording the cycle that just ended, so nothing here
 #  asserts a date that has not been published.
 #
-#  Verified 2026-09-22 against official conference sites. The ccf-deadlines
+#  Verified 2026-10-01 against official conference sites. The ccf-deadlines
 #  dataset (github.com/ccfddl/ccf-deadlines) was used only to find candidates;
 #  no date here rests on it alone. Re-check before you submit.
 # ==========================================================================
@@ -131,11 +131,33 @@
   location: Athens, Greece
   flag: "🇬🇷"
   dates: July 6-11, 2027
-  website: https://roboticsconference.org/
-  note: RSS 2027 is confirmed for Athens; every deadline is still listed as TBA. RSS 2026 closed 30 Jan 2026.
+  website: https://roboticsconference.org/information/cfp/
+  note: RSS 2027 reviews in two stages. A 6-page extended abstract comes first; only papers invited to Stage 2 submit a final paper.
   timeline:
-    - label: Paper Submission
-      date: tba
+    - label: Extended Abstract
+      date: 2026-12-04
+      tz: AoE
+    - label: Stage 1 Decision
+      date: 2027-02-05
+      tz: AoE
+    - label: Rebuttal Due
+      date: 2027-02-12
+      tz: AoE
+    - label: Stage 2 Decision
+      date: 2027-02-26
+      tz: AoE
+    - label: Final Paper
+      date: 2027-04-16
+      tz: AoE
+    - label: Supplementary Material
+      date: 2027-04-19
+      tz: AoE
+    - label: Acceptance Notification
+      date: 2027-04-30
+      tz: AoE
+    - label: Camera Ready
+      date: 2027-05-14
+      tz: AoE
 
 - name: Humanoids
   edition: 2027
@@ -180,6 +202,9 @@
       tz: AoE
     - label: Reviews Released
       date: 2027-01-25
+    - label: Rebuttal Ends
+      date: 2027-02-01
+      tz: AoE
     - label: Final Decisions
       date: 2027-02-25
 
@@ -212,9 +237,9 @@
   rank: "A"
   location: Auckland, New Zealand
   flag: "🇳🇿"
-  dates: September 26 - October 1, 2027
-  website: https://miccai.org/
-  note: Location confirmed by the MICCAI Society. Deadline not announced; MICCAI 2026 closed 26 Feb 2026.
+  dates: September 27 - October 1, 2027
+  website: https://conferences.miccai.org/2027/en/
+  note: MICCAI 2027 meets at the New Zealand International Convention Centre. Deadline not announced; MICCAI 2026 closed 26 Feb 2026.
   timeline:
     - label: Paper Submission
       date: tba
@@ -235,9 +260,11 @@
   edition: 2027
   category: vision
   rank: "A*"
-  location: TBA
-  website: https://asia.siggraph.org/
-  note: SIGGRAPH Asia 2026 closed 12 May 2026 and runs 1-4 Dec 2026 in Kuala Lumpur. The 2027 call is not out yet.
+  location: Tokyo, Japan
+  flag: "🇯🇵"
+  dates: November 30 - December 3, 2027
+  website: https://asia.siggraph.org/2026/about-the-event/siggraph-asia-2027/
+  note: SIGGRAPH Asia 2027 meets at the Tokyo International Forum. The Technical Papers call is not out yet; SIGGRAPH Asia 2026 closed 12 May 2026.
   timeline:
     - label: Technical Papers
       date: tba
@@ -246,9 +273,10 @@
   edition: 2027
   category: vision
   rank: "A*"
-  location: TBA
+  location: Hong Kong
+  flag: "🇭🇰"
   website: https://www.acmmm.org/
-  note: ACM MM 2026 closed 1 Apr 2026 and runs 10-14 Nov 2026 in Rio de Janeiro. The 2027 call is not out yet.
+  note: acmmm.org places ACM MM 2027 in Hong Kong; its dates and call are not out yet. ACM MM 2026 closed 1 Apr 2026.
   timeline:
     - label: Paper Submission
       date: tba
@@ -302,12 +330,28 @@
   edition: 2027
   category: vision
   rank: "A"
-  location: TBA
-  website: https://icdar2026.org/
-  note: ICDAR 2026 closed 27 Feb 2026 and runs August 30 - September 4, 2026 in Vienna, Austria. The 2027 call is not out yet.
+  location: Kuala Lumpur, Malaysia
+  flag: "🇲🇾"
+  dates: August 18-22, 2027
+  website: https://icdar2027.org/call-for-papers
+  note: The call for papers gives 20 Feb 2027 for full papers and the Important Dates page gives 28 Feb; the earlier date is shown until they agree.
   timeline:
+    - label: Abstract Deadline
+      date: 2027-01-31
+      tz: AoE
     - label: Paper Submission
-      date: tba
+      date: 2027-02-20
+      tz: AoE
+    - label: Reviews Released
+      date: 2027-04-20
+    - label: Rebuttal Due
+      date: 2027-04-27
+      tz: AoE
+    - label: Acceptance Notification
+      date: 2027-05-15
+    - label: Camera Ready
+      date: 2027-06-05
+      tz: AoE
 
 - name: ICME
   edition: 2027
@@ -396,11 +440,18 @@
   rank: "A*"
   location: Kyoto, Japan and Hengqin, China
   dates: August 7-13, 2027 (Kyoto) and August 15-17, 2027 (Hengqin)
-  website: https://www.ijcai.org/future_conferences
-  note: IJCAI-27 is split across two sites. The call for papers is not out yet.
+  website: https://2027.ijcai.org/
+  note: IJCAI-27 is split across two sites.
   timeline:
+    - label: Abstract Deadline
+      date: 2027-01-04
+      tz: AoE
     - label: Paper Submission
-      date: tba
+      date: 2027-01-11
+      tz: AoE
+    - label: Paper Notification
+      date: 2027-04-21
+      tz: AoE
 
 - name: KDD
   edition: 2027
@@ -442,10 +493,11 @@
   flag: "🇯🇵"
   dates: August 17-22, 2027
   website: https://2027.aclweb.org/
-  note: ACL submits through ACL Rolling Review, which lists January 2027 as the final cycle for ACL 2027. The exact date is not fixed yet.
+  note: ACL 2027 gives 4 Jan 2027 as its ARR submission deadline; the ARR dates page still lists only January 2027. Commitment and notification dates are TBA.
   timeline:
     - label: ARR Submission
-      date: tba
+      date: 2027-01-04
+      tz: AoE
 
 - name: EMNLP
   edition: 2027
@@ -646,9 +698,10 @@
   edition: 2027
   category: aiml
   rank: "A"
-  location: TBA
-  website: https://cikm2026.diag.uniroma1.it/
-  note: CIKM 2026 closed 23 May 2026 and runs November 7-11, 2026 in Rome, Italy. The 2027 call is not out yet.
+  location: Sydney, Australia
+  flag: "🇦🇺"
+  website: http://www.cikmconference.org/
+  note: cikmconference.org places CIKM 2027 in Sydney; its dates and call are not out yet. CIKM 2026 closed 23 May 2026 and runs November 7-11, 2026 in Rome, Italy.
   timeline:
     - label: Paper Submission
       date: tba
@@ -687,9 +740,9 @@
   rank: "A"
   location: Eindhoven, The Netherlands
   flag: "🇳🇱"
-  dates: September 20-24, 2027
+  dates: August 30 - September 3, 2027
   website: https://ecmlpkdd.org/2027/
-  note: ECML-PKDD 2027 is confirmed for Eindhoven, The Netherlands (September 20-24, 2027), but the call for papers is not out yet.
+  note: ECML-PKDD 2027 is confirmed for Eindhoven, The Netherlands, but the call for papers is not out yet.
   timeline:
     - label: Paper Submission
       date: tba
@@ -841,11 +894,16 @@
   location: Stockholm, Sweden
   flag: "🇸🇪"
   dates: June 28 - July 2, 2027
-  website: https://dis.acm.org/2027/
-  note: DIS 2027 is confirmed for Stockholm but has not posted deadlines. DIS 2026 closed 19 Jan 2026.
+  website: https://dis.acm.org/2027/call-for-papers/
   timeline:
+    - label: Title and Abstract
+      date: 2027-01-11
+      tz: AoE
     - label: Paper Submission
-      date: tba
+      date: 2027-01-18
+      tz: AoE
+    - label: Acceptance Notification
+      date: 2027-03-19
 
 - name: HICSS
   edition: 2028
@@ -865,14 +923,17 @@
   location: Edinburgh, Scotland, UK
   flag: "🇬🇧"
   website: https://www.icwsm.org/2027/submit/
-  note: ICWSM takes papers at three deadlines a year. The official page gives no timezone.
+  note: ICWSM takes papers at three deadlines a year.
   timeline:
     - label: First Deadline
       date: 2026-05-15
+      tz: AoE
     - label: Second Deadline
       date: 2026-09-15
+      tz: AoE
     - label: Third Deadline
       date: 2027-01-15
+      tz: AoE
     - label: Third-Round Notification
       date: 2027-03-15
 
