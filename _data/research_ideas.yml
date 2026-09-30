@@ -91,7 +91,7 @@ themes:
     color: '#14b8a6'
     blurb: Object pose from RGB-D, category-level and novel-object settings.
   - id: embodied
-    label: 'Embodied & Physical AI'
+    label: 'Embodied & Physical Super Intelligence'
     icon: fa-robot
     color: '#ea7317'
     blurb: Sim-to-real, contact, whole-body control, deployment.
@@ -143,7 +143,7 @@ themes:
     color: '#14b8a6'
     blurb: Object pose from RGB-D, category-level and novel-object settings.
   - id: embodied
-    label: 'Embodied & Physical AI'
+    label: 'Embodied & Physical Super Intelligence'
     icon: fa-robot
     color: '#ea7317'
     blurb: Sim-to-real, contact, whole-body control, deployment.
@@ -195,7 +195,7 @@ themes:
     color: '#14b8a6'
     blurb: Object pose from RGB-D, category-level and novel-object settings.
   - id: embodied
-    label: 'Embodied & Physical AI'
+    label: 'Embodied & Physical Super Intelligence'
     icon: fa-robot
     color: '#ea7317'
     blurb: Sim-to-real, contact, whole-body control, deployment.

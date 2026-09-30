@@ -1365,7 +1365,7 @@
       var maxThemeW = 0;
       var themeLines = {};
       ring.forEach(function (t) {
-        var lines = imWrap(t.label, IM_THEME_CHARS, 2);
+        var lines = imWrap(t.label, IM_THEME_CHARS, 3);
         themeLines[t.id] = lines;
         maxThemeW = Math.max(maxThemeW, lines.reduce(function (n, l) {
           return Math.max(n, l.length * IM_THEME_CHAR_W);
@@ -1383,9 +1383,13 @@
 
       // Root
       var rootG = nodeGroup("im-node--root", null, "__root");
-      rootG.appendChild(imEl("circle", { "class": "im-node__disc", r: 46, cx: 0, cy: 0 }));
-      var rootT = imEl("text", { x: 0, y: 1, "text-anchor": "middle", "font-size": "13" });
-      rootT.textContent = "Physical AI";
+      rootG.appendChild(imEl("circle", { "class": "im-node__disc", r: 52, cx: 0, cy: 0 }));
+      var rootT = imEl("text", { x: 0, y: -13, "text-anchor": "middle", "font-size": "12" });
+      ["Physical", "Super", "Intelligence"].forEach(function (w, k) {
+        var ts = imEl("tspan", { x: 0, dy: k ? "14" : "0" });
+        ts.textContent = w;
+        rootT.appendChild(ts);
+      });
       rootG.appendChild(rootT);
       rootG.setAttribute("aria-label", "All themes. Activate to clear the theme filter.");
       nodeLayer.appendChild(rootG);
@@ -2028,8 +2032,8 @@
     rootEl.type = "button";
     rootEl.className = "rm-node rm-node--root";
     rootEl.setAttribute("data-rnode", "root");
-    rootEl.innerHTML = '<span class="rm-node__root-label">Physical<br>AI</span>';
-    rootEl.setAttribute("aria-label", "Physical AI, the centre of the map. Activate to clear the selection.");
+    rootEl.innerHTML = '<span class="rm-node__root-label">Physical<br>Super<br>Intelligence</span>';
+    rootEl.setAttribute("aria-label", "Physical Super Intelligence, the centre of the map. Activate to clear the selection.");
     nodeLayer.appendChild(rootEl);
     var rootNode = addNode(rootEl, { x: 0, y: 0, z: 0 }, "root", -1, null);
 

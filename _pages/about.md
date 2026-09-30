@@ -241,11 +241,11 @@ redirect_from:
   </button>
   <div class="highlight-grid" data-carousel-track tabindex="0" role="group" aria-label="Research highlights, scroll or use the arrow keys">
   <article class="highlight-card card reveal carousel-card" data-delay="1">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence." aria-label="Zoom figure">
-      {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical Super Intelligence &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence." aria-label="Zoom figure">
+      {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical super intelligence and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
     <div class="highlight-card__body">
-      <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
+      <h3 class="highlight-card__title">Physical Super Intelligence &amp; Agentic Robotics</h3>
       <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence.</p>
       <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D Embodied AI &amp; Humanoids Robot</span></div>
     </div>
