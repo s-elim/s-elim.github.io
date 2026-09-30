@@ -24,8 +24,6 @@ redirect_from:
       <span class="chip chip--glow">World Models</span>
       <span class="chip chip--long chip--glow">Joint Embedding Predictive Architecture (V-JEPA)</span>
       <span class="chip chip--glow">Agentic Robotics</span>
-      <span class="chip">Robot Learning</span>
-      <span class="chip">Test-Time Compute</span>
       <span class="chip">RL Fine-Tuning</span>
       <span class="chip chip--long chip--glow">5D Embodied AI &amp; Humanoids Robot</span>
     </div>
