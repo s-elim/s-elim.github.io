@@ -153,7 +153,7 @@ redirect_from:
       {% if k == "the" %}{% assign other = rk.qs %}{% else %}{% assign other = rk.the %}{% endif %}
       <div class="rank-panel" id="rank-panel-{{ k }}" data-rank-panel="{{ k }}" role="tabpanel" data-rank-other="{{ other.short }}" data-rank-other-title="Position in the {{ other.name }} {{ other.edition }}"{% unless forloop.first %} hidden{% endunless %}>
         <p class="rank-meta">
-          <strong>{{ src.name }} {{ src.edition }}</strong> &middot; published {{ src.published }} &middot; full table covers {{ src.total_ranked }}. Showing the top {{ src.count }} positions.
+          <strong>{{ src.name }} {{ src.edition }}</strong> &middot; published {{ src.published }} &middot; full table covers {{ src.total_ranked }}. Showing all {{ src.count }} institutions placed in the top 400.
         </p>
 
         {% assign countries = src.entries | group_by: "country" | sort: "size" | reverse %}
@@ -185,7 +185,7 @@ redirect_from:
                  open: inlining 800 of them tripled the homepage DOM. -->
             <tbody>
               <tr class="rank-empty" hidden><td colspan="3">No university matches that filter.</td></tr>
-              <tr class="rank-loading"><td colspan="3">Loading the {{ src.short }} {{ src.edition }} top {{ src.count }}&hellip;</td></tr>
+              <tr class="rank-loading"><td colspan="3">Loading the {{ src.short }} {{ src.edition }} top 400&hellip;</td></tr>
             </tbody>
           </table>
         </div>

@@ -27,7 +27,7 @@ from collections import Counter
 from pathlib import Path
 
 TOP_N = 400
-THE_YEAR = "2026"
+THE_YEAR = "2027"
 QS_YEAR = "2027"
 
 THE_JSON = (
@@ -49,12 +49,13 @@ EDITIONS = {
         "name": "Times Higher Education World University Rankings",
         "short": "THE",
         "edition": THE_YEAR,
-        "published": "October 2025",
-        "total_ranked": "2,191 institutions from 115 countries and territories",
+        "published": "30 September 2026",
+        "total_ranked": "2,297 institutions from 118 countries and territories",
         "url": "https://www.timeshighereducation.com/world-university-rankings/"
                f"{THE_YEAR}/world-ranking",
-        "note": "THE publishes individual positions to 200, then equal bands "
-                "(201-250, 251-300, 301-350, 351-400).",
+        "note": "THE publishes individual positions to 300, then equal bands "
+                "(301-325, 326-350, 351-375, 376-400), so a band can hold more "
+                "institutions than places.",
     },
     "qs": {
         "name": "QS World University Rankings",
@@ -217,8 +218,11 @@ def main():
     print("cross-linked %d institutions across both tables" % pairs)
 
     for label, rows in (("THE", the_rows), ("QS", qs_rows)):
-        if len(rows) != TOP_N:
-            raise SystemExit("%s: expected %d rows, got %d" % (label, TOP_N, len(rows)))
+        # A tie or an equal band can straddle place 400 (THE 2027 puts 26
+        # institutions in 376-400), so keep every row ranked inside the top 400.
+        if len(rows) < TOP_N or low(rows[-1]["rank"]) > TOP_N:
+            raise SystemExit("%s: expected the top %d, got %d rows ending at %s"
+                             % (label, TOP_N, len(rows), rows[-1]["rank"]))
         ranks = [low(r["rank"]) for r in rows]
         if ranks != sorted(ranks):
             raise SystemExit(label + ": rows are not in rank order")
