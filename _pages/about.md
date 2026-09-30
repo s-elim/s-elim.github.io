@@ -2,7 +2,7 @@
 permalink: /
 layout: home
 title: Home
-description: "Md Selim Sarowar: M.Sc. student in Computer Vision & AI at Yeungnam University (GKS Scholar). Research in 3D computer vision, 6D pose estimation, vision-language-action models, world models, and agentic robotics toward physical AGI."
+description: "Md Selim Sarowar: M.Sc. student in Computer Vision & AI at Yeungnam University (GKS Scholar). Research in 3D computer vision, 6D pose estimation, vision-language-action models, world models, and agentic robotics toward physical super intelligence."
 redirect_from:
   - /about/
   - /about.html
@@ -96,7 +96,7 @@ redirect_from:
     <div class="modal__body">
 <p>I am pursuing an <strong>M.Sc. in Computer Vision &amp; AI</strong> at <a href="http://www.ynu.kr/_english/main/index.php" target="_blank" rel="noopener">Yeungnam University (YU)</a>, where I am maintaining a perfect <strong>CGPA of 4.5/4.5 (Ranked 1st / Top 1)</strong>. I am a <a href="https://www.studyinkorea.go.kr/" target="_blank" rel="noopener">Global Korea Scholarship (GKS)</a> scholar funded by NIIED, with additional support from the <strong>RLRC &amp; RISE</strong> industry-collaboration projects. I am a member of the <a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, supervised by <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>.</p>
 
-<p>My research focuses on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation. I aim to build embodied agents capable of perceiving, reasoning, and acting within the physical world, working toward <strong>physical AGI</strong>. My contributions in these areas include first-author publications at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong>.</p>
+<p>My research focuses on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation. I aim to build embodied agents capable of perceiving, reasoning, and acting within the physical world, working toward <strong>physical super intelligence</strong>. My contributions in these areas include first-author publications at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong>.</p>
 
 <p>Before joining YU, I completed a one-year Korean Language &amp; Literature program at KLI under the GKS program, and spent a year as a full-time Research Assistant in the <a href="https://nthu-en.site.nthu.edu.tw/" target="_blank" rel="noopener">WCSP Lab at National Tsing Hua University</a>, Taiwan. I earned my B.Tech (Electronics &amp; Electrical Engineering) as an <a href="https://studyinindia.gov.in/" target="_blank" rel="noopener">SII Scholar</a> from the <a href="https://kiit.ac.in/" target="_blank" rel="noopener">Kalinga Institute of Industrial Technology (KIIT)</a>, and interned at <a href="https://www.iitr.ac.in/" target="_blank" rel="noopener">IIT Roorkee</a> on image processing for biomedical signals.</p>
     </div>
@@ -243,12 +243,12 @@ redirect_from:
   </button>
   <div class="highlight-grid" data-carousel-track tabindex="0" role="group" aria-label="Research highlights, scroll or use the arrow keys">
   <article class="highlight-card card reveal carousel-card" data-delay="1">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI." aria-label="Zoom figure">
+    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical AI &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence." aria-label="Zoom figure">
       {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical AI and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
     <div class="highlight-card__body">
       <h3 class="highlight-card__title">Physical AI &amp; Agentic Robotics</h3>
-      <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical AGI.</p>
+      <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence.</p>
       <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D Embodied AI &amp; Humanoids Robot</span></div>
     </div>
   </article>
