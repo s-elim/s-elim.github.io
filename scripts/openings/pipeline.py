@@ -98,6 +98,8 @@ def run_openings_pipeline(dry_run: bool = False, max_queries: int = 15) -> List[
 
     for item in discovered:
         data = extract_from_discovered(item)
+        if not data:
+            continue
         tier, topics, expl = classify_relevance(data["title"], data["raw_text"])
 
         # Discard irrelevant general engineering/computing

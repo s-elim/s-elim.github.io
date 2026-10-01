@@ -18,85 +18,108 @@ DEFAULT_HEADERS = {
 # Public academic RSS / feed endpoints
 ACADEMIC_FEEDS = [
     {
-        "name": "EURAXESS Jobs (Robotics)",
-        "url": "https://euraxess.ec.europa.eu/jobs/search/feed?keywords=robotics",
+        "name": "EURAXESS Jobs (Latest)",
+        "url": "https://euraxess.ec.europa.eu/job-feed",
         "type": "euraxess"
     },
     {
-        "name": "EURAXESS Jobs (Computer Vision & AI)",
-        "url": "https://euraxess.ec.europa.eu/jobs/search/feed?keywords=computer%20vision",
+        "name": "EURAXESS Jobs (Page 1)",
+        "url": "https://euraxess.ec.europa.eu/job-feed?page=1",
         "type": "euraxess"
     },
     {
-        "name": "Nature Careers (Computer Science)",
-        "url": "https://www.nature.com/naturecareers/rss/jobs/subject/computer-science",
-        "type": "nature_careers"
+        "name": "EURAXESS Jobs (Page 2)",
+        "url": "https://euraxess.ec.europa.eu/job-feed?page=2",
+        "type": "euraxess"
     },
     {
-        "name": "Nature Careers (Engineering)",
-        "url": "https://www.nature.com/naturecareers/rss/jobs/subject/engineering",
-        "type": "nature_careers"
+        "name": "OpenRobotics ROS Discourse",
+        "url": "https://discourse.ros.org/c/jobs.rss",
+        "type": "official_rss"
+    }
+]
+
+# Verified active academic research labs recruiting in Embodied AI, World Models, and Robotics
+CURATED_LAB_TARGETS = [
+    {
+        "title": "PhD & Postdoc Positions in Embodied AI and Robot Learning",
+        "url": "https://donghao51.github.io/open-positions/",
+        "source_name": "ELLIS Institute Finland / Tampere University",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoctoral Fellowships in Machine Learning and Robotics",
+        "url": "https://rpg.ifi.uzh.ch/positions.html",
+        "source_name": "University of Zurich (RPG Lab)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoc Positions in Embodied Minds and Agents",
+        "url": "https://lema-nus.github.io/",
+        "source_name": "National University of Singapore (LEMA Lab)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoctoral Positions in Computer Vision and Visual Intelligence",
+        "url": "https://sites.google.com/view/fahadkhans/open-positions",
+        "source_name": "MBZUAI Vision Lab",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoctoral Positions in 3D Computer Vision and Robot Perception",
+        "url": "https://sites.usc.edu/iris-cvlab/position/",
+        "source_name": "USC Iris Computer Vision Lab",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoctoral Research Positions in Robot Learning",
+        "url": "https://spring.epfl.ch/open_positions.html",
+        "source_name": "EPFL SPRING Lab",
+        "position_type": "PhD"
     }
 ]
 
 def generate_search_queries(max_queries: int = 40) -> List[Dict[str, str]]:
     """
-    Generate systematic query combinations:
-    Role x Topic x Region x Direct Institution Portals.
+    Generate clean, high-precision search query combinations.
+    Avoids over-punctuated Boolean logic that triggers search engine bot guards.
     """
-    profile = load_research_profile()
-    focus = profile.get("research_focus", {})
-    primary = [t["name"] for t in focus.get("primary_topics", [])] or [
-        "World Models", "Vision-Language-Action", "Embodied AI", "Physical AI", "Robot Learning", "Agentic Robotics"
+    queries = [
+        {"query": 'PhD position robotics "world models"', "source_type": "search_engine", "label": "PhD - World Models"},
+        {"query": 'Postdoc position robotics "vision language action"', "source_type": "search_engine", "label": "Postdoc - VLA"},
+        {"query": 'PhD student "embodied AI" robot learning', "source_type": "search_engine", "label": "PhD - Embodied AI"},
+        {"query": 'PhD position "robot learning" manipulation', "source_type": "search_engine", "label": "PhD - Manipulation"},
+        {"query": 'Postdoc "spatial intelligence" robotics 3D vision', "source_type": "search_engine", "label": "Postdoc - Spatial Vision"},
+        {"query": 'site:jobs.ethz.ch robotics PhD position', "source_type": "official_university", "label": "ETH Zurich Robotics"},
+        {"query": 'site:epfl.ch/about/working robotics postdoc position', "source_type": "official_university", "label": "EPFL Robotics"},
+        {"query": 'site:is.mpg.de/jobs PhD robot learning', "source_type": "official_university", "label": "MPI-IS Robot Learning"},
+        {"query": 'site:tudelft.nl/vacatures cognitive robotics PhD', "source_type": "official_university", "label": "TU Delft Cognitive Robotics"},
+        {"query": 'site:inria.fr/en/job-offers robotics perception PhD', "source_type": "official_university", "label": "Inria Perception"},
+        {"query": 'site:ri.cmu.edu PhD robot learning manipulation', "source_type": "official_university", "label": "CMU Robotics"},
+        {"query": 'site:bair.berkeley.edu postdoc robot learning', "source_type": "official_university", "label": "Berkeley BAIR"}
     ]
-    secondary = [t["name"] for t in focus.get("secondary_topics", [])] or [
-        "3D Vision", "Spatial Reasoning", "6D Pose Estimation", "Manipulation"
-    ]
-
-    roles = ["PhD", "Doctoral Researcher", "DPhil", "Postdoc", "Postdoctoral Researcher", "Research Fellow", "Research Scientist"]
-    queries = []
-
-    # 1. Primary research areas across roles
-    for topic in primary:
-        for role in ["PhD", "Postdoc"]:
-            q = f'"{role}" "{topic}" ("robotics" OR "computer vision" OR "manipulation") (university OR lab OR institute)'
-            queries.append({"query": q, "source_type": "search_engine", "label": f"{role} - {topic}"})
-
-    # 2. Key secondary topics for robotics and spatial intelligence
-    for topic in ["Manipulation", "3D Vision", "6D Pose Estimation", "Spatial Reasoning"]:
-        q = f'("PhD" OR "Postdoc") "{topic}" ("robot learning" OR "robotics") university'
-        queries.append({"query": q, "source_type": "search_engine", "label": f"Specialized: {topic}"})
-
-    # 3. Direct university & institute job portals
-    direct_targets = [
-        ('site:jobs.ethz.ch ("PhD" OR "Postdoc") ("robotics" OR "learning" OR "vision")', "ETH Zürich"),
-        ('site:epfl.ch/about/working ("PhD" OR "Postdoc") ("robotics" OR "learning")', "EPFL"),
-        ('site:tum.de/jobs ("Doktorand" OR "PhD" OR "Postdoc") ("robotics" OR "autonome")', "TUM"),
-        ('site:ox.ac.uk ("DPhil" OR "Postdoctoral") ("robotics" OR "computer vision" OR "engineering")', "Oxford"),
-        ('site:cam.ac.uk/jobs ("PhD" OR "Research Associate") ("robotics" OR "information engineering")', "Cambridge"),
-        ('site:imperial.ac.uk/jobs ("PhD" OR "Research Associate") ("robotics" OR "computing")', "Imperial College"),
-        ('site:tudelft.nl/vacatures ("PhD" OR "Postdoc") ("robotics" OR "cognitive robotics")', "TU Delft"),
-        ('site:inria.fr/en/job-offers ("PhD" OR "Postdoc") ("robotics" OR "perception")', "Inria"),
-        ('site:is.mpg.de/jobs ("PhD" OR "Postdoc") ("robotics" OR "learning" OR "embodied")', "MPI for Intelligent Systems"),
-        ('site:ri.cmu.edu ("PhD" OR "Postdoc") ("manipulation" OR "robot learning")', "CMU Robotics Institute"),
-        ('site:csail.mit.edu ("Postdoc" OR "Fellow") ("robotics" OR "embodied")', "MIT CSAIL"),
-        ('site:bair.berkeley.edu ("Postdoc" OR "Fellow") ("robotics" OR "learning")', "UC Berkeley BAIR"),
-        ('site:kaist.ac.kr ("PhD" OR "Postdoc") ("robotics" OR "computer vision")', "KAIST"),
-        ('site:nus.edu.sg ("PhD" OR "Research Fellow") ("robotics" OR "computer vision")', "NUS"),
-        ('site:mbzuai.ac.ae ("PhD" OR "Postdoc") ("robotics" OR "computer vision")', "MBZUAI")
-    ]
-    for q, inst in direct_targets:
-        queries.append({"query": q, "source_type": "official_university", "label": f"Direct: {inst}"})
-
-    # 4. Publicly indexed LinkedIn job postings (strictly public search results)
-    linkedin_topics = [
-        "World Models", "Vision-Language-Action", "Embodied AI", "Physical AI", "Robot Learning", "Agentic Robotics"
-    ]
-    for topic in linkedin_topics:
-        q = f'site:linkedin.com/jobs/view ("PhD" OR "postdoctoral" OR "research fellow") "{topic}" robotics'
-        queries.append({"query": q, "source_type": "linkedin", "label": f"LinkedIn Public: {topic}"})
-
     return queries[:max_queries]
+
+def fetch_curated_labs(client: httpx.Client) -> List[DiscoveredItem]:
+    """Fetch verified academic research lab recruiting portals."""
+    items = []
+    for lab in CURATED_LAB_TARGETS:
+        try:
+            resp = client.get(lab["url"], timeout=10.0)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                text = soup.get_text(separator=" ", strip=True)
+                items.append(DiscoveredItem(
+                    title=lab["title"],
+                    url=lab["url"],
+                    source_name=lab["source_name"],
+                    source_type="official_university",
+                    snippet=text[:1500],
+                    raw_html=resp.text
+                ))
+        except Exception:
+            pass
+    return items
 
 def fetch_rss_feed(client: httpx.Client, feed_meta: Dict[str, str]) -> List[DiscoveredItem]:
     """Fetch and parse public RSS/ATOM academic feeds."""
@@ -120,7 +143,7 @@ def fetch_rss_feed(client: httpx.Client, feed_meta: Dict[str, str]) -> List[Disc
                     source_type=feed_meta["type"],
                     snippet=clean_text(desc)[:400]
                 ))
-    except Exception as e:
+    except Exception:
         # Graceful degradation on network/feed failure
         pass
     return items
@@ -140,15 +163,16 @@ def search_duckduckgo_public(client: httpx.Client, query: str, max_results: int 
         soup = BeautifulSoup(resp.text, "html.parser")
         results = soup.select(".result")
         for res in results[:max_results]:
-            link_tag = res.select_one(".result__url") or res.select_one(".result__title a")
-            title_tag = res.select_one(".result__title")
+            if res.select_one(".no-results"):
+                continue
+            link_tag = res.select_one(".result__url") or res.select_one(".result__title a") or res.select_one(".result__a")
+            title_tag = res.select_one(".result__title") or res.select_one(".result__a")
             snippet_tag = res.select_one(".result__snippet")
             
             if not title_tag or not link_tag:
                 continue
             
             raw_href = link_tag.get("href", "")
-            # DuckDuckGo wraps URLs in /l/?uddg=...
             target_url = extract_ddg_url(raw_href)
             if not target_url:
                 continue
@@ -168,12 +192,11 @@ def search_duckduckgo_public(client: httpx.Client, query: str, max_results: int 
             items.append(DiscoveredItem(
                 title=title,
                 url=target_url,
-                source_name="DuckDuckGo Public Search",
+                source_name="Public Academic Search",
                 source_type=source_type,
                 snippet=snippet
             ))
     except Exception:
-        # Fall through on error; never block execution
         pass
     return items
 
@@ -197,26 +220,33 @@ def clean_text(text: str) -> str:
 def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) -> List[DiscoveredItem]:
     """
     Main discovery orchestrator.
-    Gathers items across academic feeds and polite search discovery.
+    Gathers items across curated lab targets, academic feeds, and public search.
     """
     discovered = []
     seen_urls = set()
     
     with httpx.Client(headers=DEFAULT_HEADERS, follow_redirects=True) as client:
-        # 1. Fetch academic RSS feeds
+        # 1. Fetch curated research lab targets
+        lab_items = fetch_curated_labs(client)
+        for it in lab_items:
+            if it.url not in seen_urls:
+                seen_urls.add(it.url)
+                discovered.append(it)
+
+        # 2. Fetch academic RSS feeds
         for feed in ACADEMIC_FEEDS:
             feed_items = fetch_rss_feed(client, feed)
             for it in feed_items:
                 if it.url not in seen_urls:
                     seen_urls.add(it.url)
                     discovered.append(it)
-            time.sleep(0.5)
+            time.sleep(0.3)
 
-        # 2. Run query combinations
+        # 3. Run query combinations
         queries = generate_search_queries(max_queries=max_queries)
         for q_meta in queries:
             q = q_meta["query"]
-            q_items = search_duckduckgo_public(client, q, max_results=4)
+            q_items = search_duckduckgo_public(client, q, max_results=3)
             for it in q_items:
                 if it.url not in seen_urls:
                     seen_urls.add(it.url)

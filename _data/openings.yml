@@ -10,7 +10,307 @@
 #  Update openings: python scripts/manage.py openings run
 # ==========================================================================
 
-last_updated: '2026-10-01T23:20:50.597610+00:00'
+last_updated: '2026-10-01T23:40:44.572054+00:00'
 last_updated_human: 2 October 2026
-total_count: 0
-openings: []
+total_count: 7
+openings:
+  - id: ellis-institute-finland-tampere-university-phd-postd
+    title: 'PhD & Postdoc Positions in Embodied AI and Robot Learning'
+    position_type: PhD
+    institution: 'ELLIS Institute Finland & Tampere University'
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Finland
+    region: Europe
+    research_topics:
+      - Embodied AI
+      - Robot Learning
+      - Agentic Robotics
+      - Computer Vision
+      - Multimodal Learning
+      - Foundation Models
+    description: >-
+      open positions | Hao Dong Hao Dong Toggle navigation about open positions (current) publications group teaching ctrl k open positions I am actively looking for motivated candidates to join my research group at ELLIS Institute Finland and Tampere University for Fall 2026 / Spring 2027 . We build the next generation of reliable and trustworthy machine learning systems. Our group focuses on multimodal learning, generative AI, and vision-language models, with a specific emphasis on how foundation models and agentic systems can safely adapt and generalize to new environments . Our ultimate goal is to enable the safe and reliable deployment of intelligent systems across critical domains, including robotics, autonomous driving, healthcare, and industrial monitoring. PhD Positions I am recruiting 2-3 PhD students with a strong background in machine learning, computer vision, or related areas. Ideal candidates should have: A Master’s degree (or equivalent) in Computer Science, Electrical Engineering,
+      Mathematics, or a related field Strong programming skills, particularly in Python and PyTorch, with hands-on experience in deep learning A good command of English (written and spoken, at least IELTS 6.5 or equivalent) Motivation for independent research and publishing at top venues The positions are typically 4 years in duration and are fully funded, along with comprehensive benefits in accordance with Tampere University policies and the Finnish social security system. Eligible group memb
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - Embodied AI
+        - Robot Learning
+        - Agentic Robotics
+        - Computer Vision
+        - Multimodal Learning
+        - Foundation Models
+      technical_alignment: Focuses directly on Embodied AI, Robot Learning and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: ELLIS Institute Finland / Tampere University
+    source_url: 'https://donghao51.github.io/open-positions'
+    application_url: 'https://donghao51.github.io/open-positions/'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from ELLIS Institute Finland / Tampere University
+  - id: university-of-zurich-phd-postdoctoral-fellowships-in
+    title: 'PhD & Postdoctoral Fellowships in Machine Learning and Robotics'
+    position_type: PhD
+    institution: University of Zurich
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Switzerland
+    region: Europe
+    research_topics:
+      - World Models
+      - Robot Learning
+      - Computer Vision
+    description: "Open Positions Breadcrumb University of\r\n\t\t\t\t\t\t\tZurich Department of Informatics Robotics and Perception Group Department of Informatics Main navigation Department of Informatics - Institute of Neuroinformatics - Robotics and Perception Group News People Research Publications Software/Datasets Open Positions Student Projects Teaching Media Coverage Awards Gallery Contact We are hiring multiple talented PhD and Postdocs in AI! Be part of where breakthroughs really happen! Are you ready to take your research career to the next level? We are seeking highly motivated PhD students and postdoctoral researchers to join our lab and make a significant impact on real-world challenges! \r\n\t\t\t\t  Our researchers have earned numerous prestigious awards, and our alumni have gone on to lead teams at top-tier companies, become professors, and establish successful startups. \r\n\t\t\t\t  Our work has received global recognition, with coverage in The Guardian, The New York Times,\
+      \ Forbes, The Economist, and BBC, highlighting achievements such as outperforming world champion drone racing pilots and advancing high-speed navigation with event cameras. \r\n\t\t\t\t  If you're passionate about advancing research, technology, and innovation, apply now to join a team that is shaping the future. The mission of the Robotics and Perception Group is to research the fundamental challenges of robotics and computer vision that will benefit all of humanity, \r\n\t\t\t\t  and we want people with diverse perspectives and backgroun"
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - World Models
+        - Robot Learning
+        - Computer Vision
+      technical_alignment: Focuses directly on World Models, Robot Learning and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: University of Zurich (RPG Lab)
+    source_url: 'https://rpg.ifi.uzh.ch/positions.html'
+    application_url: 'https://rpg.ifi.uzh.ch/positions.html'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from University of Zurich (RPG Lab)
+  - id: national-university-of-singapore-nus-phd-postdoc-pos
+    title: 'PhD & Postdoc Positions in Embodied Minds and Agents'
+    position_type: PhD
+    institution: National University of Singapore (NUS)
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Singapore
+    region: Asia-Pacific
+    research_topics:
+      - World Models
+      - Vision-Language-Action Models
+      - Embodied AI
+      - Robot Learning
+      - Computer Vision
+      - Multimodal Learning
+    description: >-
+      Home – LEMA Lab LEMA Lab Research Publications Members Openings Contact Home Learning for Embodied Minds and Agents at the National University of Singapore. L E M A Lab i Name note Discover The Principles Of Intelligence; Embrace The Joy Of Research. Pronounced “lemma” in English, our lab is committed to discovering simple and scalable principles behind embodied intelligence, with as little manual effort as possible. Read as “乐马” in Mandarin, our lab was born in the Year of the Horse (马), dedicated to fostering the joy (乐) of learning, exploration, and growth in every lab member. L earning for E mbodied M inds and A gents Welcome to the LEMA Lab in the Department of Computer Science at the National University of Singapore. We are a collaborative group of researchers working to build intelligent agents that can perceive, reason, and act in the physical world. Our research bridges machine learning, computer vision, and robotics, with a focus on learning agents that can generalize from
+      limited data, adapt during deployment, remember what matters, and improve through experience. Open Positions We welcome PhD students, postdoctoral researchers, and visiting students interested in building the next generation of embodied agents, with research directions including robot learning, world models, multimodal agents, data curation, and recursive self-improvement. Join Us 3 PhD Openings Apply by Dec 15 Research Directions We study how embodied agents can learn from interaction, reason abo
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - World Models
+        - Vision-Language-Action Models
+        - Embodied AI
+        - Robot Learning
+        - Computer Vision
+        - Multimodal Learning
+      technical_alignment: Focuses directly on World Models, Vision-Language-Action Models and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: National University of Singapore (LEMA Lab)
+    source_url: 'https://lema-nus.github.io/'
+    application_url: 'https://lema-nus.github.io/'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from National University of Singapore (LEMA Lab)
+  - id: mbzuai-phd-postdoctoral-positions-in-computer-vision
+    title: 'PhD & Postdoctoral Positions in Computer Vision and Visual Intelligence'
+    position_type: PhD
+    institution: MBZUAI
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: UAE
+    region: Middle East
+    research_topics:
+      - Computer Vision
+    description: >-
+      Open Positions Search this site Embedded Files Skip to main content Skip to navigation Home Publications Patents Team Open Positions Contact Home Publications Patents Team Open Positions Contact More Home Publications Patents Team Open Positions Contact Open Positios I'm looking for Post-docs to work with me on different computer vision problems. Candidates with PhD degree and prior publications (preferably first author papers in ICCV/CVPR/ICLR/ECCV/NeurIPS) should only apply. Please check my recent works to get an idea of my current research focus areas. Please contact me by sending your CV via email, if you have interest. PhD P ositions . Currently, I do not have any PhD positions. Google Sites Report abuse Google Sites Report abuse
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Computer Vision
+      technical_alignment: Touches related methods in Computer Vision.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: MBZUAI Vision Lab
+    source_url: 'https://sites.google.com/view/fahadkhans/open-positions'
+    application_url: 'https://sites.google.com/view/fahadkhans/open-positions'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from MBZUAI Vision Lab
+  - id: university-of-southern-california-phd-postdoctoral-p
+    title: 'PhD & Postdoctoral Positions in 3D Computer Vision and Robot Perception'
+    position_type: PhD
+    institution: University of Southern California
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: USA
+    region: USA
+    research_topics:
+      - Computer Vision
+    description: >-
+      Position – USC Iris Computer Vision Lab Log In Search Skip to content USC Website Toggle search interface Search Search Site Close search interface Menu Toggle extended navigation USC Iris Computer Vision Lab Home Research Publication Toggle "Publication" dropdown 2018 2017 2016 2015 2014 2013 2012 2011 2010 People Position Courses Contact More Menu Toggle extended navigation Home Position Position For PhD Applicants We are currently looking for strong, motivated PhD students. If you are interested, Please feel free to email Prof. Ram Nevatia. Please include your CV, transcripts, and a brief statement of interest. Due to the large volume of applications, we may not respond each applications individually. For Master/Undergraduate students at USC We occasionally involve UG and MS students in our lab but have no openings at this time. We will update the announcement when the situation changes. University of Southern California Privacy Notice Notice of Non-Discrimination Digital Accessibility
+      close menu Search Search Site Home Research Publication Toggle "Publication" submenu 2018 2017 2016 2015 2014 2013 2012 2011 2010 People Position Courses Contact
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Computer Vision
+      technical_alignment: Touches related methods in Computer Vision.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: USC Iris Computer Vision Lab
+    source_url: 'https://sites.usc.edu/iris-cvlab/position'
+    application_url: 'https://sites.usc.edu/iris-cvlab/position/'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from USC Iris Computer Vision Lab
+  - id: epfl-phd-postdoctoral-research-positions-in-robot-le
+    title: 'PhD & Postdoctoral Research Positions in Robot Learning'
+    position_type: PhD
+    institution: EPFL
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Switzerland
+    region: Europe
+    research_topics:
+      - Robot Learning
+    description: >-
+      SPRING - Open Positions Team Members Research Areas Publications Research Projects Software Open Positions Student Projects Open Positions Semester and Master’s Projects If you are an EPFL student looking for a semester project or an MS thesis project, please refer to this page . Prospective PhD Students EPFL has an excellent doctoral program in computer science, called EDIC. The department collates and manage all admissions. Please refer to the EDIC website for details. If you are especially interested in working in our group, please contact Carmela Troncoso in which you explain and develop your interest. Please attach your CV and research statement. Prospective Postdocs We have two postdoc openings: Postdoc on Applied Cryptography Postdoc on Machine Learning Contact Carmela Troncoso for more information. Summer@EPFL Internships We are always looking for outstanding BS and MS students to do research on privacy over the summer. If you want to participate please look at the program
+      of the EPFL School of Computer and Communication Sciences called Summer@EPFL and submit your application. © 2026 SPRING Lab, all rights reserved
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: EPFL SPRING Lab
+    source_url: 'https://spring.epfl.ch/open_positions.html'
+    application_url: 'https://spring.epfl.ch/open_positions.html'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from EPFL SPRING Lab
+  - id: university-research-institute-phd-position-in-roboti
+    title: PhD Position in Robotics and Blockchain Technology (IE University, Madrid)
+    position_type: PhD
+    institution: University / Research Institute
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Spain
+    region: Europe
+    research_topics:
+      - Autonomous Systems
+    description: >-
+      DESCRIPTION Are you passionate about robotics, and the future of autonomous systems? The Cyber-Physical Life research group ( https://cyphy.life ) at the IE School of Science and Technology, IE University (Madrid, Spain), is inviting applications for a fully funded 4-year PhD position. This is a unique opportunity to pursue cutting-edge research at the intersection of robotics, blockchain-based to
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Autonomous Systems
+      technical_alignment: Touches related methods in Autonomous Systems.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: OpenRobotics ROS Discourse
+    source_url: 'https://discourse.openrobotics.org/t/phd-position-in-robotics-and-blockchain-technology-ie-university-madrid/55272'
+    first_seen: '2026-10-02'
+    last_seen: '2026-10-02'
+    last_verified: '2026-10-02'
+    history:
+      - date: '2026-10-02'
+        event: Discovered from OpenRobotics ROS Discourse

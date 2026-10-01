@@ -36,11 +36,21 @@ INSTITUTION_DOMAIN_MAP = {
     "ntu.edu.sg": ("Nanyang Technological University", "Singapore"),
     "u-tokyo.ac.jp": ("University of Tokyo", "Japan"),
     "mbzuai.ac.ae": ("MBZUAI", "UAE"),
-    "kaust.edu.sa": ("KAUST", "Saudi Arabia")
+    "kaust.edu.sa": ("KAUST", "Saudi Arabia"),
+    "uzh.ch": ("University of Zurich", "Switzerland"),
+    "bristol.ac.uk": ("University of Bristol", "UK"),
+    "usc.edu": ("University of Southern California", "USA"),
+    "kuleuven.be": ("KU Leuven", "Belgium"),
+    "donghao51.github.io": ("ELLIS Institute Finland & Tampere University", "Finland"),
+    "lema-nus.github.io": ("National University of Singapore (NUS)", "Singapore"),
+    "rpg.ifi.uzh.ch": ("University of Zurich", "Switzerland"),
+    "spring.epfl.ch": ("EPFL", "Switzerland"),
+    "sites.google.com/view/fahadkhans": ("MBZUAI", "UAE"),
+    "sites.usc.edu/iris-cvlab": ("USC Iris CV Lab", "USA")
 }
 
-def detect_position_type(text: str) -> str:
-    """Classify position role from title or text."""
+def detect_position_type(text: str) -> Optional[str]:
+    """Classify position role from title or text. Returns None if not an academic research role."""
     lower = text.lower()
     if "dphil" in lower:
         return "DPhil"
@@ -60,21 +70,28 @@ def detect_position_type(text: str) -> str:
         return "Research Fellow"
     if "research associate" in lower:
         return "Research Associate"
-    return "PhD"
+    if "graduate student" in lower or "studentship" in lower or "fellowship" in lower:
+        return "PhD"
+    return None
 
 def detect_institution_and_location(url: str, text: str) -> Tuple[str, str, str]:
     """Extract institution, city, and country deterministically."""
-    # Check domain
+    # 1. Check domain first
+    url_lower = url.lower()
     for domain, (inst, country) in INSTITUTION_DOMAIN_MAP.items():
-        if domain in url.lower():
+        if domain in url_lower:
             return inst, "Not specified", country
 
-    # Check text for major institutions
+    # 2. Check text for major institutions using word boundaries (prevent "submit" matching "MIT")
     for domain, (inst, country) in INSTITUTION_DOMAIN_MAP.items():
-        if inst.lower() in text.lower():
+        if len(inst) <= 4:
+            pattern = rf'\b{re.escape(inst)}\b'
+        else:
+            pattern = rf'(?i)\b{re.escape(inst)}\b'
+        if re.search(pattern, text):
             return inst, "Not specified", country
 
-    # Fallback to country detection
+    # 3. Fallback to country detection
     detected_country = "Not specified"
     for country in COUNTRY_TO_REGION.keys():
         if re.search(rf'\b{re.escape(country)}\b', text, re.IGNORECASE):
@@ -183,6 +200,11 @@ def extract_from_discovered(item: DiscoveredItem, llm_provider: Optional[LLMProv
 
     combined_text = f"{item.title}\n{item.snippet or ''}\n{page_text}"
     pos_type = detect_position_type(item.title + " " + (item.snippet or "") + " " + page_text[:400])
+    if not pos_type:
+        if item.source_type == "official_university":
+            pos_type = "PhD"
+        else:
+            return None
     inst, city, country = detect_institution_and_location(item.url, combined_text)
     deadline_iso, deadline_human = extract_deadline(combined_text)
 
