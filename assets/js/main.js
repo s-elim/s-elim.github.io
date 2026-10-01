@@ -1965,6 +1965,208 @@
           target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
         }, 60);
       }
+  }
+
+  /* ---- PhD & Postdoc Openings ----------------------------------------- */
+  function initOpeningsTracker() {
+    var grid = document.getElementById("openings-grid");
+    if (!grid) return;
+
+    var section = document.getElementById("openings");
+    var cards = Array.prototype.slice.call(grid.querySelectorAll(".op-card"));
+    var searchInput = document.getElementById("openings-search");
+    var emptyMsg = document.getElementById("openings-empty");
+    var countEl = document.getElementById("openings-count");
+    var staleMsg = document.getElementById("openings-stale-msg");
+
+    // Check data staleness (older than 14 days)
+    if (section && staleMsg) {
+      var lastUpdatedStr = section.getAttribute("data-last-updated");
+      if (lastUpdatedStr) {
+        var updatedDate = new Date(lastUpdatedStr);
+        if (!isNaN(updatedDate.getTime())) {
+          var diffDays = (new Date().getTime() - updatedDate.getTime()) / (1000 * 3600 * 24);
+          if (diffDays > 14) {
+            staleMsg.hidden = false;
+          }
+        }
+      }
+    }
+
+    if (!cards.length) {
+      if (emptyMsg) emptyMsg.hidden = false;
+      if (countEl) countEl.textContent = "0 positions";
+      return;
+    }
+
+    var models = cards.map(function (card) {
+      return {
+        id: card.getAttribute("data-id") || "",
+        card: card,
+        pos: card.getAttribute("data-pos") || "",
+        region: card.getAttribute("data-region") || "",
+        country: card.getAttribute("data-country") || "",
+        status: card.getAttribute("data-status") || "",
+        relevance: card.getAttribute("data-relevance") || "",
+        institution: (card.getAttribute("data-institution") || "").toLowerCase(),
+        deadline: card.getAttribute("data-deadline") || "9999-12-31",
+        firstSeen: card.getAttribute("data-first-seen") || "",
+        lastVerified: card.getAttribute("data-last-verified") || "",
+        search: (card.getAttribute("data-search") || "").toLowerCase()
+      };
+    });
+
+    var byId = {};
+    models.forEach(function (m) { byId[m.id] = m; });
+
+    var state = {
+      pos: "all",
+      region: "all",
+      relevance: "all",
+      status: "all",
+      query: "",
+      sort: "newest"
+    };
+
+    var relRanks = {
+      "Highly Relevant": 3,
+      "Relevant": 2,
+      "Potentially Relevant": 1
+    };
+
+    function matches(m) {
+      return (state.pos === "all" || m.pos === state.pos) &&
+             (state.region === "all" || m.region === state.region) &&
+             (state.relevance === "all" || m.relevance === state.relevance) &&
+             (state.status === "all" || m.status === state.status) &&
+             (!state.query || m.search.indexOf(state.query) !== -1);
+    }
+
+    function resort() {
+      var ordered = models.slice().sort(function (a, b) {
+        if (state.sort === "deadline") {
+          return a.deadline.localeCompare(b.deadline) || b.firstSeen.localeCompare(a.firstSeen);
+        }
+        if (state.sort === "relevance") {
+          var ra = relRanks[a.relevance] || 0, rb = relRanks[b.relevance] || 0;
+          return rb - ra || a.deadline.localeCompare(b.deadline);
+        }
+        if (state.sort === "institution") {
+          return a.institution.localeCompare(b.institution);
+        }
+        if (state.sort === "position") {
+          return a.pos.localeCompare(b.pos);
+        }
+        return b.firstSeen.localeCompare(a.firstSeen) || a.deadline.localeCompare(b.deadline);
+      });
+      var frag = document.createDocumentFragment();
+      ordered.forEach(function (m) { frag.appendChild(m.card); });
+      grid.appendChild(frag);
+    }
+
+    function apply() {
+      var visible = 0;
+      models.forEach(function (m) {
+        var show = matches(m);
+        m.visible = show;
+        m.card.classList.toggle("is-hidden", !show);
+        if (show) visible++;
+      });
+      resort();
+      if (emptyMsg) emptyMsg.hidden = visible > 0;
+      if (countEl) {
+        countEl.textContent = visible === models.length
+          ? models.length + (models.length === 1 ? " position" : " positions")
+          : visible + " of " + models.length + " positions";
+      }
+    }
+
+    // Filter pills (position types)
+    document.querySelectorAll(".dl-pill[data-op-filter]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-pill[data-op-filter]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.pos = btn.getAttribute("data-op-filter");
+        apply();
+      });
+    });
+
+    // Segmented controls: Region
+    document.querySelectorAll(".dl-seg[data-op-region]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-op-region]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.region = btn.getAttribute("data-op-region");
+        apply();
+      });
+    });
+
+    // Segmented controls: Relevance
+    document.querySelectorAll(".dl-seg[data-op-relevance]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-op-relevance]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.relevance = btn.getAttribute("data-op-relevance");
+        apply();
+      });
+    });
+
+    // Segmented controls: Status
+    document.querySelectorAll(".dl-seg[data-op-status]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-op-status]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.status = btn.getAttribute("data-op-status");
+        apply();
+      });
+    });
+
+    // Segmented controls: Sort
+    document.querySelectorAll(".dl-seg[data-op-sort]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-op-sort]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.sort = btn.getAttribute("data-op-sort");
+        apply();
+      });
+    });
+
+    // Search input
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        state.query = (searchInput.value || "").trim().toLowerCase();
+        apply();
+      });
+    }
+
+    // Expandable details handling
+    grid.addEventListener("click", function (e) {
+      var more = e.target.closest(".js-op-more");
+      if (more) {
+        var pnl = document.getElementById(more.getAttribute("aria-controls"));
+        if (!pnl) return;
+        var open = more.getAttribute("aria-expanded") === "true";
+        more.setAttribute("aria-expanded", String(!open));
+        pnl.hidden = open;
+      }
+    });
+
+    apply();
+
+    // Deep link support: #opening-<id>
+    var hash = window.location.hash || "";
+    if (hash.indexOf("#opening-") === 0) {
+      var wanted = hash.slice(9);
+      var m = byId[wanted];
+      if (m) {
+        var moreBtn = m.card.querySelector(".js-op-more");
+        var details = m.card.querySelector(".op-card__details");
+        if (moreBtn && details && details.hidden) {
+          moreBtn.setAttribute("aria-expanded", "true");
+          details.hidden = false;
+        }
+        m.card.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
+      }
     }
   }
 
@@ -3341,6 +3543,7 @@
     safe(initJournalExplorer);
     safe(initResearchIdeas);
     safe(initLinkLibrary);
+    safe(initOpeningsTracker);
     safe(initResearchMap);
     safe(initRankings);
     safe(initPalette);

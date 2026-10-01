@@ -1,0 +1,74 @@
+# ==============================================================================
+#  Research Profile Matching Configuration
+#  Used by classifier.py to determine alignment and relevance categories.
+#  Internal configuration - NOT exposed directly on the public website.
+# ==============================================================================
+
+research_focus:
+  primary_topics:
+    - name: "World Models"
+      keywords: ["world model", "world models", "latent dynamics", "action-conditioned dynamics", "video world model", "predictive model"]
+      weight: 1.0
+    - name: "Vision-Language-Action Models"
+      keywords: ["vla", "vision-language-action", "openvla", "rt-1", "rt-2", "octo", "embodied vlm"]
+      weight: 1.0
+    - name: "Embodied AI"
+      keywords: ["embodied ai", "physical ai", "embodied intelligence", "physical agent"]
+      weight: 0.95
+    - name: "Physical AI"
+      keywords: ["physical ai", "physical super intelligence", "contact dynamics", "sim-to-real", "real-world robot"]
+      weight: 0.95
+    - name: "Robot Learning"
+      keywords: ["robot learning", "robot manipulation", "policy learning", "imitation learning", "behavior cloning", "offline rl"]
+      weight: 0.9
+    - name: "Agentic Robotics"
+      keywords: ["agentic robotics", "agentic", "tool use", "latent lookahead", "hierarchical planning", "reasoning-aligned"]
+      weight: 0.9
+
+  secondary_topics:
+    - name: "3D Vision"
+      keywords: ["3d vision", "gaussian splatting", "3d gaussian", "point cloud", "depth estimation", "rgb-d"]
+      weight: 0.7
+    - name: "Spatial Reasoning"
+      keywords: ["spatial reasoning", "spatial intelligence", "spatial tokens", "geometric reasoning"]
+      weight: 0.7
+    - name: "6D Pose Estimation"
+      keywords: ["6d pose", "6dof pose", "pose estimation", "object pose", "category-level pose"]
+      weight: 0.75
+    - name: "Computer Vision"
+      keywords: ["computer vision", "visual perception", "representation learning", "vision foundation model"]
+      weight: 0.5
+    - name: "Multimodal Learning"
+      keywords: ["multimodal learning", "multimodal", "vision language model", "vlm", "cross-modal"]
+      weight: 0.6
+    - name: "Foundation Models"
+      keywords: ["foundation model", "foundation models", "large vision model", "generalist agent"]
+      weight: 0.6
+    - name: "Test-Time Adaptation"
+      keywords: ["test-time adaptation", "tta", "test-time compute", "distribution shift", "out-of-distribution"]
+      weight: 0.7
+    - name: "Efficient Post-Training"
+      keywords: ["efficient post-training", "distillation", "quantization", "jetson", "edge deployment", "fine-tuning"]
+      weight: 0.65
+    - name: "Manipulation"
+      keywords: ["dexterous manipulation", "grasping", "mobile manipulation", "robotic arm", "gripper"]
+      weight: 0.8
+    - name: "Autonomous Systems"
+      keywords: ["autonomous mobile robot", "amr", "autonomous systems", "mobile robotics"]
+      weight: 0.6
+
+candidate_profile:
+  degree_held: "M.Sc. in Electronics Engineering (AI and Computer Vision)"
+  specialization: "3D Computer Vision, World Models, VLA models for manipulation"
+  programming: ["Python", "PyTorch", "ROS 2", "Isaac Lab", "Linux"]
+  target_roles:
+    - "PhD"
+    - "Doctoral Researcher"
+    - "DPhil"
+    - "Postdoc"
+    - "Postdoctoral Researcher"
+    - "Postdoctoral Fellow"
+    - "Research Scientist"
+    - "Research Engineer"
+    - "Research Fellow"
+    - "Research Associate"

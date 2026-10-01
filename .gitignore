@@ -1,6 +1,15 @@
 _site/
 
-
 # stray page captures from live verification
 live*.html
 __pycache__/
+*.pyc
+
+# Local crawler database, caches, and secrets
+scripts/openings/data/
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+crawl_logs/

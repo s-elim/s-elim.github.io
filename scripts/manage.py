@@ -11,6 +11,9 @@ import yaml
 
 # Path setup
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, SCRIPTS_DIR)
 DATA_DIR = os.path.join(BASE_DIR, '_data')
 
 # Custom YAML Dumper to preserve list indentation and single quotes for HTML
@@ -739,6 +742,13 @@ def main():
 
     subparsers.add_parser('add-link', help="Add a single link to the library")
 
+    # Openings command
+    parser_openings = subparsers.add_parser('openings', help="Manage PhD & Postdoc openings discovery and build")
+    parser_openings.add_argument('action', nargs='?', default='run', choices=['run', 'discover', 'build'],
+                                 help="Pipeline action to run (default: run)")
+    parser_openings.add_argument('--dry-run', action='store_true', help="Preview discovered openings without writing")
+    parser_openings.add_argument('--max-queries', type=int, default=15, help="Maximum search queries to issue")
+
     # Serve command
     subparsers.add_parser('serve', help="Run the local Jekyll dev server")
 
@@ -756,6 +766,15 @@ def main():
         import_bookmarks(args.file, fallback=args.group, dry_run=args.dry_run)
     elif args.command == 'add-link':
         add_link_interactive()
+    elif args.command == 'openings':
+        from openings.pipeline import run_openings_pipeline, export_to_yaml
+        from openings.storage import get_connection, load_all_openings_from_db
+        if args.action == 'build':
+            conn = get_connection()
+            all_ops = load_all_openings_from_db(conn)
+            export_to_yaml(all_ops)
+        else:
+            run_openings_pipeline(dry_run=args.dry_run, max_queries=args.max_queries)
     elif args.command == 'serve':
         run_server()
     else:

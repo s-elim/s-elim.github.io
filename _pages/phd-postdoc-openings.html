@@ -1,0 +1,295 @@
+---
+layout: archive
+title: "PhD & Postdoc Openings"
+permalink: /phd-postdoc-openings/
+wide: true
+subtitle: 'Research positions discovered across universities, research institutes, laboratories, and public academic sources. <span class="openings__count" id="openings-count"></span>'
+description: "An automatically updated collection of PhD, postdoctoral, and research positions relevant to my research interests, gathered from universities, research institutes, laboratories, and public academic sources."
+---
+
+{% assign data = site.data.openings %}
+{% assign ops = data.openings | default: empty_array %}
+{% assign total = ops | size %}
+{% assign n_open = ops | where: "status", "Open" | size %}
+{% assign n_new = ops | where: "status", "New" | size %}
+{% assign n_relevant = ops | where: "relevance", "Highly Relevant" | size %}
+{% assign n_closing = ops | where: "status", "Closing Soon" | size %}
+
+{% comment %} Calculate unique country count via Liquid {% endcomment %}
+{% assign countries = "" | split: "" %}
+{% for op in ops %}
+  {% if op.country and op.country != "" and op.country != "Not specified" %}
+    {% unless countries contains op.country %}
+      {% assign countries = countries | push: op.country %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+{% assign n_countries = countries | size %}
+
+<div class="stat-row reveal" id="openings-stats" aria-label="Openings overview statistics">
+  <div class="stat"><div class="stat__num" id="stat-total">{{ total }}</div><div class="stat__label">Openings Tracked</div></div>
+  <div class="stat stat--research"><div class="stat__num" id="stat-new">{{ n_new }}</div><div class="stat__label">New Positions</div></div>
+  <div class="stat stat--industry"><div class="stat__num" id="stat-relevant">{{ n_relevant }}</div><div class="stat__label">Highly Relevant</div></div>
+  <div class="stat stat--skills"><div class="stat__num" id="stat-closing">{{ n_closing }}</div><div class="stat__label">Closing Soon</div></div>
+  <div class="stat"><div class="stat__num" id="stat-countries">{{ n_countries }}</div><div class="stat__label">Countries</div></div>
+</div>
+
+<section class="openings reveal" id="openings" aria-label="PhD and Postdoc Openings directory" data-last-updated="{{ data.last_updated }}">
+
+  <div class="openings__status-strip">
+    <div class="openings__sync-info">
+      <i class="fas fa-clock" aria-hidden="true"></i>
+      <span>Last updated: <strong>{{ data.last_updated_human | default: data.last_updated }}</strong></span>
+      <span class="openings__verified-badge">Automated tracking</span>
+    </div>
+    <div class="openings__stale-warning" id="openings-stale-msg" hidden>
+      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+      <span>Data may be outdated. Verify the position directly on the official source.</span>
+    </div>
+  </div>
+
+  <div class="openings__toolbar">
+    <div class="openings__filters" role="group" aria-label="Filter by position type">
+      <button type="button" class="dl-pill is-active" data-op-filter="all">
+        <span class="dl-pill__dot dl-pill__dot--all"></span> All Types <span class="dl-pill__count">{{ total }}</span>
+      </button>
+      {% assign pos_types = "PhD,Doctoral Researcher,DPhil,Postdoc,Research Scientist,Research Engineer,Research Fellow,Research Associate" | split: "," %}
+      {% for pt in pos_types %}
+        {% assign in_pt = ops | where: "position_type", pt | size %}
+        {% if in_pt > 0 %}
+        <button type="button" class="dl-pill" data-op-filter="{{ pt }}">
+          <span class="dl-pill__dot op-dot"></span> {{ pt }} <span class="dl-pill__count">{{ in_pt }}</span>
+        </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="openings__tools">
+      <label class="dl-search" for="openings-search">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="search" id="openings-search" placeholder="Search positions, universities, labs, research topics…" autocomplete="off" aria-label="Search positions, universities, labs, or topics">
+      </label>
+
+      <div class="dl-segment" role="group" aria-label="Filter by region">
+        <button type="button" class="dl-seg is-active" data-op-region="all">All regions</button>
+        <button type="button" class="dl-seg" data-op-region="Europe">Europe</button>
+        <button type="button" class="dl-seg" data-op-region="UK">UK</button>
+        <button type="button" class="dl-seg" data-op-region="USA">USA</button>
+        <button type="button" class="dl-seg" data-op-region="Canada">Canada</button>
+        <button type="button" class="dl-seg" data-op-region="Middle East">Middle East</button>
+        <button type="button" class="dl-seg" data-op-region="Asia-Pacific">Asia-Pacific</button>
+      </div>
+
+      <div class="dl-segment" role="group" aria-label="Filter by relevance">
+        <button type="button" class="dl-seg is-active" data-op-relevance="all">All relevance</button>
+        <button type="button" class="dl-seg" data-op-relevance="Highly Relevant">Highly Relevant</button>
+        <button type="button" class="dl-seg" data-op-relevance="Relevant">Relevant</button>
+        <button type="button" class="dl-seg" data-op-relevance="Potentially Relevant">Potentially Relevant</button>
+      </div>
+
+      <div class="dl-segment" role="group" aria-label="Filter by status">
+        <button type="button" class="dl-seg is-active" data-op-status="all">All status</button>
+        <button type="button" class="dl-seg" data-op-status="New">New</button>
+        <button type="button" class="dl-seg" data-op-status="Open">Open</button>
+        <button type="button" class="dl-seg" data-op-status="Closing Soon">Closing Soon</button>
+      </div>
+
+      <div class="dl-segment" role="group" aria-label="Sort openings">
+        <button type="button" class="dl-seg is-active" data-op-sort="newest">Newest</button>
+        <button type="button" class="dl-seg" data-op-sort="deadline">Deadline</button>
+        <button type="button" class="dl-seg" data-op-sort="relevance">Relevance</button>
+        <button type="button" class="dl-seg" data-op-sort="institution">Institution</button>
+        <button type="button" class="dl-seg" data-op-sort="position">Position Type</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="openings__grid" id="openings-grid">
+    {% for op in ops %}
+    {% capture hay %}{{ op.title }} {{ op.institution }} {{ op.department }} {{ op.lab }} {{ op.principal_investigator }} {{ op.country }} {{ op.city }} {{ op.region }} {{ op.position_type }} {{ op.research_topics | join: " " }} {{ op.description }} {{ op.status }} {{ op.relevance }}{% endcapture %}
+    <article class="op-card op-card--{{ op.status | slugify }} op-card--rel-{{ op.relevance | slugify }}"
+             id="opening-{{ op.id }}"
+             data-id="{{ op.id }}"
+             data-pos="{{ op.position_type | escape }}"
+             data-region="{{ op.region | escape }}"
+             data-country="{{ op.country | escape }}"
+             data-status="{{ op.status | escape }}"
+             data-relevance="{{ op.relevance | escape }}"
+             data-institution="{{ op.institution | escape }}"
+             data-deadline="{{ op.deadline | default: '9999-12-31' }}"
+             data-first-seen="{{ op.first_seen | default: '' }}"
+             data-last-verified="{{ op.last_verified | default: '' }}"
+             data-search="{{ hay | strip_newlines | escape }}">
+
+      <div class="op-card__glow" aria-hidden="true"></div>
+
+      <header class="op-card__head">
+        <div class="op-card__type-wrap">
+          <span class="op-card__type"><i class="fas fa-graduation-cap" aria-hidden="true"></i> {{ op.position_type }}</span>
+          {% if op.region %}
+          <span class="op-card__region">{{ op.region }}</span>
+          {% endif %}
+        </div>
+        <div class="op-card__badges">
+          {% if op.relevance == "Highly Relevant" %}
+          <span class="op-flame-badge" title="Top Research Match: Direct alignment with primary research priorities">
+            <i class="fas fa-fire" aria-hidden="true"></i> Top Match
+          </span>
+          {% endif %}
+          <span class="op-rel op-rel--{{ op.relevance | slugify }}">{{ op.relevance }}</span>
+          <span class="op-status op-status--{{ op.status | slugify }}">{{ op.status }}</span>
+        </div>
+      </header>
+
+      <h3 class="op-card__title">
+        {% if op.relevance == "Highly Relevant" %}
+        <span class="op-title-fire" title="Top Research Match" aria-hidden="true"><i class="fas fa-fire"></i></span>
+        {% endif %}
+        {{ op.title }}
+      </h3>
+
+      <div class="op-card__org">
+        <div class="op-card__institution">
+          <i class="fas fa-university" aria-hidden="true"></i>
+          <strong>{{ op.institution }}</strong>
+        </div>
+        <div class="op-card__place">
+          <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+          <span>{% if op.city and op.city != "Not specified" %}{{ op.city }}, {% endif %}{{ op.country }}</span>
+        </div>
+      </div>
+
+      {% if op.research_topics and op.research_topics.size > 0 %}
+      <div class="op-chips" aria-label="Research topics">
+        {% for tag in op.research_topics %}
+        <span class="op-chip"><i class="fas fa-tag" aria-hidden="true"></i> {{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="op-card__meta-bar">
+        <div class="op-meta-item op-meta-item--deadline">
+          <span class="op-meta-label">Deadline</span>
+          <span class="op-meta-val">
+            <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+            {% if op.deadline and op.deadline != "" %}
+              {{ op.deadline_human | default: op.deadline }}
+            {% else %}
+              Rolling / Open until filled
+            {% endif %}
+          </span>
+        </div>
+        {% if op.last_verified %}
+        <div class="op-meta-item">
+          <span class="op-meta-label">Verified</span>
+          <span class="op-meta-val">{{ op.last_verified }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <footer class="op-card__foot">
+        {% assign target_link = op.application_url | default: op.source_url %}
+        {% if target_link and target_link != "" %}
+        <a class="op-btn-apply" href="{{ target_link }}" target="_blank" rel="noopener" title="Open official application page">
+          <span>View Official Position</span> <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+        <button type="button" class="op-card__more js-op-more" aria-expanded="false" aria-controls="opening-{{ op.id }}-details">
+          <span>Details</span> <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+      </footer>
+
+      <div class="op-card__details" id="opening-{{ op.id }}-details" hidden>
+        {% if op.description and op.description != "" %}
+        <div class="op-block">
+          <h4 class="op-block__title"><i class="fas fa-align-left" aria-hidden="true"></i> Position Overview</h4>
+          <p>{{ op.description }}</p>
+        </div>
+        {% endif %}
+
+        {% if op.requirements and op.requirements.size > 0 %}
+        <div class="op-block">
+          <h4 class="op-block__title"><i class="fas fa-check-circle" aria-hidden="true"></i> Requirements</h4>
+          <ul class="op-list">
+            {% for req in op.requirements %}<li>{{ req }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if op.preferred_qualifications and op.preferred_qualifications.size > 0 %}
+        <div class="op-block">
+          <h4 class="op-block__title"><i class="fas fa-star" aria-hidden="true"></i> Preferred Qualifications</h4>
+          <ul class="op-list">
+            {% for pref in op.preferred_qualifications %}<li>{{ pref }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <div class="op-block">
+          <h4 class="op-block__title"><i class="fas fa-info-circle" aria-hidden="true"></i> Position Facts</h4>
+          <dl class="op-facts">
+            {% if op.lab and op.lab != "Not specified" %}
+            <div><dt>Laboratory</dt><dd>{{ op.lab }}</dd></div>
+            {% endif %}
+            {% if op.department and op.department != "Not specified" %}
+            <div><dt>Department</dt><dd>{{ op.department }}</dd></div>
+            {% endif %}
+            {% if op.principal_investigator and op.principal_investigator != "Not specified" %}
+            <div><dt>Principal Investigator</dt><dd>{{ op.principal_investigator }}</dd></div>
+            {% endif %}
+            {% if op.funding and op.funding != "Not specified" %}
+            <div><dt>Funding</dt><dd>{{ op.funding }}</dd></div>
+            {% endif %}
+            {% if op.salary and op.salary != "Not specified" %}
+            <div><dt>Compensation</dt><dd>{{ op.salary }}</dd></div>
+            {% endif %}
+            {% if op.start_date and op.start_date != "Not specified" %}
+            <div><dt>Start Date</dt><dd>{{ op.start_date }}</dd></div>
+            {% endif %}
+            {% if op.employment_type and op.employment_type != "Not specified" %}
+            <div><dt>Employment Type</dt><dd>{{ op.employment_type }}</dd></div>
+            {% endif %}
+            {% if op.source and op.source != "" %}
+            <div><dt>Source Aggregator</dt><dd>{{ op.source }}</dd></div>
+            {% endif %}
+          </dl>
+        </div>
+
+        {% if op.relevance_explanation %}
+        {% assign rel = op.relevance_explanation %}
+        <div class="op-block op-block--alignment">
+          <h4 class="op-block__title"><i class="fas fa-bullseye" aria-hidden="true"></i> Research Alignment</h4>
+          {% if rel.technical_alignment %}<p class="op-align-text"><strong>Technical:</strong> {{ rel.technical_alignment }}</p>{% endif %}
+          {% if rel.research_alignment %}<p class="op-align-text"><strong>Research Domain:</strong> {{ rel.research_alignment }}</p>{% endif %}
+          {% if rel.qualification_alignment %}<p class="op-align-text"><strong>Suitability:</strong> {{ rel.qualification_alignment }}</p>{% endif %}
+          {% if rel.potential_gaps and rel.potential_gaps != "None" and rel.potential_gaps != "" %}
+          <p class="op-align-text op-align-text--gap"><strong>Prerequisites / Gaps:</strong> {{ rel.potential_gaps }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if op.history and op.history.size > 0 %}
+        <div class="op-block">
+          <h4 class="op-block__title"><i class="fas fa-history" aria-hidden="true"></i> Tracking History</h4>
+          <ul class="op-history-list">
+            {% for h in op.history %}
+            <li><span class="op-history-date">{{ h.date }}:</span> {{ h.event }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="openings__empty" id="openings-empty" {% if total > 0 %}hidden{% endif %}>
+    <i class="fas fa-inbox" aria-hidden="true"></i><br>
+    No research positions currently match those filters.
+  </p>
+
+  <p class="openings__foot">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    Openings are collected from publicly accessible sources and may change or close without notice. Verify the position and deadline on the official source before applying.
+  </p>
+</section>

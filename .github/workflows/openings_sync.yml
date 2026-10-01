@@ -1,0 +1,42 @@
+name: Sync PhD & Postdoc Openings
+
+'on':
+  schedule:
+    # 19:00 UTC = 04:00 KST
+    - cron: '0 19 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync-openings:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+
+      - name: Run discovery and rebuild openings dataset
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          uv run --with pyyaml --with pydantic --with httpx --with beautifulsoup4 python3 scripts/manage.py openings run
+
+      - name: Commit and push updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain _data/openings.yml)" ]; then
+            git add _data/openings.yml
+            git commit -m "chore(openings): automated daily sync [skip ci]"
+            git push origin master
+          else
+            echo "No openings changes detected today."
+          fi

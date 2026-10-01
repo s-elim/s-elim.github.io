@@ -51,6 +51,15 @@ Quickly prepends a new update to the home page timeline modal.
 ```
 *Note: You can specify a custom date (e.g. `July 2026`) using the optional `--date` flag. Defaults to the current Month & Year.*
 
+### 7. Discover and Track PhD & Postdoc Openings
+Runs the automated discovery pipeline across public academic feeds and search results, checks relevance against your research profile, resolves canonical official sources, audits deadlines, and builds `_data/openings.yml`.
+```bash
+./scripts/manage.py openings run                # full discovery and build pipeline
+./scripts/manage.py openings run --dry-run      # preview discovered positions without saving
+./scripts/manage.py openings build              # rebuild _data/openings.yml from SQLite state
+```
+*The page renders at `/phd-postdoc-openings/` and is discoverable through Cmd/Ctrl-K.*
+
 ---
 
 ## 📂 Content Data Guide (`_data/`)
@@ -150,6 +159,10 @@ Scholarships, medals, and academic awards.
   * `org`: Issuing body.
   * `desc`: Description of the award.
 
+### 🎓 `openings.yml`
+Automated collection of PhD, Postdoc, and research scientist positions behind `/phd-postdoc-openings/`. Built from `scripts/openings/` crawler, never manually fabricated.
+* **Fields**: `id`, `title`, `position_type`, `institution`, `department`, `lab`, `principal_investigator`, `city`, `country`, `region`, `research_topics`, `description`, `requirements`, `preferred_qualifications`, `salary`, `funding`, `deadline`, `deadline_human`, `start_date`, `status`, `relevance`, `relevance_explanation`, `source`, `source_url`, `application_url`, `first_seen`, `last_seen`, `last_verified`, `history`.
+
 ---
 
 ## 🎨 Layout & CSS Structures (`_sass/theme/`)
@@ -160,6 +173,7 @@ The website styling has been modularized:
 * `_cards.scss`: Project cards, publications, and layouts like `.project-double-grid`.
 * `_timeline.scss`: Experience timelines, news timelines, and `.xp-pill` badge layouts.
 * `_research-ideas.scss`: Idea cards and the SVG mind map. Theme colour arrives as `--idea-color`, so every tint is mixed from the YAML value.
+* `_openings.scss`: Position cards, status badges, relevance tags, and metadata bars for `/phd-postdoc-openings/`.
 
 ---
 

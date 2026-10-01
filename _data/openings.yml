@@ -1,0 +1,16 @@
+# ==========================================================================
+#  PhD & Postdoc Openings - data source for /phd-postdoc-openings/
+# ==========================================================================
+#
+#  Rendered by _pages/phd-postdoc-openings.html, driven by initOpeningsTracker() in
+#  assets/js/main.js, styled by _sass/theme/_openings.scss.
+#  This file is an automated collection of research positions, populated by the
+#  discovery crawler in scripts/openings/.
+#
+#  Update openings: python scripts/manage.py openings run
+# ==========================================================================
+
+last_updated: '2026-10-01T23:20:50.597610+00:00'
+last_updated_human: 2 October 2026
+total_count: 0
+openings: []
