@@ -135,7 +135,7 @@ description: "Running log of Physical Super Intelligence research ideas tracked 
       </div>
       {% if d.page %}
       <a class="dive__cta" href="{{ d.page | relative_url }}">
-        <i class="fas fa-cube" aria-hidden="true"></i> Open the teardown <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        <i class="fas fa-cube" aria-hidden="true"></i> {{ d.cta | default: 'Open the teardown' }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
       </a>
       {% endif %}
     </header>

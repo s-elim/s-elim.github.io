@@ -1,0 +1,47 @@
+---
+# A standalone document: opt out of the site-wide `layout: single` default
+# in _config.yml so this page is not wrapped in the portfolio chrome.
+layout: null
+permalink: /notes/physics-informed-ml/
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Physics Priors Study Guide · Md Selim Sarowar</title>
+  <meta name="description" content="A study guide to the UniTrento and TUM PhD course on physics-informed machine learning: where a physics prior enters a network, every method with its equations, four in-page labs, the course evidence audited, and a timestamped index of all five lectures.">
+  <link rel="canonical" href="{{ '/notes/physics-informed-ml/' | absolute_url }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Physics Priors Study Guide">
+  <meta property="og:description" content="Physics-guided inputs, physics-encoded architectures and physics-informed losses, from PINNs and Lagrangian networks to model-structured networks and nnodely, with labs you can run in the page.">
+  <meta property="og:url" content="{{ '/notes/physics-informed-ml/' | absolute_url }}">
+  <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+  <style>
+    :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+    body { margin: 0; }
+    img { max-width: 100%; }
+    [hidden] { display: none !important; }
+    .backbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      max-width: 1120px; margin: 0 auto; padding: .7rem 20px 0;
+      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .74rem;
+    }
+    .backbar a { color: var(--accent, #0d7a72); text-decoration: none; }
+    .backbar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <nav class="backbar">
+    <a href="{{ '/research-ideas/' | relative_url }}">← Research ideas</a>
+    <a href="{{ '/' | relative_url }}">s-elim.github.io</a>
+  </nav>
+  {% include piml-explainer.html %}
+</body>
+</html>

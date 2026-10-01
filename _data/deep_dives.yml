@@ -16,6 +16,7 @@
 #  verdict   The calibrated read. What the evidence does and does not support.
 #  highlights Three or four findings, each one sentence.
 #  page      Where the interactive explainer lives on this site.
+#  cta       Optional button label; defaults to "Open the teardown".
 #  tags      Free keywords.
 #  source    The primary source: label, url, date.
 #  links     Further reading, as label/url pairs.
@@ -23,6 +24,66 @@
 # ==========================================================================
 
 dives:
+  - id: physics-priors-course
+    title: Physics Priors in Machine Learning
+    subtitle: A five-lecture PhD course from UniTrento and TUM, rebuilt as a study guide to where physics
+      enters a network and what it buys
+    kicker: 'Physics-informed ML · 1 Oct 2026'
+    read: 50 min
+    cta: Open the study guide
+    summary: >-
+      Mattia Piccinini and Gastone Pietro Rosati Papini's July 2026 course sorts every way of adding physics to a
+      learned model by where the prior enters: the inputs (physics-guided), the architecture (physics-encoded) or
+      the loss (physics-informed). This guide walks the three routes with their equations, from PINNs, Lagrangian
+      and Hamiltonian networks and Neural ODEs to the lecturers' model-structured networks and the nnodely
+      library, reads the racing case studies against their own tables, and adds four labs that run in the page and
+      a timestamp for every topic in the 8 h 38 min of video.
+    verdict: >-
+      The course gives a usable map and one fully worked method with open code. Its evidence supports a narrow
+      claim well: architectures shaped by the equations of motion fit vehicle dynamics and steering from a lap or
+      less of real data better than small general-purpose networks, on held-out laps of the same car, and the
+      steering model barely moves across 10 seeds. It does not yet show closed-loop gains on track, better
+      zero-shot transfer (after a tyre change the structured model was the worst of three until fine-tuned on
+      20 s of data), or more than a 3% ADE gain from the physics loss inside a 4B VLA, reported without seeds.
+    highlights:
+      - >-
+        The boundary rule that makes the taxonomy usable: preprocessing must be frozen or pre-trained to count as
+        physics-guided; once it trains with the model, the method is physics-encoded.
+      - >-
+        A neural compositional module is a scheduled Hammerstein-FIR local-model network: a static input map,
+        partition-of-unity regime weights, an FIR layer whose trained weights read as an impulse response and
+        expose dead time, and a residual.
+      - >-
+        Window length comes from the residual spectrum: content below 3 Hz gave 1.25 s of history at 20 Hz
+        (n = 25), and residual power below the noise floor flags overfitting.
+      - >-
+        A controller trained by backpropagating a tracking loss through a frozen learned simulator needs no new
+        data and inherits every simulator error; in the page's fourth lab a simulator 40% too light turns 3.3%
+        overshoot into 13.7% on the real plant.
+    page: /notes/physics-informed-ml/
+    tags:
+      - physics-informed ML
+      - PINN
+      - Lagrangian and Hamiltonian networks
+      - Neural ODE
+      - model-structured networks
+      - nnodely
+      - system identification
+      - evaluation
+    source:
+      label: 'Piccinini and Rosati Papini, Physics-Informed Machine Learning for Modeling, Planning, Control and Estimation of Physical Systems (PhD course, 5 lectures)'
+      url: https://www.youtube.com/playlist?list=PLcgrvuVJuClg
+      date: 6 to 10 Jul 2026
+    links:
+      - label: Course page and slides
+        url: https://mattiapiccinini95.github.io/teaching/
+      - label: 'Code: tonegas/nnodely'
+        url: https://github.com/tonegas/nnodely
+      - label: 'Code: nnodely-applications'
+        url: https://github.com/tonegas/nnodely-applications
+      - label: 'Faroughi et al. taxonomy (arXiv 2211.07377)'
+        url: https://arxiv.org/abs/2211.07377
+    idea: structured-ego-dynamics-wm
   - id: nvidia-cosmos-3
     title: NVIDIA Cosmos 3
     subtitle: One Mixture-of-Transformers for a VLM, a video and audio generator, forward and inverse

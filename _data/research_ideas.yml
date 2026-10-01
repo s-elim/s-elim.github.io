@@ -220,6 +220,91 @@ themes:
     color: '#ef4444'
     blurb: Where the data comes from and whether the metric measures anything.
 ideas:
+  - id: structured-ego-dynamics-wm
+    title: Model-structured ego-dynamics inside a latent world model
+    theme: world-models
+    also:
+      - embodied
+      - tta
+      - efficiency
+    status: spark
+    priority: 3
+    added: '2026-10-01'
+    effort: medium
+    risk: medium
+    venue: RA-L, or IROS 2027 if the error split justifies it
+    summary: >-
+      Route a mobile robot's own motion inside an action-conditioned latent world model through a model-structured
+      branch (windows of commanded twist in, realised twist out, scheduled by speed and payload) while the scene
+      latent stays learned, then test whether fine-tuning only that branch on seconds of real driving closes the
+      sim-to-real gap.
+    why: >-
+      Sim-to-real error for autonomous mobile robots concentrates in actuation: wheel slip, motor lag, payload. A
+      monolithic latent model has to relearn that from scarce real data, and every planner that rolls the model
+      forward inherits the drift. The physics-informed ML course from UniTrento and TUM shows a structured vehicle
+      model recovering from a tyre change or 10% extra mass with 20 s of data by fine-tuning only its transient
+      module, ending below a general network fine-tuned on the same data (yaw-rate RMSE 0.085 against 0.107 rad/s).
+      If that transfers, a world model can adapt its ego dynamics in seconds while the visual latent stays frozen.
+    angle: >-
+      Measure before building: on Isaac Lab AMR rollouts with the current world model, split open-loop error into
+      ego-pose drift and scene-prediction error at 1 to 5 s horizons. If ego drift is a real share, build the branch
+      in nnodely (FIR responses initialised as decaying exponentials, activations on speed and payload) and run a
+      3 × 3 grid: ego branch none, unicycle plus residual MLP, or NCM; 10, 30 or 100% of real data; three seeds.
+      Report three axes separately: rollout fidelity, response to counterfactual commands, and planning success
+      with latent lookahead. The objection I expect is that ego motion is a small share of the error, which the
+      first measurement answers. The second risk is the course's own zero-shot result, where the structured model
+      transferred worst before fine-tuning. Cost: about one GPU-week for the grid plus a few hours of real driving.
+    facts:
+      - label: Selective fine-tuning
+        value: 20 s of new data after tyre or mass changes, transient module only, about 50 to 60 epochs (Lecture 4; Mungiello et al., IEEE OJ-ITS 2026)
+      - label: Yaw rate after fine-tuning
+        value: 0.085, 0.053 and 0.045 rad/s for the structured model against 0.107, 0.070 and 0.046 for a general network (tyre set 1, tyre set 2, +10% mass)
+      - label: Zero-shot after a tyre change
+        value: Structured model worst of three, 0.172 and 0.129 rad/s against 0.147 and 0.110 for the general network
+      - label: Window sizing
+        value: Useful content below 3 Hz gave 1.25 s of history at 20 Hz, n = 25 (Lecture 4)
+      - label: Tooling
+        value: nnodely, MIT licence, PyPI 1.5.4, with Fir, Fuzzify, LocalModel and closed-loop composition
+    questions:
+      - What share of a latent world model's rollout error on an AMR is ego drift rather than scene prediction, and at which horizon?
+      - Does an NCM ego branch beat a unicycle-plus-residual branch at matched real data, or is the residual enough?
+      - Does fine-tuning only the ego branch on seconds of real data transfer, or does the zero-shot penalty seen in the course dominate?
+      - Does the same split help manipulation, where the arm's dynamics hide behind an end-effector controller?
+    next:
+      - Log commanded and realised twist on Isaac Lab AMR rollouts and split the current world model's error into ego and scene parts.
+      - Fit an nnodely NCM from commanded to realised twist on simulated data and read the FIR weights for actuation delay.
+      - Write the 3 × 3 grid with three seeds and the three evaluation axes as the experiment plan.
+    source:
+      kind: talk
+      author: Mattia Piccinini and Gastone Pietro Rosati Papini
+      label: PhD course on physics-informed machine learning (UniTrento and TUM, July 2026), read through my study guide
+      url: https://s-elim.github.io/notes/physics-informed-ml/
+      captured: '2026-10-01'
+    links:
+      - label: Study guide
+        url: https://s-elim.github.io/notes/physics-informed-ml/
+      - label: Course playlist
+        url: https://www.youtube.com/playlist?list=PLcgrvuVJuClg
+      - label: 'Code: tonegas/nnodely'
+        url: https://github.com/tonegas/nnodely
+      - label: MS-NN steering control (arXiv 2507.20427)
+        url: https://arxiv.org/abs/2507.20427
+    connects:
+      - 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
+      - 'Future Drive Ltd.: action-conditioned latent world models and Isaac Lab plus ROS 2 sim-to-real for autonomous mobile robots'
+    related:
+      - action-sensitivity-jepa
+      - generative-fidelity-vs-policy
+    tags:
+      - world models
+      - sim-to-real
+      - model-structured networks
+      - system identification
+      - mobile robots
+      - adaptation
+    note: >-
+      Figures are the course's, read from its slides and transcripts on 1 Oct 2026; the coupled-dynamics tables
+      show no seeds or intervals.
   - id: video-for-policy-wam
     title: Does the imagined future help the action?
     theme: vla
