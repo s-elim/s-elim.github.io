@@ -46,6 +46,9 @@ redirect_from:
       <a class="hero__link hero__link--page" href="{{ '/deadlines/' | relative_url }}">
         <i class="fas fa-stopwatch" aria-hidden="true"></i><span class="hero__link-text">Conference Deadlines</span><span class="hero__link-badge" id="deadlines-next-badge"></span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
       </a>
+      <a class="hero__link hero__link--page" href="{{ '/phd-postdoc-openings/' | relative_url }}" title="PhD and Postdoc positions in Physical AI, World Models, and Robotics">
+        <i class="fas fa-graduation-cap" aria-hidden="true"></i><span class="hero__link-text">PhD &amp; Postdoc Openings</span>{% if site.data.openings.total_count > 0 %}<span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.openings.total_count }}</span></span>{% endif %}<i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
+      </a>
       <a class="hero__link hero__link--page" href="{{ '/journals/' | relative_url }}">
         <i class="fas fa-book-open" aria-hidden="true"></i><span class="hero__link-text">Top Q1 Journals</span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
       </a>

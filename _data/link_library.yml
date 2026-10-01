@@ -2893,6 +2893,14 @@ links:
     kind: position
     site: eacea.ec.europa.eu
     added: '2026-07-23'
+  - id: phd-postdoc-openings-tracker
+    title: PhD & Postdoc Openings Tracker
+    url: /phd-postdoc-openings/
+    group: funding
+    kind: position
+    site: s-elim.github.io
+    note: Live tracker of verified PhD and Postdoc openings in Physical AI, World Models, and Robotics.
+    added: '2026-10-02'
   - id: cspaper-the-verification-layer-of-research-c
     title: CSPaper — The Verification Layer of Research — CSPaper
     url: https://cspaper.org/
