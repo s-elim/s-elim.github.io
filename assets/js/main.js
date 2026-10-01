@@ -1965,6 +1965,7 @@
           target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });
         }, 60);
       }
+    }
   }
 
   /* ---- PhD & Postdoc Openings ----------------------------------------- */
