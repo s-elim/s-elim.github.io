@@ -372,4 +372,48 @@ redirect_from:
 </div>
 <p class="pub-footnote reveal"><span class="pub-legend text-muted">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
+<h2 class="section-title reveal"><i class="fas fa-graduation-cap" aria-hidden="true"></i> PhD &amp; Postdoc Openings</h2>
+<div class="openings__grid openings__grid--home reveal">
+  {% assign top_ops = site.data.openings.openings | where: "relevance", "Highly Relevant" | slice: 0, 3 %}
+  {% for op in top_ops %}
+  <article class="op-card op-card--{{ op.status | slugify }} op-card--rel-{{ op.relevance | slugify }}">
+    <div class="op-card__glow" aria-hidden="true"></div>
+    <header class="op-card__head">
+      <div class="op-card__type-wrap">
+        <span class="op-card__type"><i class="fas fa-graduation-cap" aria-hidden="true"></i> {{ op.position_type }}</span>
+        {% if op.region %}<span class="op-card__region">{{ op.region }}</span>{% endif %}
+      </div>
+      <div class="op-card__badges">
+        <span class="op-flame-badge" title="Top Research Match"><i class="fas fa-fire" aria-hidden="true"></i> Top Match</span>
+        <span class="op-rel op-rel--{{ op.relevance | slugify }}">{{ op.relevance }}</span>
+      </div>
+    </header>
+    <h3 class="op-card__title">{{ op.title }}</h3>
+    <div class="op-card__org">
+      <div class="op-card__institution"><i class="fas fa-university" aria-hidden="true"></i> <strong>{{ op.institution }}</strong></div>
+      <div class="op-card__place"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span>{% if op.city and op.city != "Not specified" %}{{ op.city }}, {% endif %}{{ op.country }}</span></div>
+    </div>
+    {% if op.research_topics and op.research_topics.size > 0 %}
+    <div class="op-chips" aria-label="Research topics">
+      {% for tag in op.research_topics limit: 4 %}
+      <span class="op-chip"><i class="fas fa-tag" aria-hidden="true"></i> {{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <footer class="op-card__foot">
+      <div class="op-card__deadline-pill">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i> {{ op.deadline_human | default: "Rolling" }}
+      </div>
+      <a class="op-btn-apply" href="{{ op.application_url | default: op.source_url }}" target="_blank" rel="noopener">
+        View Opening <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+      </a>
+    </footer>
+  </article>
+  {% endfor %}
+</div>
+<p class="pub-footnote reveal">
+  <span class="pub-legend text-muted">Tracking {{ site.data.openings.total_count }} positions across Europe, US, UK, and Middle East</span>
+  <a class="chip" href="{{ '/phd-postdoc-openings/' | relative_url }}">View all {{ site.data.openings.total_count }} openings <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</p>
+
 
