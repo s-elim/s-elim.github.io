@@ -77,12 +77,35 @@
 
   /* ---- Scroll reveal ------------------------------------------------- */
   function initReveal() {
-    var els = document.querySelectorAll(".reveal");
+    var els = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
     if (!els.length) return;
+
+    function revealInViewport() {
+      var vh = window.innerHeight || document.documentElement.clientHeight || 800;
+      var remaining = false;
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (el.classList.contains("is-visible")) continue;
+        var r = el.getBoundingClientRect();
+        // Immediately reveal if element is currently in view or within 120px below fold
+        if (r.top < vh + 120 && r.bottom > -50) {
+          el.classList.add("is-visible");
+        } else {
+          remaining = true;
+        }
+      }
+      return remaining;
+    }
+
+    // Step 1: Immediately reveal any elements in or near initial viewport
+    revealInViewport();
+
     if (prefersReduced || !("IntersectionObserver" in window)) {
       els.forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
+
+    // Step 2: Observe remaining offscreen elements with generous margin and low threshold
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -90,8 +113,29 @@
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-    els.forEach(function (el) { io.observe(el); });
+    }, { threshold: 0.01, rootMargin: "0px 0px 100px 0px" });
+
+    els.forEach(function (el) {
+      if (!el.classList.contains("is-visible")) {
+        io.observe(el);
+      }
+    });
+
+    // Step 3: Reliable fallbacks to guarantee content is never stuck invisible
+    window.addEventListener("load", revealInViewport);
+    window.setTimeout(revealInViewport, 200);
+    window.setTimeout(revealInViewport, 600);
+    window.setTimeout(revealInViewport, 1500);
+
+    var onActivity = function () {
+      var remaining = revealInViewport();
+      if (!remaining) {
+        window.removeEventListener("scroll", onActivity);
+        window.removeEventListener("pointerdown", onActivity);
+      }
+    };
+    window.addEventListener("scroll", onActivity, { passive: true });
+    window.addEventListener("pointerdown", onActivity, { passive: true });
   }
 
   /* ---- Accordions ---------------------------------------------------- */

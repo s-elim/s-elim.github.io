@@ -10,7 +10,7 @@ redirect_from:
 
 {% assign p = site.data.profiles %}
 
-<section class="hero reveal">
+<section class="hero">
   <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="{{ p.name }}" width="200" height="200">
   <div class="hero__intro">
     <h1 class="hero__name">{{ p.name }}</h1>
@@ -373,7 +373,7 @@ redirect_from:
 <p class="pub-footnote reveal"><span class="pub-legend text-muted">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
 <h2 class="section-title reveal"><i class="fas fa-graduation-cap" aria-hidden="true"></i> PhD &amp; Postdoc Openings</h2>
-<div class="openings__grid openings__grid--home reveal">
+<div class="openings__grid openings__grid--home">
   {% assign top_ops = site.data.openings.openings | where: "relevance", "Highly Relevant" | slice: 0, 3 %}
   {% for op in top_ops %}
   <article class="op-card op-card--{{ op.status | slugify }} op-card--rel-{{ op.relevance | slugify }}">

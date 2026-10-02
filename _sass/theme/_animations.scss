@@ -2,17 +2,21 @@
 //  Scroll-reveal + motion (guarded by prefers-reduced-motion)
 // ==========================================================================
 
-// Only hide reveal elements when JS is active, so content is never
-// invisible if the script fails to load or run.
 .js .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .6s var(--ease), transform .6s var(--ease);
+  transform: translateY(14px);
+  transition: opacity .4s var(--ease), transform .4s var(--ease);
   will-change: opacity, transform;
 }
 .js .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+// Hero is above the fold: must always render immediately without animation delay
+.hero {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 // Stagger helper for grids/lists
