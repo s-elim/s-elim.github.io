@@ -1,13 +1,13 @@
 import time
 import re
 import urllib.parse
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import xml.etree.ElementTree as ET
 import httpx
 from bs4 import BeautifulSoup
 
 from .models import DiscoveredItem
-from .config import load_research_profile
+from .config import load_research_profile, COUNTRY_TO_REGION
 
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -33,10 +33,66 @@ ACADEMIC_FEEDS = [
         "type": "euraxess"
     },
     {
+        "name": "EURAXESS Jobs (Page 3)",
+        "url": "https://euraxess.ec.europa.eu/job-feed?page=3",
+        "type": "euraxess"
+    },
+    {
+        "name": "EURAXESS Jobs (Page 4)",
+        "url": "https://euraxess.ec.europa.eu/job-feed?page=4",
+        "type": "euraxess"
+    },
+    {
         "name": "OpenRobotics ROS Discourse",
         "url": "https://discourse.ros.org/c/jobs.rss",
         "type": "official_rss"
     }
+]
+
+US_STATES = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC"}
+
+def parse_linkedin_location(loc_str: str) -> Tuple[str, str, str]:
+    """Parse city, country, and macro-region from LinkedIn location strings."""
+    if not loc_str:
+        return "Not specified", "Not specified", "Europe"
+    parts = [p.strip() for p in loc_str.split(",")]
+    city = parts[0] if parts else "Not specified"
+    country = "Not specified"
+    
+    last_part = parts[-1].strip()
+    if last_part in US_STATES or last_part in ["United States", "USA", "US"]:
+        country = "USA"
+    elif "United Kingdom" in loc_str or "UK" in parts or "England" in parts or "Scotland" in parts:
+        country = "UK"
+    else:
+        for c in COUNTRY_TO_REGION.keys():
+            if c.lower() in loc_str.lower():
+                country = c
+                break
+    region = COUNTRY_TO_REGION.get(country, "Europe" if country == "Not specified" else "Europe")
+    return city, country, region
+
+LINKEDIN_ACADEMIC_QUERIES = [
+    "postdoctoral robotics",
+    "phd robotics",
+    "postdoc robot learning",
+    "embodied ai research",
+    "world models robotics",
+    "computer vision postdoc",
+    "phd computer vision",
+    "robot manipulation research",
+    "vision language action robotics",
+    "spatial intelligence robotics",
+    "3d computer vision research",
+    "postdoctoral researcher machine learning",
+    "phd student machine learning",
+    "postdoctoral fellow reinforcement learning",
+    "phd robot learning",
+    "research scientist embodied ai",
+    "research scientist robotics",
+    "postdoc autonomous systems",
+    "research fellow robotics",
+    "doctoral candidate computer vision"
 ]
 
 # Verified active academic research labs recruiting in Embodied AI, World Models, and Robotics
@@ -211,16 +267,117 @@ def extract_ddg_url(href: str) -> Optional[str]:
     return None
 
 def clean_text(text: str) -> str:
-    """Strip extraneous whitespace and HTML artefacts."""
+    """Strip extraneous whitespace, HTML artefacts, and convert dashes."""
     if not text:
         return ""
+    text = text.replace("—", " - ").replace("–", " - ")
     text = re.sub(r'<[^>]+>', ' ', text)
     return " ".join(text.split()).strip()
+
+def search_linkedin_guest(client: httpx.Client, max_queries: int = 10, max_pages_per_query: int = 2) -> List[DiscoveredItem]:
+    """
+    Search LinkedIn's public guest job postings endpoint for authentic academic,
+    laboratory, and institutional research openings.
+    """
+    items = []
+    seen = set()
+    for q in LINKEDIN_ACADEMIC_QUERIES[:max_queries]:
+        kw = urllib.parse.quote_plus(q)
+        for p in range(max_pages_per_query):
+            start = p * 10
+            url = f"https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords={kw}&start={start}"
+            try:
+                resp = client.get(url, timeout=10.0)
+                if resp.status_code != 200:
+                    break
+                soup = BeautifulSoup(resp.text, "html.parser")
+                jobs = soup.select("li")
+                if not jobs:
+                    break
+                for li in jobs:
+                    t_el = li.select_one("h3.base-search-card__title")
+                    c_el = li.select_one("h4.base-search-card__subtitle")
+                    l_el = li.select_one(".job-search-card__location")
+                    a_el = li.select_one("a.base-card__full-link")
+                    if not t_el or not a_el:
+                        continue
+                    job_url = a_el["href"].split("?")[0]
+                    if job_url in seen:
+                        continue
+                    seen.add(job_url)
+
+                    title = clean_text(t_el.get_text())
+                    comp = clean_text(c_el.get_text()) if c_el else "Research Institution"
+                    raw_loc = clean_text(l_el.get_text()) if l_el else ""
+                    city, country, region = parse_linkedin_location(raw_loc)
+
+                    snippet = f"{title} at {comp}. Location: {raw_loc}. Public research opening tracked via LinkedIn academic search."
+
+                    items.append(DiscoveredItem(
+                        title=title,
+                        url=job_url,
+                        source_name=f"LinkedIn ({comp})",
+                        source_type="linkedin",
+                        snippet=snippet,
+                        detected_institution=comp,
+                        detected_city=city,
+                        detected_country=country,
+                        detected_region=region
+                    ))
+                time.sleep(0.3)
+            except Exception:
+                break
+    return items
+
+def fetch_jobs_ac_uk(client: httpx.Client, keywords: Optional[List[str]] = None) -> List[DiscoveredItem]:
+    """Fetch academic research positions from jobs.ac.uk."""
+    if keywords is None:
+        keywords = ["robotics", "computer vision", "robot learning", "physical ai"]
+    items = []
+    seen = set()
+    for kw in keywords:
+        q = urllib.parse.quote_plus(kw)
+        url = f"https://www.jobs.ac.uk/search/?keywords={q}"
+        try:
+            resp = client.get(url, timeout=12.0)
+            if resp.status_code != 200:
+                continue
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for a in soup.select("a[href*='/job/']"):
+                href = a.get("href", "")
+                title = clean_text(a.text)
+                if not title or not href:
+                    continue
+                job_url = "https://www.jobs.ac.uk" + href if href.startswith("/") else href
+                if job_url in seen:
+                    continue
+                seen.add(job_url)
+
+                parent = a.find_parent("div", class_="j-search-result__text") or a.find_parent("div")
+                text_snippet = clean_text(parent.get_text(separator=" ", strip=True)) if parent else title
+                
+                employer_el = parent.select_one(".employer") if parent else None
+                inst = clean_text(employer_el.get_text()) if employer_el else "UK Academic Institution"
+
+                items.append(DiscoveredItem(
+                    title=title,
+                    url=job_url,
+                    source_name=f"jobs.ac.uk ({inst})",
+                    source_type="official_university",
+                    snippet=text_snippet[:1500],
+                    detected_institution=inst,
+                    detected_country="UK",
+                    detected_region="UK"
+                ))
+            time.sleep(0.3)
+        except Exception:
+            pass
+    return items
 
 def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) -> List[DiscoveredItem]:
     """
     Main discovery orchestrator.
-    Gathers items across curated lab targets, academic feeds, and public search.
+    Gathers items across curated lab targets, LinkedIn jobs, academic feeds, and public search.
     """
     discovered = []
     seen_urls = set()
@@ -233,7 +390,21 @@ def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) ->
                 seen_urls.add(it.url)
                 discovered.append(it)
 
-        # 2. Fetch academic RSS feeds
+        # 2. Fetch LinkedIn public academic jobs
+        linkedin_items = search_linkedin_guest(client, max_queries=20, max_pages_per_query=2)
+        for it in linkedin_items:
+            if it.url not in seen_urls:
+                seen_urls.add(it.url)
+                discovered.append(it)
+
+        # 3. Fetch jobs.ac.uk UK academic openings
+        jobs_uk = fetch_jobs_ac_uk(client)
+        for it in jobs_uk:
+            if it.url not in seen_urls:
+                seen_urls.add(it.url)
+                discovered.append(it)
+
+        # 4. Fetch academic RSS feeds
         for feed in ACADEMIC_FEEDS:
             feed_items = fetch_rss_feed(client, feed)
             for it in feed_items:
@@ -242,7 +413,7 @@ def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) ->
                     discovered.append(it)
             time.sleep(0.3)
 
-        # 3. Run query combinations
+        # 5. Run query combinations
         queries = generate_search_queries(max_queries=max_queries)
         for q_meta in queries:
             q = q_meta["query"]

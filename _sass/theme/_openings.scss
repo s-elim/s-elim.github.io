@@ -537,3 +537,87 @@
   font-weight: 600;
   color: var(--text);
 }
+
+// ---- Compact List View Layout ---------------------------------------------
+.openings__grid.is-list {
+  grid-template-columns: 1fr;
+  gap: .55rem;
+
+  .op-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    padding: .75rem 1.15rem;
+
+    &:hover {
+      transform: none;
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  .op-card__glow { display: none; }
+
+  .op-card__head {
+    flex: 1 1 18rem;
+    gap: .5rem;
+  }
+
+  .op-card__body {
+    flex: 2 1 24rem;
+    gap: .3rem;
+  }
+
+  .op-card__title {
+    font-size: .98rem;
+    margin: 0;
+  }
+
+  .op-card__institution {
+    font-size: .82rem;
+  }
+
+  .op-card__description {
+    display: none;
+  }
+
+  .op-card__topics {
+    margin-top: .15rem;
+  }
+
+  .op-card__foot {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    gap: .8rem;
+    margin-left: auto;
+  }
+
+  .op-card__deadline-pill {
+    padding: 2px 7px;
+    font-size: .7rem;
+  }
+
+  .op-card__details {
+    flex: 1 0 100%;
+    margin-top: .5rem;
+    padding-top: .75rem;
+    border-top: 1px dashed var(--border);
+  }
+}
+
+@media (max-width: 600px) {
+  .openings__grid.is-list .op-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .65rem;
+  }
+  .openings__grid.is-list .op-card__foot {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: .5rem;
+  }
+}

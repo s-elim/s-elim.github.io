@@ -2026,7 +2026,8 @@
       relevance: "all",
       status: "all",
       query: "",
-      sort: "newest"
+      sort: "newest",
+      view: "grid"
     };
 
     var relRanks = {
@@ -2132,6 +2133,16 @@
       });
     });
 
+    // Segmented controls: Layout View (List / Card)
+    document.querySelectorAll(".dl-seg[data-op-view]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".dl-seg[data-op-view]").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        state.view = btn.getAttribute("data-op-view");
+        grid.classList.toggle("is-list", state.view === "list");
+      });
+    });
+
     // Search input
     if (searchInput) {
       searchInput.addEventListener("input", function () {
@@ -2152,6 +2163,7 @@
       }
     });
 
+    grid.classList.toggle("is-list", state.view === "list");
     apply();
 
     // Deep link support: #opening-<id>

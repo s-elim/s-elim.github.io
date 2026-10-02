@@ -54,4 +54,6 @@ class DiscoveredItem(BaseModel):
     snippet: Optional[str] = ""
     raw_html: Optional[str] = ""
     detected_institution: Optional[str] = None
+    detected_city: Optional[str] = None
     detected_country: Optional[str] = None
+    detected_region: Optional[str] = None

@@ -54,13 +54,11 @@ def detect_position_type(text: str) -> Optional[str]:
     lower = text.lower()
     if "dphil" in lower:
         return "DPhil"
-    if "phd" in lower or "doctoral candidate" in lower or "ph.d" in lower:
+    if any(k in lower for k in ["phd", "ph.d", "doctoral candidate", "doctoral student", "graduate student", "studentship"]):
         return "PhD"
-    if "doctoral researcher" in lower or "doktorand" in lower or "pre-doc" in lower:
+    if any(k in lower for k in ["doctoral researcher", "doktorand", "pre-doc"]):
         return "Doctoral Researcher"
-    if "postdoctoral fellow" in lower or "postdoc fellow" in lower:
-        return "Postdoc"
-    if "postdoctoral researcher" in lower or "postdoc" in lower or "post-doctoral" in lower:
+    if any(k in lower for k in ["postdoctoral", "post-doctoral", "post doctoral", "postdoc", "post-doc"]):
         return "Postdoc"
     if "research scientist" in lower:
         return "Research Scientist"
@@ -70,7 +68,7 @@ def detect_position_type(text: str) -> Optional[str]:
         return "Research Fellow"
     if "research associate" in lower:
         return "Research Associate"
-    if "graduate student" in lower or "studentship" in lower or "fellowship" in lower:
+    if "fellowship" in lower:
         return "PhD"
     return None
 
@@ -206,9 +204,15 @@ def extract_from_discovered(item: DiscoveredItem, llm_provider: Optional[LLMProv
         else:
             return None
     inst, city, country = detect_institution_and_location(item.url, combined_text)
+    if item.detected_institution and (inst == "University / Research Institute" or item.source_type == "linkedin"):
+        inst = item.detected_institution
+    if item.detected_city and (city == "Not specified" or item.source_type == "linkedin"):
+        city = item.detected_city
+    if item.detected_country and (country == "Not specified" or item.source_type == "linkedin"):
+        country = item.detected_country
     deadline_iso, deadline_human = extract_deadline(combined_text)
 
-    region = COUNTRY_TO_REGION.get(country, "Europe")
+    region = item.detected_region or COUNTRY_TO_REGION.get(country, "Europe")
 
     # If deterministic extraction needs refinement and LLM is available
     if llm_provider and inst == "University / Research Institute":
