@@ -37,6 +37,19 @@ INSTITUTION_DOMAIN_MAP = {
     "u-tokyo.ac.jp": ("University of Tokyo", "Japan"),
     "mbzuai.ac.ae": ("MBZUAI", "UAE"),
     "kaust.edu.sa": ("KAUST", "Saudi Arabia"),
+    "opra.kaust.edu.sa": ("KAUST", "Saudi Arabia"),
+    "vcc.kaust.edu.sa": ("KAUST", "Saudi Arabia"),
+    "asl.ethz.ch": ("ETH Zürich (ASL)", "Switzerland"),
+    "rsl.ethz.ch": ("ETH Zürich (RSL)", "Switzerland"),
+    "cvg.ethz.ch": ("ETH Zürich (CVG)", "Switzerland"),
+    "vlg.inf.ethz.ch": ("ETH Zürich (VLG)", "Switzerland"),
+    "is.mpg.de": ("Max Planck Institute for Intelligent Systems", "Germany"),
+    "cvg.cit.tum.de": ("TU Munich", "Germany"),
+    "mirmi.tum.de": ("TU Munich (MIRMI)", "Germany"),
+    "ori.ox.ac.uk": ("Oxford Robotics Institute", "UK"),
+    "tii.ae": ("Technology Innovation Institute", "UAE"),
+    "nyuad.nyu.edu": ("NYU Abu Dhabi", "UAE"),
+    "academictransfer.com": ("Dutch Universities (AcademicTransfer)", "Netherlands"),
     "uzh.ch": ("University of Zurich", "Switzerland"),
     "bristol.ac.uk": ("University of Bristol", "UK"),
     "usc.edu": ("University of Southern California", "USA"),
@@ -52,22 +65,36 @@ INSTITUTION_DOMAIN_MAP = {
 def detect_position_type(text: str) -> Optional[str]:
     """Classify position role from title or text. Returns None if not an academic research role."""
     lower = text.lower()
+    # Exclude administrative, operations, sales, and non-research roles
+    if any(k in lower for k in [
+        "head of", "director of", "coordinator", "manager", "officer", "administrator",
+        "specialist", "assistant director", "associate director", "vp", "chief", "curator",
+        "event", "operations", "rewards", "adviser", "marketing", "recruiter", "sales"
+    ]):
+        return None
     if "dphil" in lower:
         return "DPhil"
-    if any(k in lower for k in ["phd", "ph.d", "doctoral candidate", "doctoral student", "graduate student", "studentship"]):
-        return "PhD"
-    if any(k in lower for k in ["doctoral researcher", "doktorand", "pre-doc"]):
-        return "Doctoral Researcher"
+    # Postdoc checked before Doctoral Researcher to prevent "postdoctoral researcher" matching "doctoral researcher"
     if any(k in lower for k in ["postdoctoral", "post-doctoral", "post doctoral", "postdoc", "post-doc"]):
         return "Postdoc"
-    if "research scientist" in lower:
+    if any(k in lower for k in ["doctoral researcher", "doktorand", "pre-doc"]):
+        return "Doctoral Researcher"
+    if any(k in lower for k in ["phd", "ph.d", "doctoral candidate", "doctoral student", "graduate student", "studentship"]):
+        return "PhD"
+    if any(k in lower for k in ["research scientist", "ai researcher", "robotics researcher", "research expert"]):
         return "Research Scientist"
-    if "research engineer" in lower:
+    if any(k in lower for k in [
+        "research engineer", "member of technical staff", "perception engineer",
+        "robotics engineer", "rl engineer", "vlm engineer", "robotics rl engineer",
+        "machine learning engineer", "ml engineer"
+    ]):
         return "Research Engineer"
     if "research fellow" in lower:
         return "Research Fellow"
     if "research associate" in lower:
         return "Research Associate"
+    if any(k in lower for k in ["assistant professor", "associate professor", "full professor", "faculty"]):
+        return "Faculty"
     if "fellowship" in lower:
         return "PhD"
     return None

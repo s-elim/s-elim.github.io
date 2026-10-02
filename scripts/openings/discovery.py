@@ -51,14 +51,80 @@ ACADEMIC_FEEDS = [
 
 US_STATES = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC"}
 
+CITY_TO_COUNTRY_REGION = {
+    # UAE
+    "abu dhabi": ("Abu Dhabi", "UAE", "Middle East"),
+    "dubai": ("Dubai", "UAE", "Middle East"),
+    "sharjah": ("Sharjah", "UAE", "Middle East"),
+    "ajman": ("Ajman", "UAE", "Middle East"),
+    # Saudi Arabia
+    "riyadh": ("Riyadh", "Saudi Arabia", "Middle East"),
+    "thuwal": ("Thuwal", "Saudi Arabia", "Middle East"),
+    "dhahran": ("Dhahran", "Saudi Arabia", "Middle East"),
+    "jeddah": ("Jeddah", "Saudi Arabia", "Middle East"),
+    "al khobar": ("Al Khobar", "Saudi Arabia", "Middle East"),
+    "dammam": ("Dammam", "Saudi Arabia", "Middle East"),
+    "makkah": ("Makkah", "Saudi Arabia", "Middle East"),
+    # Switzerland
+    "zurich": ("Zurich", "Switzerland", "Europe"),
+    "zürich": ("Zurich", "Switzerland", "Europe"),
+    "lausanne": ("Lausanne", "Switzerland", "Europe"),
+    "geneva": ("Geneva", "Switzerland", "Europe"),
+    # Germany
+    "munich": ("Munich", "Germany", "Europe"),
+    "münchen": ("Munich", "Germany", "Europe"),
+    "berlin": ("Berlin", "Germany", "Europe"),
+    "stuttgart": ("Stuttgart", "Germany", "Europe"),
+    "tübingen": ("Tübingen", "Germany", "Europe"),
+    "tubingen": ("Tübingen", "Germany", "Europe"),
+    "heidelberg": ("Heidelberg", "Germany", "Europe"),
+    "aachen": ("Aachen", "Germany", "Europe"),
+    "karlsruhe": ("Karlsruhe", "Germany", "Europe"),
+    # Netherlands
+    "delft": ("Delft", "Netherlands", "Europe"),
+    "amsterdam": ("Amsterdam", "Netherlands", "Europe"),
+    "eindhoven": ("Eindhoven", "Netherlands", "Europe"),
+    "enschede": ("Enschede", "Netherlands", "Europe"),
+    "wageningen": ("Wageningen", "Netherlands", "Europe"),
+    "utrecht": ("Utrecht", "Netherlands", "Europe"),
+    # France
+    "paris": ("Paris", "France", "Europe"),
+    "grenoble": ("Grenoble", "France", "Europe"),
+    "rennes": ("Rennes", "France", "Europe"),
+    "lyon": ("Lyon", "France", "Europe"),
+    # Sweden & Finland
+    "stockholm": ("Stockholm", "Sweden", "Europe"),
+    "gothenburg": ("Gothenburg", "Sweden", "Europe"),
+    "linköping": ("Linköping", "Sweden", "Europe"),
+    "helsinki": ("Helsinki", "Finland", "Europe"),
+    "tampere": ("Tampere", "Finland", "Europe"),
+    # UK
+    "london": ("London", "UK", "UK"),
+    "oxford": ("Oxford", "UK", "UK"),
+    "cambridge": ("Cambridge", "UK", "UK"),
+    "edinburgh": ("Edinburgh", "UK", "UK"),
+    "bristol": ("Bristol", "UK", "UK"),
+}
+
 def parse_linkedin_location(loc_str: str) -> Tuple[str, str, str]:
     """Parse city, country, and macro-region from LinkedIn location strings."""
     if not loc_str:
         return "Not specified", "Not specified", "Europe"
+    
+    loc_lower = loc_str.lower()
+    for city_key, (c_name, country_name, reg_name) in CITY_TO_COUNTRY_REGION.items():
+        if city_key in loc_lower:
+            return c_name, country_name, reg_name
+
     parts = [p.strip() for p in loc_str.split(",")]
     city = parts[0] if parts else "Not specified"
     country = "Not specified"
-    
+
+    if "united arab emirates" in loc_lower or "uae" in loc_lower or "emirates" in loc_lower:
+        return city, "UAE", "Middle East"
+    if "saudi arabia" in loc_lower or "saudi" in loc_lower or "ksa" in loc_lower:
+        return city, "Saudi Arabia", "Middle East"
+
     last_part = parts[-1].strip()
     if last_part in US_STATES or last_part in ["United States", "USA", "US"]:
         country = "USA"
@@ -66,7 +132,7 @@ def parse_linkedin_location(loc_str: str) -> Tuple[str, str, str]:
         country = "UK"
     else:
         for c in COUNTRY_TO_REGION.keys():
-            if c.lower() in loc_str.lower():
+            if c.lower() in loc_lower:
                 country = c
                 break
     region = COUNTRY_TO_REGION.get(country, "Europe" if country == "Not specified" else "Europe")
@@ -93,6 +159,35 @@ LINKEDIN_ACADEMIC_QUERIES = [
     "postdoc autonomous systems",
     "research fellow robotics",
     "doctoral candidate computer vision"
+]
+
+LINKEDIN_REGIONAL_TARGETS = [
+    # United Arab Emirates
+    ("postdoctoral", "United Arab Emirates"),
+    ("research scientist", "United Arab Emirates"),
+    ("robotics", "United Arab Emirates"),
+    ("computer vision", "United Arab Emirates"),
+    ("MBZUAI", "United Arab Emirates"),
+    ("New York University Abu Dhabi", "United Arab Emirates"),
+    ("Technology Innovation Institute", "United Arab Emirates"),
+    ("Khalifa University", "United Arab Emirates"),
+    ("world models", "United Arab Emirates"),
+    # Saudi Arabia
+    ("postdoctoral", "Saudi Arabia"),
+    ("research scientist", "Saudi Arabia"),
+    ("robotics", "Saudi Arabia"),
+    ("computer vision", "Saudi Arabia"),
+    ("KAUST", "Saudi Arabia"),
+    ("KFUPM", "Saudi Arabia"),
+    # European Hubs
+    ("robotics", "Munich, Germany"),
+    ("robot learning", "Munich, Germany"),
+    ("computer vision", "Munich, Germany"),
+    ("computer vision", "Delft, Netherlands"),
+    ("robotics", "Paris, France"),
+    ("robot learning", "London, United Kingdom"),
+    ("robotics", "London, United Kingdom"),
+    ("robotics", "Stockholm, Sweden")
 ]
 
 # Verified active academic research labs recruiting in Embodied AI, World Models, and Robotics
@@ -132,6 +227,108 @@ CURATED_LAB_TARGETS = [
         "url": "https://spring.epfl.ch/open_positions.html",
         "source_name": "EPFL SPRING Lab",
         "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoctoral Fellowships in Machine Learning and Computer Vision",
+        "url": "https://mbzuai.ac.ae/study/phd-programs/",
+        "source_name": "MBZUAI",
+        "position_type": "PhD"
+    },
+    {
+        "title": "Post-Doctoral Associate & Research Scientist in Computer Science and Robotics",
+        "url": "https://nyuad.nyu.edu/en/academics/divisions/science/faculty/computer-science.html",
+        "source_name": "NYU Abu Dhabi",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "Research Scientist & Robotics Engineer in Autonomous Systems and World Models",
+        "url": "https://www.tii.ae/",
+        "source_name": "Technology Innovation Institute (TII)",
+        "position_type": "Research Scientist"
+    },
+    {
+        "title": "Postdoctoral Fellowships and PhD Openings in Visual Computing and AI",
+        "url": "https://vcc.kaust.edu.sa/",
+        "source_name": "KAUST Visual Computing Center",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "Postdoctoral Research Fellow in Computer Vision and Deep Learning",
+        "url": "https://opra.kaust.edu.sa/postdocs/prospective",
+        "source_name": "KAUST (OPRA)",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "PhD and Postdoc Positions in Autonomous Mobile Robotics and Perception",
+        "url": "https://asl.ethz.ch/",
+        "source_name": "ETH Zürich (ASL)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "PhD & Postdoc Positions in Legged Robotics and Dexterous Manipulation",
+        "url": "https://rsl.ethz.ch/",
+        "source_name": "ETH Zürich (RSL)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "Doctoral and Postdoctoral Positions in 3D Computer Vision and Spatial AI",
+        "url": "https://cvg.ethz.ch/",
+        "source_name": "ETH Zürich (CVG)",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "PhD & Postdoctoral Positions in Robot Learning and Control",
+        "url": "https://www.epfl.ch/labs/lasa/",
+        "source_name": "EPFL (LASA)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "Postdoc and PhD Positions in Deep Learning and Computer Vision",
+        "url": "https://www.epfl.ch/labs/cvlab/",
+        "source_name": "EPFL (CVLab)",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "Doctoral Researcher & Postdoc Openings in Visual SLAM and 3D Perception",
+        "url": "https://cvg.cit.tum.de/",
+        "source_name": "TU Munich (Cremers Lab)",
+        "position_type": "Doctoral Researcher"
+    },
+    {
+        "title": "Postdoctoral Fellowships in Autonomous Systems and Robot Learning",
+        "url": "https://is.mpg.de/jobs",
+        "source_name": "Max Planck Institute for Intelligent Systems",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "PhD & Postdoctoral Positions in Cognitive Robotics and Robot Learning",
+        "url": "https://www.tudelft.nl/3me/over-de-faculteit/afdelingen/cognitive-robotics-cor",
+        "source_name": "TU Delft (Cognitive Robotics)",
+        "position_type": "PhD"
+    },
+    {
+        "title": "Postdoctoral Research Assistant in Autonomous Robot Navigation and Learning",
+        "url": "https://ori.ox.ac.uk/",
+        "source_name": "Oxford Robotics Institute",
+        "position_type": "Postdoc"
+    },
+    {
+        "title": "Research Associate & PhD Positions in Robot Learning and Dexterity",
+        "url": "https://www.imperial.ac.uk/robot-intelligence/",
+        "source_name": "Imperial College London",
+        "position_type": "Research Associate"
+    },
+    {
+        "title": "Doctoral and Postdoc Openings in Robotics, Perception, and Learning",
+        "url": "https://www.kth.se/is/rpl",
+        "source_name": "KTH Royal Institute of Technology",
+        "position_type": "PhD"
+    },
+    {
+        "title": "Postdoctoral and PhD Fellowships in Robotics and Computer Vision",
+        "url": "https://www.inria.fr/en/join-inria",
+        "source_name": "Inria",
+        "position_type": "Postdoc"
     }
 ]
 
@@ -329,6 +526,60 @@ def search_linkedin_guest(client: httpx.Client, max_queries: int = 10, max_pages
                 break
     return items
 
+def search_linkedin_regional(client: httpx.Client, targets: Optional[List[Tuple[str, str]]] = None) -> List[DiscoveredItem]:
+    """
+    Search LinkedIn guest API specifically across targeted geographies
+    including UAE, Saudi Arabia, and premier European academic hubs.
+    """
+    if targets is None:
+        targets = LINKEDIN_REGIONAL_TARGETS
+    items = []
+    seen = set()
+    for kw, loc in targets:
+        encoded_kw = urllib.parse.quote_plus(kw)
+        encoded_loc = urllib.parse.quote_plus(loc)
+        url = f"https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords={encoded_kw}&location={encoded_loc}&start=0"
+        try:
+            resp = client.get(url, timeout=10.0)
+            if resp.status_code != 200:
+                continue
+            soup = BeautifulSoup(resp.text, "html.parser")
+            jobs = soup.select("li")
+            for li in jobs:
+                t_el = li.select_one("h3.base-search-card__title")
+                c_el = li.select_one("h4.base-search-card__subtitle")
+                l_el = li.select_one(".job-search-card__location")
+                a_el = li.select_one("a.base-card__full-link")
+                if not t_el or not a_el:
+                    continue
+                job_url = a_el["href"].split("?")[0]
+                if job_url in seen:
+                    continue
+                seen.add(job_url)
+
+                title = clean_text(t_el.get_text())
+                comp = clean_text(c_el.get_text()) if c_el else "Research Institution"
+                raw_loc = clean_text(l_el.get_text()) if l_el else loc
+                city, country, region = parse_linkedin_location(raw_loc)
+
+                snippet = f"{title} at {comp}. Location: {raw_loc}. Regional research opportunity."
+
+                items.append(DiscoveredItem(
+                    title=title,
+                    url=job_url,
+                    source_name=f"LinkedIn ({comp})",
+                    source_type="linkedin",
+                    snippet=snippet,
+                    detected_institution=comp,
+                    detected_city=city,
+                    detected_country=country,
+                    detected_region=region
+                ))
+            time.sleep(0.3)
+        except Exception:
+            pass
+    return items
+
 def fetch_jobs_ac_uk(client: httpx.Client, keywords: Optional[List[str]] = None) -> List[DiscoveredItem]:
     """Fetch academic research positions from jobs.ac.uk."""
     if keywords is None:
@@ -374,37 +625,98 @@ def fetch_jobs_ac_uk(client: httpx.Client, keywords: Optional[List[str]] = None)
             pass
     return items
 
+def fetch_academictransfer(client: httpx.Client, keywords: Optional[List[str]] = None) -> List[DiscoveredItem]:
+    """Fetch Dutch academic university research positions from AcademicTransfer."""
+    if keywords is None:
+        keywords = ["robotics", "computer vision", "robot learning", "autonomous systems"]
+    items = []
+    seen = set()
+    for kw in keywords:
+        q = urllib.parse.quote_plus(kw)
+        url = f"https://www.academictransfer.com/en/jobs/?q={q}"
+        try:
+            resp = client.get(url, timeout=12.0)
+            if resp.status_code != 200:
+                continue
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for a in soup.select("a[href*='/jobs/']"):
+                href = a.get("href", "")
+                if not href.startswith("/en/jobs/") or len(href.split("/")) <= 4:
+                    continue
+                if href in seen:
+                    continue
+                seen.add(href)
+                job_url = "https://www.academictransfer.com" + href
+
+                container = a.find_parent("div", class_="grid") or a.parent
+                raw_snippet = clean_text(container.get_text(separator=" ", strip=True)) if container else ""
+                
+                slug_part = [s for s in href.split("/") if s and not s.isdigit() and s != "en" and s != "jobs"]
+                slug_title = slug_part[-1].replace("-", " ").capitalize() if slug_part else "Research Position"
+                title = clean_text(slug_title)
+                
+                items.append(DiscoveredItem(
+                    title=title,
+                    url=job_url,
+                    source_name="AcademicTransfer (Netherlands)",
+                    source_type="official_university",
+                    snippet=raw_snippet[:1500] if raw_snippet else f"{title} at Dutch Research University.",
+                    detected_institution="Dutch Universities",
+                    detected_city="Delft / Amsterdam",
+                    detected_country="Netherlands",
+                    detected_region="Europe"
+                ))
+            time.sleep(0.3)
+        except Exception:
+            pass
+    return items
+
 def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) -> List[DiscoveredItem]:
     """
     Main discovery orchestrator.
-    Gathers items across curated lab targets, LinkedIn jobs, academic feeds, and public search.
+    Gathers items across curated lab targets, regional LinkedIn jobs (UAE, Saudi, EU),
+    academic aggregators (jobs.ac.uk, AcademicTransfer, EURAXESS), and public search.
     """
     discovered = []
     seen_urls = set()
     
     with httpx.Client(headers=DEFAULT_HEADERS, follow_redirects=True) as client:
-        # 1. Fetch curated research lab targets
+        # 1. Fetch curated research lab targets (Europe, UAE, Saudi, Asia-Pacific, USA)
         lab_items = fetch_curated_labs(client)
         for it in lab_items:
             if it.url not in seen_urls:
                 seen_urls.add(it.url)
                 discovered.append(it)
 
-        # 2. Fetch LinkedIn public academic jobs
-        linkedin_items = search_linkedin_guest(client, max_queries=20, max_pages_per_query=2)
+        # 2. Fetch LinkedIn public academic jobs (General queries)
+        linkedin_items = search_linkedin_guest(client, max_queries=15, max_pages_per_query=2)
         for it in linkedin_items:
             if it.url not in seen_urls:
                 seen_urls.add(it.url)
                 discovered.append(it)
 
-        # 3. Fetch jobs.ac.uk UK academic openings
+        # 3. Fetch LinkedIn regional targets (UAE, Saudi Arabia, European hubs)
+        regional_li_items = search_linkedin_regional(client)
+        for it in regional_li_items:
+            if it.url not in seen_urls:
+                seen_urls.add(it.url)
+                discovered.append(it)
+
+        # 4. Fetch jobs.ac.uk UK academic openings
         jobs_uk = fetch_jobs_ac_uk(client)
         for it in jobs_uk:
             if it.url not in seen_urls:
                 seen_urls.add(it.url)
                 discovered.append(it)
 
-        # 4. Fetch academic RSS feeds
+        # 5. Fetch AcademicTransfer Dutch university openings
+        jobs_nl = fetch_academictransfer(client)
+        for it in jobs_nl:
+            if it.url not in seen_urls:
+                seen_urls.add(it.url)
+                discovered.append(it)
+
+        # 6. Fetch academic RSS feeds (EURAXESS, OpenRobotics)
         for feed in ACADEMIC_FEEDS:
             feed_items = fetch_rss_feed(client, feed)
             for it in feed_items:
@@ -413,7 +725,7 @@ def run_discovery(max_queries: int = 15, delay_between_requests: float = 1.0) ->
                     discovered.append(it)
             time.sleep(0.3)
 
-        # 5. Run query combinations
+        # 7. Run query combinations
         queries = generate_search_queries(max_queries=max_queries)
         for q_meta in queries:
             q = q_meta["query"]

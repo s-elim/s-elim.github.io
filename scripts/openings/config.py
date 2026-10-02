@@ -64,7 +64,8 @@ POSITION_TYPES = [
     "Research Scientist",
     "Research Engineer",
     "Research Fellow",
-    "Research Associate"
+    "Research Associate",
+    "Faculty"
 ]
 
 # Status taxonomy

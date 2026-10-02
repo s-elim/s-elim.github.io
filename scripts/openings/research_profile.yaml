@@ -19,7 +19,7 @@ research_focus:
       keywords: ["physical ai", "physical super intelligence", "contact dynamics", "sim-to-real", "real-world robot"]
       weight: 0.95
     - name: "Robot Learning"
-      keywords: ["robot learning", "robot manipulation", "policy learning", "imitation learning", "behavior cloning", "offline rl", "robotics", "robotic", "reinforcement learning"]
+      keywords: ["robot learning", "robot manipulation", "policy learning", "imitation learning", "behavior cloning", "offline rl", "robotics", "robotic", "reinforcement learning", "rl", "robot"]
       weight: 0.9
     - name: "Agentic Robotics"
       keywords: ["agentic robotics", "agentic", "tool use", "latent lookahead", "hierarchical planning", "reasoning-aligned"]
@@ -36,13 +36,13 @@ research_focus:
       keywords: ["6d pose", "6dof pose", "pose estimation", "object pose", "category-level pose"]
       weight: 0.75
     - name: "Computer Vision"
-      keywords: ["computer vision", "visual perception", "representation learning", "vision foundation model", "image processing", "perception", "slam"]
+      keywords: ["computer vision", "visual perception", "representation learning", "vision foundation model", "image processing", "perception", "slam", "vision"]
       weight: 0.5
     - name: "Machine Learning"
       keywords: ["machine learning", "deep learning", "neural network", "artificial intelligence", "generative ai", "diffusion models"]
       weight: 0.6
     - name: "Multimodal Learning"
-      keywords: ["multimodal learning", "multimodal", "vision language model", "vlm", "cross-modal"]
+      keywords: ["multimodal learning", "multimodal", "multi-modal", "vision language model", "vlm", "cross-modal"]
       weight: 0.6
     - name: "Foundation Models"
       keywords: ["foundation model", "foundation models", "large vision model", "generalist agent"]
@@ -57,7 +57,7 @@ research_focus:
       keywords: ["dexterous manipulation", "grasping", "mobile manipulation", "robotic arm", "gripper"]
       weight: 0.8
     - name: "Autonomous Systems"
-      keywords: ["autonomous mobile robot", "amr", "autonomous systems", "mobile robotics", "autonomous driving", "autonomous vehicles", "autonomy", "motion planning"]
+      keywords: ["autonomous mobile robot", "amr", "autonomous systems", "mobile robotics", "autonomous driving", "autonomous vehicles", "autonomy", "motion planning", "autonomous"]
       weight: 0.6
 
 candidate_profile:
