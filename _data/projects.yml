@@ -49,9 +49,10 @@ latest:
 industry:
   - name: 'IITP (Institute of Information & Communications Technology Planning & Evaluation), Korea'
     timeline: 'During M.Sc.'
+    role: 'Project POC'
     points:
       - 'Towards General-Purpose Physical AI: Infrastructure, World Models, Spatial Reasoning, and Robot Manipulation'
-      - 'PI: Prof. Sungho Kim'
+      - 'PI: Prof. Sungho Kim · Role: Project Point of Contact (POC)'
       - 'Building shared infrastructure and benchmarks for general-purpose physical AI, spanning perception, world-model learning, and spatial reasoning for robot manipulation'
       - 'Integrating action-conditioned world models with spatial reasoning modules to enable robust, generalizable manipulation policies across diverse robotic platforms'
   - name: 'Future Drive Ltd., Korea'
@@ -62,8 +63,10 @@ industry:
       - 'Deploying vision-language-action policies and sim-to-real pipelines with Isaac Lab and ROS 2 on edge mobile robot platforms'
   - name: 'RISE (Regional Innovation System & Education), Korea (Funded with Nanosystem Ltd., SL Corp., SK Telecom, Kakao Inc., ETRI AI, and others.)'
     timeline: 'During M.Sc.'
+    role: 'Project POC'
     points:
       - 'Pose Estimation with VLM integration for RGB-D, LiDAR & RADAR Multi Modal fusion for workers safety and Industry automation'
+      - 'Role: Project Point of Contact (POC) across consortium partners (Nanosystem, SL Corp., SK Telecom, Kakao, ETRI AI)'
       - 'Developing multi-sensor fusion pipelines (RGB-D, LiDAR, and RADAR) to estimate 3D object poses and segment dynamic safety boundaries'
       - 'Integrating vision-language models (VLMs) to semantically analyze industrial scenes and identify hazardous worker-robot proximity events'
   - name: 'RLRC (Regional Leading Research Center), South Korea'

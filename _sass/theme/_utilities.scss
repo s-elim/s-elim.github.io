@@ -207,4 +207,22 @@ a.chip:hover { transform: translateY(-2px); border-color: var(--accent); color: 
   padding: .18rem .55rem;
   border-radius: var(--radius-pill);
   white-space: nowrap;
+  flex-shrink: 0;
 }
+
+/* Role / POC chip on project accordion headers */
+.role-badge {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: .18rem .55rem;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  flex-shrink: 0;
+}
+
