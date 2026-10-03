@@ -1,0 +1,30 @@
+<!--
+  two_balls.xml : two free spheres in zero gravity that collide head-on along x.
+
+  Contact forces are internal to the pair (equal and opposite), so total linear
+  momentum must be conserved through the collision; kinetic energy is not, unless
+  the contact is perfectly elastic. The contact's damping ratio (second number of
+  solref, set identically on both geoms so the contact uses exactly that value)
+  controls how much energy the collision removes. Used in Lesson 4.3.
+-->
+<mujoco model="two_balls">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.001" gravity="0 0 0" integrator="RK4"/>
+  <default>
+    <geom type="sphere" size="0.05" solref="0.01 1" condim="1"/>
+  </default>
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <body name="a" pos="-0.3 0 0.3">
+      <freejoint name="a"/>
+      <geom name="a" mass="1.0" rgba=".85 .33 .1 1"/>
+    </body>
+    <body name="b" pos="0.3 0 0.3">
+      <freejoint name="b"/>
+      <geom name="b" mass="1.0" rgba=".15 .35 .85 1"/>
+    </body>
+  </worldbody>
+  <keyframe>
+    <key name="approach" qvel="1 0 0 0 0 0  -0.5 0 0 0 0 0"/>
+  </keyframe>
+</mujoco>

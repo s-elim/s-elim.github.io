@@ -78,11 +78,11 @@
       "id": 4, "title": "Rigid-body mechanics", "track": "math",
       "summary": "The mathematics of frames and rigid bodies, introduced when the robot needs it.",
       "lessons": [
-        {"id": "4.1", "slug": "rotations-and-frames", "title": "Frames, rotations, quaternions and SE(3)", "minutes": 55, "difficulty": 3, "status": "planned", "lab": "frames",
+        {"id": "4.1", "slug": "rotations-and-frames", "title": "Frames, rotations, quaternions and SE(3)", "minutes": 55, "difficulty": 3, "status": "draft", "lab": "frames",
          "prereqs": ["2.1"], "objectives": ["Convert between rotation matrices, quaternions and Euler angles in MuJoCo's conventions", "Compose and invert homogeneous transforms", "Explain the double cover of quaternions and why it matters for control and learning"]},
-        {"id": "4.2", "slug": "mass-and-inertia", "title": "Mass, centre of mass and the inertia tensor", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "simlab",
+        {"id": "4.2", "slug": "mass-and-inertia", "title": "Mass, centre of mass and the inertia tensor", "minutes": 40, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["4.1"], "objectives": ["Compute the inertia tensor of primitive shapes and check MuJoCo's values", "Apply the parallel-axis theorem", "Read body_inertia and body_iquat as principal moments and axes"]},
-        {"id": "4.3", "slug": "newton-euler-energy", "title": "Newton-Euler, momentum and energy", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "simlab",
+        {"id": "4.3", "slug": "newton-euler-energy", "title": "Newton-Euler, momentum and energy", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["4.2"], "objectives": ["Write the Newton-Euler equations for one rigid body", "Check momentum and energy conservation in a MuJoCo rollout", "Explain gyroscopic effects with the spinning free body"]}
       ],
       "checkpoint": {"title": "Checkpoint 4: verify the engine", "task": "For three primitive shapes, compute mass, centre of mass and inertia by hand, then match MuJoCo's compiled values to 1e-9. For a tumbling free box in zero gravity, show angular momentum is conserved and report the integrator you used.", "accept": ["Hand computations shown", "Matches to 1e-9 with the comparison code", "Momentum drift plotted for two integrators"]}

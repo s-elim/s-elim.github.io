@@ -1,0 +1,31 @@
+<!--
+  tumbling_box.xml : a free box in zero gravity with three distinct principal
+  moments of inertia (half-sizes 0.10 x 0.05 x 0.02 m, mass 1 kg).
+
+  Spun about its largest or smallest principal axis, it keeps spinning. Spun
+  about the intermediate axis (here body y), the motion is unstable: the box
+  periodically flips end over end while its angular momentum stays constant in
+  the world. Level 4 uses it to check Euler's equations and conservation laws.
+  The integrator is RK4 because the documentation recommends it for long-horizon
+  energy conservation of tumbling bodies; Lesson 4.2 compares the others.
+-->
+<mujoco model="tumbling_box">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 0" integrator="RK4"/>
+  <visual>
+    <global offwidth="640" offheight="480"/>
+  </visual>
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <body name="box" pos="0 0 0.5">
+      <freejoint name="box"/>
+      <geom name="box" type="box" size="0.1 0.05 0.02" mass="1" rgba=".85 .33 .1 1" contype="0" conaffinity="0"/>
+      <geom name="marker" type="sphere" pos="0.1 0 0" size="0.012" mass="0" rgba=".1 .45 .85 1" contype="0" conaffinity="0"/>
+    </body>
+  </worldbody>
+  <keyframe>
+    <!-- spin 6 rad/s about the intermediate axis (body y), with a 1e-3 rad/s nudge about x -->
+    <key name="intermediate" qvel="0 0 0  0.001 6 0"/>
+    <key name="major" qvel="0 0 0  0 0.001 6"/>
+  </keyframe>
+</mujoco>

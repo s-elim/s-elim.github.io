@@ -76,7 +76,7 @@ export async function mount(el, config) {
 
   view = await createSimView(body, {
     model: config.model, xml: config.xml, key: config.key, height: config.height,
-    camera: config.camera, overlays: config.overlays, autoplay: config.autoplay,
+    camera: config.camera, overlays: config.overlays, autoplay: config.autoplay, forceScale: config.forceScale,
     onReset: () => { apply.forEach((fn) => fn()); view?.sim.forward(); plots.forEach((p) => p.plot.clear()); },
     onTick: (s) => {
       if (config.stopAt != null && s.time >= config.stopAt && !s.paused) view?.pause();
