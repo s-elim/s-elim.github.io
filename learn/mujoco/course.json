@@ -195,11 +195,11 @@
       "id": 13, "title": "Reinforcement learning", "track": "learning",
       "summary": "What RL algorithms do inside a MuJoCo environment, a policy search you can watch, and PPO from scratch.",
       "lessons": [
-        {"id": "13.1", "slug": "rl-in-mujoco-terms", "title": "MDPs in MuJoCo terms, and a policy search you can watch", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "rl",
+        {"id": "13.1", "slug": "rl-in-mujoco-terms", "title": "MDPs in MuJoCo terms, and a policy search you can watch", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "rl",
          "prereqs": ["12.1"], "objectives": ["Map state, observation, action, reward and discount onto a MuJoCo loop", "Run a cross-entropy policy search in the browser and read its learning curve", "Explain the difference between a value function and a Q function"]},
-        {"id": "13.2", "slug": "ppo-from-scratch", "title": "PPO from scratch", "minutes": 70, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "13.2", "slug": "ppo-from-scratch", "title": "PPO from scratch", "minutes": 70, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["13.1"], "objectives": ["Implement PPO with GAE in PyTorch in under 300 lines", "Train a reaching policy on arm7", "Read entropy, KL and value loss to diagnose training"]},
-        {"id": "13.3", "slug": "off-policy-and-evaluation", "title": "SAC and TD3, and how to evaluate any agent", "minutes": 50, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "13.3", "slug": "off-policy-and-evaluation", "title": "SAC and TD3, and how to evaluate any agent", "minutes": 50, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["13.2"], "objectives": ["Explain what SAC and TD3 add over DDPG", "Evaluate deterministic policies on held-out initial states with enough seeds", "Report results with confidence intervals"]}
       ],
       "checkpoint": {"title": "Checkpoint 13: a credible learning curve", "task": "Train PPO on the reach task with 5 seeds, evaluate on 100 held-out initial states per seed, and report the final success rate with a bootstrap interval. Include one ablation (for example, without observation normalization).", "accept": ["5 seeds, held-out evaluation", "Interval reported", "Ablation with the same budget"]}
