@@ -143,13 +143,13 @@
       "id": 9, "title": "Contacts and friction", "track": "contact",
       "summary": "Collision detection, the soft contact model, friction and stability, in the depth manipulation needs.",
       "lessons": [
-        {"id": "9.1", "slug": "collision-detection", "title": "Collision detection: phases, filtering, margin and gap", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "contact",
+        {"id": "9.1", "slug": "collision-detection", "title": "Collision detection: phases, filtering, margin and gap", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["2.2"], "objectives": ["Describe broad, mid and narrow phase", "Predict which geom pairs can collide from contype, conaffinity and parent-child filtering", "Use margin and gap correctly"]},
-        {"id": "9.2", "slug": "soft-contact-model", "title": "The soft contact model: solref, solimp and the solver", "minutes": 60, "difficulty": 4, "status": "planned", "lab": "contact",
+        {"id": "9.2", "slug": "soft-contact-model", "title": "The soft contact model: solref, solimp and the solver", "minutes": 60, "difficulty": 4, "status": "draft", "lab": "simlab",
          "prereqs": ["9.1", "7.2"], "objectives": ["Write the reference acceleration from solref and the impedance from solimp", "Predict resting penetration from timeconst and dampratio", "State the convex optimization MuJoCo solves for constraint forces"]},
-        {"id": "9.3", "slug": "friction", "title": "Friction: cones, slip and the incline test", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "incline",
+        {"id": "9.3", "slug": "friction", "title": "Friction: cones, slip and the incline test", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["9.2"], "objectives": ["Predict the slip angle of a block from the friction coefficient", "Choose condim 1, 3, 4 or 6 for a task", "Explain pyramidal versus elliptic cones and impratio"]},
-        {"id": "9.4", "slug": "stability", "title": "Why simulations explode, and how to keep them stable", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "simlab",
+        {"id": "9.4", "slug": "stability", "title": "Why simulations explode, and how to keep them stable", "minutes": 45, "difficulty": 4, "status": "draft", "lab": "simlab",
          "prereqs": ["9.2", "1.3"], "objectives": ["Diagnose instability from mjData warnings and energy", "Relate stiffness, mass ratio and timestep to stability", "Apply the fixes in order of cost"]}
       ],
       "checkpoint": {"title": "Checkpoint 9: diagnose a broken simulation", "task": "Open each model in the debugging clinic's contact section, find the root cause without reading the solution, fix it with the smallest change, and justify the change with a measurement.", "accept": ["Root cause stated before the fix", "A measurement before and after", "The general lesson in one sentence"]}
