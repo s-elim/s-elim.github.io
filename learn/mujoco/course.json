@@ -219,7 +219,7 @@
       "id": 15, "title": "Vision-based robotics", "track": "perception",
       "summary": "Policies that see pixels instead of privileged state, and what that costs.",
       "lessons": [
-        {"id": "15.1", "slug": "vision-policies", "title": "From state to pixels: vision-based policies", "minutes": 60, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "15.1", "slug": "vision-policies", "title": "From state to pixels: vision-based policies", "minutes": 60, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["11.2", "14.1"], "objectives": ["Build state, RGB plus proprioception, and RGB-D plus proprioception observation variants of one task", "Train each with the same data budget and compare honestly", "Identify shortcut features a vision policy can exploit in simulation"]}
       ],
       "checkpoint": {"title": "Checkpoint 15: the price of pixels", "task": "Train the same behaviour-cloning architecture on state and on RGB-D observations for the pick task with equal demonstrations, and report the gap with intervals and with a held-out lighting and camera-pose condition.", "accept": ["Equal data budgets", "In-distribution and shifted results reported separately", "A failure mode identified from rollouts"]}
@@ -228,7 +228,7 @@
       "id": 16, "title": "Language-conditioned robotics", "track": "learning",
       "summary": "Instructions as task representations, and what technically makes a model a VLA.",
       "lessons": [
-        {"id": "16.1", "slug": "language-conditioned-tasks", "title": "Language-conditioned tasks, and what makes a VLA", "minutes": 55, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "16.1", "slug": "language-conditioned-tasks", "title": "Language-conditioned tasks, and what makes a VLA", "minutes": 55, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["15.1"], "objectives": ["Build a templated instruction set over the pick-and-place scene", "Separate language grounding from control in evaluation", "State the architectural criteria for calling a model a vision-language-action model"]}
       ],
       "checkpoint": {"title": "Checkpoint 16: a language benchmark with splits", "task": "Define 30 instruction templates over pick_place.xml, split them into train and held-out paraphrases and held-out object-goal combinations, and evaluate a scripted language-to-goal baseline on each split.", "accept": ["Splits defined before evaluation", "Per-split success rates", "Errors separated into parsing and execution"]}
