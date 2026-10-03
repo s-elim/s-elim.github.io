@@ -10,7 +10,7 @@
 // The answer key is in the page source; the point is to commit to an answer
 // first, not to keep it secret.
 
-import { h } from "./ui.js";
+import { h, mathHtml } from "./ui.js";
 import { store } from "../store.js";
 
 const KIND_LABEL = { mcq: "Concept", predict: "Predict, then simulate", numeric: "Compute", open: "Explain or design", debug: "Debugging", code: "Coding" };
@@ -44,7 +44,7 @@ export async function mount(el, config) {
     const reveal = (correct, extra = "") => {
       explain.hidden = false;
       const verdict = correct === null ? "" : `<span class="verdict ${correct ? "ok" : "no"}">${correct ? "Correct" : "Not quite"}</span>`;
-      explain.innerHTML = verdict + (q.explain || "") + extra;
+      explain.innerHTML = verdict + mathHtml(q.explain || "") + extra;
     };
 
     if (kind === "mcq" || kind === "predict" || kind === "debug") {
@@ -98,7 +98,7 @@ export async function mount(el, config) {
         results[i] = "open";
         store.setQuizAnswer(qid, { text: ta.value, revealed: true });
         explain.hidden = false;
-        explain.innerHTML = `<span class="verdict ok">Reference answer</span>${q.reference || q.explain || ""}`;
+        explain.innerHTML = `<span class="verdict ok">Reference answer</span>${mathHtml(q.reference || q.explain || "")}`;
         updateScore();
       };
       if (saved && saved.text) ta.value = saved.text;

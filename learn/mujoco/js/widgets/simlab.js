@@ -102,7 +102,10 @@ export async function mount(el, config) {
   for (const c of config.controls || []) {
     if (c.type === "button") {
       const fn = compileStmt(c.run);
-      controls.appendChild(h("div", { class: "toolbar" }, button(c.label, () => { call(fn); view.sim.forward(); })));
+      // Consecutive buttons share one toolbar row.
+      let bar = controls.lastElementChild;
+      if (!bar || !bar.classList.contains("toolbar")) bar = controls.appendChild(h("div", { class: "toolbar" }));
+      bar.appendChild(button(c.label, () => { call(fn); view.sim.forward(); }));
       continue;
     }
     // "set": an assignable expression; "apply": statements that read `value`

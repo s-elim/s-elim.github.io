@@ -4,6 +4,17 @@
 import { loadModel, compileXml, getMujoco } from "../runtime.js";
 import { Sim } from "../sim.js";
 import { register } from "../loop.js";
+import { protectMath, restoreMath } from "../mdcore.js";
+
+/** Typeset $...$ and $$...$$ in an HTML string from a widget config (quiz text,
+ *  debug cases). KaTeX is already loaded by the page renderer before any widget mounts. */
+export function mathHtml(s) {
+  const katex = window.katex;
+  if (!katex || typeof s !== "string" || !s.includes("$")) return s;
+  const { text, math } = protectMath(s);
+  return restoreMath(text, math, (tex, display) =>
+    katex.renderToString(tex, { displayMode: display, throwOnError: false, strict: "ignore" }));
+}
 
 export function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -12,7 +23,7 @@ export function h(tag, attrs = {}, ...children) {
     if (k === "class") el.className = v;
     else if (k === "style" && typeof v === "object") Object.assign(el.style, v);
     else if (k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
-    else if (k === "html") el.innerHTML = v;
+    else if (k === "html") el.innerHTML = mathHtml(v);
     else el.setAttribute(k, v === true ? "" : v);
   }
   for (const c of children.flat()) {
