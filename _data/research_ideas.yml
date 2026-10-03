@@ -533,7 +533,7 @@ ideas:
         url: https://www.worldlabs.ai/blog/atlas
     connects:
       - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
-      - A Capability-Factored Dataset and Benchmark for Robot Learning
+      - AFFORD-PRO: A Benchmark, Dataset Generator & Generalization Evaluation Suite for Robot Foundation Models
       - Future Drive world models
     related:
       - v2d-pipeline-break
@@ -657,7 +657,7 @@ ideas:
     connects:
       - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
       - AFFORD-X
-      - PRAXIS
+      - AFFORD-PRO
       - Future Drive world models
     related:
       - generative-fidelity-vs-policy

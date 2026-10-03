@@ -59,20 +59,19 @@
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2609.13235', kind: 'pdf' }
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
-- title: 'A Capability-Factored Dataset and Benchmark for Robot Learning'
+- title: 'AFFORD-PRO: A Benchmark, Dataset Generator & Generalization Evaluation Suite for Robot Foundation Models'
   authors: 'Md Selim Sarowar and Sungho Kim*'
-  venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition'
-  venue_short: "CVPR'28"
+  venue: 'Robotics: Science and Systems'
+  venue_short: "RSS'27"
   year: 2027
   type: 'conference'
+  flagship: 'robotics'
   rank: 'A*'
   status: 'In Preparation'
-  image: '/images/praxis-capability-vector.webp'
-  thumb: "PRAXIS"
-  url: 'https://physical-agi.github.io/PRAXIS/'
+  thumb: "RSS '27"
+  url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/PRAXIS/', kind: 'project' }
-    - { label: 'Code', url: 'https://github.com/Physical-AGI/PRAXIS', kind: 'code' }
+    - { label: 'Code', url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
