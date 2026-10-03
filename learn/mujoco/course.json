@@ -171,11 +171,11 @@
       "id": 11, "title": "Cameras, rendering, RGB and depth", "track": "perception",
       "summary": "MuJoCo's camera model, rendering RGB, depth and segmentation, and generating datasets.",
       "lessons": [
-        {"id": "11.1", "slug": "camera-model", "title": "The camera model: intrinsics, extrinsics, projection", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "camera",
+        {"id": "11.1", "slug": "camera-model", "title": "The camera model: intrinsics, extrinsics, projection", "minutes": 50, "difficulty": 3, "status": "draft", "lab": "camera",
          "prereqs": ["4.1"], "objectives": ["Compute the intrinsic matrix from fovy and resolution", "Compute the extrinsic transform from cam_xpos and cam_xmat", "Project world points to pixels and check against a render"]},
-        {"id": "11.2", "slug": "rgb-depth-segmentation", "title": "RGB, depth, segmentation and point clouds", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "camera",
+        {"id": "11.2", "slug": "rgb-depth-segmentation", "title": "RGB, depth, segmentation and point clouds", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "camera",
          "prereqs": ["11.1", "3.2"], "objectives": ["Render RGB, depth and segmentation with mujoco.Renderer", "Convert depth to a point cloud in the world frame", "Know what depth MuJoCo returns and in which units"]},
-        {"id": "11.3", "slug": "datasets", "title": "Generating datasets from simulation", "minutes": 45, "difficulty": 3, "status": "planned", "lab": null,
+        {"id": "11.3", "slug": "datasets", "title": "Generating datasets from simulation", "minutes": 45, "difficulty": 3, "status": "draft", "lab": null,
          "prereqs": ["11.2", "10.2"], "objectives": ["Design a dataset schema with images, depth, masks, state, action and object poses", "Write episodes reproducibly with seeds and metadata", "Validate a dataset before training on it"]}
       ],
       "checkpoint": {"title": "Checkpoint 11: a dataset you can trust", "task": "Generate 50 pick-and-place episodes with RGB, depth and segmentation from two cameras, plus state, action and object poses, then write a validation script that checks shapes, ranges, reprojection of object centres into the masks, and seed reproducibility.", "accept": ["Reprojection error of object centres under 2 px", "Bitwise-identical regeneration from the same seed", "Schema documented"]}
