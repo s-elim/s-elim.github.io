@@ -184,9 +184,9 @@
       "id": 12, "title": "Gymnasium integration", "track": "learning",
       "summary": "The Gymnasium API built from scratch on top of MuJoCo, without hiding anything behind a library.",
       "lessons": [
-        {"id": "12.1", "slug": "gymnasium-from-scratch", "title": "The Gymnasium API, from scratch on MuJoCo", "minutes": 50, "difficulty": 3, "status": "planned", "lab": null,
+        {"id": "12.1", "slug": "gymnasium-from-scratch", "title": "The Gymnasium API, from scratch on MuJoCo", "minutes": 50, "difficulty": 3, "status": "draft", "lab": null,
          "prereqs": ["3.1"], "objectives": ["Implement reset, step, spaces and seeding on a MuJoCo model", "Separate terminated from truncated correctly", "Pass gymnasium's environment checker"]},
-        {"id": "12.2", "slug": "env-design", "title": "Observation, action and reward design", "minutes": 50, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "12.2", "slug": "env-design", "title": "Observation, action and reward design", "minutes": 50, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["12.1"], "objectives": ["Choose action spaces (torque, joint target, end-effector delta) and know their trade-offs", "Design dense and sparse rewards and detect reward hacking", "Find privileged information leaking into observations"]}
       ],
       "checkpoint": {"title": "Checkpoint 12: an environment that passes review", "task": "Build a custom Gymnasium environment for the push task with three action-space variants, document observation and reward, pass check_env, and write a test that fails if any observation contains privileged simulator state not available on a real robot.", "accept": ["check_env passes", "Leakage test written and passing", "Observation and action spaces documented with units"]}
