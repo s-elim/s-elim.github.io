@@ -17,6 +17,7 @@
 #  highlights Three or four findings, each one sentence.
 #  page      Where the interactive explainer lives on this site.
 #  cta       Optional button label; defaults to "Open the teardown".
+#  verdict_label Optional label for the verdict box; defaults to "Calibrated verdict".
 #  tags      Free keywords.
 #  source    The primary source: label, url, date.
 #  links     Further reading, as label/url pairs.
@@ -24,6 +25,45 @@
 # ==========================================================================
 
 dives:
+  - id: mujoco-course
+    title: MuJoCo, from Zero to Research
+    subtitle: An interactive course that runs MuJoCo 3.14.0 in the browser, from a falling ball to
+      research-grade robot-learning experiments
+    kicker: 'Simulation course · 3 Oct 2026'
+    cta: Open the course
+    verdict_label: Status
+    summary: >-
+      Twenty-three levels take MuJoCo from what a simulator computes, through MJCF, the Python and JavaScript
+      bindings and rigid-body mechanics, to controllers, contact, Gymnasium, reinforcement and imitation learning,
+      vision, language conditioning, world models, domain randomization, system identification and sim-to-real.
+      Every lab is MuJoCo itself, compiled to WebAssembly and running in the page, and every measured number in the
+      text comes from a script in the companion repository.
+    verdict: >-
+      Levels 0 to 4 (17 lessons), the playground, the physics, performance and debugging labs, research mode, the
+      reading list, the final exam and 2 of 20 projects are written and tested. Levels 5 to 22 have fixed outlines
+      and objectives but no lesson text yet, and projects 3 to 20 have specifications without code; each page says
+      which state it is in.
+    highlights:
+      - >-
+        Claims carry their kind: established MuJoCo behaviour, derivation, implementation detail, engineering
+        recommendation or research-level interpretation, with anything unconfirmed marked unverified.
+      - >-
+        Measured, not paraphrased: a resting ball sinks 0.37 mm into the floor at 2 kg and at 0.1 kg alike,
+        because MuJoCo specifies soft contacts as a reference acceleration rather than a force.
+      - >-
+        A pytest suite checks every lesson script, model, broken-model case and project solution against
+        MuJoCo 3.14.0, and a content checker flags any lesson whose embedded code differs from its source file.
+      - >-
+        The thirteen-case debugging clinic walks symptom, diagnosis, root cause, fix and lesson for common
+        faults such as degrees read as radians, xyzw quaternions and stale observations after reset.
+    page: /learn/mujoco/
+    tags: [mujoco, simulation, robot-learning, webassembly, course]
+    links:
+      - label: MuJoCo documentation
+        url: https://mujoco.readthedocs.io/en/stable/
+      - label: google-deepmind/mujoco
+        url: https://github.com/google-deepmind/mujoco
+
   - id: physics-priors-course
     title: Physics Priors in Machine Learning
     subtitle: A five-lecture PhD course from UniTrento and TUM, rebuilt as a study guide to where physics
