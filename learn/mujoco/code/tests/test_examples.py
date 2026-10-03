@@ -16,8 +16,6 @@ from pathlib import Path
 
 import pytest
 
-from conftest import HAS_GL
-
 EXAMPLES = sorted((Path(__file__).resolve().parents[1] / "examples").glob("*.py"))
 
 
@@ -31,12 +29,12 @@ def _has_torch() -> bool:
 
 
 @pytest.mark.parametrize("script", EXAMPLES, ids=lambda p: p.name)
-def test_example_runs(script, tmp_path):
+def test_example_runs(script, tmp_path, has_gl):
     needs = _requirements(script)
     if "display" in needs:
         py_compile.compile(str(script), cfile=str(tmp_path / "x.pyc"), doraise=True)
         pytest.skip("needs a display: byte-compiled only")
-    if "render" in needs and not HAS_GL:
+    if "render" in needs and not has_gl:
         pytest.skip("needs an OpenGL backend (MUJOCO_GL=egl or osmesa)")
     if "torch" in needs and not _has_torch():
         pytest.skip("needs PyTorch")

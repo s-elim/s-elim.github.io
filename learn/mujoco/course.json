@@ -312,7 +312,7 @@
     {"id": "research-mode", "title": "Research mode", "kind": "page", "file": "content/research-mode.md", "summary": "How to design, run and report a scientifically valid MuJoCo experiment."},
     {"id": "performance-lab", "title": "Performance lab", "kind": "page", "file": "content/performance-lab.md", "summary": "Steps per second from 1 to 1000 simulations, measured in your browser and in Python."},
     {"id": "math-track", "title": "Mathematics track", "kind": "page", "file": "content/math-track.md", "summary": "The mathematics of the course in order, each topic linked to where the robot first needs it."},
-    {"id": "reading-list", "title": "Reading list", "kind": "page", "file": "content/reading-list.md", "summary": "A curated paper sequence, each entry with what it solves and what MuJoCo contributes."},
+    {"id": "reading-list", "title": "Reading list", "kind": "page", "file": "content/reading-list.md", "summary": "Verified papers by track, each tied to a level and a question to answer while reading."},
     {"id": "final-exam", "title": "Final expert exam", "kind": "page", "file": "content/final-exam.md", "summary": "Practical and written examination across all levels."},
     {"id": "about", "title": "How this course works", "kind": "page", "file": "content/about.md", "summary": "Versions, the two runtimes, the five kinds of claim, and how to run everything locally."}
   ]

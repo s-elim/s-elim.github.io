@@ -9,7 +9,7 @@ import pytest
 
 from mjcourse import MODELS_DIR, model_builder
 
-MODELS = sorted(p.stem for p in MODELS_DIR.glob("*.xml") if p.stem != "gripper")
+MODELS = sorted(p.stem for p in MODELS_DIR.glob("*.xml") if p.stem != "gripper" and not p.stem.startswith("broken_"))
 # Scenes that attach an arm inherit its keyframes; "home" is keyframe 1 there.
 HOME_KEY = {"arm7": 1, "arm7_gripper": 1, "arm7_peg": 1, "reach": 1, "push": 1, "pick_place": 1,
             "peg_insert": 1, "articulated": 1, "bimanual": 0}

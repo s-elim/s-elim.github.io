@@ -1,0 +1,13 @@
+<!-- BROKEN (debugging clinic, case 6): images from camera "front" come out upside down. -->
+<mujoco model="upside_down_camera">
+  <compiler angle="radian" autolimits="true"/>
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.05" rgba=".86 .88 .86 1"/>
+    <body name="tower" pos="0 0 0.15">
+      <geom type="box" size="0.05 0.05 0.15" rgba=".85 .33 .1 1"/>
+      <geom type="sphere" pos="0 0 0.2" size="0.05" rgba=".15 .35 .85 1"/>
+    </body>
+    <camera name="front" pos="1.2 0 0.3" xyaxes="0 -1 0 0 0 -1"/>
+  </worldbody>
+</mujoco>

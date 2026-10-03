@@ -4,7 +4,6 @@ from pathlib import Path
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 MODELS_DIR = PACKAGE_DIR / "models"
-BROKEN_DIR = MODELS_DIR / "broken"
 
 
 def model_path(name: str) -> Path:

@@ -1,0 +1,35 @@
+<!-- BROKEN (debugging clinic, case 4): the gripper closes on the cube, but the cube slides out when lifted slowly. -->
+<mujoco model="weak_grip">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+  <asset><model name="gripper" file="gripper.xml"/></asset>
+  <default>
+    <default class="gantry">
+      <joint type="slide" damping="5" armature="0.1"/>
+      <position kp="10000" kv="250"/>
+    </default>
+  </default>
+  <worldbody>
+    <light pos="0.3 -0.6 1.4" dir="-0.2 0.5 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.05" rgba=".86 .88 .86 1"/>
+    <body name="carriage" pos="0 0 0.45" childclass="gantry">
+      <joint name="gx" axis="1 0 0" range="-0.4 0.4"/>
+      <joint name="gy" axis="0 1 0" range="-0.4 0.4"/>
+      <joint name="gz" axis="0 0 1" range="-0.42 0.1"/>
+      <geom type="box" size="0.04 0.04 0.02" mass="1.0" contype="0" conaffinity="0"/>
+      <frame quat="0 1 0 0"><attach model="gripper" body="hand" prefix="gripper/"/></frame>
+    </body>
+    <body name="cube" pos="0.12 0 0.02">
+      <freejoint name="cube"/>
+      <geom name="cube" type="box" size="0.02 0.02 0.02" mass="0.4" rgba=".8 .15 .15 1" friction="0.15 0.005 0.0001" priority="2"/>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="gx" joint="gx" class="gantry" ctrlrange="-0.4 0.4"/>
+    <position name="gy" joint="gy" class="gantry" ctrlrange="-0.4 0.4"/>
+    <position name="gz" joint="gz" class="gantry" ctrlrange="-0.42 0.1"/>
+  </actuator>
+  <keyframe>
+    <key name="open_above" qpos="0.12 0 0  0.04 0.04  0.12 0 0.02 1 0 0 0" ctrl="0.12 0 0 0.04"/>
+  </keyframe>
+</mujoco>

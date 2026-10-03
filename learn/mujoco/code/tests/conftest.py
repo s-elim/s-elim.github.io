@@ -27,6 +27,11 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_render)
 
 
+@pytest.fixture(scope="session")
+def has_gl() -> bool:
+    return HAS_GL
+
+
 @pytest.fixture(autouse=True)
 def _quiet_numpy():
     import numpy as np

@@ -1,0 +1,17 @@
+<!-- BROKEN (debugging clinic, case 2): the arm flies apart within a fraction of a second. -->
+<mujoco model="explode">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.01"/>
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <body name="link1" pos="0 0 1">
+      <joint name="j1" type="hinge" axis="0 1 0" stiffness="2000"/>
+      <geom type="capsule" fromto="0 0 0 0.3 0 0" size="0.02" mass="0.05"/>
+      <body name="link2" pos="0.3 0 0">
+        <joint name="j2" type="hinge" axis="0 1 0" stiffness="2000"/>
+        <geom type="capsule" fromto="0 0 0 0.3 0 0" size="0.02" mass="0.05"/>
+      </body>
+    </body>
+  </worldbody>
+  <keyframe><key qpos="0.3 -0.3"/></keyframe>
+</mujoco>
