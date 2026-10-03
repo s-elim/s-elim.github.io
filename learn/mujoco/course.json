@@ -48,13 +48,13 @@
       "id": 2, "title": "MJCF, the modeling language", "track": "modeling",
       "summary": "Writing models by hand: the kinematic tree, physical properties, actuation, sensing and composition.",
       "lessons": [
-        {"id": "2.1", "slug": "bodies-geoms-joints-sites", "title": "Bodies, geoms, joints and sites", "minutes": 45, "difficulty": 2, "status": "planned", "lab": "playground",
+        {"id": "2.1", "slug": "bodies-geoms-joints-sites", "title": "Bodies, geoms, joints and sites", "minutes": 45, "difficulty": 2, "status": "draft", "lab": "playground",
          "prereqs": ["1.1"], "objectives": ["Write a kinematic tree and predict the world pose of every frame", "Use pos, quat, euler, axisangle, xyaxes, zaxis and fromto correctly", "Avoid the degrees-versus-radians trap of compiler/angle"]},
-        {"id": "2.2", "slug": "mass-inertia-defaults", "title": "Mass, inertia, defaults and options", "minutes": 40, "difficulty": 2, "status": "planned", "lab": "playground",
+        {"id": "2.2", "slug": "mass-inertia-defaults", "title": "Mass, inertia, defaults and options", "minutes": 40, "difficulty": 2, "status": "draft", "lab": "playground",
          "prereqs": ["2.1"], "objectives": ["Predict the mass and inertia MuJoCo infers from geoms", "Organise a model with default classes and childclass", "Set solver and integrator options and know what each changes"]},
-        {"id": "2.3", "slug": "actuators-sensors-constraints", "title": "Actuators, sensors, tendons, equalities and keyframes", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "playground",
+        {"id": "2.3", "slug": "actuators-sensors-constraints", "title": "Actuators, sensors, tendons, equalities and keyframes", "minutes": 50, "difficulty": 3, "status": "draft", "lab": "playground",
          "prereqs": ["2.2"], "objectives": ["Write the force law of a general actuator from its gain, bias and dynamics", "Express motor, position and velocity actuators as general actuators", "Couple joints with tendons and equality constraints"]},
-        {"id": "2.4", "slug": "composition-and-compiled-models", "title": "Composition: include, attach, and reading the compiled model", "minutes": 35, "difficulty": 3, "status": "planned", "lab": "playground",
+        {"id": "2.4", "slug": "composition-and-compiled-models", "title": "Composition: include, attach, and reading the compiled model", "minutes": 35, "difficulty": 3, "status": "draft", "lab": "playground",
          "prereqs": ["2.3"], "objectives": ["Compose a scene from sub-models with attach and prefixes", "Read compiler errors and fix them", "Inspect what the compiler produced with mj_saveLastXML and named access"]}
       ],
       "checkpoint": {"title": "Checkpoint 2: a robot without a template", "task": "Write, from an empty file, a 3-DOF arm with a two-finger gripper, joint limits, a position actuator per joint, a camera looking at the workspace and a keyframe. It must compile without warnings and hold its keyframe pose under gravity for 5 s.", "accept": ["Compiles in MuJoCo 3.14.0 without warnings", "Joint drift under 1 degree after 5 s at the keyframe", "Every numeric attribute carries a comment with its unit"]}
@@ -63,13 +63,13 @@
       "id": 3, "title": "The Python API", "track": "foundations",
       "summary": "Driving MuJoCo from Python and JavaScript: named access, views, rendering, and model editing with MjSpec.",
       "lessons": [
-        {"id": "3.1", "slug": "python-bindings", "title": "Python bindings: models, data, named access, views and copies", "minutes": 40, "difficulty": 2, "status": "planned", "lab": "inspector",
+        {"id": "3.1", "slug": "python-bindings", "title": "Python bindings: models, data, named access, views and copies", "minutes": 40, "difficulty": 2, "status": "draft", "lab": "inspector",
          "prereqs": ["1.1"], "objectives": ["Load, step, reset and inspect a model from Python", "Use named access instead of hand-computed indices", "Avoid the views-versus-copies bugs that silently corrupt logs"]},
-        {"id": "3.2", "slug": "viewing-and-rendering", "title": "Viewing and rendering from Python", "minutes": 35, "difficulty": 2, "status": "planned", "lab": null,
+        {"id": "3.2", "slug": "viewing-and-rendering", "title": "Viewing and rendering from Python", "minutes": 35, "difficulty": 2, "status": "draft", "lab": null,
          "prereqs": ["3.1"], "objectives": ["Use the passive viewer for interactive debugging", "Render offscreen with mujoco.Renderer", "Run rendering on a headless server and diagnose GL backend errors"]},
-        {"id": "3.3", "slug": "mjspec", "title": "Editing models in code with MjSpec", "minutes": 40, "difficulty": 3, "status": "planned", "lab": null,
+        {"id": "3.3", "slug": "mjspec", "title": "Editing models in code with MjSpec", "minutes": 40, "difficulty": 3, "status": "draft", "lab": null,
          "prereqs": ["2.4", "3.1"], "objectives": ["Build and modify a model procedurally", "Attach sub-models and recompile while preserving state", "Decide between editing mjModel arrays and editing the spec"]},
-        {"id": "3.4", "slug": "javascript-bindings", "title": "The JavaScript bindings this course runs on", "minutes": 30, "difficulty": 3, "status": "planned", "lab": "inspector",
+        {"id": "3.4", "slug": "javascript-bindings", "title": "The JavaScript bindings this course runs on", "minutes": 30, "difficulty": 3, "status": "draft", "lab": "inspector",
          "prereqs": ["3.1"], "objectives": ["Load MuJoCo's WebAssembly build and step a model in a browser", "Manage WASM memory explicitly", "Use output buffers correctly (a plain typed array is silently discarded)"]}
       ],
       "checkpoint": {"title": "Checkpoint 3: a logged experiment", "task": "Write a script that loads pick_place.xml, runs 2 s of passive dynamics from three keyframes, logs qpos, contact counts and the front-camera image at 10 Hz to an .npz file, and reloads the file to plot one trajectory.", "accept": ["Logged arrays are copies, not views (verified by a test)", "Images have the shape and dtype stated in the docstring", "The script runs headless with MUJOCO_GL=egl or osmesa"]}

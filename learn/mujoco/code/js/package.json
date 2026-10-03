@@ -1,0 +1,9 @@
+{
+  "name": "mjcourse-js",
+  "private": true,
+  "type": "module",
+  "description": "JavaScript examples for the MuJoCo course (Lesson 3.4). Run: npm install && node bindings_tour.mjs",
+  "dependencies": {
+    "@mujoco/mujoco": "3.14.0"
+  }
+}

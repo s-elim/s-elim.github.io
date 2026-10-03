@@ -1,0 +1,83 @@
+<!doctype html>
+<!--
+  Lesson 3.4: the smallest useful MuJoCo page. A box falls on a plane; MuJoCo
+  (WebAssembly, from jsDelivr) computes the physics, three.js draws it.
+
+  INPUT   nothing; open the file through any static web server
+          (python -m http.server, then http://localhost:8000/minimal.html)
+  PROCESS compile an MJCF string, step mj_step in real time, copy geom poses to three.js
+  OUTPUT  an animated canvas and the box height in the page title
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal MuJoCo page</title>
+  <style>html, body { margin: 0; height: 100%; background: #e9ece8; } canvas { display: block; width: 100%; height: 100%; }</style>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+<script type="module">
+import * as THREE from "three";
+import loadMujoco from "https://cdn.jsdelivr.net/npm/@mujoco/mujoco@3.14.0/mujoco.js";
+
+const mj = await loadMujoco();
+const model = mj.MjModel.from_xml_string(`
+  <mujoco>
+    <worldbody>
+      <light pos="0 0 3"/>
+      <geom type="plane" size="1 1 .1" rgba=".8 .82 .8 1"/>
+      <body pos="0 0 1" euler="20 30 0"><freejoint/><geom type="box" size=".1 .1 .1" rgba=".85 .33 .1 1"/></body>
+    </worldbody>
+  </mujoco>`);
+const data = new mj.MjData(model);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xe9ece8);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x888888, 2));
+const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 50);
+camera.up.set(0, 0, 1);                           // MuJoCo is z-up
+camera.position.set(2.2, -2.2, 1.6);
+camera.lookAt(0, 0, 0.3);
+
+// One mesh per geom. Sizes are half-sizes; a plane's size is only for drawing.
+const meshes = [];
+for (let g = 0; g < model.ngeom; g++) {
+  const type = model.geom_type[g], s = model.geom_size.subarray(3 * g, 3 * g + 3);
+  const geo = type === mj.mjtGeom.mjGEOM_PLANE.value ? new THREE.PlaneGeometry(2 * s[0], 2 * s[1])
+            : new THREE.BoxGeometry(2 * s[0], 2 * s[1], 2 * s[2]);
+  const c = model.geom_rgba.subarray(4 * g, 4 * g + 4);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: new THREE.Color(c[0], c[1], c[2]) }));
+  mesh.matrixAutoUpdate = false;
+  scene.add(mesh);
+  meshes.push(mesh);
+}
+
+let last = performance.now();
+function frame(now) {
+  // Real time: step until simulated time catches up with wall time (capped per frame).
+  const target = data.time + Math.min((now - last) / 1000, 0.05);
+  last = now;
+  while (data.time < target) mj.mj_step(model, data);
+  // Read the arrays fresh every frame: views can go stale if the WebAssembly heap grows.
+  const pos = data.geom_xpos, mat = data.geom_xmat;
+  meshes.forEach((m, g) => {
+    const r = mat.subarray(9 * g, 9 * g + 9);    // row-major rotation matrix
+    m.matrix.set(r[0], r[1], r[2], pos[3 * g], r[3], r[4], r[5], pos[3 * g + 1], r[6], r[7], r[8], pos[3 * g + 2], 0, 0, 0, 1);
+  });
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  document.title = `t = ${data.time.toFixed(2)} s, box z = ${data.qpos[2].toFixed(3)} m`;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

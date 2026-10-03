@@ -13,7 +13,9 @@ import { liveTables } from "./inspect-tables.js";
 import { CODEMIRROR_JS, CODEMIRROR_CSS, CODEMIRROR_XML, loadScript, loadStyle } from "../vendor.js";
 
 export const LIBRARY = [
-  ["ball_drop", "Two falling balls"], ["pendulum", "Pendulum"], ["double_pendulum", "Double pendulum"],
+  ["tutorial_tree", "Tutorial: a kinematic tree"], ["joint_zoo", "One joint of each type"],
+  ["ball_drop", "Two falling balls"], ["free_fall", "Free fall (no floor)"], ["pendulum", "Pendulum"],
+  ["pendulum_servo", "Pendulum on a position servo"], ["double_pendulum", "Double pendulum"],
   ["cartpole", "Cart-pole"], ["arm2", "Two-link arm"], ["arm7", "7-DOF arm"], ["arm7_gripper", "7-DOF arm + gripper"],
   ["gantry_gripper", "Gantry gripper + cube"], ["cube_table", "Contact lab"], ["incline", "Incline"],
   ["hand3", "Three-finger hand"], ["point_mass", "Point mass arena"], ["reach", "Reach scene"],

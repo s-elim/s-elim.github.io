@@ -493,3 +493,6 @@ dialog::backdrop { background: rgba(0, 0, 0, .35); }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* Short code in table cells (element names, attribute values) should not break mid-word. */
+.prose td code, .prose th code { white-space: nowrap; }

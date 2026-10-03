@@ -26,9 +26,14 @@
   <compiler angle="radian" autolimits="true"/>
   <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
 
+  <visual>
+    <!-- A dimmer headlight than the default, so the two scene lights do not wash out the images. -->
+    <headlight ambient=".15 .15 .15" diffuse=".35 .35 .35" specular=".1 .1 .1"/>
+  </visual>
+
   <asset>
     <model name="arm" file="arm7_gripper.xml"/>
-    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".80 .82 .80" width="256" height="256"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".62 .64 .62" rgb2=".56 .58 .56" width="256" height="256"/>
     <material name="grid" texture="grid" texrepeat="10 10"/>
   </asset>
 
@@ -42,8 +47,8 @@
   </default>
 
   <worldbody>
-    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1" diffuse=".75 .75 .75"/>
-    <light pos="0.5 0.8 1.8" dir="0 -0.5 -1" diffuse=".35 .35 .35"/>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1" diffuse=".55 .55 .55"/>
+    <light pos="0.5 0.8 1.8" dir="0 -0.5 -1" diffuse=".25 .25 .25"/>
     <geom name="floor" type="plane" size="2 2 0.05" material="grid"/>
 
     <attach model="arm" body="link0" prefix=""/>
