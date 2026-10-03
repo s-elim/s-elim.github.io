@@ -162,8 +162,8 @@
          "prereqs": ["9.3", "5.3"], "objectives": ["Compute the friction budget of a two-finger grasp", "Show why fast motions break grasps that hold at rest", "Apply the documented slip-prevention steps in order"]},
         {"id": "10.2", "slug": "pick-and-place", "title": "A scripted pick-and-place pipeline", "minutes": 60, "difficulty": 4, "status": "draft", "lab": "pickplace",
          "prereqs": ["10.1", "8.3"], "objectives": ["Structure a task as a state machine over task-space targets", "Detect grasp success from contacts rather than from the plan", "Measure success rate over randomized initial states"]},
-        {"id": "10.3", "slug": "contact-rich-tasks", "title": "Contact-rich tasks: pushing, insertion, drawers and doors", "minutes": 60, "difficulty": 5, "status": "planned", "lab": "simlab",
-         "prereqs": ["10.2"], "objectives": ["Use impedance control to insert a peg with 2 mm clearance", "Open a drawer and a door by controlling force along the joint direction", "Push an object to a goal without grasping it"]}
+        {"id": "10.3", "slug": "contact-rich-tasks", "title": "Contact-rich tasks: insertion, drawers, doors and pushing", "minutes": 70, "difficulty": 5, "status": "draft", "lab": "peg",
+         "prereqs": ["10.2"], "objectives": ["Bound contact force with impedance and insert a peg with 2 mm clearance, searching when the error exceeds it", "Open a drawer and a door without fighting the mechanism, with and without a model of it", "Push an object to a goal open and closed loop, and say when each works"]}
       ],
       "checkpoint": {"title": "Checkpoint 10: manipulation under randomization", "task": "Make the scripted pick-and-place succeed on at least 90% of 100 episodes with object positions randomized over a 20 x 20 cm area, using contact-based success detection. Report the success rate with a 95% interval and categorize every failure.", "accept": ["Success rate with a Wilson interval", "Every failure categorized", "Seeds and initial states logged"]}
     },

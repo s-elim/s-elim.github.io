@@ -18,6 +18,7 @@ const MODULES = {
   pd: () => import("./pd.js"),
   osc: () => import("./osc.js"),
   pickplace: () => import("./pickplace.js"),
+  peg: () => import("./peg.js"),
   contact: () => import("./contact.js"),
   incline: () => import("./incline.js"),
   grasp: () => import("./grasp.js"),

@@ -17,6 +17,7 @@ from dataclasses import dataclass
 import mujoco
 import numpy as np
 
+from mjcourse import spatial
 from mjcourse.kinematics import site_jacobian
 
 
@@ -112,3 +113,45 @@ def operational_space(model: mujoco.MjModel, data: mujoco.MjData, site: str, x_d
         null = np.eye(n) - j.T @ j_bar.T
         tau = tau + null @ (k_null * (q_rest - data.qpos[:n]) - 2 * np.sqrt(k_null) * data.qvel[:n])
     return clip_to_ctrlrange(model, tau)
+
+
+def cartesian_impedance(model: mujoco.MjModel, data: mujoco.MjData, site: str, x_des: np.ndarray,
+                        quat_des: np.ndarray, k_pos, k_rot: float, *, n: int = 7,
+                        xd_des: np.ndarray | None = None, f_ff: np.ndarray | None = None,
+                        mass: float = 2.0, inertia: float = 0.05, q_rest: np.ndarray | None = None,
+                        k_null: float = 0.0) -> np.ndarray:
+    """Cartesian impedance of a site with gravity compensation and no force sensing.
+
+    wrench = [K (x_des - x) + D (xd_des - xdot) + f_ff ; k_rot e_rot - d_rot omega],
+    tau = J^T wrench + c + b qdot + N^T (k_null (q_rest - q) - 2 sqrt(k_null) qdot),
+    where e_rot is the rotation vector taking the current orientation to quat_des.
+    k_pos is a scalar or a 3-vector of stiffnesses along the world axes (N/m); the
+    damping D is critical for an effective `mass` (kg), d_rot for an effective
+    `inertia` (kg m^2). Held still against an obstacle, the site pushes with
+    K (x_des - x) + f_ff, so stiffness sets contact force, not just tracking.
+    The arm's dofs are the first n and its torque actuators the first n; data must
+    be current (mj_forward). Returns the n torques, clipped to their ctrlrange.
+    """
+    sid = model.site(site).id
+    jacp, jacr = site_jacobian(model, data, sid)
+    jac = np.vstack([jacp[:, :n], jacr[:, :n]])
+    qvel = data.qvel[:n]
+    k = np.broadcast_to(np.asarray(k_pos, float), (3,))
+    d = 2.0 * np.sqrt(k * mass)
+    d_rot = 2.0 * np.sqrt(k_rot * inertia)
+    x, xdot, omega = data.site_xpos[sid], jacp[:, :n] @ qvel, jacr[:, :n] @ qvel
+    cur = spatial.mat_to_quat(data.site_xmat[sid].reshape(3, 3))
+    e_rot = spatial.quat_to_rotvec(spatial.quat_mul(quat_des, spatial.quat_conj(cur)))
+    xd = np.zeros(3) if xd_des is None else xd_des
+    force = k * (x_des - x) + d * (xd - xdot) + (0.0 if f_ff is None else f_ff)
+    wrench = np.r_[force, k_rot * e_rot - d_rot * omega]
+    tau = jac.T @ wrench + data.qfrc_bias[:n] + model.dof_damping[:n] * qvel
+    if k_null > 0 and q_rest is not None:
+        m_full = np.zeros((model.nv, model.nv))
+        mujoco.mj_fullM(model, data, m_full)
+        m_inv = np.linalg.inv(m_full[:n, :n])
+        lam = np.linalg.inv(jac @ m_inv @ jac.T)
+        null = np.eye(n) - jac.T @ (m_inv @ jac.T @ lam).T
+        tau = tau + null @ (k_null * (q_rest[:n] - data.qpos[:n]) - 2 * np.sqrt(k_null) * qvel)
+    lo, hi = model.actuator_ctrlrange[:n, 0], model.actuator_ctrlrange[:n, 1]
+    return np.clip(tau, lo, hi)
