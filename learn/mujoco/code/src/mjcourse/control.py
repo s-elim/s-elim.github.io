@@ -72,27 +72,43 @@ def computed_torque(model: mujoco.MjModel, data: mujoco.MjData, q_des: np.ndarra
 
 
 def operational_space(model: mujoco.MjModel, data: mujoco.MjData, site: str, x_des: np.ndarray,
-                      xd_des: np.ndarray, kp: float, kd: float, q_rest: np.ndarray | None = None,
-                      k_null: float = 0.0) -> np.ndarray:
+                      xd_des: np.ndarray, kp: float, kd: float, xdd_des: np.ndarray | None = None,
+                      q_rest: np.ndarray | None = None, k_null: float = 0.0,
+                      dyn: tuple[mujoco.MjModel, mujoco.MjData] | None = None) -> np.ndarray:
     """Position-only operational-space control of a site, with null-space posture control.
 
-    F = Lambda (kp (x_des - x) + kd (xd_des - xdot)); tau = J^T F + c + N^T tau_null,
-    Lambda = (J M^-1 J^T)^-1. Orientation is left free; Level 8.3 adds it.
+    F = Lambda (xdd_des + kp e + kd edot - Jdot qdot),  Lambda = (J M^-1 J^T)^-1,
+    tau = J^T F + c + b qdot + N^T (k_null (q_rest - q) - 2 sqrt(k_null) qdot),
+    N^T = I - J^T Jbar^T with the dynamically consistent inverse Jbar = M^-1 J^T Lambda.
+    kp and kd act on a unit mass (Lambda scales them), so kp = wn^2 and kd = 2 wn give
+    bandwidth wn. Kinematics (J, Jdot, x) come from `data`, which must be current
+    (call mj_forward first). M and c come from `dyn` = (controller model, its data) if
+    given, for model-mismatch studies, otherwise from the true model. Orientation is
+    left free; Lesson 8.3's impedance controller adds it.
     """
     n = model.nu
-    jacp, _ = site_jacobian(model, data, site)
+    sid = model.site(site).id
+    jacp, _ = site_jacobian(model, data, sid)
     j = jacp[:, :n]
-    m_full = np.zeros((model.nv, model.nv))
-    mujoco.mj_fullM(model, data, m_full)
+    jdot = np.zeros((3, model.nv))
+    mujoco.mj_jacDot(model, data, jdot, None, data.site_xpos[sid], model.site_bodyid[sid])
+    if dyn is None:
+        m_full, bias = np.zeros((model.nv, model.nv)), data.qfrc_bias
+        mujoco.mj_fullM(model, data, m_full)
+    else:
+        cmodel, cdata = dyn
+        cdata.qpos[:], cdata.qvel[:] = data.qpos, data.qvel
+        mujoco.mj_forward(cmodel, cdata)
+        m_full, bias = np.zeros((cmodel.nv, cmodel.nv)), cdata.qfrc_bias
+        mujoco.mj_fullM(cmodel, cdata, m_full)
     m_inv = np.linalg.inv(m_full[:n, :n])
-    lam = np.linalg.inv(j @ m_inv @ j.T + 1e-6 * np.eye(3))
-    x = data.site(site).xpos
-    xdot = j @ data.qvel[:n]
-    force = lam @ (kp * (x_des - x) + kd * (xd_des - xdot))
-    tau = j.T @ force + data.qfrc_bias[:n]
+    lam = np.linalg.inv(j @ m_inv @ j.T)
+    xdd = np.zeros(3) if xdd_des is None else xdd_des
+    x, xdot = data.site_xpos[sid], j @ data.qvel[:n]
+    force = lam @ (xdd + kp * (x_des - x) + kd * (xd_des - xdot) - jdot[:, :n] @ data.qvel[:n])
+    tau = j.T @ force + bias[:n] + model.dof_damping[:n] * data.qvel[:n]
     if k_null > 0 and q_rest is not None:
         j_bar = m_inv @ j.T @ lam                       # dynamically consistent pseudo-inverse
         null = np.eye(n) - j.T @ j_bar.T
-        tau_null = k_null * (q_rest - data.qpos[:n]) - 2 * np.sqrt(k_null) * data.qvel[:n]
-        tau = tau + null @ tau_null
+        tau = tau + null @ (k_null * (q_rest - data.qpos[:n]) - 2 * np.sqrt(k_null) * data.qvel[:n])
     return clip_to_ctrlrange(model, tau)

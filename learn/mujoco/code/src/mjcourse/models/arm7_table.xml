@@ -1,0 +1,27 @@
+<!--
+  arm7_table.xml : arm7 (torque control) over a table, for impedance control in contact.
+
+  At the "home" keyframe the tool points down and the bottom face of the flange
+  (the `flange` site) is 24 mm above the table top. Lesson 8.3 commands the flange
+  to a point below the table surface and measures the contact force that results.
+
+  The arm is attached from arm7.xml with an empty prefix, so its names are unchanged
+  and "home" is keyframe 1. The table is a static box whose top is at z = 0.38 m.
+-->
+<mujoco model="arm7_table">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>
+
+  <asset>
+    <model name="arm7" file="arm7.xml"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".78 .80 .78" width="256" height="256"/>
+    <material name="grid" texture="grid" texrepeat="8 8"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -1 2" dir="-0.3 0.6 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="grid"/>
+    <attach model="arm7" body="link0" prefix=""/>
+    <geom name="table" type="box" size="0.12 0.12 0.02" pos="0.556 0 0.36" rgba=".55 .45 .35 1"/>
+  </worldbody>
+</mujoco>

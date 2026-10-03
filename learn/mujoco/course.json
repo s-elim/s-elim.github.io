@@ -130,11 +130,11 @@
       "id": 8, "title": "Controllers", "track": "control",
       "summary": "Joint-space and task-space controllers built from scratch, each with its failure modes on screen.",
       "lessons": [
-        {"id": "8.1", "slug": "joint-space-control", "title": "Joint-space control: P, PD, PID and servo actuators", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "pd",
+        {"id": "8.1", "slug": "joint-space-control", "title": "Joint-space control: P, PD, PID and servo actuators", "minutes": 50, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["7.1"], "objectives": ["Tune PD gains and predict overshoot from the damping ratio", "Explain steady-state error under gravity and remove it two ways", "Know when to use MuJoCo's position actuator and when to compute torques yourself"]},
-        {"id": "8.2", "slug": "model-based-control", "title": "Feedforward, gravity compensation and computed torque", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "pd",
+        {"id": "8.2", "slug": "model-based-control", "title": "Feedforward, gravity compensation and computed torque", "minutes": 45, "difficulty": 4, "status": "draft", "lab": "pd",
          "prereqs": ["8.1"], "objectives": ["Implement gravity compensation from qfrc_bias", "Implement computed-torque control and show its sensitivity to model error", "Compare tracking error across controllers on one trajectory"]},
-        {"id": "8.3", "slug": "task-space-control", "title": "Task-space control: Jacobian transpose, resolved rates, OSC, impedance", "minutes": 60, "difficulty": 4, "status": "planned", "lab": "osc",
+        {"id": "8.3", "slug": "task-space-control", "title": "Task-space control: Jacobian transpose, resolved rates, OSC, impedance", "minutes": 60, "difficulty": 4, "status": "draft", "lab": "osc",
          "prereqs": ["8.2", "6.3"], "objectives": ["Implement operational-space control from the task-space inertia", "Implement Cartesian impedance and tune stiffness for contact", "Explain null-space control for a redundant arm"]}
       ],
       "checkpoint": {"title": "Checkpoint 8: a controller from scratch", "task": "Implement an operational-space controller for arm7 that tracks a 10 cm circle at 0.5 Hz with RMS error under 5 mm while a null-space term keeps the elbow up. Then halve the modelled link masses in the controller only and report the change.", "accept": ["RMS error with units and a plot", "Null-space term shown to work (elbow height plotted)", "Model-mismatch result explained"]}
