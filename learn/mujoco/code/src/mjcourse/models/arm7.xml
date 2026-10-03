@@ -1,0 +1,108 @@
+<!--
+  arm7.xml : a 7-DOF torque-controlled manipulator built from primitives.
+
+  Kinematic structure (all joints revolute, all at q = 0 pointing straight up):
+
+      j1  z   shoulder yaw          j5  z   forearm roll
+      j2  y   shoulder pitch        j6  y   wrist pitch
+      j3  z   upper-arm roll        j7  z   flange roll
+      j4  y   elbow pitch
+
+  With j3 = j5 = 0 the pitch joints are parallel, so the tool pitch is
+  q2 + q4 + q6; the "home" keyframe sets it to +pi so the tool z axis points down.
+
+  This arm is written for the course. Its proportions are of the same order as a
+  collaborative 7-DOF arm, but it is not a model of any commercial robot and its
+  numbers must not be read as one.
+
+  Masses come from the geoms (compiler inertiafromgeom="auto"), so inertias are
+  those of the capsules and cylinders drawn. Armature adds reflected rotor inertia
+  on each joint, which is the main reason this arm is stable at a 2 ms timestep
+  under torque control with the default Euler integrator.
+
+  The `flange` site at the end of link7 is the mounting point used by
+  build_models.py to attach the gripper (MjSpec.attach(..., site="flange")).
+  The `ee` site is the tool centre point used by kinematics and control.
+-->
+<mujoco model="arm7">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>
+
+  <default>
+    <default class="arm7">
+      <joint type="hinge" armature="0.05" damping="0.5" frictionloss="0"/>
+      <geom type="capsule" contype="1" conaffinity="1" condim="3" group="2" rgba=".82 .84 .86 1"/>
+      <site group="3"/>
+      <default class="arm7/accent">
+        <geom rgba=".2 .35 .6 1"/>
+      </default>
+    </default>
+  </default>
+
+  <worldbody>
+    <body name="link0" childclass="arm7">
+      <geom name="base" type="cylinder" fromto="0 0 0 0 0 0.12" size="0.07" mass="4" class="arm7/accent"/>
+
+      <body name="link1" pos="0 0 0.12">
+        <joint name="j1" axis="0 0 1" range="-2.9 2.9"/>
+        <geom name="link1" fromto="0 0 0.06 0 0 0.16" size="0.055" mass="3"/>
+
+        <body name="link2" pos="0 0 0.21">
+          <joint name="j2" axis="0 1 0" range="-1.8 1.8"/>
+          <geom name="link2_hub" type="cylinder" fromto="0 -0.06 0 0 0.06 0" size="0.055" mass="1" class="arm7/accent"/>
+          <geom name="link2" fromto="0 0 0 0 0 0.3" size="0.05" mass="2.5"/>
+
+          <body name="link3" pos="0 0 0.3">
+            <joint name="j3" axis="0 0 1" range="-2.9 2.9"/>
+            <geom name="link3" fromto="0 0 0.02 0 0 0.12" size="0.045" mass="1.5"/>
+
+            <body name="link4" pos="0 0 0.14">
+              <joint name="j4" axis="0 1 0" range="-0.1 2.9"/>
+              <geom name="link4_hub" type="cylinder" fromto="0 -0.05 0 0 0.05 0" size="0.048" mass="0.8" class="arm7/accent"/>
+              <geom name="link4" fromto="0 0 0 0 0 0.28" size="0.04" mass="1.8"/>
+
+              <body name="link5" pos="0 0 0.28">
+                <joint name="j5" axis="0 0 1" range="-2.9 2.9"/>
+                <geom name="link5" fromto="0 0 0.02 0 0 0.1" size="0.038" mass="1.0"/>
+
+                <body name="link6" pos="0 0 0.12">
+                  <joint name="j6" axis="0 1 0" range="-2.2 2.2"/>
+                  <geom name="link6_hub" type="cylinder" fromto="0 -0.04 0 0 0.04 0" size="0.04" mass="0.5" class="arm7/accent"/>
+                  <geom name="link6" fromto="0 0 0 0 0 0.07" size="0.035" mass="0.6"/>
+
+                  <body name="link7" pos="0 0 0.08">
+                    <joint name="j7" axis="0 0 1" range="-2.9 2.9"/>
+                    <geom name="flange" type="cylinder" fromto="0 0 0 0 0 0.03" size="0.04" mass="0.3" class="arm7/accent"/>
+                    <site name="flange" pos="0 0 0.03"/>
+                    <site name="ee" pos="0 0 0.13" size="0.01" rgba="1 .8 0 1"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- Torque motors. ctrl is joint torque in N m; ctrlrange is the actuator limit. -->
+    <motor name="a1" joint="j1" ctrlrange="-80 80"/>
+    <motor name="a2" joint="j2" ctrlrange="-80 80"/>
+    <motor name="a3" joint="j3" ctrlrange="-60 60"/>
+    <motor name="a4" joint="j4" ctrlrange="-60 60"/>
+    <motor name="a5" joint="j5" ctrlrange="-20 20"/>
+    <motor name="a6" joint="j6" ctrlrange="-20 20"/>
+    <motor name="a7" joint="j7" ctrlrange="-10 10"/>
+  </actuator>
+
+  <sensor>
+    <framepos name="ee_pos" objtype="site" objname="ee"/>
+    <framequat name="ee_quat" objtype="site" objname="ee"/>
+  </sensor>
+
+  <keyframe>
+    <key name="zero" qpos="0 0 0 0 0 0 0"/>
+    <key name="home" qpos="0 0.5 0 1.6 0 1.0416 0"/>
+  </keyframe>
+</mujoco>

@@ -1,0 +1,319 @@
+{
+  "title": "MuJoCo, Zero to Research",
+  "version": "2026.10",
+  "mujoco": "3.14.0",
+  "updated": "2026-10-03",
+  "author": "Md Selim Sarowar",
+  "statuses": {
+    "complete": "Written, every code block executed against MuJoCo 3.14.0, labs tested in a browser.",
+    "draft": "Written and executable, still being reviewed for depth and exercises.",
+    "planned": "Syllabus only: objectives and scope are fixed, the lesson text is not written yet."
+  },
+  "tiers": {
+    "established": "Established MuJoCo behavior, checked against the 3.14.0 documentation or source.",
+    "derivation": "Mathematical derivation: follows from the stated assumptions.",
+    "implementation": "Implementation detail: how MuJoCo (or this course's code) does it; may change between versions.",
+    "recommendation": "Engineering recommendation: a judgement call, with its trade-off.",
+    "research": "Research-level interpretation: an argument, not a measurement.",
+    "unverified": "UNVERIFIED: could not be checked against a primary source; treat as a hypothesis."
+  },
+  "levels": [
+    {
+      "id": 0, "title": "What is simulation?", "track": "foundations",
+      "summary": "What a physics simulator actually computes, how this course runs MuJoCo in two places, and what MuJoCo does not model.",
+      "lessons": [
+        {"id": "0.1", "slug": "what-a-simulator-computes", "title": "What a physics simulator computes", "minutes": 35, "difficulty": 1, "status": "draft", "lab": "simlab",
+         "prereqs": [], "objectives": ["Define state, dynamics, integration and timestep without jargon", "Predict how a falling body's position depends on time, mass and gravity, then check it in MuJoCo", "Explain why a simulator's output is an approximation even for a falling ball"]},
+        {"id": "0.2", "slug": "setup-and-versions", "title": "Installation, versions and the two runtimes", "minutes": 25, "difficulty": 1, "status": "draft", "lab": null,
+         "prereqs": ["0.1"], "objectives": ["Install MuJoCo 3.14.0 for Python and verify it", "Know which features of this course run in the browser (WebAssembly) and which need Python", "Set up headless rendering (EGL or OSMesa) on a server"]},
+        {"id": "0.3", "slug": "boundaries-of-mujoco", "title": "What MuJoCo models, approximates and ignores", "minutes": 30, "difficulty": 2, "status": "draft", "lab": null,
+         "prereqs": ["0.1"], "objectives": ["List the physical phenomena MuJoCo models natively and the ones it approximates", "Recognise when a research question needs a different simulator or a real robot", "Compare MuJoCo with other simulators by modelling assumptions, not by ranking"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 0: predict, then simulate", "task": "Without running anything, write down how long the balls in ball_drop.xml (centre released at 1.0 m, radius 0.05 m) take to touch the floor and their speed at that moment. Then measure both in MuJoCo and explain the discrepancy in terms of the timestep and the contact model.", "accept": ["Analytic answers within 1% (0.440 s and 4.32 m/s for a 0.95 m fall at g = 9.81 m/s^2)", "Measured values with the measurement method stated", "A one-paragraph explanation that names the timestep and contact softness"]}
+    },
+    {
+      "id": 1, "title": "MuJoCo fundamentals", "track": "foundations",
+      "summary": "mjModel and mjData, generalized coordinates, and what happens inside one call to mj_step.",
+      "lessons": [
+        {"id": "1.1", "slug": "model-and-data", "title": "mjModel and mjData: what is fixed and what evolves", "minutes": 40, "difficulty": 2, "status": "draft", "lab": "inspector",
+         "prereqs": ["0.1"], "objectives": ["Trace MJCF to mjSpec to mjModel to mjData", "Classify a field as model (constant during simulation) or data (state or derived)", "Explain why changing mjModel at run time is legal for some fields and dangerous for others"]},
+        {"id": "1.2", "slug": "generalized-coordinates", "title": "Generalized coordinates: qpos, qvel, and why nq differs from nv", "minutes": 35, "difficulty": 2, "status": "draft", "lab": "simlab",
+         "prereqs": ["1.1"], "objectives": ["Give nq and nv for each joint type", "Explain why a free joint has a 7-number position and a 6-number velocity", "Integrate and difference positions correctly with mj_integratePos and mj_differentiatePos"]},
+        {"id": "1.3", "slug": "the-step", "title": "The step: mj_step, mj_forward and the integrators", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "integrators",
+         "prereqs": ["1.2"], "objectives": ["List the stages of mj_step and what each writes into mjData", "Choose between Euler, RK4, implicit, implicitfast and discrete for a given model", "Measure energy drift and relate it to the timestep and the integrator"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 1: account for every number", "task": "For cartpole.xml, state nq, nv, nu and the meaning of every entry of qpos, qvel and ctrl, then verify each with code. Run the pendulum with three integrators at three timesteps and report the energy drift after 10 s in a table.", "accept": ["Every array entry named with its unit", "A 3 x 3 drift table with the measurement code", "One sentence choosing an integrator for that model, with the reason"]}
+    },
+    {
+      "id": 2, "title": "MJCF, the modeling language", "track": "modeling",
+      "summary": "Writing models by hand: the kinematic tree, physical properties, actuation, sensing and composition.",
+      "lessons": [
+        {"id": "2.1", "slug": "bodies-geoms-joints-sites", "title": "Bodies, geoms, joints and sites", "minutes": 45, "difficulty": 2, "status": "planned", "lab": "playground",
+         "prereqs": ["1.1"], "objectives": ["Write a kinematic tree and predict the world pose of every frame", "Use pos, quat, euler, axisangle, xyaxes, zaxis and fromto correctly", "Avoid the degrees-versus-radians trap of compiler/angle"]},
+        {"id": "2.2", "slug": "mass-inertia-defaults", "title": "Mass, inertia, defaults and options", "minutes": 40, "difficulty": 2, "status": "planned", "lab": "playground",
+         "prereqs": ["2.1"], "objectives": ["Predict the mass and inertia MuJoCo infers from geoms", "Organise a model with default classes and childclass", "Set solver and integrator options and know what each changes"]},
+        {"id": "2.3", "slug": "actuators-sensors-constraints", "title": "Actuators, sensors, tendons, equalities and keyframes", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "playground",
+         "prereqs": ["2.2"], "objectives": ["Write the force law of a general actuator from its gain, bias and dynamics", "Express motor, position and velocity actuators as general actuators", "Couple joints with tendons and equality constraints"]},
+        {"id": "2.4", "slug": "composition-and-compiled-models", "title": "Composition: include, attach, and reading the compiled model", "minutes": 35, "difficulty": 3, "status": "planned", "lab": "playground",
+         "prereqs": ["2.3"], "objectives": ["Compose a scene from sub-models with attach and prefixes", "Read compiler errors and fix them", "Inspect what the compiler produced with mj_saveLastXML and named access"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 2: a robot without a template", "task": "Write, from an empty file, a 3-DOF arm with a two-finger gripper, joint limits, a position actuator per joint, a camera looking at the workspace and a keyframe. It must compile without warnings and hold its keyframe pose under gravity for 5 s.", "accept": ["Compiles in MuJoCo 3.14.0 without warnings", "Joint drift under 1 degree after 5 s at the keyframe", "Every numeric attribute carries a comment with its unit"]}
+    },
+    {
+      "id": 3, "title": "The Python API", "track": "foundations",
+      "summary": "Driving MuJoCo from Python and JavaScript: named access, views, rendering, and model editing with MjSpec.",
+      "lessons": [
+        {"id": "3.1", "slug": "python-bindings", "title": "Python bindings: models, data, named access, views and copies", "minutes": 40, "difficulty": 2, "status": "planned", "lab": "inspector",
+         "prereqs": ["1.1"], "objectives": ["Load, step, reset and inspect a model from Python", "Use named access instead of hand-computed indices", "Avoid the views-versus-copies bugs that silently corrupt logs"]},
+        {"id": "3.2", "slug": "viewing-and-rendering", "title": "Viewing and rendering from Python", "minutes": 35, "difficulty": 2, "status": "planned", "lab": null,
+         "prereqs": ["3.1"], "objectives": ["Use the passive viewer for interactive debugging", "Render offscreen with mujoco.Renderer", "Run rendering on a headless server and diagnose GL backend errors"]},
+        {"id": "3.3", "slug": "mjspec", "title": "Editing models in code with MjSpec", "minutes": 40, "difficulty": 3, "status": "planned", "lab": null,
+         "prereqs": ["2.4", "3.1"], "objectives": ["Build and modify a model procedurally", "Attach sub-models and recompile while preserving state", "Decide between editing mjModel arrays and editing the spec"]},
+        {"id": "3.4", "slug": "javascript-bindings", "title": "The JavaScript bindings this course runs on", "minutes": 30, "difficulty": 3, "status": "planned", "lab": "inspector",
+         "prereqs": ["3.1"], "objectives": ["Load MuJoCo's WebAssembly build and step a model in a browser", "Manage WASM memory explicitly", "Use output buffers correctly (a plain typed array is silently discarded)"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 3: a logged experiment", "task": "Write a script that loads pick_place.xml, runs 2 s of passive dynamics from three keyframes, logs qpos, contact counts and the front-camera image at 10 Hz to an .npz file, and reloads the file to plot one trajectory.", "accept": ["Logged arrays are copies, not views (verified by a test)", "Images have the shape and dtype stated in the docstring", "The script runs headless with MUJOCO_GL=egl or osmesa"]}
+    },
+    {
+      "id": 4, "title": "Rigid-body mechanics", "track": "math",
+      "summary": "The mathematics of frames and rigid bodies, introduced when the robot needs it.",
+      "lessons": [
+        {"id": "4.1", "slug": "rotations-and-frames", "title": "Frames, rotations, quaternions and SE(3)", "minutes": 55, "difficulty": 3, "status": "planned", "lab": "frames",
+         "prereqs": ["2.1"], "objectives": ["Convert between rotation matrices, quaternions and Euler angles in MuJoCo's conventions", "Compose and invert homogeneous transforms", "Explain the double cover of quaternions and why it matters for control and learning"]},
+        {"id": "4.2", "slug": "mass-and-inertia", "title": "Mass, centre of mass and the inertia tensor", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "simlab",
+         "prereqs": ["4.1"], "objectives": ["Compute the inertia tensor of primitive shapes and check MuJoCo's values", "Apply the parallel-axis theorem", "Read body_inertia and body_iquat as principal moments and axes"]},
+        {"id": "4.3", "slug": "newton-euler-energy", "title": "Newton-Euler, momentum and energy", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "simlab",
+         "prereqs": ["4.2"], "objectives": ["Write the Newton-Euler equations for one rigid body", "Check momentum and energy conservation in a MuJoCo rollout", "Explain gyroscopic effects with the spinning free body"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 4: verify the engine", "task": "For three primitive shapes, compute mass, centre of mass and inertia by hand, then match MuJoCo's compiled values to 1e-9. For a tumbling free box in zero gravity, show angular momentum is conserved and report the integrator you used.", "accept": ["Hand computations shown", "Matches to 1e-9 with the comparison code", "Momentum drift plotted for two integrators"]}
+    },
+    {
+      "id": 5, "title": "Robot modeling", "track": "robotics",
+      "summary": "From a two-link arm to a 7-DOF manipulator, a gripper, a three-finger hand and a bimanual cell.",
+      "lessons": [
+        {"id": "5.1", "slug": "two-link-arm", "title": "Modeling a two-link arm", "minutes": 35, "difficulty": 2, "status": "planned", "lab": "simlab",
+         "prereqs": ["2.3"], "objectives": ["Model a planar arm with explicit inertias", "Add joint limits and motors with realistic ranges", "Place sites where kinematics and control need them"]},
+        {"id": "5.2", "slug": "seven-dof-arm", "title": "A 7-DOF manipulator from primitives", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "simlab",
+         "prereqs": ["5.1"], "objectives": ["Lay out a redundant arm's joint axes", "Set armature, damping and torque limits and explain each", "Check a model for self-collision and singular home poses"]},
+        {"id": "5.3", "slug": "grippers", "title": "Grippers: tendons, equality coupling and force-limited servos", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "grasp",
+         "prereqs": ["5.2"], "objectives": ["Couple two fingers with a tendon and an equality", "Bound the squeeze force with forcerange", "Choose pad friction and condim for grasping"]},
+        {"id": "5.4", "slug": "hands-and-bimanual", "title": "Hands and bimanual systems", "minutes": 40, "difficulty": 4, "status": "planned", "lab": "simlab",
+         "prereqs": ["5.3", "3.3"], "objectives": ["Reuse one finger definition three times with defaults", "Build a bimanual scene with MjSpec attach and prefixes", "Command a hand through a low-dimensional synergy"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 5: a robot that holds still", "task": "Model a robot of your choice (at least 6 DOF plus an end effector), then show it holds a commanded pose under gravity with position actuators, has no unintended contacts at three poses, and has a Jacobian of full rank at its home pose.", "accept": ["Pose error under 2 mm after 3 s", "Contact list empty at three poses (printed)", "Singular values of the Jacobian reported"]}
+    },
+    {
+      "id": 6, "title": "Forward and inverse kinematics", "track": "robotics",
+      "summary": "Where the end effector is, how fast it moves, and how to get it where you want.",
+      "lessons": [
+        {"id": "6.1", "slug": "forward-kinematics", "title": "Forward kinematics as a chain of transforms", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "fk2",
+         "prereqs": ["4.1", "5.1"], "objectives": ["Compute the end-effector pose of the two-link arm by hand and in code", "Match MuJoCo's site_xpos to machine precision", "Explain what mj_kinematics computes and what it does not"]},
+        {"id": "6.2", "slug": "jacobians", "title": "Jacobians, velocity kinematics and singularities", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "fk2",
+         "prereqs": ["6.1"], "objectives": ["Derive the two-link Jacobian and check it against mj_jacSite and finite differences", "Visualise the manipulability ellipse and find singular configurations", "Know which reference point and frame each MuJoCo Jacobian function uses"]},
+        {"id": "6.3", "slug": "inverse-kinematics", "title": "Inverse kinematics: Newton steps, damped least squares, null space", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "ik",
+         "prereqs": ["6.2"], "objectives": ["Implement IK by damped least squares for position and orientation", "Handle joint limits and redundancy with null-space terms", "Diagnose IK failures near singularities and outside the workspace"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 6: IK under test", "task": "Implement 6-D IK for arm7 that reaches 100 random reachable poses within 1 mm and 1 degree, respects joint limits, and reports failures honestly. Report success rate, iterations and time per solve.", "accept": ["Success rate with a definition of 'reachable' that does not use the solver itself", "No joint-limit violations", "A failure case analysed"]}
+    },
+    {
+      "id": 7, "title": "Dynamics", "track": "math",
+      "summary": "The equations of motion MuJoCo solves, derived for small systems and read out of the engine for large ones.",
+      "lessons": [
+        {"id": "7.1", "slug": "equations-of-motion", "title": "Equations of motion: M(q), bias forces, generalized forces", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "dynamics",
+         "prereqs": ["4.3", "6.2"], "objectives": ["Derive the two-link equations of motion with the Lagrangian", "Match the derived M(q) and bias forces to mj_fullM and qfrc_bias", "Explain where armature and joint damping enter"]},
+        {"id": "7.2", "slug": "forward-and-inverse-dynamics", "title": "Forward and inverse dynamics in MuJoCo", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "simlab",
+         "prereqs": ["7.1"], "objectives": ["Use mj_inverse to compute the torques that produce a given motion", "Decompose qfrc into its MuJoCo components", "Explain why inverse dynamics with contacts depends on the soft-constraint model"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 7: torque from motion", "task": "Generate a smooth joint trajectory for arm7, compute the torques with mj_inverse, replay them open loop with mj_step, and report the tracking error over 2 s. Explain the source of the error.", "accept": ["Error plot with units", "Correct handling of the integrator in the inverse computation", "Explanation names the source of drift"]}
+    },
+    {
+      "id": 8, "title": "Controllers", "track": "control",
+      "summary": "Joint-space and task-space controllers built from scratch, each with its failure modes on screen.",
+      "lessons": [
+        {"id": "8.1", "slug": "joint-space-control", "title": "Joint-space control: P, PD, PID and servo actuators", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "pd",
+         "prereqs": ["7.1"], "objectives": ["Tune PD gains and predict overshoot from the damping ratio", "Explain steady-state error under gravity and remove it two ways", "Know when to use MuJoCo's position actuator and when to compute torques yourself"]},
+        {"id": "8.2", "slug": "model-based-control", "title": "Feedforward, gravity compensation and computed torque", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "pd",
+         "prereqs": ["8.1"], "objectives": ["Implement gravity compensation from qfrc_bias", "Implement computed-torque control and show its sensitivity to model error", "Compare tracking error across controllers on one trajectory"]},
+        {"id": "8.3", "slug": "task-space-control", "title": "Task-space control: Jacobian transpose, resolved rates, OSC, impedance", "minutes": 60, "difficulty": 4, "status": "planned", "lab": "osc",
+         "prereqs": ["8.2", "6.3"], "objectives": ["Implement operational-space control from the task-space inertia", "Implement Cartesian impedance and tune stiffness for contact", "Explain null-space control for a redundant arm"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 8: a controller from scratch", "task": "Implement an operational-space controller for arm7 that tracks a 10 cm circle at 0.5 Hz with RMS error under 5 mm while a null-space term keeps the elbow up. Then halve the modelled link masses in the controller only and report the change.", "accept": ["RMS error with units and a plot", "Null-space term shown to work (elbow height plotted)", "Model-mismatch result explained"]}
+    },
+    {
+      "id": 9, "title": "Contacts and friction", "track": "contact",
+      "summary": "Collision detection, the soft contact model, friction and stability, in the depth manipulation needs.",
+      "lessons": [
+        {"id": "9.1", "slug": "collision-detection", "title": "Collision detection: phases, filtering, margin and gap", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "contact",
+         "prereqs": ["2.2"], "objectives": ["Describe broad, mid and narrow phase", "Predict which geom pairs can collide from contype, conaffinity and parent-child filtering", "Use margin and gap correctly"]},
+        {"id": "9.2", "slug": "soft-contact-model", "title": "The soft contact model: solref, solimp and the solver", "minutes": 60, "difficulty": 4, "status": "planned", "lab": "contact",
+         "prereqs": ["9.1", "7.2"], "objectives": ["Write the reference acceleration from solref and the impedance from solimp", "Predict resting penetration from timeconst and dampratio", "State the convex optimization MuJoCo solves for constraint forces"]},
+        {"id": "9.3", "slug": "friction", "title": "Friction: cones, slip and the incline test", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "incline",
+         "prereqs": ["9.2"], "objectives": ["Predict the slip angle of a block from the friction coefficient", "Choose condim 1, 3, 4 or 6 for a task", "Explain pyramidal versus elliptic cones and impratio"]},
+        {"id": "9.4", "slug": "stability", "title": "Why simulations explode, and how to keep them stable", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "simlab",
+         "prereqs": ["9.2", "1.3"], "objectives": ["Diagnose instability from mjData warnings and energy", "Relate stiffness, mass ratio and timestep to stability", "Apply the fixes in order of cost"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 9: diagnose a broken simulation", "task": "Open each model in the debugging clinic's contact section, find the root cause without reading the solution, fix it with the smallest change, and justify the change with a measurement.", "accept": ["Root cause stated before the fix", "A measurement before and after", "The general lesson in one sentence"]}
+    },
+    {
+      "id": 10, "title": "Manipulation", "track": "robotics",
+      "summary": "Grasping physics, a scripted pick-and-place pipeline, and contact-rich tasks.",
+      "lessons": [
+        {"id": "10.1", "slug": "grasping", "title": "Grasping: squeeze force, friction budget and slip", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "grasp",
+         "prereqs": ["9.3", "5.3"], "objectives": ["Compute the friction budget of a two-finger grasp", "Show why fast motions break grasps that hold at rest", "Apply the documented slip-prevention steps in order"]},
+        {"id": "10.2", "slug": "pick-and-place", "title": "A scripted pick-and-place pipeline", "minutes": 60, "difficulty": 4, "status": "planned", "lab": "simlab",
+         "prereqs": ["10.1", "8.3"], "objectives": ["Structure a task as a state machine over task-space targets", "Detect grasp success from contacts rather than from the plan", "Measure success rate over randomized initial states"]},
+        {"id": "10.3", "slug": "contact-rich-tasks", "title": "Contact-rich tasks: pushing, insertion, drawers and doors", "minutes": 60, "difficulty": 5, "status": "planned", "lab": "simlab",
+         "prereqs": ["10.2"], "objectives": ["Use impedance control to insert a peg with 2 mm clearance", "Open a drawer and a door by controlling force along the joint direction", "Push an object to a goal without grasping it"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 10: manipulation under randomization", "task": "Make the scripted pick-and-place succeed on at least 90% of 100 episodes with object positions randomized over a 20 x 20 cm area, using contact-based success detection. Report the success rate with a 95% interval and categorize every failure.", "accept": ["Success rate with a Wilson interval", "Every failure categorized", "Seeds and initial states logged"]}
+    },
+    {
+      "id": 11, "title": "Cameras, rendering, RGB and depth", "track": "perception",
+      "summary": "MuJoCo's camera model, rendering RGB, depth and segmentation, and generating datasets.",
+      "lessons": [
+        {"id": "11.1", "slug": "camera-model", "title": "The camera model: intrinsics, extrinsics, projection", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "camera",
+         "prereqs": ["4.1"], "objectives": ["Compute the intrinsic matrix from fovy and resolution", "Compute the extrinsic transform from cam_xpos and cam_xmat", "Project world points to pixels and check against a render"]},
+        {"id": "11.2", "slug": "rgb-depth-segmentation", "title": "RGB, depth, segmentation and point clouds", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "camera",
+         "prereqs": ["11.1", "3.2"], "objectives": ["Render RGB, depth and segmentation with mujoco.Renderer", "Convert depth to a point cloud in the world frame", "Know what depth MuJoCo returns and in which units"]},
+        {"id": "11.3", "slug": "datasets", "title": "Generating datasets from simulation", "minutes": 45, "difficulty": 3, "status": "planned", "lab": null,
+         "prereqs": ["11.2", "10.2"], "objectives": ["Design a dataset schema with images, depth, masks, state, action and object poses", "Write episodes reproducibly with seeds and metadata", "Validate a dataset before training on it"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 11: a dataset you can trust", "task": "Generate 50 pick-and-place episodes with RGB, depth and segmentation from two cameras, plus state, action and object poses, then write a validation script that checks shapes, ranges, reprojection of object centres into the masks, and seed reproducibility.", "accept": ["Reprojection error of object centres under 2 px", "Bitwise-identical regeneration from the same seed", "Schema documented"]}
+    },
+    {
+      "id": 12, "title": "Gymnasium integration", "track": "learning",
+      "summary": "The Gymnasium API built from scratch on top of MuJoCo, without hiding anything behind a library.",
+      "lessons": [
+        {"id": "12.1", "slug": "gymnasium-from-scratch", "title": "The Gymnasium API, from scratch on MuJoCo", "minutes": 50, "difficulty": 3, "status": "planned", "lab": null,
+         "prereqs": ["3.1"], "objectives": ["Implement reset, step, spaces and seeding on a MuJoCo model", "Separate terminated from truncated correctly", "Pass gymnasium's environment checker"]},
+        {"id": "12.2", "slug": "env-design", "title": "Observation, action and reward design", "minutes": 50, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["12.1"], "objectives": ["Choose action spaces (torque, joint target, end-effector delta) and know their trade-offs", "Design dense and sparse rewards and detect reward hacking", "Find privileged information leaking into observations"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 12: an environment that passes review", "task": "Build a custom Gymnasium environment for the push task with three action-space variants, document observation and reward, pass check_env, and write a test that fails if any observation contains privileged simulator state not available on a real robot.", "accept": ["check_env passes", "Leakage test written and passing", "Observation and action spaces documented with units"]}
+    },
+    {
+      "id": 13, "title": "Reinforcement learning", "track": "learning",
+      "summary": "What RL algorithms do inside a MuJoCo environment, a policy search you can watch, and PPO from scratch.",
+      "lessons": [
+        {"id": "13.1", "slug": "rl-in-mujoco-terms", "title": "MDPs in MuJoCo terms, and a policy search you can watch", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "rl",
+         "prereqs": ["12.1"], "objectives": ["Map state, observation, action, reward and discount onto a MuJoCo loop", "Run a cross-entropy policy search in the browser and read its learning curve", "Explain the difference between a value function and a Q function"]},
+        {"id": "13.2", "slug": "ppo-from-scratch", "title": "PPO from scratch", "minutes": 70, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["13.1"], "objectives": ["Implement PPO with GAE in PyTorch in under 300 lines", "Train a reaching policy on arm7", "Read entropy, KL and value loss to diagnose training"]},
+        {"id": "13.3", "slug": "off-policy-and-evaluation", "title": "SAC and TD3, and how to evaluate any agent", "minutes": 50, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["13.2"], "objectives": ["Explain what SAC and TD3 add over DDPG", "Evaluate deterministic policies on held-out initial states with enough seeds", "Report results with confidence intervals"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 13: a credible learning curve", "task": "Train PPO on the reach task with 5 seeds, evaluate on 100 held-out initial states per seed, and report the final success rate with a bootstrap interval. Include one ablation (for example, without observation normalization).", "accept": ["5 seeds, held-out evaluation", "Interval reported", "Ablation with the same budget"]}
+    },
+    {
+      "id": 14, "title": "Imitation learning", "track": "learning",
+      "summary": "Demonstrations, behaviour cloning, covariate shift, DAgger and offline datasets.",
+      "lessons": [
+        {"id": "14.1", "slug": "bc-and-dagger", "title": "Demonstrations, behaviour cloning and DAgger", "minutes": 55, "difficulty": 3, "status": "planned", "lab": "bc",
+         "prereqs": ["12.1"], "objectives": ["Generate demonstrations from a scripted expert", "Show covariate shift in state-distribution plots", "Implement DAgger and measure what it fixes"]},
+        {"id": "14.2", "slug": "offline-datasets", "title": "Offline datasets: formats, coverage and evaluation", "minutes": 40, "difficulty": 3, "status": "planned", "lab": null,
+         "prereqs": ["14.1", "11.3"], "objectives": ["Store demonstrations in a documented episode format", "Measure dataset coverage", "Evaluate a cloned policy in closed loop, not only by validation loss"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 14: beat covariate shift", "task": "Train behaviour cloning on 20 expert demonstrations of the point-mass task, measure closed-loop success, then run 5 DAgger iterations and plot success versus number of expert labels.", "accept": ["Closed-loop success, not loss, as the metric", "Success-versus-labels plot", "State-distribution plot before and after DAgger"]}
+    },
+    {
+      "id": 15, "title": "Vision-based robotics", "track": "perception",
+      "summary": "Policies that see pixels instead of privileged state, and what that costs.",
+      "lessons": [
+        {"id": "15.1", "slug": "vision-policies", "title": "From state to pixels: vision-based policies", "minutes": 60, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["11.2", "14.1"], "objectives": ["Build state, RGB plus proprioception, and RGB-D plus proprioception observation variants of one task", "Train each with the same data budget and compare honestly", "Identify shortcut features a vision policy can exploit in simulation"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 15: the price of pixels", "task": "Train the same behaviour-cloning architecture on state and on RGB-D observations for the pick task with equal demonstrations, and report the gap with intervals and with a held-out lighting and camera-pose condition.", "accept": ["Equal data budgets", "In-distribution and shifted results reported separately", "A failure mode identified from rollouts"]}
+    },
+    {
+      "id": 16, "title": "Language-conditioned robotics", "track": "learning",
+      "summary": "Instructions as task representations, and what technically makes a model a VLA.",
+      "lessons": [
+        {"id": "16.1", "slug": "language-conditioned-tasks", "title": "Language-conditioned tasks, and what makes a VLA", "minutes": 55, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["15.1"], "objectives": ["Build a templated instruction set over the pick-and-place scene", "Separate language grounding from control in evaluation", "State the architectural criteria for calling a model a vision-language-action model"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 16: a language benchmark with splits", "task": "Define 30 instruction templates over pick_place.xml, split them into train and held-out paraphrases and held-out object-goal combinations, and evaluate a scripted language-to-goal baseline on each split.", "accept": ["Splits defined before evaluation", "Per-split success rates", "Errors separated into parsing and execution"]}
+    },
+    {
+      "id": 17, "title": "Domain randomization", "track": "sim2real",
+      "summary": "Randomizing physics, sensing and rendering, and measuring what it buys.",
+      "lessons": [
+        {"id": "17.1", "slug": "domain-randomization", "title": "Domain randomization: what to randomize and how to measure it", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "dr",
+         "prereqs": ["8.1", "12.1"], "objectives": ["Randomize mass, friction, damping, actuator gain, latency and noise correctly at reset", "Compare nominal, randomized and held-out-mismatch performance", "Avoid randomization that changes the task instead of the dynamics"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 17: robustness, measured", "task": "Train or tune a controller on nominal and on randomized dynamics for the push task and evaluate both on a held-out set of parameter values outside the training range. Report performance against the size of the mismatch.", "accept": ["Held-out range disjoint from the training range", "Performance-versus-mismatch plot", "Seeds and ranges logged"]}
+    },
+    {
+      "id": 18, "title": "System identification", "track": "sim2real",
+      "summary": "Estimating physical parameters from trajectories, by regression and by simulation in the loop.",
+      "lessons": [
+        {"id": "18.1", "slug": "sysid-least-squares", "title": "System identification by least squares", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "sysid",
+         "prereqs": ["7.2"], "objectives": ["Write a pendulum's dynamics linear in its parameters", "Estimate inertia, damping and friction from q, qdot and u", "Diagnose poor excitation from the regressor's condition number"]},
+        {"id": "18.2", "slug": "sysid-simulation", "title": "Simulation-in-the-loop identification", "minutes": 45, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["18.1", "3.3"], "objectives": ["Fit MuJoCo model parameters by minimizing trajectory error", "Use MuJoCo's own sysid toolbox", "Validate identified parameters on held-out trajectories"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 18: identify a hidden model", "task": "Given trajectories generated from a pendulum with hidden mass, damping and friction loss plus sensor noise, estimate all three, report uncertainty, and validate on a held-out trajectory.", "accept": ["Estimates with uncertainty", "Held-out trajectory error", "Excitation discussed"]}
+    },
+    {
+      "id": 19, "title": "Sim-to-real", "track": "sim2real",
+      "summary": "What breaks when a controller or policy leaves the simulator, demonstrated in simulation.",
+      "lessons": [
+        {"id": "19.1", "slug": "sim-to-real", "title": "Sim-to-real: mismatch, latency and honest transfer", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "sim2real",
+         "prereqs": ["17.1", "18.1"], "objectives": ["Classify sources of sim-to-real error", "Show a controller failing under latency and actuator mismatch, using MuJoCo's actuator delay", "Design a transfer experiment that can fail informatively"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 19: a failure you predicted", "task": "Pick a controller from Level 8, predict the latency at which it goes unstable from a simple analysis, then measure it in MuJoCo with actuator delay. Explain any gap.", "accept": ["Prediction written before measurement", "Measured threshold with the method", "Gap explained"]}
+    },
+    {
+      "id": 20, "title": "Advanced MuJoCo internals", "track": "internals",
+      "summary": "The simulation pipeline in source, the constraint solver, performance, and extending the engine.",
+      "lessons": [
+        {"id": "20.1", "slug": "pipeline-internals", "title": "Inside mj_step: the pipeline in source", "minutes": 60, "difficulty": 5, "status": "planned", "lab": "pipeline",
+         "prereqs": ["1.3", "9.2"], "objectives": ["Walk the forward pipeline stage by stage in engine_forward.c", "Run the stages one at a time and see which mjData fields each writes", "Read MuJoCo source with a map of files to concepts"]},
+        {"id": "20.2", "slug": "constraint-solver", "title": "The constraint solver: PGS, CG, Newton and warmstart", "minutes": 55, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["20.1"], "objectives": ["State the primal and dual problems the solvers address", "Read solver statistics from mjData.solver", "Choose solver, iterations and tolerance for a model"]},
+        {"id": "20.3", "slug": "performance", "title": "Performance: profiling, threads, rollout, MJX and MuJoCo Warp", "minutes": 50, "difficulty": 4, "status": "planned", "lab": "perf",
+         "prereqs": ["20.1"], "objectives": ["Profile a model with mjData timers", "Scale to many environments with mujoco.rollout and threads", "Know when GPU simulation (MJX, MuJoCo Warp) pays and when it does not"]},
+        {"id": "20.4", "slug": "extending-mujoco", "title": "Callbacks, plugins, derivatives and the C API", "minutes": 45, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["20.1"], "objectives": ["Use finite-difference derivatives with mjd_transitionFD", "Know what control callbacks and plugins can and cannot do", "Write a minimal C program against the MuJoCo API"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 20: read the source", "task": "Pick one quantity in mjData (for example qfrc_passive or efc_force), find every function in src/engine that writes it, and explain the order in which they run during mj_step, with file and line references for 3.14.0.", "accept": ["File and line references", "Order verified by instrumenting a run", "One surprise documented"]}
+    },
+    {
+      "id": 21, "title": "Research-grade environments", "track": "research",
+      "summary": "Designing environments and experiments that survive peer review, and connecting MuJoCo to world models, agentic planning and VLA evaluation.",
+      "lessons": [
+        {"id": "21.1", "slug": "environment-design", "title": "Designing a research-grade environment", "minutes": 55, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["12.2", "11.3"], "objectives": ["Specify task, initial-state distribution, success and evaluation protocol before writing code", "Version and log everything a reviewer would ask for", "Avoid the common mistakes that invalidate results"]},
+        {"id": "21.2", "slug": "experimental-methodology", "title": "Experimental methodology: seeds, splits and statistics", "minutes": 50, "difficulty": 4, "status": "planned", "lab": null,
+         "prereqs": ["21.1"], "objectives": ["Choose seeds and evaluation episodes from a target interval width", "Report success rates with intervals and aggregate across tasks correctly", "Design ablations that isolate one factor"]},
+        {"id": "21.3", "slug": "benchmark-anatomy", "title": "How MuJoCo-based benchmarks are built", "minutes": 45, "difficulty": 3, "status": "planned", "lab": null,
+         "prereqs": ["21.1"], "objectives": ["Read a benchmark as task, observation, action, episode, initialization, evaluation and metric", "Distinguish training from evaluation protocols", "Check benchmark version and protocol before comparing numbers"]},
+        {"id": "21.4", "slug": "world-models-and-planning", "title": "World models, MPC and agentic planning on MuJoCo", "minutes": 60, "difficulty": 5, "status": "planned", "lab": "mpc",
+         "prereqs": ["8.3", "13.1"], "objectives": ["Run sampling-based MPC with MuJoCo as a perfect model", "Replace the model with a mismatched one and measure the cost", "Explain where MuJoCo ends and a learned world model begins"]},
+        {"id": "21.5", "slug": "embodied-ai-evaluation", "title": "MuJoCo for VLA evaluation, 3D perception and 6D pose", "minutes": 50, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["16.1", "21.2"], "objectives": ["Build generalization axes (object, spatial, instruction, embodiment) into an evaluation", "Generate 6D pose and depth ground truth for perception models", "Evaluate a policy without letting the simulator leak privileged state"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 21: design a valid experiment", "task": "Write a one-page experimental protocol for a hypothesis of your choice (for example, 'depth input improves grasp success under camera-pose shift'), including baselines, controlled variables, seeds, splits, metrics, statistical test and the result that would falsify the hypothesis. Then run it at small scale.", "accept": ["Protocol written before running", "Falsifying result stated", "Small-scale run with intervals"]}
+    },
+    {
+      "id": 22, "title": "Capstone projects", "track": "research",
+      "summary": "Seven expert capstones, a final research-grade capstone and the final examination.",
+      "lessons": [
+        {"id": "22.1", "slug": "capstones", "title": "Capstones A to G and the final capstone", "minutes": 30, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["21.2"], "objectives": ["Choose a capstone that matches your research question", "Meet the specification, rubric and reporting standard", "Produce a reproducible experiment report"]}
+      ],
+      "checkpoint": {"title": "Final checkpoint", "task": "Complete the final capstone and the final expert examination.", "accept": ["See the capstone rubric", "See the exam marking guide"]}
+    }
+  ],
+  "pages": [
+    {"id": "playground", "title": "Playground", "kind": "app", "summary": "Edit MJCF, run MuJoCo in the browser, inspect state, contacts and forces."},
+    {"id": "physics-lab", "title": "Physics lab", "kind": "page", "file": "content/physics-lab.md", "summary": "Every parameter experiment in one place: gravity, mass, friction, damping, restitution, collision, torque, momentum, energy, stability, constraints."},
+    {"id": "debugging-clinic", "title": "Debugging clinic", "kind": "page", "file": "content/debugging-clinic.md", "summary": "Deliberately broken models and environments: symptom, diagnosis, root cause, fix, general lesson."},
+    {"id": "projects", "title": "Projects", "kind": "page", "file": "content/projects.md", "summary": "Twenty projects from a pendulum simulator to a research-grade benchmark."},
+    {"id": "research-mode", "title": "Research mode", "kind": "page", "file": "content/research-mode.md", "summary": "How to design, run and report a scientifically valid MuJoCo experiment."},
+    {"id": "performance-lab", "title": "Performance lab", "kind": "page", "file": "content/performance-lab.md", "summary": "Steps per second from 1 to 1000 simulations, measured in your browser and in Python."},
+    {"id": "math-track", "title": "Mathematics track", "kind": "page", "file": "content/math-track.md", "summary": "The mathematics of the course in order, each topic linked to where the robot first needs it."},
+    {"id": "reading-list", "title": "Reading list", "kind": "page", "file": "content/reading-list.md", "summary": "A curated paper sequence, each entry with what it solves and what MuJoCo contributes."},
+    {"id": "final-exam", "title": "Final expert exam", "kind": "page", "file": "content/final-exam.md", "summary": "Practical and written examination across all levels."},
+    {"id": "about", "title": "How this course works", "kind": "page", "file": "content/about.md", "summary": "Versions, the two runtimes, the five kinds of claim, and how to run everything locally."}
+  ]
+}

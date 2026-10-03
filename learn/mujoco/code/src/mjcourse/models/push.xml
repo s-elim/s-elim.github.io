@@ -1,0 +1,33 @@
+<!--
+  push.xml : arm7 + gripper (held closed, used as a pusher) and a puck to push
+  onto a goal site. A non-prehensile task: the object moves only through
+  contact forces, so success depends on friction between puck and floor
+  (sliding) and between pusher and puck.
+
+  The goal is a site: it does not collide, it only marks where the puck should go.
+  ctrl layout (8): a1..a7 joint torques (N m), then gripper/grip half-opening (m).
+-->
+<mujoco model="push">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <asset>
+    <model name="arm" file="arm7_gripper.xml"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".80 .82 .80" width="256" height="256"/>
+    <material name="grid" texture="grid" texrepeat="10 10"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="grid" friction="0.5 0.005 0.0001"/>
+    <attach model="arm" body="link0" prefix=""/>
+
+    <body name="puck" pos="0.45 0 0.02">
+      <freejoint name="puck"/>
+      <geom name="puck" type="cylinder" size="0.035 0.02" mass="0.2" rgba=".85 .33 .1 1" friction="0.5 0.005 0.0001"/>
+    </body>
+    <site name="goal" pos="0.62 0.12 0.001" type="cylinder" size="0.04 0.001" rgba=".1 .7 .3 .4"/>
+
+    <camera name="overview" pos="1.2 -0.8 0.9" xyaxes="0.7526 0.6585 0 -0.4112 0.47 0.781" fovy="45"/>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,43 @@
+<!--
+  ball_drop.xml : two spheres of different mass falling onto a plane.
+
+  Used in Level 0 (what a simulator computes) and the Physics Lab (gravity, mass,
+  restitution). The heavy and light balls start at the same height so the learner
+  can check that, without drag, fall time does not depend on mass.
+
+  Units are SI throughout: metres, kilograms, seconds, radians.
+-->
+<mujoco model="ball_drop">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <visual>
+    <global offwidth="640" offheight="480"/>
+  </visual>
+
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".78 .80 .78" width="256" height="256"/>
+    <material name="grid" texture="grid" texrepeat="8 8" reflectance="0"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" diffuse=".8 .8 .8"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="grid"/>
+
+    <!-- A free joint gives the body 6 DOF: nq = 7 (position + unit quaternion), nv = 6. -->
+    <body name="heavy" pos="-0.2 0 1.0">
+      <freejoint name="heavy_free"/>
+      <geom name="heavy_geom" type="sphere" size="0.05" mass="2.0" rgba=".85 .33 .1 1"/>
+    </body>
+
+    <body name="light" pos="0.2 0 1.0">
+      <freejoint name="light_free"/>
+      <geom name="light_geom" type="sphere" size="0.05" mass="0.1" rgba=".1 .45 .85 1"/>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <framepos name="heavy_pos" objtype="body" objname="heavy"/>
+    <framepos name="light_pos" objtype="body" objname="light"/>
+  </sensor>
+</mujoco>

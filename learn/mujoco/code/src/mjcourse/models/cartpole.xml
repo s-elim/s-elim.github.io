@@ -1,0 +1,49 @@
+<!--
+  cartpole.xml : cart on a rail (slide joint) carrying a pole (hinge joint).
+
+  qpos = [cart position (m), pole angle (rad)], with angle 0 = upright.
+  The single actuator pushes the cart with a force in newtons.
+  The rail limits are enforced by the joint range, which creates a limit
+  constraint (not a contact) when the cart reaches the end.
+-->
+<mujoco model="cartpole">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>
+
+  <default>
+    <geom contype="0" conaffinity="0"/>
+  </default>
+
+  <worldbody>
+    <light pos="0 -2 3" dir="0 1 -1.5"/>
+    <geom name="floor" type="plane" size="3 1 0.05" pos="0 0 -0.05" rgba=".85 .87 .85 1"/>
+    <geom name="rail" type="capsule" fromto="-1.6 0 0.5 1.6 0 0.5" size="0.01" rgba=".4 .4 .4 1"/>
+
+    <body name="cart" pos="0 0 0.5">
+      <joint name="slider" type="slide" axis="1 0 0" range="-1.5 1.5" damping="0.1"/>
+      <geom name="cart" type="box" size="0.1 0.06 0.04" mass="1.0" rgba=".2 .3 .5 1"/>
+
+      <body name="pole">
+        <joint name="hinge" type="hinge" axis="0 1 0" damping="0.002"/>
+        <geom name="pole" type="capsule" fromto="0 0 0 0 0 0.6" size="0.015" mass="0.2" rgba=".85 .33 .1 1"/>
+        <site name="pole_tip" pos="0 0 0.6" size="0.01"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="push" joint="slider" gear="1" ctrlrange="-20 20"/>
+  </actuator>
+
+  <sensor>
+    <jointpos name="cart_pos" joint="slider"/>
+    <jointpos name="pole_angle" joint="hinge"/>
+    <jointvel name="cart_vel" joint="slider"/>
+    <jointvel name="pole_angvel" joint="hinge"/>
+  </sensor>
+
+  <keyframe>
+    <key name="tilted" qpos="0 0.15"/>
+    <key name="hanging" qpos="0 3.14159265"/>
+  </keyframe>
+</mujoco>

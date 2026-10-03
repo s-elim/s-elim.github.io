@@ -1,0 +1,46 @@
+<!--
+  peg_insert.xml : arm7 with a rigidly mounted peg (radius 12 mm) above a block
+  with a square hole of half-width 14 mm, i.e. 2 mm radial clearance per side.
+
+  The hole is four boxes around an empty square, so the collision geometry is
+  exactly what is drawn (no meshes, no convex-hull surprises). A small chamfer
+  is not modelled: the course uses this to show why compliance (impedance
+  control) matters when position error exceeds clearance.
+
+  The peg tip is the site `tool/peg_tip`. `hole_bottom` marks the bottom of the
+  hole; insertion depth is measured from `hole_top`.
+  ctrl layout (7): a1..a7 joint torques (N m).
+-->
+<mujoco model="peg_insert">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.001" integrator="implicitfast"/>
+
+  <asset>
+    <model name="arm" file="arm7_peg.xml"/>
+  </asset>
+
+  <default>
+    <default class="block">
+      <geom type="box" rgba=".45 .5 .55 1" friction="0.3 0.005 0.0001"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.05" rgba=".86 .88 .86 1"/>
+    <attach model="arm" body="link0" prefix=""/>
+
+    <!-- Hole block centred at (0.5, 0, 0): outer half-width 0.06, hole half-width 0.014, height 0.06. -->
+    <body name="hole" pos="0.5 0 0">
+      <geom name="hole_px" class="block" size="0.023 0.06 0.03" pos="0.037 0 0.03"/>
+      <geom name="hole_nx" class="block" size="0.023 0.06 0.03" pos="-0.037 0 0.03"/>
+      <geom name="hole_py" class="block" size="0.014 0.023 0.03" pos="0 0.037 0.03"/>
+      <geom name="hole_ny" class="block" size="0.014 0.023 0.03" pos="0 -0.037 0.03"/>
+      <geom name="hole_floor" class="block" size="0.014 0.014 0.002" pos="0 0 0.002"/>
+      <site name="hole_top" pos="0 0 0.06" size="0.004" rgba="0 1 0 1"/>
+      <site name="hole_bottom" pos="0 0 0.004" size="0.004" rgba="1 0 0 1"/>
+    </body>
+
+    <camera name="overview" pos="0.9 -0.6 0.6" xyaxes="0.8321 0.5547 0 -0.3161 0.4741 0.8218" fovy="40"/>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,33 @@
+<!--
+  reach.xml : arm7 (torque control) on the floor with a mocap target marker.
+
+  Used by the kinematics, dynamics and control levels and by the first RL
+  environment. The arm is attached from arm7.xml with an empty prefix, so its
+  names (j1..j7, a1..a7, ee) are unchanged. Its keyframes come with it: "home"
+  is keyframe 1.
+
+  The target is a mocap body: it has no degrees of freedom, takes no part in the
+  dynamics and does not collide (contype = conaffinity = 0). Code moves it by
+  writing data.mocap_pos[0].
+-->
+<mujoco model="reach">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>
+
+  <asset>
+    <model name="arm7" file="arm7.xml"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".78 .80 .78" width="256" height="256"/>
+    <material name="grid" texture="grid" texrepeat="8 8"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -1 2" dir="-0.3 0.6 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="grid"/>
+    <attach model="arm7" body="link0" prefix=""/>
+    <body name="target" mocap="true" pos="0.5 0.2 0.4">
+      <geom name="target" type="sphere" size="0.025" rgba=".1 .7 .3 .5" contype="0" conaffinity="0"/>
+      <site name="target" size="0.005"/>
+    </body>
+    <camera name="overview" pos="1.6 -1.2 1.2" xyaxes="0.6783 0.7348 0 -0.3328 0.3072 0.8915"/>
+  </worldbody>
+</mujoco>

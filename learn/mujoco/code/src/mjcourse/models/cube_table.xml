@@ -1,0 +1,43 @@
+<!--
+  cube_table.xml : the contact laboratory. A cube dropped onto a plane, a resting
+  cube, and a mocap pusher that can shove the resting cube sideways.
+
+  Every contact parameter the lessons vary lives on the cube geoms so a lab can
+  change it at run time through mjModel arrays: geom_friction, geom_solref,
+  geom_solimp, geom_margin, geom_condim (condim changes the contact dimension and
+  must be set before the next collision pass).
+
+  The pusher is mocap-driven: it imposes a kinematic motion, so the contact
+  force it applies is whatever the constraint solver needs to enforce non-
+  penetration, which is the cleanest way to read friction off a force plot.
+-->
+<mujoco model="cube_table">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>
+
+  <visual>
+    <scale contactwidth="0.05" contactheight="0.01" forcewidth="0.02"/>
+    <map force="0.05"/>
+  </visual>
+
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.05" rgba=".86 .88 .86 1"/>
+    <body name="drop_cube" pos="-0.15 0 0.3" euler="0.3 0.2 0">
+      <freejoint name="drop_cube"/>
+      <geom name="drop_cube" type="box" size="0.04 0.04 0.04" mass="0.5" rgba=".85 .33 .1 1"/>
+    </body>
+    <body name="rest_cube" pos="0.15 0 0.04">
+      <freejoint name="rest_cube"/>
+      <geom name="rest_cube" type="box" size="0.04 0.04 0.04" mass="0.5" rgba=".15 .35 .85 1"/>
+    </body>
+    <body name="pusher" mocap="true" pos="0.35 0 0.04">
+      <geom name="pusher" type="box" size="0.01 0.06 0.03" rgba=".3 .3 .3 1"/>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <framepos name="drop_pos" objtype="body" objname="drop_cube"/>
+    <framepos name="rest_pos" objtype="body" objname="rest_cube"/>
+  </sensor>
+</mujoco>

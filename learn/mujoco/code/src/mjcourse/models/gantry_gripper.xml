@@ -1,0 +1,74 @@
+<!--
+  gantry_gripper.xml : the gripper on a three-axis Cartesian gantry, with a cube.
+
+  The grasping lab isolates contact from arm kinematics: three slide joints with
+  position servos place the gripper anywhere above the floor, so every failure in
+  this scene is a contact or actuation failure, never an IK failure.
+
+  The gripper is composed with MJCF attachment, not copy-paste:
+      <asset><model name="gripper" file="gripper.xml"/></asset>
+      <attach model="gripper" body="hand" prefix="gripper/"/>
+  so its names appear as gripper/finger_left, gripper/grip, and so on.
+
+  Contact settings follow the MuJoCo modeling guide's slip-prevention advice:
+  elliptic friction cones with impratio > 1 make friction "harder" relative to the
+  normal direction, which reduces slow slippage of a held object (it does not
+  guarantee exact sticking).
+
+  ctrl layout (4): [x, y, z] carriage position (m), then [grip] half-opening (m).
+  Note the slide servos are P-D only: under gravity the z axis settles with a
+  steady-state sag of about (m_carriage + m_gripper) g / kp, a few millimetres.
+-->
+<mujoco model="gantry_gripper">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <asset>
+    <model name="gripper" file="gripper.xml"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".86 .88 .86" rgb2=".78 .80 .78" width="256" height="256"/>
+    <material name="grid" texture="grid" texrepeat="6 6"/>
+  </asset>
+
+  <default>
+    <default class="gantry">
+      <joint type="slide" damping="5" armature="0.1"/>
+      <position kp="10000" kv="250"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0.3 -0.6 1.4" dir="-0.2 0.5 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.05" material="grid" friction="1 0.005 0.0001"/>
+
+    <body name="carriage" pos="0 0 0.45" childclass="gantry">
+      <joint name="gx" axis="1 0 0" range="-0.4 0.4"/>
+      <joint name="gy" axis="0 1 0" range="-0.4 0.4"/>
+      <joint name="gz" axis="0 0 1" range="-0.42 0.1"/>
+      <geom name="carriage" type="box" size="0.04 0.04 0.02" mass="1.0" contype="0" conaffinity="0" rgba=".3 .3 .3 1"/>
+      <!-- Rotate 180 degrees about x so the hand's +z (finger direction) points down. -->
+      <frame quat="0 1 0 0">
+        <attach model="gripper" body="hand" prefix="gripper/"/>
+      </frame>
+    </body>
+
+    <body name="cube" pos="0.12 0 0.02">
+      <freejoint name="cube"/>
+      <geom name="cube" type="box" size="0.02 0.02 0.02" mass="0.1" rgba=".8 .15 .15 1" friction="1 0.005 0.0001"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="gx" joint="gx" class="gantry" ctrlrange="-0.4 0.4"/>
+    <position name="gy" joint="gy" class="gantry" ctrlrange="-0.4 0.4"/>
+    <position name="gz" joint="gz" class="gantry" ctrlrange="-0.42 0.1"/>
+  </actuator>
+
+  <sensor>
+    <framepos name="cube_pos" objtype="body" objname="cube"/>
+    <framepos name="tcp_pos" objtype="site" objname="gripper/tcp"/>
+  </sensor>
+
+  <keyframe>
+    <key name="open_above" qpos="0.12 0 0  0.04 0.04  0.12 0 0.02 1 0 0 0" ctrl="0.12 0 0 0.04"/>
+  </keyframe>
+</mujoco>

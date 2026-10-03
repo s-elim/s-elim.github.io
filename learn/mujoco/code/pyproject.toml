@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mjcourse"
+version = "0.1.0"
+description = "Companion code for the MuJoCo, Zero to Research course (s-elim.github.io/learn/mujoco/)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Md Selim Sarowar" }]
+# MuJoCo is pinned exactly: every number quoted in the lessons was produced with
+# this release, and contact and solver behaviour changes between releases.
+dependencies = [
+  "mujoco==3.14.0",
+  "numpy>=1.26",
+  "gymnasium>=1.0",
+  "scipy>=1.11",
+  "matplotlib>=3.8",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+learn = ["torch>=2.2"]
+dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mjcourse = ["models/*.xml", "models/broken/*.xml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "projects"]
+markers = [
+  "slow: takes more than ~20 s (training, long rollouts)",
+  "torch: needs PyTorch (pip install -e .[learn])",
+  "render: needs an OpenGL context (MUJOCO_GL=egl or osmesa on a headless machine)",
+]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"

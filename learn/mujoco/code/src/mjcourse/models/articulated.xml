@@ -1,0 +1,76 @@
+<!--
+  articulated.xml : arm7 + gripper in front of a cabinet with a drawer (slide
+  joint) and a door (hinge joint), each with a handle.
+
+  Articulated objects are modelled as bodies with joints, exactly like the robot:
+  a drawer is a body with a slide joint, a door a body with a hinge joint. Joint
+  damping and frictionloss give them the "resistance" a real drawer or door has,
+  and joint ranges are their mechanical stops. Their state is ordinary qpos, so
+  task success is a statement about a joint value (e.g. drawer opened > 0.1 m).
+
+  ctrl layout (8): a1..a7 joint torques (N m), then gripper/grip half-opening (m).
+-->
+<mujoco model="articulated">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <asset>
+    <model name="arm" file="arm7_gripper.xml"/>
+  </asset>
+
+  <default>
+    <default class="cabinet">
+      <geom type="box" rgba=".62 .52 .4 1"/>
+    </default>
+    <default class="handle">
+      <geom type="capsule" size="0.01" rgba=".2 .2 .22 1" friction="1.2 0.01 0.0001" condim="4"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.05" rgba=".86 .88 .86 1"/>
+    <attach model="arm" body="link0" prefix=""/>
+
+    <!-- Cabinet: a static carcass open toward -x (toward the robot). -->
+    <body name="cabinet" pos="0.85 0 0">
+      <geom name="cab_top" class="cabinet" size="0.15 0.3 0.01" pos="0 0 0.41"/>
+      <geom name="cab_bottom" class="cabinet" size="0.15 0.3 0.01" pos="0 0 0.01"/>
+      <geom name="cab_left" class="cabinet" size="0.15 0.01 0.2" pos="0 0.29 0.21"/>
+      <geom name="cab_right" class="cabinet" size="0.15 0.01 0.2" pos="0 -0.29 0.21"/>
+      <geom name="cab_back" class="cabinet" size="0.01 0.3 0.2" pos="0.14 0 0.21"/>
+      <geom name="cab_shelf" class="cabinet" size="0.15 0.28 0.008" pos="0 0 0.2"/>
+      <geom name="cab_divider" class="cabinet" size="0.15 0.008 0.1" pos="0 0 0.1"/>
+
+      <!-- Drawer in the lower-right bay: slides along -x out of the cabinet. -->
+      <body name="drawer" pos="-0.02 -0.14 0.1">
+        <joint name="drawer" type="slide" axis="-1 0 0" range="0 0.2" damping="5" frictionloss="0.5"/>
+        <geom name="drawer_front" class="cabinet" size="0.01 0.12 0.075" pos="-0.12 0 0" rgba=".72 .62 .48 1"/>
+        <geom name="drawer_bottom" class="cabinet" size="0.12 0.11 0.005" pos="0 0 -0.07"/>
+        <geom name="drawer_side_l" class="cabinet" size="0.12 0.005 0.05" pos="0 0.11 -0.02"/>
+        <geom name="drawer_side_r" class="cabinet" size="0.12 0.005 0.05" pos="0 -0.11 -0.02"/>
+        <geom name="drawer_handle" class="handle" fromto="-0.16 -0.05 0 -0.16 0.05 0"/>
+        <geom name="drawer_handle_l" class="handle" fromto="-0.13 0.05 0 -0.16 0.05 0"/>
+        <geom name="drawer_handle_r" class="handle" fromto="-0.13 -0.05 0 -0.16 -0.05 0"/>
+        <site name="drawer_handle" pos="-0.16 0 0" size="0.008"/>
+      </body>
+
+      <!-- Door in the upper bay: hinged on its left (+y) edge, opens toward the robot. -->
+      <body name="door" pos="-0.165 0.28 0.305">
+        <joint name="door" type="hinge" axis="0 0 1" range="-1.6 0" damping="1" frictionloss="0.2"/>
+        <geom name="door_panel" class="cabinet" size="0.01 0.27 0.09" pos="0 -0.27 0" rgba=".72 .62 .48 1"/>
+        <geom name="door_handle" class="handle" fromto="-0.05 -0.48 -0.05 -0.05 -0.48 0.05"/>
+        <geom name="door_handle_t" class="handle" fromto="-0.02 -0.48 0.05 -0.05 -0.48 0.05"/>
+        <geom name="door_handle_b" class="handle" fromto="-0.02 -0.48 -0.05 -0.05 -0.48 -0.05"/>
+        <site name="door_handle" pos="-0.05 -0.48 0" size="0.008"/>
+      </body>
+    </body>
+
+    <camera name="overview" pos="1.0 -1.2 1.1" xyaxes="0.9487 0.3162 0 -0.169 0.5071 0.8452" fovy="45"/>
+  </worldbody>
+
+  <sensor>
+    <jointpos name="drawer_open" joint="drawer"/>
+    <jointpos name="door_angle" joint="door"/>
+  </sensor>
+</mujoco>

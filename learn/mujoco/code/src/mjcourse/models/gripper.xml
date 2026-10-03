@@ -1,0 +1,82 @@
+<!--
+  gripper.xml : a parallel-jaw gripper, written as a standalone sub-model.
+
+  It is attached to other models, never simulated alone:
+    * gantry_gripper.xml attaches it in MJCF with <asset><model/></asset> + <attach/>;
+    * build_models.py attaches it to arm7's `flange` site with MjSpec.attach.
+
+  Mechanism. Each finger has its own slide joint (0 = closed, 0.04 m = open).
+  A fixed tendon `grip` averages the two finger joints, the actuator drives that
+  tendon, and a joint equality forces the right finger to mirror the left one.
+  This "drive the average, constrain the difference" pattern keeps the jaws
+  centred on the object while a single scalar command opens and closes them.
+
+  Actuator. A position servo on the tendon with kp = 800 N/m and kv = 20 N s/m;
+  ctrl is the commanded half-opening in metres. forcerange caps the actuator force
+  at 30 N, which bounds the squeeze force: once the pads touch the object the
+  servo saturates and the gripper behaves as a force-limited clamp.
+
+  Pads. Box pads with sliding friction 1.5 and condim 4 (sliding + torsional), so
+  a grasped object resists twisting about the contact normal as well as slipping.
+-->
+<mujoco model="gripper">
+  <compiler angle="radian" autolimits="true"/>
+
+  <default>
+    <default class="gripper">
+      <geom contype="1" conaffinity="1" group="2" rgba=".25 .27 .3 1"/>
+      <joint type="slide" range="0 0.04" damping="2" armature="0.01"/>
+      <default class="gripper/pad">
+        <geom type="box" size="0.008 0.004 0.018" friction="1.5 0.02 0.0001" condim="4" rgba=".9 .55 .15 1" priority="1"/>
+      </default>
+    </default>
+  </default>
+
+  <worldbody>
+    <body name="hand" childclass="gripper">
+      <geom name="palm" type="box" size="0.03 0.065 0.015" pos="0 0 0.015" mass="0.4"/>
+      <site name="tcp" pos="0 0 0.1" size="0.008" rgba="1 .8 0 1" group="3"/>
+      <!-- Wrist camera. MuJoCo cameras look along their own -z axis with +y up, so
+           xyaxes="0 1 0 1 0 0" (camera x = hand y, camera y = hand x) gives camera
+           z = hand -z: the camera looks along +z of the hand, down the fingers. -->
+      <camera name="wrist" pos="0.055 0 0.02" xyaxes="0 1 0 1 0 0" fovy="75"/>
+
+      <body name="finger_left" pos="0 0 0.03">
+        <joint name="finger_left" axis="0 1 0"/>
+        <geom name="finger_left" type="box" size="0.008 0.006 0.04" pos="0 0.01 0.04" mass="0.05"/>
+        <geom name="pad_left" class="gripper/pad" pos="0 0.004 0.07" mass="0.01"/>
+      </body>
+
+      <body name="finger_right" pos="0 0 0.03">
+        <joint name="finger_right" axis="0 -1 0"/>
+        <geom name="finger_right" type="box" size="0.008 0.006 0.04" pos="0 -0.01 0.04" mass="0.05"/>
+        <geom name="pad_right" class="gripper/pad" pos="0 -0.004 0.07" mass="0.01"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <!-- The pads touch when fully closed; that contact carries no information. -->
+    <exclude body1="finger_left" body2="finger_right"/>
+  </contact>
+
+  <tendon>
+    <fixed name="grip">
+      <joint joint="finger_left" coef="0.5"/>
+      <joint joint="finger_right" coef="0.5"/>
+    </fixed>
+  </tendon>
+
+  <equality>
+    <joint name="mirror" joint1="finger_left" joint2="finger_right" polycoef="0 1 0 0 0" solref="0.005 1"/>
+  </equality>
+
+  <actuator>
+    <position name="grip" tendon="grip" kp="800" kv="20" ctrlrange="0 0.04" forcerange="-30 30"/>
+  </actuator>
+
+  <sensor>
+    <tendonpos name="opening" tendon="grip"/>
+    <actuatorfrc name="grip_force" actuator="grip"/>
+  </sensor>
+</mujoco>

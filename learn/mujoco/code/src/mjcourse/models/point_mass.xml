@@ -1,0 +1,51 @@
+<!--
+  point_mass.xml : a 2-D point mass (two slide joints) in a walled arena with a
+  round obstacle between the start region and the goal.
+
+  The smallest model that still shows the core problems of policy learning:
+  a reward that is easy to state, an expert that is easy to script (attract to
+  the goal, repel from the obstacle), and a state distribution that a cloned
+  policy can drift away from. Used by the RL and imitation-learning labs.
+
+  qpos = [x, y] (m), ctrl = [fx, fy] (N), clamped to +-1 N.
+  The mass moves in the plane z = 0.03; gravity acts but is cancelled by the
+  slide joints, which have no z component.
+-->
+<mujoco model="point_mass">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.01"/>
+
+  <default>
+    <joint type="slide" damping="0.5" limited="false"/>
+    <geom contype="1" conaffinity="1" friction="0 0 0"/>
+    <default class="wall">
+      <geom type="box" rgba=".45 .47 .5 1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0 0 2" dir="0 0 -1"/>
+    <geom name="floor" type="plane" size="0.6 0.6 0.05" rgba=".86 .88 .86 1" contype="0" conaffinity="0"/>
+    <geom name="wall_px" class="wall" size="0.01 0.5 0.03" pos="0.5 0 0.03"/>
+    <geom name="wall_nx" class="wall" size="0.01 0.5 0.03" pos="-0.5 0 0.03"/>
+    <geom name="wall_py" class="wall" size="0.5 0.01 0.03" pos="0 0.5 0.03"/>
+    <geom name="wall_ny" class="wall" size="0.5 0.01 0.03" pos="0 -0.5 0.03"/>
+    <geom name="obstacle" type="cylinder" size="0.1 0.03" pos="0 0 0.03" rgba=".55 .45 .35 1"/>
+    <site name="goal" pos="0.35 0 0.001" type="cylinder" size="0.04 0.001" rgba=".1 .7 .3 .5"/>
+
+    <body name="agent" pos="0 0 0.03">
+      <joint name="x" axis="1 0 0"/>
+      <joint name="y" axis="0 1 0"/>
+      <geom name="agent" type="sphere" size="0.025" mass="0.5" rgba=".85 .33 .1 1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="fx" joint="x" ctrlrange="-1 1"/>
+    <motor name="fy" joint="y" ctrlrange="-1 1"/>
+  </actuator>
+
+  <keyframe>
+    <key name="start" qpos="-0.35 0"/>
+  </keyframe>
+</mujoco>

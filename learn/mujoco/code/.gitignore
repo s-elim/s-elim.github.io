@@ -1,0 +1,7 @@
+*.egg-info/
+.venv/
+.pytest_cache/
+runs/
+datasets/
+*.npz
+MUJOCO_LOG.TXT

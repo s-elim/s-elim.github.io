@@ -1,0 +1,115 @@
+<!--
+  hand3.xml : a three-finger hand (two flexion joints per finger) on a Cartesian
+  gantry, with a sphere and a cylinder to grasp.
+
+  Every finger has the same structure: a proximal and a distal hinge about the
+  finger's local y axis, positive values curling the finger toward the palm axis.
+  The fingers are placed at 0, 120 and 240 degrees around the palm by yawing
+  their mounting frames, so one finger definition is reused three times with
+  childclass defaults rather than three sets of hand-tuned numbers.
+
+  This is a minimal dexterous-manipulation testbed, not a model of a human or a
+  commercial robot hand. It has 6 finger DOF, enough to show enveloping versus
+  fingertip grasps, and the effect of commanding all fingers through one scalar
+  "synergy" versus independent joint targets.
+
+  ctrl layout (9): gx, gy, gz (m), then f1_prox, f1_dist, f2_prox, f2_dist,
+  f3_prox, f3_dist (rad).
+-->
+<mujoco model="hand3">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <default>
+    <default class="gantry">
+      <joint type="slide" damping="5" armature="0.1"/>
+      <position kp="8000" kv="200"/>
+    </default>
+    <default class="finger">
+      <joint type="hinge" axis="0 1 0" damping="0.02" armature="0.001"/>
+      <geom type="capsule" contype="1" conaffinity="1" rgba=".3 .32 .36 1" friction="1.2 0.01 0.0001" condim="4"/>
+      <position kp="2" kv="0.05" ctrlrange="-0.3 1.6"/>
+      <default class="tip">
+        <geom type="sphere" size="0.011" rgba=".9 .55 .15 1" friction="1.5 0.02 0.0001"/>
+      </default>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0.3 -0.6 1.4" dir="-0.2 0.5 -1"/>
+    <geom name="floor" type="plane" size="1 1 0.05" rgba=".86 .88 .86 1"/>
+
+    <body name="palm" pos="0 0 0.3" childclass="gantry">
+      <joint name="gx" axis="1 0 0" range="-0.3 0.3"/>
+      <joint name="gy" axis="0 1 0" range="-0.3 0.3"/>
+      <joint name="gz" axis="0 0 1" range="-0.25 0.1"/>
+      <geom name="palm" type="cylinder" size="0.045 0.012" mass="0.5" rgba=".2 .35 .6 1" contype="1" conaffinity="1"/>
+      <site name="palm_center" pos="0 0 -0.012" size="0.006"/>
+
+      <body name="f1_prox" pos="0.035 0 -0.012" childclass="finger">
+        <joint name="f1_prox" range="-0.3 1.4"/>
+        <geom name="f1_prox" fromto="0 0 0 0 0 -0.05" size="0.009" mass="0.02"/>
+        <body name="f1_dist" pos="0 0 -0.05">
+          <joint name="f1_dist" range="0 1.6"/>
+          <geom name="f1_dist" fromto="0 0 0 0 0 -0.035" size="0.008" mass="0.012"/>
+          <geom name="f1_tip" class="tip" pos="0 0 -0.04" mass="0.005"/>
+          <site name="f1_tip" pos="0 0 -0.04" size="0.013" rgba="1 1 1 0"/>
+        </body>
+      </body>
+
+      <body name="f2_prox" pos="-0.0175 0.0303 -0.012" quat="-0.5 0 0 0.8660254" childclass="finger">
+        <joint name="f2_prox" range="-0.3 1.4"/>
+        <geom name="f2_prox" fromto="0 0 0 0 0 -0.05" size="0.009" mass="0.02"/>
+        <body name="f2_dist" pos="0 0 -0.05">
+          <joint name="f2_dist" range="0 1.6"/>
+          <geom name="f2_dist" fromto="0 0 0 0 0 -0.035" size="0.008" mass="0.012"/>
+          <geom name="f2_tip" class="tip" pos="0 0 -0.04" mass="0.005"/>
+          <site name="f2_tip" pos="0 0 -0.04" size="0.013" rgba="1 1 1 0"/>
+        </body>
+      </body>
+
+      <body name="f3_prox" pos="-0.0175 -0.0303 -0.012" quat="0.5 0 0 0.8660254" childclass="finger">
+        <joint name="f3_prox" range="-0.3 1.4"/>
+        <geom name="f3_prox" fromto="0 0 0 0 0 -0.05" size="0.009" mass="0.02"/>
+        <body name="f3_dist" pos="0 0 -0.05">
+          <joint name="f3_dist" range="0 1.6"/>
+          <geom name="f3_dist" fromto="0 0 0 0 0 -0.035" size="0.008" mass="0.012"/>
+          <geom name="f3_tip" class="tip" pos="0 0 -0.04" mass="0.005"/>
+          <site name="f3_tip" pos="0 0 -0.04" size="0.013" rgba="1 1 1 0"/>
+        </body>
+      </body>
+    </body>
+
+    <body name="ball" pos="0 0 0.03">
+      <freejoint name="ball"/>
+      <geom name="ball" type="sphere" size="0.03" mass="0.05" rgba=".85 .15 .15 1" friction="1 0.01 0.0001" condim="4"/>
+    </body>
+
+    <body name="can" pos="0.15 0.1 0.045">
+      <freejoint name="can"/>
+      <geom name="can" type="cylinder" size="0.025 0.045" mass="0.06" rgba=".15 .45 .8 1" friction="1 0.01 0.0001" condim="4"/>
+    </body>
+
+    <camera name="overview" pos="0.45 -0.45 0.5" xyaxes="0.7071 0.7071 0 -0.3763 0.3763 0.8466" fovy="45"/>
+  </worldbody>
+
+  <actuator>
+    <position name="gx" joint="gx" class="gantry" ctrlrange="-0.3 0.3"/>
+    <position name="gy" joint="gy" class="gantry" ctrlrange="-0.3 0.3"/>
+    <position name="gz" joint="gz" class="gantry" ctrlrange="-0.25 0.1"/>
+    <position name="f1_prox" joint="f1_prox" class="finger"/>
+    <position name="f1_dist" joint="f1_dist" class="finger"/>
+    <position name="f2_prox" joint="f2_prox" class="finger"/>
+    <position name="f2_dist" joint="f2_dist" class="finger"/>
+    <position name="f3_prox" joint="f3_prox" class="finger"/>
+    <position name="f3_dist" joint="f3_dist" class="finger"/>
+  </actuator>
+
+  <sensor>
+    <framepos name="ball_pos" objtype="body" objname="ball"/>
+    <!-- A touch sensor sums the normal forces of contacts whose point lies inside its site volume. -->
+    <touch name="f1_touch" site="f1_tip"/>
+    <touch name="f2_touch" site="f2_tip"/>
+    <touch name="f3_touch" site="f3_tip"/>
+  </sensor>
+</mujoco>

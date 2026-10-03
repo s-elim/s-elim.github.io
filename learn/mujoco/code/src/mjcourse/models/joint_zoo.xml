@@ -1,0 +1,37 @@
+<!--
+  joint_zoo.xml : one body per joint type, so qpos/qvel layouts can be read off.
+
+  free  : 7 position numbers (x, y, z, qw, qx, qy, qz), 6 velocity numbers
+  ball  : 4 position numbers (unit quaternion),          3 velocity numbers
+  slide : 1 and 1        hinge : 1 and 1
+
+  Gravity is off so the bodies stay where they are put; Level 1.2 uses this
+  model to show why nq differs from nv and how positions must be integrated.
+-->
+<mujoco model="joint_zoo">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 0"/>
+  <default>
+    <geom contype="0" conaffinity="0"/>
+  </default>
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0.5 -1"/>
+    <body name="free_box" pos="-0.45 0 0.5">
+      <freejoint name="free"/>
+      <geom type="box" size="0.06 0.04 0.02" mass="1" rgba=".85 .33 .1 1"/>
+    </body>
+    <body name="ball_body" pos="-0.15 0 0.5">
+      <joint name="ball" type="ball"/>
+      <geom type="capsule" fromto="0 0 0 0 0 -0.15" size="0.015" mass="0.3" rgba=".15 .35 .85 1"/>
+      <geom type="sphere" pos="0 0 -0.15" size="0.03" mass="0.3" rgba=".15 .35 .85 1"/>
+    </body>
+    <body name="slide_body" pos="0.15 0 0.5">
+      <joint name="slide" type="slide" axis="0 0 1"/>
+      <geom type="box" size="0.04 0.04 0.04" mass="1" rgba=".1 .6 .3 1"/>
+    </body>
+    <body name="hinge_body" pos="0.45 0 0.5">
+      <joint name="hinge" type="hinge" axis="0 1 0"/>
+      <geom type="capsule" fromto="0 0 0 0.12 0 0" size="0.015" mass="0.5" rgba=".55 .4 .7 1"/>
+    </body>
+  </worldbody>
+</mujoco>
