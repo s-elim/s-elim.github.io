@@ -5,8 +5,10 @@
   Every finger has the same structure: a proximal and a distal hinge about the
   finger's local y axis, positive values curling the finger toward the palm axis.
   The fingers are placed at 0, 120 and 240 degrees around the palm by yawing
-  their mounting frames, so one finger definition is reused three times with
-  childclass defaults rather than three sets of hand-tuned numbers.
+  their mounting frames (quat = [cos(a/2), 0, 0, sin(a/2)] for yaw a, so that each
+  finger's local x axis points radially outward), and one finger definition is
+  reused three times with childclass defaults rather than three sets of
+  hand-tuned numbers.
 
   This is a minimal dexterous-manipulation testbed, not a model of a human or a
   commercial robot hand. It has 6 finger DOF, enough to show enveloping versus
@@ -57,7 +59,7 @@
         </body>
       </body>
 
-      <body name="f2_prox" pos="-0.0175 0.0303 -0.012" quat="-0.5 0 0 0.8660254" childclass="finger">
+      <body name="f2_prox" pos="-0.0175 0.0303 -0.012" quat="0.5 0 0 0.8660254" childclass="finger">
         <joint name="f2_prox" range="-0.3 1.4"/>
         <geom name="f2_prox" fromto="0 0 0 0 0 -0.05" size="0.009" mass="0.02"/>
         <body name="f2_dist" pos="0 0 -0.05">
@@ -68,7 +70,7 @@
         </body>
       </body>
 
-      <body name="f3_prox" pos="-0.0175 -0.0303 -0.012" quat="0.5 0 0 0.8660254" childclass="finger">
+      <body name="f3_prox" pos="-0.0175 -0.0303 -0.012" quat="-0.5 0 0 0.8660254" childclass="finger">
         <joint name="f3_prox" range="-0.3 1.4"/>
         <geom name="f3_prox" fromto="0 0 0 0 0 -0.05" size="0.009" mass="0.02"/>
         <body name="f3_dist" pos="0 0 -0.05">

@@ -13,8 +13,9 @@
 
   Actuator. A position servo on the tendon with kp = 800 N/m and kv = 20 N s/m;
   ctrl is the commanded half-opening in metres. forcerange caps the actuator force
-  at 30 N, which bounds the squeeze force: once the pads touch the object the
-  servo saturates and the gripper behaves as a force-limited clamp.
+  at 30 N. Commanded closed on an object that stops the jaws at half-opening L,
+  the servo pushes with kp * L, so the cap binds only for L > 0.0375 m: on the
+  40 mm cube (L = 0.0193 m) the squeeze is 15.4 N, 7.7 N per pad (Lesson 5.3).
 
   Pads. Box pads with sliding friction 1.5 and condim 4 (sliding + torsional), so
   a grasped object resists twisting about the contact normal as well as slipping.
