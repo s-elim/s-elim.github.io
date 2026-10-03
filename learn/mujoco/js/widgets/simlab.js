@@ -30,7 +30,7 @@
 
 import { h, frame, slider, select, button, readout, createSimView, overlayToggles, fmt } from "./ui.js";
 import { Plot } from "../plot.js";
-import { idOf } from "../runtime.js";
+import { idOf, nameOf } from "../runtime.js";
 
 const ARGS = ["model", "data", "sim", "mj", "ctx", "lib"];
 
@@ -44,7 +44,36 @@ export function compileSetter(target) {
   return new Function(...ARGS, "value", `"use strict"; ${target} = value;`);
 }
 
+/** Eigenvalues of a small symmetric matrix by cyclic Jacobi rotations. */
+function symEig(A0) {
+  const A = A0.map((r) => r.slice());
+  const n = A.length;
+  for (let sweep = 0; sweep < 60; sweep++) {
+    let off = 0;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) off += A[i][j] * A[i][j];
+    if (off < 1e-30) break;
+    for (let p = 0; p < n; p++) {
+      for (let q = p + 1; q < n; q++) {
+        if (Math.abs(A[p][q]) < 1e-300) continue;
+        const theta = (A[q][q] - A[p][p]) / (2 * A[p][q]);
+        const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.sqrt(theta * theta + 1));
+        const c = 1 / Math.sqrt(t * t + 1), sn = t * c;
+        for (let k = 0; k < n; k++) {            // A <- A G (columns p, q)
+          const akp = A[k][p], akq = A[k][q];
+          A[k][p] = c * akp - sn * akq; A[k][q] = sn * akp + c * akq;
+        }
+        for (let k = 0; k < n; k++) {            // A <- G^T A (rows p, q)
+          const apk = A[p][k], aqk = A[q][k];
+          A[p][k] = c * apk - sn * aqk; A[q][k] = sn * apk + c * aqk;
+        }
+      }
+    }
+  }
+  return A.map((r, i) => r[i]);
+}
+
 export function makeLib(view) {
+  let jac = null;
   const lib = {
     sitePos(name) { const s = view.sim; const i = idOf(s.mj, s.model, "mjOBJ_SITE", name); return [s.data.site_xpos[3 * i], s.data.site_xpos[3 * i + 1], s.data.site_xpos[3 * i + 2]]; },
     bodyPos(name) { const s = view.sim; const i = idOf(s.mj, s.model, "mjOBJ_BODY", name); return [s.data.xpos[3 * i], s.data.xpos[3 * i + 1], s.data.xpos[3 * i + 2]]; },
@@ -58,6 +87,30 @@ export function makeLib(view) {
       const g = geomName ? idOf(s.mj, s.model, "mjOBJ_GEOM", geomName) : -1;
       return s.contacts().reduce((acc, c) => (g < 0 || c.geom1 === g || c.geom2 === g ? acc + c.force[0] : acc), 0);
     },
+    /** Site Jacobian as rows [3 translational, 3 rotational] x the first `cols` dofs (default nv). */
+    jacobian(siteName, cols = null) {
+      const s = view.sim;
+      const nv = s.model.nv;
+      if (!jac || jac.nv !== nv) { lib.dispose(); jac = { nv, p: new s.mj.DoubleBuffer(3 * nv), r: new s.mj.DoubleBuffer(3 * nv) }; }
+      s.mj.mj_jacSite(s.model, s.data, jac.p, jac.r, idOf(s.mj, s.model, "mjOBJ_SITE", siteName));
+      const P = Array.from(jac.p.GetView()), R = Array.from(jac.r.GetView());   // copy before the heap can move
+      const n = cols ?? nv;
+      return [0, 1, 2].map((i) => P.slice(i * nv, i * nv + n)).concat([0, 1, 2].map((i) => R.slice(i * nv, i * nv + n)));
+    },
+    /** Singular values of a site Jacobian, largest first; rows "pos" uses translation only. */
+    jacobianSV(siteName, { cols = null, rows = "full" } = {}) {
+      let J = lib.jacobian(siteName, cols);
+      if (rows === "pos") J = J.slice(0, 3);
+      const A = J.map((a) => J.map((b) => a.reduce((acc, v, k) => acc + v * b[k], 0)));   // J J^T
+      return symEig(A).map((e) => Math.sqrt(Math.max(e, 0))).sort((x, y) => y - x);
+    },
+    /** "geomA / geomB" for each active contact (unnamed geoms show their body). */
+    contactPairs() {
+      const s = view.sim;
+      const label = (g) => nameOf(s.mj, s.model, "mjOBJ_GEOM", g) || nameOf(s.mj, s.model, "mjOBJ_BODY", s.model.geom_bodyid[g]);
+      return s.contacts().map((c) => `${label(c.geom1)} / ${label(c.geom2)}`);
+    },
+    dispose() { if (jac) { jac.p.delete(); jac.r.delete(); jac = null; } },
     norm(v) { return Math.hypot(...v); },
     deg: (rad) => rad * 180 / Math.PI,
     rad: (deg) => deg * Math.PI / 180,
@@ -159,6 +212,6 @@ export async function mount(el, config) {
 
   return {
     view,
-    destroy() { plots.forEach((p) => p.plot.dispose()); view.destroy(); },
+    destroy() { plots.forEach((p) => p.plot.dispose()); lib.dispose(); view.destroy(); },
   };
 }

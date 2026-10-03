@@ -91,13 +91,13 @@
       "id": 5, "title": "Robot modeling", "track": "robotics",
       "summary": "From a two-link arm to a 7-DOF manipulator, a gripper, a three-finger hand and a bimanual cell.",
       "lessons": [
-        {"id": "5.1", "slug": "two-link-arm", "title": "Modeling a two-link arm", "minutes": 35, "difficulty": 2, "status": "planned", "lab": "simlab",
+        {"id": "5.1", "slug": "two-link-arm", "title": "Modeling a two-link arm", "minutes": 35, "difficulty": 2, "status": "draft", "lab": "simlab",
          "prereqs": ["2.3"], "objectives": ["Model a planar arm with explicit inertias", "Add joint limits and motors with realistic ranges", "Place sites where kinematics and control need them"]},
-        {"id": "5.2", "slug": "seven-dof-arm", "title": "A 7-DOF manipulator from primitives", "minutes": 45, "difficulty": 3, "status": "planned", "lab": "simlab",
+        {"id": "5.2", "slug": "seven-dof-arm", "title": "A 7-DOF manipulator from primitives", "minutes": 45, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["5.1"], "objectives": ["Lay out a redundant arm's joint axes", "Set armature, damping and torque limits and explain each", "Check a model for self-collision and singular home poses"]},
-        {"id": "5.3", "slug": "grippers", "title": "Grippers: tendons, equality coupling and force-limited servos", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "grasp",
+        {"id": "5.3", "slug": "grippers", "title": "Grippers: tendons, equality coupling and force-limited servos", "minutes": 40, "difficulty": 3, "status": "draft", "lab": "simlab",
          "prereqs": ["5.2"], "objectives": ["Couple two fingers with a tendon and an equality", "Bound the squeeze force with forcerange", "Choose pad friction and condim for grasping"]},
-        {"id": "5.4", "slug": "hands-and-bimanual", "title": "Hands and bimanual systems", "minutes": 40, "difficulty": 4, "status": "planned", "lab": "simlab",
+        {"id": "5.4", "slug": "hands-and-bimanual", "title": "Hands and bimanual systems", "minutes": 40, "difficulty": 4, "status": "draft", "lab": "simlab",
          "prereqs": ["5.3", "3.3"], "objectives": ["Reuse one finger definition three times with defaults", "Build a bimanual scene with MjSpec attach and prefixes", "Command a hand through a low-dimensional synergy"]}
       ],
       "checkpoint": {"title": "Checkpoint 5: a robot that holds still", "task": "Model a robot of your choice (at least 6 DOF plus an end effector), then show it holds a commanded pose under gravity with position actuators, has no unintended contacts at three poses, and has a Jacobian of full rank at its home pose.", "accept": ["Pose error under 2 mm after 3 s", "Contact list empty at three poses (printed)", "Singular values of the Jacobian reported"]}

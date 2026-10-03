@@ -10,6 +10,11 @@
   Inertias are given explicitly (uniform thin rods, I = m L^2 / 12 about the
   centre) and armature is zero, so the mass matrix computed by MuJoCo can be
   checked term by term against the textbook derivation in Level 7.
+
+  Joint ranges are hardware stops: the shoulder cannot swing below -1.2 rad, so
+  with no torque the arm comes to rest on that stop (Lesson 5.1 measures how far
+  the soft limit lets it sink). Motor limits are about three times the worst-case
+  gravity torque at the shoulder and nine times at the elbow (Lesson 5.1).
   The links do not collide with anything: this model is for kinematics,
   dynamics and control, not contact.
 -->
@@ -29,12 +34,12 @@
     <geom name="pedestal" type="cylinder" fromto="0 0 0 0 0 0.97" size="0.04" rgba=".3 .3 .3 1"/>
 
     <body name="link1" pos="0 0 1">
-      <joint name="shoulder"/>
+      <joint name="shoulder" range="-1.2 2.4"/>
       <inertial pos="0.25 0 0" mass="1.0" diaginertia="1e-4 0.0208333 0.0208333"/>
       <geom name="link1" fromto="0 0 0 0.5 0 0" size="0.025" rgba=".2 .35 .6 1"/>
 
       <body name="link2" pos="0.5 0 0">
-        <joint name="elbow"/>
+        <joint name="elbow" range="-2.6 2.6"/>
         <inertial pos="0.2 0 0" mass="0.8" diaginertia="1e-4 0.0106667 0.0106667"/>
         <geom name="link2" fromto="0 0 0 0.4 0 0" size="0.02" rgba=".85 .33 .1 1"/>
         <site name="ee" pos="0.4 0 0" size="0.012" rgba="1 .8 0 1"/>
