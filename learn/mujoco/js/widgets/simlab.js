@@ -31,6 +31,7 @@
 import { h, frame, slider, select, button, readout, createSimView, overlayToggles, fmt } from "./ui.js";
 import { Plot } from "../plot.js";
 import { idOf, nameOf } from "../runtime.js";
+import { symEig } from "../linalg.js";
 
 const ARGS = ["model", "data", "sim", "mj", "ctx", "lib"];
 
@@ -42,34 +43,6 @@ export function compileStmt(stmt) {
 }
 export function compileSetter(target) {
   return new Function(...ARGS, "value", `"use strict"; ${target} = value;`);
-}
-
-/** Eigenvalues of a small symmetric matrix by cyclic Jacobi rotations. */
-function symEig(A0) {
-  const A = A0.map((r) => r.slice());
-  const n = A.length;
-  for (let sweep = 0; sweep < 60; sweep++) {
-    let off = 0;
-    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) off += A[i][j] * A[i][j];
-    if (off < 1e-30) break;
-    for (let p = 0; p < n; p++) {
-      for (let q = p + 1; q < n; q++) {
-        if (Math.abs(A[p][q]) < 1e-300) continue;
-        const theta = (A[q][q] - A[p][p]) / (2 * A[p][q]);
-        const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.sqrt(theta * theta + 1));
-        const c = 1 / Math.sqrt(t * t + 1), sn = t * c;
-        for (let k = 0; k < n; k++) {            // A <- A G (columns p, q)
-          const akp = A[k][p], akq = A[k][q];
-          A[k][p] = c * akp - sn * akq; A[k][q] = sn * akp + c * akq;
-        }
-        for (let k = 0; k < n; k++) {            // A <- G^T A (rows p, q)
-          const apk = A[p][k], aqk = A[q][k];
-          A[p][k] = c * apk - sn * aqk; A[q][k] = sn * apk + c * aqk;
-        }
-      }
-    }
-  }
-  return A.map((r, i) => r[i]);
 }
 
 export function makeLib(view) {
@@ -102,7 +75,7 @@ export function makeLib(view) {
       let J = lib.jacobian(siteName, cols);
       if (rows === "pos") J = J.slice(0, 3);
       const A = J.map((a) => J.map((b) => a.reduce((acc, v, k) => acc + v * b[k], 0)));   // J J^T
-      return symEig(A).map((e) => Math.sqrt(Math.max(e, 0))).sort((x, y) => y - x);
+      return symEig(A).values.map((e) => Math.sqrt(Math.max(e, 0))).sort((x, y) => y - x);
     },
     /** "geomA / geomB" for each active contact (unnamed geoms show their body). */
     contactPairs() {

@@ -106,11 +106,11 @@
       "id": 6, "title": "Forward and inverse kinematics", "track": "robotics",
       "summary": "Where the end effector is, how fast it moves, and how to get it where you want.",
       "lessons": [
-        {"id": "6.1", "slug": "forward-kinematics", "title": "Forward kinematics as a chain of transforms", "minutes": 40, "difficulty": 3, "status": "planned", "lab": "fk2",
+        {"id": "6.1", "slug": "forward-kinematics", "title": "Forward kinematics as a chain of transforms", "minutes": 40, "difficulty": 3, "status": "draft", "lab": "fk2",
          "prereqs": ["4.1", "5.1"], "objectives": ["Compute the end-effector pose of the two-link arm by hand and in code", "Match MuJoCo's site_xpos to machine precision", "Explain what mj_kinematics computes and what it does not"]},
-        {"id": "6.2", "slug": "jacobians", "title": "Jacobians, velocity kinematics and singularities", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "fk2",
+        {"id": "6.2", "slug": "jacobians", "title": "Jacobians, velocity kinematics and singularities", "minutes": 50, "difficulty": 3, "status": "draft", "lab": "fk2",
          "prereqs": ["6.1"], "objectives": ["Derive the two-link Jacobian and check it against mj_jacSite and finite differences", "Visualise the manipulability ellipse and find singular configurations", "Know which reference point and frame each MuJoCo Jacobian function uses"]},
-        {"id": "6.3", "slug": "inverse-kinematics", "title": "Inverse kinematics: Newton steps, damped least squares, null space", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "ik",
+        {"id": "6.3", "slug": "inverse-kinematics", "title": "Inverse kinematics: Newton steps, damped least squares, null space", "minutes": 55, "difficulty": 4, "status": "draft", "lab": "ik",
          "prereqs": ["6.2"], "objectives": ["Implement IK by damped least squares for position and orientation", "Handle joint limits and redundancy with null-space terms", "Diagnose IK failures near singularities and outside the workspace"]}
       ],
       "checkpoint": {"title": "Checkpoint 6: IK under test", "task": "Implement 6-D IK for arm7 that reaches 100 random reachable poses within 1 mm and 1 degree, respects joint limits, and reports failures honestly. Report success rate, iterations and time per solve.", "accept": ["Success rate with a definition of 'reachable' that does not use the solver itself", "No joint-limit violations", "A failure case analysed"]}
