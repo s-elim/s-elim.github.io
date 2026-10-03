@@ -46,7 +46,7 @@ export function compileSetter(target) {
 }
 
 export function makeLib(view) {
-  let jac = null;
+  let jac = null, mbuf = null;
   const lib = {
     sitePos(name) { const s = view.sim; const i = idOf(s.mj, s.model, "mjOBJ_SITE", name); return [s.data.site_xpos[3 * i], s.data.site_xpos[3 * i + 1], s.data.site_xpos[3 * i + 2]]; },
     bodyPos(name) { const s = view.sim; const i = idOf(s.mj, s.model, "mjOBJ_BODY", name); return [s.data.xpos[3 * i], s.data.xpos[3 * i + 1], s.data.xpos[3 * i + 2]]; },
@@ -83,7 +83,21 @@ export function makeLib(view) {
       const label = (g) => nameOf(s.mj, s.model, "mjOBJ_GEOM", g) || nameOf(s.mj, s.model, "mjOBJ_BODY", s.model.geom_bodyid[g]);
       return s.contacts().map((c) => `${label(c.geom1)} / ${label(c.geom2)}`);
     },
-    dispose() { if (jac) { jac.p.delete(); jac.r.delete(); jac = null; } },
+    /** Dense mass matrix (rows) for the current qpos: runs mj_forward first so that every
+     *  readout evaluated after it in the same tick sees one consistent state. */
+    massMatrix() {
+      const s = view.sim;
+      const nv = s.model.nv;
+      if (!mbuf || mbuf.n !== nv * nv) { mbuf?.b.delete(); mbuf = { n: nv * nv, b: new s.mj.DoubleBuffer(nv * nv) }; }
+      s.mj.mj_forward(s.model, s.data);
+      s.mj.mj_fullM(s.model, s.data, mbuf.b);
+      const v = Array.from(mbuf.b.GetView());
+      return Array.from({ length: nv }, (_, i) => v.slice(i * nv, i * nv + nv));
+    },
+    dispose() {
+      if (jac) { jac.p.delete(); jac.r.delete(); jac = null; }
+      if (mbuf) { mbuf.b.delete(); mbuf = null; }
+    },
     norm(v) { return Math.hypot(...v); },
     deg: (rad) => rad * 180 / Math.PI,
     rad: (deg) => deg * Math.PI / 180,

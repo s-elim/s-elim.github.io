@@ -119,9 +119,9 @@
       "id": 7, "title": "Dynamics", "track": "math",
       "summary": "The equations of motion MuJoCo solves, derived for small systems and read out of the engine for large ones.",
       "lessons": [
-        {"id": "7.1", "slug": "equations-of-motion", "title": "Equations of motion: M(q), bias forces, generalized forces", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "dynamics",
+        {"id": "7.1", "slug": "equations-of-motion", "title": "Equations of motion: M(q), bias forces, generalized forces", "minutes": 55, "difficulty": 4, "status": "draft", "lab": "simlab",
          "prereqs": ["4.3", "6.2"], "objectives": ["Derive the two-link equations of motion with the Lagrangian", "Match the derived M(q) and bias forces to mj_fullM and qfrc_bias", "Explain where armature and joint damping enter"]},
-        {"id": "7.2", "slug": "forward-and-inverse-dynamics", "title": "Forward and inverse dynamics in MuJoCo", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "simlab",
+        {"id": "7.2", "slug": "forward-and-inverse-dynamics", "title": "Forward and inverse dynamics in MuJoCo", "minutes": 45, "difficulty": 4, "status": "draft", "lab": "dynamics",
          "prereqs": ["7.1"], "objectives": ["Use mj_inverse to compute the torques that produce a given motion", "Decompose qfrc into its MuJoCo components", "Explain why inverse dynamics with contacts depends on the soft-constraint model"]}
       ],
       "checkpoint": {"title": "Checkpoint 7: torque from motion", "task": "Generate a smooth joint trajectory for arm7, compute the torques with mj_inverse, replay them open loop with mj_step, and report the tracking error over 2 s. Explain the source of the error.", "accept": ["Error plot with units", "Correct handling of the integrator in the inverse computation", "Explanation names the source of drift"]}
