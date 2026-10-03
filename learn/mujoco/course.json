@@ -208,9 +208,9 @@
       "id": 14, "title": "Imitation learning", "track": "learning",
       "summary": "Demonstrations, behaviour cloning, covariate shift, DAgger and offline datasets.",
       "lessons": [
-        {"id": "14.1", "slug": "bc-and-dagger", "title": "Demonstrations, behaviour cloning and DAgger", "minutes": 55, "difficulty": 3, "status": "planned", "lab": "bc",
+        {"id": "14.1", "slug": "bc-and-dagger", "title": "Demonstrations, behaviour cloning and DAgger", "minutes": 55, "difficulty": 3, "status": "draft", "lab": "bc",
          "prereqs": ["12.1"], "objectives": ["Generate demonstrations from a scripted expert", "Show covariate shift in state-distribution plots", "Implement DAgger and measure what it fixes"]},
-        {"id": "14.2", "slug": "offline-datasets", "title": "Offline datasets: formats, coverage and evaluation", "minutes": 40, "difficulty": 3, "status": "planned", "lab": null,
+        {"id": "14.2", "slug": "offline-datasets", "title": "Offline datasets: formats, coverage and evaluation", "minutes": 40, "difficulty": 3, "status": "draft", "lab": null,
          "prereqs": ["14.1", "11.3"], "objectives": ["Store demonstrations in a documented episode format", "Measure dataset coverage", "Evaluate a cloned policy in closed loop, not only by validation loss"]}
       ],
       "checkpoint": {"title": "Checkpoint 14: beat covariate shift", "task": "Train behaviour cloning on 20 expert demonstrations of the point-mass task, measure closed-loop success, then run 5 DAgger iterations and plot success versus number of expert labels.", "accept": ["Closed-loop success, not loss, as the metric", "Success-versus-labels plot", "State-distribution plot before and after DAgger"]}
