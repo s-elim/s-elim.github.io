@@ -64,19 +64,22 @@ class IKResult:
     pos_error: float              # m
     rot_error: float              # rad
     history: list[float] = field(default_factory=list)
+    max_step: float = 0.0         # largest joint step before step_limit clipped it (rad)
 
 
 def solve_ik(model: mujoco.MjModel, site: str, target_pos: np.ndarray,
              target_quat: np.ndarray | None = None, q_init: np.ndarray | None = None,
              damping: float = 1e-2, max_iters: int = 200, tol_pos: float = 1e-4, tol_rot: float = 1e-3,
              step_limit: float = 0.2, joints: list[int] | None = None, nullspace_gain: float = 0.0,
-             q_rest: np.ndarray | None = None) -> IKResult:
+             q_rest: np.ndarray | None = None, projector: str = "exact") -> IKResult:
     """Damped-least-squares inverse kinematics for one site.
 
     Solves for qpos so that the site reaches target_pos (and target_quat if given),
     iterating dq = J^T (J J^T + damping^2 I)^-1 e, clamping joints to their ranges.
     `joints` restricts the solve to the given dof indices (default: all dofs of
-    hinge and slide joints). A null-space term pulls redundant arms toward q_rest.
+    hinge and slide joints). A null-space term pulls redundant arms toward q_rest,
+    projected with the exact null-space projector; projector="damped" builds it from
+    the damped inverse instead, which leaks into the task (kept to demonstrate that).
     Works on a private MjData; `model` is not modified.
     """
     data = mujoco.MjData(model)
@@ -90,6 +93,7 @@ def solve_ik(model: mujoco.MjModel, site: str, target_pos: np.ndarray,
     sid = model.site(site).id
     history: list[float] = []
     pos_err = rot_err = np.inf
+    max_step = 0.0
     for it in range(1, max_iters + 1):
         mujoco.mj_kinematics(model, data)
         mujoco.mj_comPos(model, data)
@@ -106,18 +110,46 @@ def solve_ik(model: mujoco.MjModel, site: str, target_pos: np.ndarray,
         pos_err = float(np.linalg.norm(e_pos))
         history.append(pos_err)
         if pos_err < tol_pos and rot_err < tol_rot:
-            return IKResult(data.qpos.copy(), True, it, pos_err, rot_err, history)
+            return IKResult(data.qpos.copy(), True, it, pos_err, rot_err, history, max_step)
         jjt = jac @ jac.T + damping**2 * np.eye(jac.shape[0])
         dq = jac.T @ np.linalg.solve(jjt, err)
         if nullspace_gain > 0 and q_rest is not None:
-            pinv = jac.T @ np.linalg.inv(jjt)
-            null = np.eye(len(dofs)) - pinv @ jac
+            # Exact projector onto the null space of J, I - V_r V_r^T. Building it from the
+            # damped inverse instead leaks the posture term into the task (Lesson 6.3).
+            if projector == "damped":
+                null = np.eye(len(dofs)) - jac.T @ np.linalg.solve(jjt, jac)
+            else:
+                _, sv, vt = np.linalg.svd(jac)
+                rank = int(np.sum(sv > 1e-6 * sv[0]))
+                null = np.eye(len(dofs)) - vt[:rank].T @ vt[:rank]
             dq += null @ (nullspace_gain * (q_rest[qadr] - data.qpos[qadr]))
         norm = np.linalg.norm(dq)
+        max_step = max(max_step, float(norm))
         if norm > step_limit:
             dq *= step_limit / norm
         data.qpos[qadr] = np.clip(data.qpos[qadr] + dq, lo, hi)
-    return IKResult(data.qpos.copy(), False, max_iters, pos_err, rot_err, history)
+    return IKResult(data.qpos.copy(), False, max_iters, pos_err, rot_err, history, max_step)
+
+
+def solve_ik_restarts(model: mujoco.MjModel, site: str, target_pos: np.ndarray,
+                      target_quat: np.ndarray | None = None, q_init: np.ndarray | None = None,
+                      restarts: int = 10, seed: int = 0, **kwargs) -> tuple[IKResult, int]:
+    """solve_ik from q_init, then from up to `restarts` random configurations inside the
+    joint ranges. Returns the first success (or the last attempt) and the number of
+    restarts used. Clamping at joint limits creates local minima; restarts escape them.
+    """
+    result = solve_ik(model, site, target_pos, target_quat, q_init=q_init, **kwargs)
+    rng = np.random.default_rng(seed)
+    lo, hi = model.jnt_range[:, 0], model.jnt_range[:, 1]
+    used = 0
+    while not result.success and used < restarts:
+        used += 1
+        q0 = np.zeros(model.nq) if q_init is None else np.array(q_init, dtype=float)
+        limited = model.jnt_limited.astype(bool)
+        for j in np.flatnonzero(limited & np.isin(model.jnt_type, (2, 3))):
+            q0[model.jnt_qposadr[j]] = rng.uniform(lo[j], hi[j])
+        result = solve_ik(model, site, target_pos, target_quat, q_init=q0, **kwargs)
+    return result, used
 
 
 def manipulability(jac: np.ndarray) -> float:
