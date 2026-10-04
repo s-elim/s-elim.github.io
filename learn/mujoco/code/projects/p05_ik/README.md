@@ -39,7 +39,7 @@ Nine tests:
 - five unreachable targets;
 - the posture test.
 
-Each common failure below was introduced into the reference as a mutant and fails at least one test.
+Each common failure below is a mutant in `mutants.json`; `python tools/mutate_project.py p05_ik` checks that each one fails at least one test.
 
 ## Common failures
 

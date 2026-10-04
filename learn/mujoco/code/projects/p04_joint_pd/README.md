@@ -36,7 +36,7 @@ MJC_IMPL=starter pytest projects/p04_joint_pd
 pytest projects/p04_joint_pd
 ```
 
-Four tests: gains of the right shape and sign; the compensated step (overshoot under 5%, within 1% after 0.5 s, every command inside `ctrlrange`); the steady error without compensation within 10% of your prediction on every loaded joint; and the compensated steady error under $10^{-4}$ rad. The first-order prediction fails the third test, and $\omega$ = 12 fails the second.
+Four tests: gains of the right shape and sign; the compensated step (overshoot under 5%, within 1% after 0.5 s, every command inside `ctrlrange`); the steady error without compensation within 10% of your prediction on every loaded joint; and the compensated steady error under $10^{-4}$ rad. The common failures are mutants in `mutants.json`. `python tools/mutate_project.py p04_joint_pd` checks that each one fails: the first-order prediction fails the third test, and $\omega$ = 12, unclipped torques and ignored armature fail the second.
 
 ## Common failures
 

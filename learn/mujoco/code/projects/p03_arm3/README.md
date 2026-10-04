@@ -39,12 +39,12 @@ MJC_IMPL=starter pytest projects/p03_arm3
 pytest projects/p03_arm3
 ```
 
-Six tests: a warning-free compile, the required parts, the 5 s hold, contact-free poses, the gripper response, and the unit comments. Each of the four common failures below was checked to fail the test meant to catch it.
+Six tests: a warning-free compile, the required parts, the 5 s hold, contact-free poses, the gripper response, and the unit comments. Each common failure below is a mutant in `mutants.json`. `python tools/mutate_project.py p03_arm3` applies each one to the reference and checks that the intended test fails; a control mutant (swapped `fromto` ends) must pass.
 
 ## Common failures
 
 - **Angles in degrees.** `range="-90 90"` under `angle="radian"` is a range of ±90 rad; the joint is effectively unlimited. The compiler's default is degrees, so state the unit explicitly in `<compiler>`.
-- **`fromto` reversed.** A capsule from the child frame back to the parent puts the link's mass on the wrong side of the joint; the hold test sees the larger load.
+- **A link drawn away from the next joint.** Swapping a capsule's two `fromto` ends changes nothing, because a capsule is symmetric. Pointing it the wrong way does: `fromto="0 0 0 0 0 -0.25"` on the upper arm, with the elbow body still at $+0.25$, buries the link in the base. The pose test then reports contacts and the hold test fails.
 - **Fingers that collide when closed.** Two finger geoms whose closed positions overlap produce a contact at every closed pose. Leave a gap at the lower limit, or exclude the pair in `<contact>` and say why.
 - **Weak servos.** `<position>` defaults to $k_p$ = 1. A servo whose stiffness cannot carry the gravity load sags until the error times $k_p$ equals the load.
 

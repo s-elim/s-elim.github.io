@@ -1,0 +1,54 @@
+{
+ "first-order steady-error prediction": {
+  "edits": {
+   "solution.py": [
+    [
+     "    error = _bias(model, q_des) / kp\n    for _ in range(100):",
+     "    error = _bias(model, q_des) / kp\n    return error\n    for _ in range(100):"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_steady_error_without_compensation_is_predicted"
+  ]
+ },
+ "bandwidth too low for the settling time": {
+  "edits": {
+   "solution.py": [
+    [
+     "OMEGA = 18.0",
+     "OMEGA = 12.0"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_compensated_step_settles_fast_without_overshoot"
+  ]
+ },
+ "torques not clipped to ctrlrange": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return np.clip(tau, lo, hi)",
+     "    return tau"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_compensated_step_settles_fast_without_overshoot"
+  ]
+ },
+ "armature ignored in the gain design": {
+  "edits": {
+   "solution.py": [
+    [
+     "    inertia = np.diag(mass)                           # includes armature",
+     "    inertia = np.diag(mass) - model.dof_armature"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_compensated_step_settles_fast_without_overshoot"
+  ]
+ }
+}

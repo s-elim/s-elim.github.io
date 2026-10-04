@@ -1,0 +1,86 @@
+{
+ "joint range in degrees under angle=radian": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "range=\"-1.5 1.5\"/>",
+     "range=\"-90 90\"/>"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_required_parts"
+  ]
+ },
+ "servo too weak for the load": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "kp=\"500\" kv=\"30\"",
+     "kp=\"5\" kv=\"30\""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_holds_keyframe_for_five_seconds"
+  ]
+ },
+ "fingers collide when closed": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "range=\"0.002 0.035\"",
+     "range=\"-0.005 0.035\""
+    ]
+   ],
+   "solution.py": [
+    [
+     "np.array([-1.0, -0.5, 2.2, 0.002, 0.002])",
+     "np.array([-1.0, -0.5, 2.2, -0.005, -0.005])"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_named_poses_are_contact_free"
+  ],
+  "note": "the replacement also changes ctrlrange, which contains the same text"
+ },
+ "a number without a unit comment": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "<!-- m; m; kg -->",
+     ""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_every_number_has_a_unit_comment"
+  ]
+ },
+ "upper arm drawn away from the elbow": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "fromto=\"0 0 0 0 0 0.25\" size=\"0.025\"",
+     "fromto=\"0 0 0 0 0 -0.25\" size=\"0.025\""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_named_poses_are_contact_free"
+  ]
+ },
+ "fromto ends swapped (a capsule is symmetric: harmless)": {
+  "edits": {
+   "arm3_solution.xml": [
+    [
+     "fromto=\"0 0 0 0 0 0.25\" size=\"0.025\"",
+     "fromto=\"0 0 0.25 0 0 0\" size=\"0.025\""
+    ]
+   ]
+  },
+  "caught_by": [],
+  "expect_survival": true
+ }
+}

@@ -7,7 +7,7 @@ pytest projects/p01_pendulum                     # test the reference solution
 
 Projects get harder in three ways as you go down the list: more of the system is yours to design, the acceptance criteria move from "matches a known answer" to "meets a measured standard on held-out conditions", and the instructions shrink. By Project 16 the README states a goal and an evaluation protocol, not a recipe.
 
-**Status.** Projects marked **built** have their folder, starter, solution and tests in the repository, and the tests pass. Projects marked **specified** have a fixed specification below (objective, acceptance criteria, failure modes) but no code yet. The specification is the contract the code will be written against.
+**Status.** Projects marked **built** have their folder, starter, solution and tests in the repository, and the tests pass. The common failures each README lists are also in the project's `mutants.json`: `python tools/mutate_project.py <project>` introduces each one into the reference solution and checks that a test fails, so the tests are known to catch them. Projects marked **specified** have a fixed specification below (objective, acceptance criteria, failure modes) but no code yet. The specification is the contract the code will be written against.
 
 | # | Project | Level | Status |
 |---|---|---|---|

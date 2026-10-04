@@ -1,0 +1,55 @@
+{
+ "sign error in gravity": {
+  "edits": {
+   "solution.py": [
+    [
+     "return (-M * G * L * np.sin(theta)",
+     "return (M * G * L * np.sin(theta)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_acceleration_sign",
+   "test_matches_mujoco_euler"
+  ]
+ },
+ "I = m L^2 without the rotor inertia": {
+  "edits": {
+   "solution.py": [
+    [
+     "I_PIVOT = M * L * L + I_C",
+     "I_PIVOT = M * L * L"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_matches_mujoco_euler"
+  ]
+ },
+ "explicit instead of semi-implicit Euler": {
+  "edits": {
+   "solution.py": [
+    [
+     "            w = w + h * acceleration(q, w, damping)\n            q = q + h * w",
+     "            q, w = q + h * w, w + h * acceleration(q, w, damping)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_matches_mujoco_euler"
+  ]
+ },
+ "RK4 stores the state before the update": {
+  "edits": {
+   "solution.py": [
+    [
+     "            q, w = s + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)\n        else:\n            raise ValueError(method)\n        out[k + 1] = q, w",
+     "            out[k + 1] = q, w\n            q, w = s + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)\n            continue\n        else:\n            raise ValueError(method)\n        out[k + 1] = q, w"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_matches_mujoco_rk4"
+  ]
+ }
+}

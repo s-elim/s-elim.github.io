@@ -1,0 +1,77 @@
+{
+ "hand-written angle, no sign fix": {
+  "edits": {
+   "solution.py": [
+    [
+     "    if diff[0] < 0:",
+     "    if False:"
+    ],
+    [
+     "    rotvec = np.zeros(3)\n    mujoco.mju_quat2Vel(rotvec, diff, 1.0)",
+     "    s = np.linalg.norm(diff[1:])\n    rotvec = 2 * np.arccos(np.clip(diff[0], -1, 1)) * diff[1:] / s if s > 1e-12 else np.zeros(3)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_pose_error",
+   "test_negated_target_quaternions"
+  ]
+ },
+ "damped null-space projector": {
+  "edits": {
+   "solution.py": [
+    [
+     "np.linalg.pinv(jac, rcond=1e-6) @ jac",
+     "jac.T @ np.linalg.solve(jac @ jac.T + damping**2 * np.eye(6), jac)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_reaches_100_reachable_poses_inside_limits"
+  ]
+ },
+ "no mj_comPos before mj_jacSite": {
+  "edits": {
+   "solution.py": [
+    [
+     "        mujoco.mj_comPos(model, data)",
+     "        pass"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_reaches_100_reachable_poses_inside_limits"
+  ]
+ },
+ "success claimed from position alone": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return np.linalg.norm(err[:3]) < 0.1 * POS_TOL and np.linalg.norm(err[3:]) < 0.1 * ROT_TOL\n\n\ndef solve",
+     "    return np.linalg.norm(err[:3]) < POS_TOL\n\n\ndef solve"
+    ],
+    [
+     "        task_done = np.linalg.norm(err[:3]) < 0.1 * POS_TOL and np.linalg.norm(err[3:]) < 0.1 * ROT_TOL",
+     "        task_done = np.linalg.norm(err[:3]) < 0.1 * POS_TOL\n        err = np.r_[err[:3], 0.1 * err[3:]]"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_reaches_100_reachable_poses_inside_limits"
+  ]
+ },
+ "joint limits ignored": {
+  "edits": {
+   "solution.py": [
+    [
+     "        data.qpos[:] = np.clip(data.qpos + dq, lo, hi)",
+     "        data.qpos[:] = data.qpos + dq"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_reaches_100_reachable_poses_inside_limits",
+   "test_reports_failure_when_unreachable"
+  ]
+ }
+}

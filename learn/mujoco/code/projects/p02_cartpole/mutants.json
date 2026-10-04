@@ -1,0 +1,54 @@
+{
+ "linearized at the hanging position": {
+  "edits": {
+   "solution.py": [
+    [
+     "    data.qpos[:] = qpos\n",
+     "    data.qpos[:] = qpos + np.array([0.0, np.pi])\n"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_balances_from_tilt"
+  ]
+ },
+ "feedback on the pole only": {
+  "edits": {
+   "solution.py": [
+    [
+     "    x = np.concatenate([data.qpos, data.qvel])",
+     "    x = np.concatenate([data.qpos, data.qvel]) * np.array([0.0, 1.0, 0.0, 1.0])"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_balances_from_tilt"
+  ]
+ },
+ "sign of the gain": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return float(-(k @ x)[0])",
+     "    return float((k @ x)[0])"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_balances_from_tilt"
+  ]
+ },
+ "finite-difference step too large": {
+  "edits": {
+   "solution.py": [
+    [
+     "mujoco.mjd_transitionFD(model, data, 1e-6,",
+     "mujoco.mjd_transitionFD(model, data, 0.3,"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_linearization_predicts_one_step"
+  ]
+ }
+}
