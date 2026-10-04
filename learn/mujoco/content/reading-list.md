@@ -79,26 +79,26 @@ The documentation is the reference for everything this course states about MuJoC
 
 ## World models and planning
 
-- Y. Tassa, T. Erez, E. Todorov. **Synthesis and stabilization of complex behaviors through online trajectory optimization.** IROS 2012, pp. 4906-4913. [doi:10.1109/IROS.2012.6386025](https://doi.org/10.1109/IROS.2012.6386025). *Level 17.* Model predictive control with MuJoCo as the model.
-- G. Williams et al. **Information theoretic MPC for model-based reinforcement learning.** ICRA 2017, pp. 1714-1721. [doi:10.1109/ICRA.2017.7989202](https://doi.org/10.1109/ICRA.2017.7989202). *Level 17.* MPPI.
-- T. Howell et al. **Predictive Sampling: Real-time Behaviour Synthesis with MuJoCo.** arXiv:2212.00541, 2022. [arXiv](https://arxiv.org/abs/2212.00541). *Level 17.* MuJoCo MPC, and the case for a very simple sampling planner.
-- D. Ha, J. Schmidhuber. **World Models.** arXiv:1803.10122, 2018. [arXiv](https://arxiv.org/abs/1803.10122). *Level 17.*
-- D. Hafner et al. **Learning Latent Dynamics for Planning from Pixels.** arXiv:1811.04551, 2018. [arXiv](https://arxiv.org/abs/1811.04551). *Level 17.* PlaNet.
-- D. Hafner et al. **Mastering Diverse Domains through World Models.** arXiv:2301.04104, 2023. [arXiv](https://arxiv.org/abs/2301.04104). *Level 17.* DreamerV3.
-- N. Hansen, X. Wang, H. Su. **Temporal Difference Learning for Model Predictive Control.** arXiv:2203.04955, 2022. [arXiv](https://arxiv.org/abs/2203.04955). *Level 17.* TD-MPC.
-- N. Hansen, H. Su, X. Wang. **TD-MPC2: Scalable, Robust World Models for Continuous Control.** arXiv:2310.16828, 2023. [arXiv](https://arxiv.org/abs/2310.16828). *Level 17.*
-- M. Assran et al. **V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning.** arXiv:2506.09985, 2025. [arXiv](https://arxiv.org/abs/2506.09985). *Level 17.* For each world-model paper, separate three claims the course keeps apart: prediction accuracy, controllability, and the success of the policy or planner that uses the model.
+- Y. Tassa, T. Erez, E. Todorov. **Synthesis and stabilization of complex behaviors through online trajectory optimization.** IROS 2012, pp. 4906-4913. [doi:10.1109/IROS.2012.6386025](https://doi.org/10.1109/IROS.2012.6386025). *Level 21.* Model predictive control with MuJoCo as the model.
+- G. Williams et al. **Information theoretic MPC for model-based reinforcement learning.** ICRA 2017, pp. 1714-1721. [doi:10.1109/ICRA.2017.7989202](https://doi.org/10.1109/ICRA.2017.7989202). *Level 21.* MPPI.
+- T. Howell et al. **Predictive Sampling: Real-time Behaviour Synthesis with MuJoCo.** arXiv:2212.00541, 2022. [arXiv](https://arxiv.org/abs/2212.00541). *Level 21.* MuJoCo MPC, and the case for a very simple sampling planner.
+- D. Ha, J. Schmidhuber. **World Models.** arXiv:1803.10122, 2018. [arXiv](https://arxiv.org/abs/1803.10122). *Level 21.*
+- D. Hafner et al. **Learning Latent Dynamics for Planning from Pixels.** arXiv:1811.04551, 2018. [arXiv](https://arxiv.org/abs/1811.04551). *Level 21.* PlaNet.
+- D. Hafner et al. **Mastering Diverse Domains through World Models.** arXiv:2301.04104, 2023. [arXiv](https://arxiv.org/abs/2301.04104). *Level 21.* DreamerV3.
+- N. Hansen, X. Wang, H. Su. **Temporal Difference Learning for Model Predictive Control.** arXiv:2203.04955, 2022. [arXiv](https://arxiv.org/abs/2203.04955). *Level 21.* TD-MPC.
+- N. Hansen, H. Su, X. Wang. **TD-MPC2: Scalable, Robust World Models for Continuous Control.** arXiv:2310.16828, 2023. [arXiv](https://arxiv.org/abs/2310.16828). *Level 21.*
+- M. Assran et al. **V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning.** arXiv:2506.09985, 2025. [arXiv](https://arxiv.org/abs/2506.09985). *Level 21.* For each world-model paper, separate three claims the course keeps apart: prediction accuracy, controllability, and the success of the policy or planner that uses the model.
 
 ## Domain randomization, system identification and sim-to-real
 
-- J. Tobin et al. **Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World.** arXiv:1703.06907, 2017. [arXiv](https://arxiv.org/abs/1703.06907). *Level 18.* Visual randomization.
-- X. B. Peng et al. **Sim-to-Real Transfer of Robotic Control with Dynamics Randomization.** arXiv:1710.06537, 2017. [arXiv](https://arxiv.org/abs/1710.06537). *Level 18.* Dynamics randomization.
-- J. Tan et al. **Sim-to-Real: Learning Agile Locomotion For Quadruped Robots.** arXiv:1804.10332, 2018. [arXiv](https://arxiv.org/abs/1804.10332). *Levels 18 and 19.* System identification and randomization used together, with an actuator model.
+- J. Tobin et al. **Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World.** arXiv:1703.06907, 2017. [arXiv](https://arxiv.org/abs/1703.06907). *Level 17.* Visual randomization.
+- X. B. Peng et al. **Sim-to-Real Transfer of Robotic Control with Dynamics Randomization.** arXiv:1710.06537, 2017. [arXiv](https://arxiv.org/abs/1710.06537). *Level 17.* Dynamics randomization.
+- J. Tan et al. **Sim-to-Real: Learning Agile Locomotion For Quadruped Robots.** arXiv:1804.10332, 2018. [arXiv](https://arxiv.org/abs/1804.10332). *Levels 17 and 18.* System identification and randomization used together, with an actuator model.
 - J. Hwangbo et al. **Learning agile and dynamic motor skills for legged robots.** Science Robotics 4(26), 2019, eaau5872. [arXiv:1901.08652](https://arxiv.org/abs/1901.08652). *Level 19.* A learned actuator model closes the gap that rigid-body identification left.
-- OpenAI et al. **Solving Rubik's Cube with a Robot Hand.** arXiv:1910.07113, 2019. [arXiv](https://arxiv.org/abs/1910.07113). *Level 18.* Automatic domain randomization at large compute cost.
+- OpenAI et al. **Solving Rubik's Cube with a Robot Hand.** arXiv:1910.07113, 2019. [arXiv](https://arxiv.org/abs/1910.07113). *Level 17.* Automatic domain randomization at large compute cost.
 - A. Kumar et al. **RMA: Rapid Motor Adaptation for Legged Robots.** arXiv:2107.04034, 2021. [arXiv](https://arxiv.org/abs/2107.04034). *Level 19.* Adapting to the dynamics online instead of being robust to all of them.
 - W. Zhao, J. P. Queralta, T. Westerlund. **Sim-to-Real Transfer in Deep Reinforcement Learning for Robotics: a Survey.** IEEE SSCI 2020, pp. 737-744. [arXiv:2009.13303](https://arxiv.org/abs/2009.13303). *Level 19.*
-- F. Muratore et al. **Robot Learning from Randomized Simulations: A Review.** arXiv:2111.00956, 2021. [arXiv](https://arxiv.org/abs/2111.00956). *Level 18.*
+- F. Muratore et al. **Robot Learning from Randomized Simulations: A Review.** arXiv:2111.00956, 2021. [arXiv](https://arxiv.org/abs/2111.00956). *Level 17.*
 
 ## Benchmarks and batched simulation
 
