@@ -6,6 +6,7 @@ Scripts may declare one requirement on a line of its own:
     # requires: render    needs an OpenGL backend (skipped without one)
     # requires: display   needs a window; only byte-compiled here
     # requires: torch     needs PyTorch (skipped without it)
+    # requires: sysid     needs MuJoCo's sysid toolbox, mujoco[sysid] (skipped without it)
 """
 
 import os
@@ -28,6 +29,12 @@ def _has_torch() -> bool:
     return subprocess.run([sys.executable, "-c", "import torch"], capture_output=True).returncode == 0
 
 
+def _has_sysid() -> bool:
+    """mujoco.sysid imports without its extras but then exports nothing; check for a function."""
+    check = "import mujoco.sysid as s; assert hasattr(s, 'optimize')"
+    return subprocess.run([sys.executable, "-c", check], capture_output=True).returncode == 0
+
+
 @pytest.mark.parametrize("script", EXAMPLES, ids=lambda p: p.name)
 def test_example_runs(script, tmp_path, has_gl):
     needs = _requirements(script)
@@ -38,6 +45,8 @@ def test_example_runs(script, tmp_path, has_gl):
         pytest.skip("needs an OpenGL backend (MUJOCO_GL=egl or osmesa)")
     if "torch" in needs and not _has_torch():
         pytest.skip("needs PyTorch")
+    if "sysid" in needs and not _has_sysid():
+        pytest.skip("needs mujoco[sysid]")
     env = {**os.environ, "MJC_FAST": "1", "MPLBACKEND": "Agg"}
     proc = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, timeout=900, env=env,
                           cwd=tmp_path)

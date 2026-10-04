@@ -248,7 +248,7 @@
       "lessons": [
         {"id": "18.1", "slug": "sysid-least-squares", "title": "System identification by least squares", "minutes": 45, "difficulty": 4, "status": "draft", "lab": "sysid",
          "prereqs": ["7.2"], "objectives": ["Write a pendulum's dynamics linear in its parameters", "Estimate inertia, damping and friction from q, qdot and u", "Diagnose poor excitation, including when the regressor's condition number does not flag it"]},
-        {"id": "18.2", "slug": "sysid-simulation", "title": "Simulation-in-the-loop identification", "minutes": 45, "difficulty": 4, "status": "planned", "lab": null,
+        {"id": "18.2", "slug": "sysid-simulation", "title": "Simulation-in-the-loop identification", "minutes": 45, "difficulty": 4, "status": "draft", "lab": null,
          "prereqs": ["18.1", "3.3"], "objectives": ["Fit MuJoCo model parameters by minimizing trajectory error", "Use MuJoCo's own sysid toolbox", "Validate identified parameters on held-out trajectories"]}
       ],
       "checkpoint": {"title": "Checkpoint 18: identify a hidden model", "task": "Given trajectories generated from a pendulum with hidden mass, damping and friction loss plus sensor noise, estimate all three, report uncertainty, and validate on a held-out trajectory.", "accept": ["Estimates with uncertainty", "Held-out trajectory error", "Excitation discussed"]}
