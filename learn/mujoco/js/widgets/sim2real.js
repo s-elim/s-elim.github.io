@@ -137,7 +137,7 @@ export async function mount(el, config = {}) {
   }
   const tickPlot = () => {
     const s = view.sim;
-    if (errs.length) plot.push(s.time, [1000 * errs[errs.length - 1]]);
+    if (errs.length && !s.paused) { plot.push(s.time, [1000 * errs[errs.length - 1]]); plot.draw(); }
     if (diverged) outs.live.set("left the linear range (|error| > 0.5 rad)");
     else if (errs.length > 2500) {                       // after 5 s, past the step's transient
       outs.live.set(std(errs.slice(-1000)) > 0.005 ? "oscillating (> 5 mrad)" : "settled");
