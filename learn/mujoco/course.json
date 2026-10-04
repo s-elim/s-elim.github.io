@@ -287,7 +287,7 @@
          "prereqs": ["21.1"], "objectives": ["Choose seeds and evaluation episodes from a target interval width", "Report success rates with intervals and aggregate across tasks correctly", "Design ablations that isolate one factor"]},
         {"id": "21.3", "slug": "benchmark-anatomy", "title": "How MuJoCo-based benchmarks are built", "minutes": 45, "difficulty": 3, "status": "draft", "lab": null,
          "prereqs": ["21.1"], "objectives": ["Read a benchmark as task, observation, action, episode, initialization, evaluation and metric", "Distinguish training from evaluation protocols", "Check benchmark version and protocol before comparing numbers"]},
-        {"id": "21.4", "slug": "world-models-and-planning", "title": "World models, MPC and agentic planning on MuJoCo", "minutes": 60, "difficulty": 5, "status": "planned", "lab": "mpc",
+        {"id": "21.4", "slug": "world-models-and-planning", "title": "World models, MPC and agentic planning on MuJoCo", "minutes": 60, "difficulty": 5, "status": "draft", "lab": "mpc",
          "prereqs": ["8.3", "13.1"], "objectives": ["Run sampling-based MPC with MuJoCo as a perfect model", "Replace the model with a mismatched one and measure the cost", "Explain where MuJoCo ends and a learned world model begins"]},
         {"id": "21.5", "slug": "embodied-ai-evaluation", "title": "MuJoCo for VLA evaluation, 3D perception and 6D pose", "minutes": 50, "difficulty": 5, "status": "planned", "lab": null,
          "prereqs": ["16.1", "21.2"], "objectives": ["Build generalization axes (object, spatial, instruction, embodiment) into an evaluation", "Generate 6D pose and depth ground truth for perception models", "Evaluate a policy without letting the simulator leak privileged state"]}

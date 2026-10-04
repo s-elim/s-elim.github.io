@@ -122,7 +122,7 @@ export async function mount(el, config = {}) {
     h("div", { class: "controls" },
       slider({ label: "samples per replan", min: 4, max: 128, step: 4, value: opt.samples, digits: 0, onInput: (v) => { opt.samples = v; } }),
       slider({ label: "horizon", min: 0.25, max: 2, step: 0.25, value: opt.horizon, unit: "s", digits: 2, onInput: (v) => { opt.horizon = v; } }),
-      slider({ label: "real pole mass (planner assumes 0.2)", min: 0.1, max: 0.5, step: 0.05, value: 0.2, unit: "kg", digits: 2, onInput: (v) => { opt.poleMass = v; setPoleMass(v); } }),
+      slider({ label: "real pole mass (planner assumes 0.2)", min: 0.1, max: 1.0, step: 0.05, value: 0.2, unit: "kg", digits: 2, onInput: (v) => { opt.poleMass = v; setPoleMass(v); } }),
       select({ label: "draw candidate rollouts", options: [["yes", "yes"], ["no", "no"]], value: "yes", onChange: (v) => { opt.show = v === "yes"; } })),
     h("div", { class: "readouts" }, Object.values(outs)), plotEl,
     h("p", { class: "widget__note", html: "The planner simulates every candidate in this page each 40 ms of simulated time; if that takes longer than 40 ms of wall time, the simulation slows down rather than skipping plans. Measured in Python over 20 starts: 128 samples balance the pole from all 20, 64 from 18, 4 from none (table below)." }));
