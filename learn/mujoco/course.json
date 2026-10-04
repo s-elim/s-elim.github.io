@@ -298,7 +298,7 @@
       "id": 22, "title": "Capstone projects", "track": "research",
       "summary": "Seven expert capstones, a final research-grade capstone and the final examination.",
       "lessons": [
-        {"id": "22.1", "slug": "capstones", "title": "Capstones A to G and the final capstone", "minutes": 30, "difficulty": 5, "status": "planned", "lab": null,
+        {"id": "22.1", "slug": "capstones", "title": "Capstones A to G and the final capstone", "minutes": 30, "difficulty": 5, "status": "draft", "lab": null,
          "prereqs": ["21.2"], "objectives": ["Choose a capstone that matches your research question", "Meet the specification, rubric and reporting standard", "Produce a reproducible experiment report"]}
       ],
       "checkpoint": {"title": "Final checkpoint", "task": "Complete the final capstone and the final expert examination.", "accept": ["See the capstone rubric", "See the exam marking guide"]}
