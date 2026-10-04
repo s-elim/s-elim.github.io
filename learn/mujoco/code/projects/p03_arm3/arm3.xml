@@ -1,0 +1,6 @@
+<!--
+  arm3.xml : your model for Project 3. Start from this empty file; do not copy a course model.
+  Every line that sets a number must end with a comment giving its unit (or "unitless").
+-->
+<mujoco model="arm3">
+</mujoco>

@@ -1,0 +1,80 @@
+<!--
+  arm3_solution.xml : reference answer for Project 3, a 3-DOF arm with a two-finger gripper.
+
+  Kinematic chain: base (fixed) -> turret (yaw about +z) -> upper_arm (shoulder about +y)
+  -> forearm (elbow about +y) -> hand -> two fingers on slide joints. At qpos = 0 the arm
+  points straight up; a positive shoulder or elbow angle tips the next link toward +x.
+
+  Gripper: one position servo drives finger_left; an equality constraint makes finger_right
+  copy it, so the jaws stay centred. A finger's slide coordinate is the distance from the hand
+  axis to its inner face, so the jaw gap is twice the coordinate. The lower limit leaves a
+  4 mm gap when closed, which keeps the fingers from touching each other.
+
+  Servo sizing: the worst static load on the shoulder (arm horizontal) is about 2.8 N m, so
+  kp = 500 N m/rad leaves a steady error of 2.8 / 500 = 0.0056 rad (0.32 degree), inside
+  the 1 degree budget of the hold test.
+-->
+<mujoco model="arm3">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002"/>                                       <!-- s -->
+
+  <default>
+    <joint damping="0.5" armature="0.01"/>                         <!-- N m s/rad; kg m^2 -->
+    <geom rgba=".35 .45 .6 1"/>                                    <!-- RGBA, unitless -->
+    <default class="finger">
+      <joint type="slide" range="0.002 0.035" damping="1"/>        <!-- m; N s/m -->
+      <geom type="box" size="0.006 0.004 0.03" rgba=".9 .55 .15 1"/>  <!-- half-sizes m; RGBA -->
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0 -1 2" dir="0 1 -2"/>                             <!-- m; direction, unitless -->
+    <geom name="floor" type="plane" size="1 1 0.05" rgba=".85 .87 .85 1"/>  <!-- m; RGBA -->
+    <geom name="base" type="cylinder" fromto="0 0 0 0 0 0.1" size="0.05" mass="2"/>  <!-- m; m; kg -->
+    <camera name="workspace" pos="0.75 -0.75 0.65" xyaxes="0.806 0.591 0 -0.234 0.319 0.919"/>  <!-- m; unit vectors -->
+
+    <body name="turret" pos="0 0 0.1">                             <!-- m -->
+      <joint name="yaw" axis="0 0 1" range="-2.8 2.8"/>            <!-- unit vector; rad -->
+      <geom name="turret" type="cylinder" fromto="0 0 0 0 0 0.03" size="0.04" mass="0.3"/>  <!-- m; m; kg -->
+
+      <body name="upper_arm" pos="0 0 0.04">                       <!-- m -->
+        <joint name="shoulder" axis="0 1 0" range="-1.5 1.5"/>     <!-- unit vector; rad -->
+        <geom name="upper_arm" type="capsule" fromto="0 0 0 0 0 0.25" size="0.025" mass="0.5"/>  <!-- m; m; kg -->
+
+        <body name="forearm" pos="0 0 0.25">                       <!-- m -->
+          <joint name="elbow" axis="0 1 0" range="-2.4 2.4"/>      <!-- unit vector; rad -->
+          <geom name="forearm" type="capsule" fromto="0 0 0 0 0 0.2" size="0.02" mass="0.35"/>  <!-- m; m; kg -->
+
+          <body name="hand" pos="0 0 0.22">                        <!-- m -->
+            <geom name="palm" type="box" size="0.02 0.045 0.01" pos="0 0 0.01" mass="0.15"/>  <!-- half-sizes m; m; kg -->
+            <site name="tcp" pos="0 0 0.08" size="0.006"/>          <!-- m; m -->
+
+            <body name="finger_left" pos="0 0 0.02">               <!-- m -->
+              <joint name="finger_left" class="finger" axis="0 1 0"/>  <!-- unit vector -->
+              <geom name="finger_left" class="finger" pos="0 0.004 0.03" mass="0.02"/>  <!-- m; kg -->
+            </body>
+            <body name="finger_right" pos="0 0 0.02">              <!-- m -->
+              <joint name="finger_right" class="finger" axis="0 -1 0"/>  <!-- unit vector -->
+              <geom name="finger_right" class="finger" pos="0 -0.004 0.03" mass="0.02"/>  <!-- m; kg -->
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <equality>
+    <joint joint1="finger_right" joint2="finger_left"/>            <!-- finger_right = finger_left -->
+  </equality>
+
+  <actuator>
+    <position name="yaw" joint="yaw" kp="300" kv="20" ctrlrange="-2.8 2.8" forcerange="-15 15"/>  <!-- N m/rad; N m s/rad; rad; N m -->
+    <position name="shoulder" joint="shoulder" kp="500" kv="30" ctrlrange="-1.5 1.5" forcerange="-20 20"/>  <!-- N m/rad; N m s/rad; rad; N m -->
+    <position name="elbow" joint="elbow" kp="300" kv="15" ctrlrange="-2.4 2.4" forcerange="-15 15"/>  <!-- N m/rad; N m s/rad; rad; N m -->
+    <position name="gripper" joint="finger_left" kp="200" kv="5" ctrlrange="0.002 0.035" forcerange="-10 10"/>  <!-- N/m; N s/m; m; N -->
+  </actuator>
+
+  <keyframe>
+    <key name="home" qpos="0 0.6 1.2 0.02 0.02" ctrl="0 0.6 1.2 0.02"/>  <!-- rad rad rad m m; same units for ctrl -->
+  </keyframe>
+</mujoco>

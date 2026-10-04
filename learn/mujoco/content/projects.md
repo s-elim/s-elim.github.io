@@ -13,9 +13,9 @@ Projects get harder in three ways as you go down the list: more of the system is
 |---|---|---|---|
 | 1 | [Pendulum simulator that matches MuJoCo](#/project/p01_pendulum) | 1 | built |
 | 2 | [Cart-pole balance by LQR on MuJoCo's linearization](#/project/p02_cartpole) | 8 | built |
-| 3 | A 3-DOF arm with a gripper, from an empty file | 2, 5 | specified |
-| 4 | Joint PD and gravity compensation on the 7-DOF arm | 8 | specified |
-| 5 | Inverse kinematics under test | 6 | specified |
+| 3 | [A 3-DOF arm with a gripper, from an empty file](#/project/p03_arm3) | 2, 5 | built |
+| 4 | [Joint PD and gravity compensation on the 7-DOF arm](#/project/p04_joint_pd) | 8 | built |
+| 5 | [Inverse kinematics under test](#/project/p05_ik) | 6 | built |
 | 6 | Cartesian (operational-space) circle tracking | 8 | specified |
 | 7 | A grasp that survives randomization | 10 | specified |
 | 8 | Scripted pick-and-place on the 7-DOF arm | 10 | specified |
@@ -33,18 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 3. A 3-DOF arm with a gripper, from an empty file
-
-**Objective.** Write an MJCF model of a 3-DOF arm with a two-finger gripper, joint limits, position actuators, a workspace camera and a keyframe, without copying a course model. **Accept when** it compiles without warnings in MuJoCo 3.14.0, holds its keyframe under gravity for 5 s with joint drift under 1 degree, has no contacts at three named poses, and every numeric attribute carries a unit comment. **Common failures:** angles in degrees, `fromto` reversed, finger pads colliding with each other when closed, default `kp="1"` servos that cannot hold the load. **Extensions:** generate the same arm with `MjSpec` and test that the two models are identical.
-
-### 4. Joint PD and gravity compensation on the 7-DOF arm
-
-**Objective.** Implement joint-space PD and PD with gravity compensation for `arm7.xml` and characterize step responses. **Accept when** with compensation, a 0.3 rad step on every joint settles within 1% in under 0.5 s with less than 5% overshoot, the steady-state error without compensation matches the prediction load/$k_p$ within 10%, and torques stay within `ctrlrange`. **Common failures:** compensating with `qfrc_bias` from a stale state; gains tuned for one pose that ring at another; ignoring armature in the damping-ratio estimate. **Extensions:** gain scheduling with the configuration-dependent inertia from `mj_fullM`.
-
-### 5. Inverse kinematics under test
-
-**Objective.** Six-dimensional IK for `arm7.xml` by damped least squares, with joint limits and a null-space posture term. **Accept when** it reaches 100 reachable random poses within 1 mm and 1 degree, never violates a joint limit, and reports failure (rather than a wrong answer) on unreachable poses. Reachability must be defined without using the solver (for example, poses produced by forward kinematics of random joint vectors). **Common failures:** orientation error computed from quaternion differences without fixing the sign; damping so small the solver diverges near singularities; success claimed from position alone. **Extensions:** compare with an analytic solution for the 2-link arm; measure iterations against damping.
 
 ### 6. Cartesian circle tracking
 
