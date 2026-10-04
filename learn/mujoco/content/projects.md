@@ -20,7 +20,7 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 7 | [A grasp that survives randomization](#/project/p07_robust_grasp) | 10 | built |
 | 8 | [Scripted pick-and-place on the 7-DOF arm](#/project/p08_pick_place) | 10 | built |
 | 9 | [Camera-based manipulation without privileged state](#/project/p09_vision_pick) | 11 | built |
-| 10 | A Gymnasium environment that passes review | 12 | specified |
+| 10 | [A Gymnasium environment that passes review](#/project/p10_gym_env) | 12 | built |
 | 11 | PPO on a manipulation task | 13 | specified |
 | 12 | SAC on the same task, compared fairly | 13 | specified |
 | 13 | Behaviour cloning, and what DAgger fixes | 14 | specified |
@@ -33,10 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 10. A Gymnasium environment that passes review
-
-**Objective.** A `gymnasium.Env` for the push task built from scratch on `push.xml`, with three action-space variants (joint torques, joint targets, end-effector deltas). **Accept when** `gymnasium.utils.env_checker.check_env` passes, seeding reproduces trajectories bit for bit, `terminated` and `truncated` are separated correctly, and a test fails if any observation component has no real-robot source. **Common failures:** stale observations after reset (Debugging clinic, case 11); time limits reported as termination; rewards that read privileged state the observation hides. **Extensions:** a vectorized version and its throughput.
 
 ### 11. PPO on a manipulation task
 

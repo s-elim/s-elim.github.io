@@ -68,7 +68,8 @@ def perturbation_leaks(env, body: str = "puck", geom: str = "puck", seed: int = 
     b, g = m.body(body).id, m.geom(geom).id
     dof = m.body_dofadr[b]
     spec = mujoco.mjtState.mjSTATE_FULLPHYSICS
-    base = env._get_obs().copy()
+    mujoco.mj_forward(m, d)                                     # baseline from a fresh state, so a merely stale
+    base = env._get_obs().copy()                                # observation is not reported as a leak
 
     def bump_velocity():
         d.qvel[dof:dof + m.body_dofnum[b]] += 0.3

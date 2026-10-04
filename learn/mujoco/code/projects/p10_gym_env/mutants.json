@@ -1,0 +1,105 @@
+{
+ "stale observation after reset (no mj_forward)": {
+  "edits": {
+   "solution.py": [
+    [
+     "        mujoco.mj_forward(m, d)                                  # the first observation must describe this state\n",
+     ""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_tool_position_matches_the_joints"
+  ]
+ },
+ "time limit reported as termination": {
+  "edits": {
+   "solution.py": [
+    [
+     "        terminated = distance < SUCCESS_RADIUS\n        truncated = self._steps >= self.max_episode_steps and not terminated",
+     "        terminated = distance < SUCCESS_RADIUS or self._steps >= self.max_episode_steps\n        truncated = False"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_passes_the_environment_checks"
+  ]
+ },
+ "observation buffer reused": {
+  "edits": {
+   "solution.py": [
+    [
+     "        d = self.data\n        return np.concatenate(",
+     "        d = self.data\n        if not hasattr(self, '_buffer'):\n            self._buffer = np.zeros(21, np.float32)\n        self._buffer[:] = np.concatenate("
+    ],
+    [
+     "                               self.goal]).astype(np.float32)\n",
+     "                               self.goal]).astype(np.float32)\n        return self._buffer\n"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_passes_the_environment_checks"
+  ]
+ },
+ "puck velocity observed, declared honestly": {
+  "edits": {
+   "solution.py": [
+    [
+     "(\"goal_xy\", 2, \"task specification\"))",
+     "(\"goal_xy\", 2, \"task specification\"), (\"puck_vel\", 3, \"simulator state\"))"
+    ],
+    [
+     "                               self.goal]).astype(np.float32)",
+     "                               self.goal, d.qvel[self.model.jnt_dofadr[self.model.joint(\"puck\").id]:][:3]]).astype(np.float32)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_passes_the_environment_checks"
+  ]
+ },
+ "puck velocity observed under a false label": {
+  "edits": {
+   "solution.py": [
+    [
+     "(\"goal_xy\", 2, \"task specification\"))",
+     "(\"goal_xy\", 2, \"task specification\"), (\"puck_vel\", 3, \"camera tracker\"))"
+    ],
+    [
+     "                               self.goal]).astype(np.float32)",
+     "                               self.goal, d.qvel[self.model.jnt_dofadr[self.model.joint(\"puck\").id]:][:3]]).astype(np.float32)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_passes_the_environment_checks"
+  ]
+ },
+ "unseeded randomness": {
+  "edits": {
+   "solution.py": [
+    [
+     "self.np_random.uniform(-0.03, 0.03)",
+     "np.random.uniform(-0.03, 0.03)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_passes_the_environment_checks"
+  ]
+ },
+ "stale tool position after a step (no mj_kinematics)": {
+  "edits": {
+   "solution.py": [
+    [
+     "        mujoco.mj_kinematics(self.model, self.data)              # positions are one step stale after mj_step\n",
+     ""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_tool_position_matches_the_joints"
+  ]
+ }
+}
