@@ -237,8 +237,8 @@
       "id": 17, "title": "Domain randomization", "track": "sim2real",
       "summary": "Randomizing physics, sensing and rendering, and measuring what it buys.",
       "lessons": [
-        {"id": "17.1", "slug": "domain-randomization", "title": "Domain randomization: what to randomize and how to measure it", "minutes": 50, "difficulty": 3, "status": "planned", "lab": "dr",
-         "prereqs": ["8.1", "12.1"], "objectives": ["Randomize mass, friction, damping, actuator gain, latency and noise correctly at reset", "Compare nominal, randomized and held-out-mismatch performance", "Avoid randomization that changes the task instead of the dynamics"]}
+        {"id": "17.1", "slug": "domain-randomization", "title": "Domain randomization: what to randomize and how to measure it", "minutes": 50, "difficulty": 3, "status": "draft", "lab": "dr",
+         "prereqs": ["8.1", "12.1"], "objectives": ["Apply mass and friction changes correctly at reset, and recognize the divergence that stale derived constants cause", "Compare nominal and randomized tuning on held-out parameter values beyond the training range", "Tell when randomization cannot help, keep randomized ranges feasible, and identify a parameter instead"]}
       ],
       "checkpoint": {"title": "Checkpoint 17: robustness, measured", "task": "Train or tune a controller on nominal and on randomized dynamics for the push task and evaluate both on a held-out set of parameter values outside the training range. Report performance against the size of the mismatch.", "accept": ["Held-out range disjoint from the training range", "Performance-versus-mismatch plot", "Seeds and ranges logged"]}
     },

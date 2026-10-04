@@ -9,8 +9,12 @@ to catch: "puck_velocity" (simulator state), "contact_force" (contact solver),
 Action: see mjcourse.envs.arm; "ee_delta" moves the tcp in x and y at a fixed height.
 Reward (`reward=`): "dense" minus the puck-goal distance; "shaped" adds minus half the
 tcp-puck distance; "sparse" 1 on success; "contact" 1 per step in contact with the puck.
-Terminated: the puck is within `success_radius` of the goal. Truncated: after
+Terminated: the puck is within `success_radius` of the goal, unless `terminate_on_success`
+is False (then success is judged where the puck ends). Truncated: after
 `max_episode_steps` steps (0.05 s each by default).
+reset(options=...) accepts "puck" and "goal" positions and, for Level 17, "puck_mass" (kg)
+and "friction" (sliding coefficient of the puck and the floor); parameters not given
+return to their nominal values, since model edits persist across episodes.
 """
 
 from __future__ import annotations
@@ -38,13 +42,14 @@ class PushEnv(MujocoEnv):
 
     def __init__(self, action_mode: str = "ee_delta", reward: str = "shaped", frame_skip: int = 25,
                  max_episode_steps: int = 100, success_radius: float = 0.03, extra_observations: tuple[str, ...] = (),
-                 **kwargs):
+                 terminate_on_success: bool = True, max_lead: float | None = None, **kwargs):
         super().__init__("push", frame_skip, max_episode_steps, **kwargs)
         if reward not in REWARDS:
             raise ValueError(f"reward must be one of {REWARDS}")
         self.reward_kind, self.success_radius, self.extra = reward, success_radius, tuple(extra_observations)
+        self.terminate_on_success = terminate_on_success
         self.arm = ArmCommand(self.model, self.data, action_mode, "gripper/tcp", ee_axes=(0, 1),
-                              ee_low=(0.25, -0.35, PUSH_HEIGHT), ee_high=(0.75, 0.35, PUSH_HEIGHT))
+                              ee_low=(0.25, -0.35, PUSH_HEIGHT), ee_high=(0.75, 0.35, PUSH_HEIGHT), max_lead=max_lead)
         self.action_space = self.arm.space
         self.observation_sources = {name: source for name, _, source in OBSERVATION}
         self.observation_sources |= {name: PRIVILEGED[name][1] for name in self.extra}
@@ -56,6 +61,10 @@ class PushEnv(MujocoEnv):
         self.pusher = {self.model.geom(n).id for n in ("gripper/pad_left", "gripper/pad_right",
                                                       "gripper/finger_left", "gripper/finger_right")}
         self.puck_adr = self.model.jnt_qposadr[self.model.joint("puck").id]
+        self.floor_geom = self.model.geom("floor").id
+        self.nominal = {"puck_mass": float(self.model.body_mass[self.puck]),
+                        "puck_inertia": self.model.body_inertia[self.puck].copy(),
+                        "friction": float(self.model.geom_friction[self.puck_geom, 0])}
         if PushEnv._start_q is None:
             mujoco.mj_resetDataKeyframe(self.model, self.data, self.keyframe)
             mujoco.mj_forward(self.model, self.data)
@@ -65,7 +74,15 @@ class PushEnv(MujocoEnv):
             PushEnv._start_q = result.qpos[:7].copy()
 
     def _reset_task(self, options: dict) -> None:
-        d, rng = self.data, self.np_random
+        d, rng, m = self.data, self.np_random, self.model
+        mass = options.get("puck_mass", self.nominal["puck_mass"])
+        if mass != m.body_mass[self.puck]:
+            m.body_mass[self.puck] = mass
+            m.body_inertia[self.puck] = self.nominal["puck_inertia"] * mass / self.nominal["puck_mass"]
+            mujoco.mj_setConst(m, d)            # derived constants (inverse weights that set contact softness)
+            mujoco.mj_resetDataKeyframe(m, d, self.keyframe)   # mj_setConst used d as scratch
+        for g in (self.puck_geom, self.floor_geom):
+            m.geom_friction[g, 0] = options.get("friction", self.nominal["friction"])
         d.qpos[:7] = PushEnv._start_q
         d.ctrl[7] = 0.0                                                    # gripper closed: a pusher
         d.qpos[7:9] = 0.0
@@ -126,7 +143,7 @@ class PushEnv(MujocoEnv):
         return float(self._in_contact())
 
     def _terminal(self) -> bool:
-        return self._distance() < self.success_radius
+        return self.terminate_on_success and self._distance() < self.success_radius
 
     def _get_info(self) -> dict:
         return {"distance": self._distance(), "is_success": self._distance() < self.success_radius,
