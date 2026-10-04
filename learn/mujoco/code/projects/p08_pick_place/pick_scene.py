@@ -16,6 +16,7 @@ EPISODE_LIMIT simulated seconds.
 """
 
 import importlib.util
+import multiprocessing
 import os
 from concurrent.futures import ProcessPoolExecutor
 
@@ -120,5 +121,5 @@ def _episode(module_file: str, state: np.ndarray, degraded: bool) -> dict:
 def run_many(module_file: str, states: np.ndarray, degraded: bool = False, workers: int | None = None) -> list[dict]:
     """Episodes in parallel processes; the routine is the module at `module_file`."""
     workers = workers or min(16, os.cpu_count() or 1)
-    with ProcessPoolExecutor(max_workers=workers) as pool:
+    with ProcessPoolExecutor(max_workers=workers, mp_context=multiprocessing.get_context("spawn")) as pool:
         return list(pool.map(_episode, [module_file] * len(states), list(states), [degraded] * len(states)))

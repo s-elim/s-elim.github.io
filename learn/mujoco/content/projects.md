@@ -19,7 +19,7 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 6 | [Cartesian (operational-space) circle tracking](#/project/p06_osc_circle) | 8 | built |
 | 7 | [A grasp that survives randomization](#/project/p07_robust_grasp) | 10 | built |
 | 8 | [Scripted pick-and-place on the 7-DOF arm](#/project/p08_pick_place) | 10 | built |
-| 9 | Camera-based manipulation without privileged state | 11 | specified |
+| 9 | [Camera-based manipulation without privileged state](#/project/p09_vision_pick) | 11 | built |
 | 10 | A Gymnasium environment that passes review | 12 | specified |
 | 11 | PPO on a manipulation task | 13 | specified |
 | 12 | SAC on the same task, compared fairly | 13 | specified |
@@ -33,10 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 9. Camera-based manipulation without privileged state
-
-**Objective.** Repeat Project 8 with the cube positions estimated from the front camera's depth and segmentation images, not read from `mjData`. **Accept when** estimated cube centres are within 5 mm of the truth on 95% of frames and the pick success rate is within 10 points of Project 8's. **Common failures:** depth pixels at the far plane (80 m) left in the point cloud; camera extrinsics with the wrong axis convention; segmentation ids confused between geoms and sites. **Extensions:** use only RGB with a learned detector trained on rendered data.
 
 ### 10. A Gymnasium environment that passes review
 

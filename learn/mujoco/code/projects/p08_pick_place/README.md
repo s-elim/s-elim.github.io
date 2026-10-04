@@ -36,7 +36,7 @@ Three tests, run on 100 held-out layouts in parallel processes (about 7 s):
 - every report is a valid category, "success" exactly when the judge says placed, and every episode finishes within the time limit;
 - with nearly frictionless pads, every cube is reported as failing at a grasp stage ("IK failed", "grasp missed", "dropped while lifting" or "knocked over").
 
-`python tools/mutate_project.py p08_pick_place` checks the mutants in `mutants.json`. One of them, ignoring the cube's yaw, is a control that must pass (see below).
+`python tools/mutate_project.py p08_pick_place` checks the mutants in `mutants.json`. One of them, ignoring the cube's yaw, is a control that must pass (see below). The scene starts its worker processes with `spawn`, so a script of yours that calls `run_many` must keep its top-level code under `if __name__ == "__main__":`.
 
 ## Common failures
 

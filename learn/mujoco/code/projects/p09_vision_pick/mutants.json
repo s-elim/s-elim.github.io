@@ -1,0 +1,82 @@
+{
+ "camera axes not converted (no diag(1, -1, -1))": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return p_cv @ (cam_mat @ FLIP).T + cam_pos",
+     "    return p_cv @ cam_mat.T + cam_pos"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_estimates_within_5_mm_on_95_percent_of_frames"
+  ]
+ },
+ "centroid of every visible pixel": {
+  "edits": {
+   "solution.py": [
+    [
+     "        top = points[points[:, 2] > points[:, 2].max() - 0.004][:, :2]   # the top face: one height\n",
+     "        top = points[:, :2]\n"
+    ],
+    [
+     "        out[name] = mean + 0.5 * (along.max(axis=0) + along.min(axis=0)) @ axes",
+     "        out[name] = mean"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_estimates_within_5_mm_on_95_percent_of_frames"
+  ]
+ },
+ "body ids used as geom ids": {
+  "edits": {
+   "solution.py": [
+    [
+     "(seg[..., 0] == model.geom(name).id)",
+     "(seg[..., 0] == model.body(name).id)"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_estimates_within_5_mm_on_95_percent_of_frames"
+  ]
+ },
+ "success judged from the plan": {
+  "edits": {
+   "solution.py": [
+    [
+     "    if not holding(robot):\n        return \"grasp missed\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(robot):\n        return \"dropped while lifting\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(robot):\n        return \"dropped while carrying\"",
+     "    pass"
+    ],
+    [
+     "    if where is not None and np.all(np.abs(where - tray) < 0.045):\n        return \"success\"",
+     "    return \"success\""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_failures_are_reported_at_the_right_stage"
+  ]
+ },
+ "object type not checked (no site shares a cube's id here: harmless)": {
+  "edits": {
+   "solution.py": [
+    [
+     "        mask = (seg[..., 0] == model.geom(name).id) & (seg[..., 1] == mujoco.mjtObj.mjOBJ_GEOM)",
+     "        mask = seg[..., 0] == model.geom(name).id"
+    ]
+   ]
+  },
+  "caught_by": [],
+  "expect_survival": true
+ }
+}
