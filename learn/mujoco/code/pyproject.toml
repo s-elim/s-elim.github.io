@@ -25,6 +25,8 @@ dependencies = [
 learn = ["torch>=2.2"]
 # MuJoCo's system identification toolbox (mujoco.sysid), used from Lesson 18.2
 sysid = ["mujoco[sysid]==3.14.0"]
+# MJX, the JAX implementation of MuJoCo (Lesson 20.3); add a CUDA build of JAX for a GPU
+mjx = ["mujoco-mjx==3.14.0", "jax"]
 dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.6"]
 
 [tool.setuptools.packages.find]
@@ -39,6 +41,7 @@ markers = [
   "slow: takes more than ~20 s (training, long rollouts)",
   "torch: needs PyTorch (pip install -e .[learn])",
   "sysid: needs mujoco.sysid (pip install -e .[sysid])",
+  "mjx: needs mujoco-mjx and JAX (pip install -e .[mjx])",
   "render: needs an OpenGL context (MUJOCO_GL=egl or osmesa on a headless machine)",
 ]
 addopts = "-ra"

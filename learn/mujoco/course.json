@@ -270,7 +270,7 @@
          "prereqs": ["1.3", "9.2"], "objectives": ["Walk the forward pipeline stage by stage in engine_forward.c", "Run the stages one at a time and see which mjData fields each writes", "Read MuJoCo source with a map of files to concepts"]},
         {"id": "20.2", "slug": "constraint-solver", "title": "The constraint solver: PGS, CG, Newton and warmstart", "minutes": 55, "difficulty": 5, "status": "draft", "lab": null,
          "prereqs": ["20.1"], "objectives": ["State the primal and dual problems the solvers address", "Read solver statistics from mjData.solver", "Choose solver, iterations and tolerance for a model"]},
-        {"id": "20.3", "slug": "performance", "title": "Performance: profiling, threads, rollout, MJX and MuJoCo Warp", "minutes": 50, "difficulty": 4, "status": "planned", "lab": "perf",
+        {"id": "20.3", "slug": "performance", "title": "Performance: profiling, threads, rollout, MJX and MuJoCo Warp", "minutes": 50, "difficulty": 4, "status": "draft", "lab": "perf",
          "prereqs": ["20.1"], "objectives": ["Profile a model with mjData timers", "Scale to many environments with mujoco.rollout and threads", "Know when GPU simulation (MJX, MuJoCo Warp) pays and when it does not"]},
         {"id": "20.4", "slug": "extending-mujoco", "title": "Callbacks, plugins, derivatives and the C API", "minutes": 45, "difficulty": 5, "status": "planned", "lab": null,
          "prereqs": ["20.1"], "objectives": ["Use finite-difference derivatives with mjd_transitionFD", "Know what control callbacks and plugins can and cannot do", "Write a minimal C program against the MuJoCo API"]}

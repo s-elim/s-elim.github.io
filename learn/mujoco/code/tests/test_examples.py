@@ -7,6 +7,7 @@ Scripts may declare one requirement on a line of its own:
     # requires: display   needs a window; only byte-compiled here
     # requires: torch     needs PyTorch (skipped without it)
     # requires: sysid     needs MuJoCo's sysid toolbox, mujoco[sysid] (skipped without it)
+    # requires: mjx       needs mujoco-mjx and JAX (skipped without them)
 """
 
 import os
@@ -29,6 +30,10 @@ def _has_torch() -> bool:
     return subprocess.run([sys.executable, "-c", "import torch"], capture_output=True).returncode == 0
 
 
+def _has_mjx() -> bool:
+    return subprocess.run([sys.executable, "-c", "import jax; from mujoco import mjx"], capture_output=True).returncode == 0
+
+
 def _has_sysid() -> bool:
     """mujoco.sysid imports without its extras but then exports nothing; check for a function."""
     check = "import mujoco.sysid as s; assert hasattr(s, 'optimize')"
@@ -47,6 +52,8 @@ def test_example_runs(script, tmp_path, has_gl):
         pytest.skip("needs PyTorch")
     if "sysid" in needs and not _has_sysid():
         pytest.skip("needs mujoco[sysid]")
+    if "mjx" in needs and not _has_mjx():
+        pytest.skip("needs mujoco-mjx and JAX")
     env = {**os.environ, "MJC_FAST": "1", "MPLBACKEND": "Agg"}
     proc = subprocess.run([sys.executable, str(script)], capture_output=True, text=True, timeout=900, env=env,
                           cwd=tmp_path)
