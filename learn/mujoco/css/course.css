@@ -496,3 +496,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .35); }
 
 /* Short code in table cells (element names, attribute values) should not break mid-word. */
 .prose td code, .prose th code { white-space: nowrap; }
+
+/* pipeline lab (Lesson 20.1): one row per stage */
+.pipeline { display: grid; gap: .3rem; margin: .5rem 0; }
+.pipeline__row { display: grid; grid-template-columns: minmax(150px, max-content) 1fr; gap: .6rem; align-items: start; }
+.pipeline__row .btn { font-family: var(--mono, monospace); font-size: .8rem; }
+.pipeline__out { font-family: var(--mono, monospace); font-size: .75rem; line-height: 1.45; color: var(--ink-2, inherit); word-break: break-word; }
