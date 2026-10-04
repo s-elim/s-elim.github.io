@@ -257,7 +257,7 @@
       "id": 19, "title": "Sim-to-real", "track": "sim2real",
       "summary": "What breaks when a controller or policy leaves the simulator, demonstrated in simulation.",
       "lessons": [
-        {"id": "19.1", "slug": "sim-to-real", "title": "Sim-to-real: mismatch, latency and honest transfer", "minutes": 55, "difficulty": 4, "status": "planned", "lab": "sim2real",
+        {"id": "19.1", "slug": "sim-to-real", "title": "Sim-to-real: mismatch, latency and honest transfer", "minutes": 55, "difficulty": 4, "status": "draft", "lab": "sim2real",
          "prereqs": ["17.1", "18.1"], "objectives": ["Classify sources of sim-to-real error", "Show a controller failing under latency and actuator mismatch, using MuJoCo's actuator delay", "Design a transfer experiment that can fail informatively"]}
       ],
       "checkpoint": {"title": "Checkpoint 19: a failure you predicted", "task": "Pick a controller from Level 8, predict the latency at which it goes unstable from a simple analysis, then measure it in MuJoCo with actuator delay. Explain any gap.", "accept": ["Prediction written before measurement", "Measured threshold with the method", "Gap explained"]}
