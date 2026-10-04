@@ -1,0 +1,29 @@
+{
+ "lifting too fast (0.15 s)": {
+  "edits": {
+   "solution.py": [
+    [
+     "\"lift\": 1.5}",
+     "\"lift\": 0.15}"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_corners_of_the_randomization",
+   "test_held_out_success_rate"
+  ]
+ },
+ "aiming at the nominal cube position": {
+  "edits": {
+   "solution.py": [
+    [
+     "    cube = data.xpos[model.body(\"cube\").id].copy()",
+     "    cube = np.array([0.12, 0.0, 0.02])"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_held_out_success_rate"
+  ]
+ }
+}

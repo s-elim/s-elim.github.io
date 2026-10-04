@@ -16,8 +16,8 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 3 | [A 3-DOF arm with a gripper, from an empty file](#/project/p03_arm3) | 2, 5 | built |
 | 4 | [Joint PD and gravity compensation on the 7-DOF arm](#/project/p04_joint_pd) | 8 | built |
 | 5 | [Inverse kinematics under test](#/project/p05_ik) | 6 | built |
-| 6 | Cartesian (operational-space) circle tracking | 8 | specified |
-| 7 | A grasp that survives randomization | 10 | specified |
+| 6 | [Cartesian (operational-space) circle tracking](#/project/p06_osc_circle) | 8 | built |
+| 7 | [A grasp that survives randomization](#/project/p07_robust_grasp) | 10 | built |
 | 8 | Scripted pick-and-place on the 7-DOF arm | 10 | specified |
 | 9 | Camera-based manipulation without privileged state | 11 | specified |
 | 10 | A Gymnasium environment that passes review | 12 | specified |
@@ -33,14 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 6. Cartesian circle tracking
-
-**Objective.** Operational-space control of `arm7.xml` tracking a 10 cm circle at 0.5 Hz while a null-space term keeps the elbow up. **Accept when** RMS tracking error is under 5 mm after the first cycle, the elbow's height stays within 2 cm of its initial value, and the result is reported with the controller's model mismatch test (halve the controller's link masses; report the error). **Common failures:** using the Jacobian of the wrong site; inverting the task-space inertia near singularities without regularization; null-space torques that leak into the task. **Extensions:** add orientation control; add Cartesian impedance and press against a wall with a set force.
-
-### 7. A grasp that survives randomization
-
-**Objective.** On `gantry_gripper.xml`, design a grasp-and-lift routine that succeeds under randomized cube position, yaw, mass and friction. **Accept when** success is at least 95% with a 95% Wilson lower bound above 90%, on 400 held-out initial states from a seed you did not tune on. **Common failures:** tuning on the evaluation seed; lifting too fast for heavy cubes (Research mode shows the effect); success tested before the cube has settled. **Extensions:** add grasp-success detection from contact forces and retry on failure.
 
 ### 8. Scripted pick-and-place on the 7-DOF arm
 

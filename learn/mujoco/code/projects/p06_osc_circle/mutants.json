@@ -1,0 +1,67 @@
+{
+ "Jacobian of the wrong site": {
+  "edits": {
+   "solution.py": [
+    [
+     "    sid = model.site(site).id",
+     "    sid = model.site(\"flange\").id"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_tracks_the_circle_with_the_elbow_up"
+  ]
+ },
+ "posture torque not projected (leaks into the task)": {
+  "edits": {
+   "solution.py": [
+    [
+     "    tau += null_space_projector(jac, mass) @ (",
+     "    tau += ("
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_tracks_the_circle_with_the_elbow_up"
+  ]
+ },
+ "kinematic instead of dynamically consistent projector": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return np.eye(mass.shape[0]) - jac.T @ (m_inv @ jac.T @ lam).T",
+     "    return np.eye(mass.shape[0]) - jac.T @ np.linalg.pinv(jac).T"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_null_space_projector_is_dynamically_consistent"
+  ]
+ },
+ "no null-space posture term": {
+  "edits": {
+   "solution.py": [
+    [
+     "    tau += null_space_projector(jac, mass) @ (",
+     "    tau += 0 * null_space_projector(jac, mass) @ ("
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_tracks_the_circle_with_the_elbow_up"
+  ]
+ },
+ "controller model ignored": {
+  "edits": {
+   "solution.py": [
+    [
+     "    cmodel, cdata = controller if controller is not None else (model, data)\n    if controller is not None:",
+     "    cmodel, cdata = model, data\n    if False:"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_controller_uses_its_own_model"
+  ]
+ }
+}
