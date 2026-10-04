@@ -30,6 +30,7 @@ WIDGETS = set(re.findall(r"^\s+(\w+): \(\) => import", (ROOT / "js/widgets/regis
 BANNED = ["delve", "leverage", "crucial", "pivotal", "seamless", "showcase", "unlock",
           "foster", "myriad", "it is important to note", "in today's rapidly evolving",
           "at its core", "plays a vital role", "serves as a testament"]
+LINK_TARGET = re.compile(r"\]\([^)\s]*\)")
 BANNED_RE = re.compile(r"\b(" + "|".join(re.escape(w) for w in BANNED) + r")\w*\b", re.I)
 HARNESS_VERB = re.compile(r"\bharness(es|ed|ing)?\b(?! and graph)", re.I)
 FENCE = re.compile(r"^```([^\n]*)\n(.*?)^```\s*$", re.M | re.S)
@@ -49,7 +50,7 @@ def check_markdown(path: Path, problems: list[str]) -> None:
         for i, line in enumerate(text.splitlines(), 1):
             if "—" in line:
                 problems.append(f"{rel}:{i}: em dash")
-    prose = FENCE.sub("", text)
+    prose = LINK_TARGET.sub("]()", FENCE.sub("", text))         # link targets are URLs, not prose
     for i, line in enumerate(prose.splitlines(), 1):
         for m in BANNED_RE.finditer(line):
             problems.append(f"{rel}: banned word '{m.group(0)}' in: {line.strip()[:90]}")
