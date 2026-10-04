@@ -45,8 +45,8 @@ def run_mutant(slug: str, edits: dict[str, list[list[str]]]) -> set[str]:
                                 env=env, capture_output=True, text=True, check=False)
     if result.returncode not in (0, 1):                  # 2+ means pytest itself failed: collection, fixtures, usage
         raise SystemExit(f"{slug}: pytest exited {result.returncode}\n{result.stdout[-2000:]}")
-    return {line.split("::")[1].split(" ")[0].split("[")[0]
-            for line in result.stdout.splitlines() if line.startswith("FAILED")}
+    return {line.split("::")[1].split(" ")[0].split("[")[0]            # a test that errors has not passed either
+            for line in result.stdout.splitlines() if line.startswith(("FAILED", "ERROR"))}
 
 
 def main(slugs: list[str]) -> int:

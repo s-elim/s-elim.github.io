@@ -1,0 +1,73 @@
+{
+ "success judged from the plan": {
+  "edits": {
+   "solution.py": [
+    [
+     "    if not holding(model, data, cube):\n        return \"grasp missed\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(model, data, cube):\n        return \"dropped while lifting\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(model, data, cube):\n        return \"dropped while carrying\"",
+     "    pass"
+    ],
+    [
+     "    if abs(p[0] - tray[0]) < 0.05 and abs(p[1] - tray[1]) < 0.05 and p[2] < 0.06:\n        return \"success\"",
+     "    return \"success\""
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_failures_are_reported_at_the_right_stage"
+  ]
+ },
+ "only the final position is checked": {
+  "edits": {
+   "solution.py": [
+    [
+     "    if not holding(model, data, cube):\n        return \"grasp missed\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(model, data, cube):\n        return \"dropped while lifting\"",
+     "    pass"
+    ],
+    [
+     "    if not holding(model, data, cube):\n        return \"dropped while carrying\"",
+     "    pass"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_failures_are_reported_at_the_right_stage"
+  ]
+ },
+ "every cube placed at the tray centre": {
+  "edits": {
+   "solution.py": [
+    [
+     "SLOTS = np.array([[-0.03, -0.03], [0.03, -0.03], [0.0, 0.03]])",
+     "SLOTS = np.zeros((3, 2))"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_each_cube_placed_in_90_percent"
+  ]
+ },
+ "cube yaw ignored (the closing jaws square the cube: harmless here)": {
+  "edits": {
+   "solution.py": [
+    [
+     "    yaw = (yaw + math.pi / 4) % (math.pi / 2) - math.pi / 4      # a cube looks the same every 90 degrees",
+     "    yaw = 0.0"
+    ]
+   ]
+  },
+  "caught_by": [],
+  "expect_survival": true
+ }
+}

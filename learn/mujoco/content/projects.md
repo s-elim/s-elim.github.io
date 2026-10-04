@@ -18,7 +18,7 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 5 | [Inverse kinematics under test](#/project/p05_ik) | 6 | built |
 | 6 | [Cartesian (operational-space) circle tracking](#/project/p06_osc_circle) | 8 | built |
 | 7 | [A grasp that survives randomization](#/project/p07_robust_grasp) | 10 | built |
-| 8 | Scripted pick-and-place on the 7-DOF arm | 10 | specified |
+| 8 | [Scripted pick-and-place on the 7-DOF arm](#/project/p08_pick_place) | 10 | built |
 | 9 | Camera-based manipulation without privileged state | 11 | specified |
 | 10 | A Gymnasium environment that passes review | 12 | specified |
 | 11 | PPO on a manipulation task | 13 | specified |
@@ -33,10 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 8. Scripted pick-and-place on the 7-DOF arm
-
-**Objective.** A state machine on `pick_place.xml` (approach, descend, close, lift, transport, place, release, retreat) using Project 5's IK or Project 6's controller. **Accept when** each cube is placed in the tray on 90% of 100 randomized episodes, with success judged from the final cube position after release and a hold period, and every failure categorized. **Common failures:** judging grasp success from the plan rather than from contacts; collisions between the gripper and the tray walls; releasing above the tray before the cube has stopped swinging. **Extensions:** stack all three cubes.
 
 ### 9. Camera-based manipulation without privileged state
 
