@@ -246,8 +246,8 @@
       "id": 18, "title": "System identification", "track": "sim2real",
       "summary": "Estimating physical parameters from trajectories, by regression and by simulation in the loop.",
       "lessons": [
-        {"id": "18.1", "slug": "sysid-least-squares", "title": "System identification by least squares", "minutes": 45, "difficulty": 4, "status": "planned", "lab": "sysid",
-         "prereqs": ["7.2"], "objectives": ["Write a pendulum's dynamics linear in its parameters", "Estimate inertia, damping and friction from q, qdot and u", "Diagnose poor excitation from the regressor's condition number"]},
+        {"id": "18.1", "slug": "sysid-least-squares", "title": "System identification by least squares", "minutes": 45, "difficulty": 4, "status": "draft", "lab": "sysid",
+         "prereqs": ["7.2"], "objectives": ["Write a pendulum's dynamics linear in its parameters", "Estimate inertia, damping and friction from q, qdot and u", "Diagnose poor excitation, including when the regressor's condition number does not flag it"]},
         {"id": "18.2", "slug": "sysid-simulation", "title": "Simulation-in-the-loop identification", "minutes": 45, "difficulty": 4, "status": "planned", "lab": null,
          "prereqs": ["18.1", "3.3"], "objectives": ["Fit MuJoCo model parameters by minimizing trajectory error", "Use MuJoCo's own sysid toolbox", "Validate identified parameters on held-out trajectories"]}
       ],
