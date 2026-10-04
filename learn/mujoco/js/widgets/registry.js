@@ -31,6 +31,7 @@ const MODULES = {
   pipeline: () => import("./pipeline.js"),
   perf: () => import("./perf.js"),
   mpc: () => import("./mpc.js"),
+  chaos: () => import("./chaos.js"),
 };
 
 export function hasWidget(name) { return name in MODULES; }

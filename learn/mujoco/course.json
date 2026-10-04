@@ -306,6 +306,7 @@
   ],
   "pages": [
     {"id": "playground", "title": "Playground", "kind": "app", "summary": "Edit MJCF, run MuJoCo in the browser, inspect state, contacts and forces."},
+    {"id": "showcase", "title": "Showcase", "kind": "page", "file": "content/showcase.md", "summary": "Live simulations worth watching: a planner swinging up a cart-pole in the page, chaos, contact, cloth and a robot that writes; each with its code and measured numbers."},
     {"id": "physics-lab", "title": "Physics lab", "kind": "page", "file": "content/physics-lab.md", "summary": "Every parameter experiment in one place: gravity, mass, friction, damping, restitution, collision, torque, momentum, energy, stability, constraints."},
     {"id": "debugging-clinic", "title": "Debugging clinic", "kind": "page", "file": "content/debugging-clinic.md", "summary": "Deliberately broken models and environments: symptom, diagnosis, root cause, fix, general lesson."},
     {"id": "projects", "title": "Projects", "kind": "page", "file": "content/projects.md", "summary": "Twenty projects from a pendulum simulator to a research-grade benchmark."},

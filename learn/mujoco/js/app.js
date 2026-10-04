@@ -115,6 +115,7 @@ function buildNav() {
     ${link("#/", "Course map")}
     ${link("#/page/about", "How this course works")}
     ${link("#/playground", "Playground")}
+    ${link("#/page/showcase", "Showcase")}
   </div><div class="nav-section"><div class="nav-section__title">Levels</div>`;
   for (const level of state.course.levels) {
     html += `<details class="nav-level" data-level="${level.id}"><summary><span class="nav-level__num">L${level.id}</span>${esc(level.title)}<span class="nav-level__done" data-level-done="${level.id}"></span></summary><div class="nav-level__lessons">`;
@@ -124,7 +125,7 @@ function buildNav() {
     html += `</div></details>`;
   }
   html += `</div><div class="nav-section"><div class="nav-section__title">Labs and practice</div>`;
-  for (const p of pages) if (p.id !== "about" && p.id !== "playground") html += link(`#/page/${p.id}`, p.title);
+  for (const p of pages) if (!["about", "playground", "showcase"].includes(p.id)) html += link(`#/page/${p.id}`, p.title);
   html += `</div>`;
   tree.innerHTML = html;
   refreshNavDone();
@@ -200,6 +201,7 @@ async function renderHome(main) {
       <div class="hero__cta">
         <a class="btn btn--primary" href="#/lesson/0.1">Start at Level 0</a>
         ${resume}
+        <a class="btn" href="#/page/showcase">See the showcase</a>
         <a class="btn" href="#/playground">Open the playground</a>
         <a class="btn" href="#/page/about">How the course works</a>
       </div>
