@@ -21,7 +21,7 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 8 | [Scripted pick-and-place on the 7-DOF arm](#/project/p08_pick_place) | 10 | built |
 | 9 | [Camera-based manipulation without privileged state](#/project/p09_vision_pick) | 11 | built |
 | 10 | [A Gymnasium environment that passes review](#/project/p10_gym_env) | 12 | built |
-| 11 | PPO on a manipulation task | 13 | specified |
+| 11 | [PPO on a manipulation task](#/project/p11_ppo_reach) | 13 | built |
 | 12 | SAC on the same task, compared fairly | 13 | specified |
 | 13 | Behaviour cloning, and what DAgger fixes | 14 | specified |
 | 14 | A vision-based policy, and the price of pixels | 15 | specified |
@@ -33,10 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 11. PPO on a manipulation task
-
-**Objective.** Train PPO, implemented in the course package or your own, on the reach task. **Accept when** 5 training seeds reach a mean success above 90% on 100 held-out initial states each, reported as an interquartile mean with a bootstrap interval, plus one ablation with the same budget. **Common failures:** evaluating stochastic actions; normalizing observations with statistics that leak evaluation data; reporting the best seed. **Extensions:** measure wall-clock time split between simulation and learning.
 
 ### 12. SAC on the same task, compared fairly
 

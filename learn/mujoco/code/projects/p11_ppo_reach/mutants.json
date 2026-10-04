@@ -1,0 +1,41 @@
+{
+ "stochastic actions at evaluation": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return agent.act, history[-1][\"steps\"]",
+     "    import torch\n\n    def act(obs):\n        x = torch.as_tensor(agent.norm(obs), dtype=torch.float32)\n        return agent.net.dist(x).sample().numpy()\n    return act, history[-1][\"steps\"]"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_policies_are_evaluated_deterministically"
+  ]
+ },
+ "normalization statistics updated on evaluation data": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return agent.act, history[-1][\"steps\"]",
+     "    def act(obs):\n        agent.obs_rms.update(obs[None].astype(float))\n        return agent.act(obs)\n    return act, history[-1][\"steps\"]"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_policies_are_evaluated_deterministically"
+  ]
+ },
+ "the ablation gets twice the budget": {
+  "edits": {
+   "solution.py": [
+    [
+     "total_steps=budget,",
+     "total_steps=budget if variant == \"main\" else 2 * budget,"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_both_variants_get_the_same_budget"
+  ]
+ }
+}
