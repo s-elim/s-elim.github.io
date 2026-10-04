@@ -115,9 +115,9 @@ def part3_4() -> None:
         runs[label] = [checkpoint_run(normalize, seed, steps) for seed in range(seeds)]
         r = runs[label]
         print(f"  {label}: {steps // 1000}k steps per seed, {r[0]['seconds']:.0f} s each")
-        print(f"    held-out success per seed  {', '.join(f'{x['success']:.2f}' for x in r)}   {summary([x['success'] for x in r])}")
-        print(f"    mean steps to reach        {', '.join(f'{x['length']:.1f}' for x in r)}   {summary([x['length'] for x in r])}")
-        print(f"    steps until 90% held-out   {', '.join('never' if np.isnan(x['steps_to_90']) else f'{x['steps_to_90'] / 1000:.0f}k' for x in r)}   "
+        print(f"    held-out success per seed  {', '.join(format(x['success'], '.2f') for x in r)}   {summary([x['success'] for x in r])}")
+        print(f"    mean steps to reach        {', '.join(format(x['length'], '.1f') for x in r)}   {summary([x['length'] for x in r])}")
+        print(f"    steps until 90% held-out   {', '.join('never' if np.isnan(x['steps_to_90']) else format(x['steps_to_90'] / 1000, '.0f') + 'k' for x in r)}   "
               f"{summary([x['steps_to_90'] / 1000 for x in r])} (thousands)")
     a, b = runs["normalized observations"], runs["raw observations"]
     for key, name in (("length", "mean steps to reach"), ("steps_to_90", "steps until 90%")):
@@ -127,7 +127,7 @@ def part3_4() -> None:
     print("(4) evaluation pitfalls, normalized runs")
     r = a
     print(f"  training success (stochastic policy, last 100 training episodes) per seed: "
-          f"{', '.join(f'{x['train_success']:.2f}' for x in r)}; held-out deterministic: {', '.join(f'{x['success']:.2f}' for x in r)}")
+          f"{', '.join(format(x['train_success'], '.2f') for x in r)}; held-out deterministic: {', '.join(format(x['success'], '.2f') for x in r)}")
     lengths = [x["length"] for x in r]
     for k in range(1, len(lengths) + 1):
         if k == 1:
