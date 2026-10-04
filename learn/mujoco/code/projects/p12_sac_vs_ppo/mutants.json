@@ -1,0 +1,58 @@
+{
+ "PPO stops one iteration short of the budget": {
+  "edits": {
+   "solution.py": [
+    [
+     "cfg = ppo.PPOConfig(total_steps=budget, ",
+     "cfg = ppo.PPOConfig(total_steps=budget - 1, "
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_both_methods_use_exactly_the_budget"
+  ]
+ },
+ "SAC evaluated with exploration noise": {
+  "edits": {
+   "solution.py": [
+    [
+     "    return (lambda obs: learner.act(obs, explore=False)), budget",
+     "    return (lambda obs: learner.act(obs, explore=True)), budget"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_both_evaluated_deterministically"
+  ]
+ },
+ "SAC checkpoints on its own schedule": {
+  "edits": {
+   "solution.py": [
+    [
+     "hidden=SAC_HIDDEN, eval_every=every,",
+     "hidden=SAC_HIDDEN, eval_every=5_000,"
+    ],
+    [
+     "        checkpoint(len(calls) * every, lambda",
+     "        checkpoint(len(calls) * 5_000, lambda"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_checkpoints_at_the_same_step_counts"
+  ]
+ },
+ "SAC tuned more than PPO": {
+  "edits": {
+   "solution.py": [
+    [
+     "{\"config\": {\"init_alpha\": 0.03}, \"tuning_success\": 1.00}]",
+     "{\"config\": {\"init_alpha\": 0.03}, \"tuning_success\": 1.00}, {\"config\": {\"init_alpha\": 0.3}, \"tuning_success\": 0.5}]"
+    ]
+   ]
+  },
+  "caught_by": [
+   "test_equal_tuning_effort_is_documented"
+  ]
+ }
+}

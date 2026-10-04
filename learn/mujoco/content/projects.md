@@ -22,7 +22,7 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 9 | [Camera-based manipulation without privileged state](#/project/p09_vision_pick) | 11 | built |
 | 10 | [A Gymnasium environment that passes review](#/project/p10_gym_env) | 12 | built |
 | 11 | [PPO on a manipulation task](#/project/p11_ppo_reach) | 13 | built |
-| 12 | SAC on the same task, compared fairly | 13 | specified |
+| 12 | [SAC on the same task, compared fairly](#/project/p12_sac_vs_ppo) | 13 | built |
 | 13 | Behaviour cloning, and what DAgger fixes | 14 | specified |
 | 14 | A vision-based policy, and the price of pixels | 15 | specified |
 | 15 | Language-conditioned pick-and-place | 16 | specified |
@@ -33,10 +33,6 @@ Projects get harder in three ways as you go down the list: more of the system is
 | 20 | A research-grade embodied-AI benchmark | 21 | specified |
 
 ## Specifications
-
-### 12. SAC on the same task, compared fairly
-
-**Objective.** Train SAC on Project 11's task and compare with PPO. **Accept when** both methods get the same environment steps, the same evaluation protocol and a documented tuning budget, and the comparison reports intervals and a sample-efficiency curve. **Common failures:** unequal tuning effort; comparing at different numbers of environment steps; one method evaluated deterministically and the other stochastically. **Extensions:** add TD3 and a third task.
 
 ### 13. Behaviour cloning, and what DAgger fixes
 
