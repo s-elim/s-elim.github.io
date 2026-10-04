@@ -34,6 +34,7 @@ const MODULES = {
   chaos: () => import("./chaos.js"),
   cradle: () => import("./cradle.js"),
   write: () => import("./write.js"),
+  cloth: () => import("./cloth.js"),
 };
 
 export function hasWidget(name) { return name in MODULES; }
