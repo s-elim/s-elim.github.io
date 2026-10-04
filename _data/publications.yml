@@ -59,7 +59,7 @@
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2609.13235', kind: 'pdf' }
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
-- title: 'AFFORD-PRO: A Benchmark, Dataset Generator & Generalization Evaluation Suite for Robot Foundation Models'
+- title: 'AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
   venue_short: "RSS'27"
