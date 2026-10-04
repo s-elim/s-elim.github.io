@@ -272,7 +272,7 @@
          "prereqs": ["20.1"], "objectives": ["State the primal and dual problems the solvers address", "Read solver statistics from mjData.solver", "Choose solver, iterations and tolerance for a model"]},
         {"id": "20.3", "slug": "performance", "title": "Performance: profiling, threads, rollout, MJX and MuJoCo Warp", "minutes": 50, "difficulty": 4, "status": "draft", "lab": "perf",
          "prereqs": ["20.1"], "objectives": ["Profile a model with mjData timers", "Scale to many environments with mujoco.rollout and threads", "Know when GPU simulation (MJX, MuJoCo Warp) pays and when it does not"]},
-        {"id": "20.4", "slug": "extending-mujoco", "title": "Callbacks, plugins, derivatives and the C API", "minutes": 45, "difficulty": 5, "status": "planned", "lab": null,
+        {"id": "20.4", "slug": "extending-mujoco", "title": "Callbacks, plugins, derivatives and the C API", "minutes": 45, "difficulty": 5, "status": "draft", "lab": null,
          "prereqs": ["20.1"], "objectives": ["Use finite-difference derivatives with mjd_transitionFD", "Know what control callbacks and plugins can and cannot do", "Write a minimal C program against the MuJoCo API"]}
       ],
       "checkpoint": {"title": "Checkpoint 20: read the source", "task": "Pick one quantity in mjData (for example qfrc_passive or efc_force), find every function in src/engine that writes it, and explain the order in which they run during mj_step, with file and line references for 3.14.0.", "accept": ["File and line references", "Order verified by instrumenting a run", "One surprise documented"]}
