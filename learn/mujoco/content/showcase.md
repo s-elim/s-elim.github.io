@@ -312,3 +312,135 @@ MuJoCo 3.14.0; double pendulum released from (2.0, 0.5) rad
     implicitfast  2 ms, eps 0e+00: mean tip height -0.3965 m,   5.0 flips per minute, energy change -40.588 %
     Euler         2 ms, eps 0e+00: mean tip height -0.3965 m,   5.0 flips per minute, energy change -40.588 %
 ```
+
+## 3. Newton's cradle
+
+Lift one ball, let it go, and one ball leaves the other end; lift two, and two leave. The toy is a hard test for a contact engine, because a soft contact that spreads an impact over time and over several balls at once produces something else entirely. The lab offers three contact models and three gaps between the balls; the velocities are read 30 ms after the first impact, as fractions of the incoming speed, starting from the lifted end.
+
+```lab cradle
+{"title": "Newton's cradle", "height": 280}
+```
+
+A head-on collision of two balls at 1 m/s shows what each contact model does to a single impact: MuJoCo's default soft contact gives a restitution of 0.136, a lightly damped one 0.750, and a stiff spring set directly in `solref` (negative values are stiffness and damping) 1.006, an exchange of velocities. In the cradle, 30 ms after the first impact:
+
+| Contact | Gap | Velocities, lifted end first | Energy left |
+|---|---|---|---|
+| default soft, solref (0.02, 1) | touching | 0.107, 0.219, 0.218, 0.216, 0.216 | 0.212 |
+| less damping, solref (0.02, 0.1) | touching | −0.387, 0.291, 0.334, 0.362, 0.376 | 0.642 |
+| stiff spring, solref (−1e7, −10) | touching | −0.588, 0.317, 0.381, 0.423, 0.443 | 1.013 |
+| stiff spring | 0.1 mm | −0.260, −0.050, −0.018, 0.306, 0.998 | 1.211 |
+| stiff spring | 1 mm | 0.001, 0.000, 0.000, 0.000, 0.972 | 0.977 |
+
+The default contact turns the cradle into one lump: every ball moves off at about a fifth of the incoming speed, which is what a perfectly inelastic collision of five equal balls gives, and four fifths of the energy are gone. Stiff, elastic contacts keep the energy, but with the balls touching the impact still spreads along the chain and the first ball bounces back. Only with gaps, so that every collision is between two balls at a time, does the toy appear: one ball leaves at 0.972 of the incoming speed, and with two lifted, two leave at 0.973 and 0.972. The 0.1 mm gap is a warning: impacts that nearly overlap added 21% to the energy. For an analysis of the real ball chain, see Herrmann and Seitz (Am. J. Phys. 50, 977, 1982; doi:10.1119/1.12936). Contact parameters are Lesson 9.2's subject; 18.2 tried to identify them.
+
+```python file=examples/showcase_newtons_cradle.py
+"""Showcase: a Newton's cradle, and what it takes from a soft-contact engine to reproduce the toy.
+
+INPUT   five 0.26 kg balls of radius 2 cm, each on a 0.2 m pendulum, in a row along x, frictionless contacts
+        (condim 1); the first ball lifted by 30 degrees and released
+PROCESS (1) two balls colliding head-on at 1 m/s: the restitution each contact setting gives;
+        (2) the cradle with three contact settings and three gaps between neighbouring balls, timestep 0.1 ms:
+            each ball's velocity 30 ms after the first impact, as a fraction of the incoming speed, and the
+            mechanical energy (kinetic + gravitational) left, as a fraction of the release energy;
+        (3) two balls lifted together, with the setting that works
+OUTPUT  printed tables
+
+Run:  python examples/showcase_newtons_cradle.py          (about 30 seconds)
+"""
+
+import math
+
+import mujoco
+import numpy as np
+
+R, LENGTH, N, MASS = 0.02, 0.2, 5, 0.26
+SETTINGS = {"default soft contact, solref (0.02, 1)": "0.02 1",
+            "less damping, solref (0.02, 0.1)": "0.02 0.1",
+            "stiff spring, solref (-1e7, -10)": "-1e7 -10"}
+
+
+def cradle(solref: str, gap: float, dt: float = 1e-4) -> mujoco.MjModel:
+    balls = "".join(f"""
+    <body name="b{i}" pos="{i * (2 * R + gap):.6f} 0 0.3">
+      <joint type="hinge" axis="0 1 0"/>
+      <geom type="capsule" fromto="0 0 0 0 0 {-LENGTH + R}" size="0.0015" mass="0" contype="0" conaffinity="0"/>
+      <geom name="g{i}" type="sphere" pos="0 0 {-LENGTH}" size="{R}" mass="{MASS}" condim="1" solref="{solref}"/>
+    </body>""" for i in range(N))
+    return mujoco.MjModel.from_xml_string(f"""<mujoco><option timestep="{dt}"><flag energy="enable"/></option>
+  <worldbody>{balls}</worldbody></mujoco>""")
+
+
+def energy(data) -> float:
+    return float(data.energy[0] + data.energy[1])
+
+
+def release(model, lifted: int = 1, angle: float = 30.0, after: float = 0.03) -> tuple[np.ndarray, float]:
+    """Velocities along +x (fraction of the incoming speed) `after` s past the first impact, and energy left."""
+    data = mujoco.MjData(model)
+    data.qpos[:lifted] = math.radians(angle)           # a positive hinge angle swings the bob toward -x
+    mujoco.mj_forward(model, data)
+    rest = mujoco.MjData(model)
+    mujoco.mj_forward(model, rest)
+    e_rest = energy(rest)
+    e0 = energy(data) - e_rest
+    incoming = math.sqrt(2 * 9.81 * LENGTH * (1 - math.cos(math.radians(angle))))
+    first, second = model.geom(f"g{lifted - 1}").id, model.geom(f"g{lifted}").id
+    hit = None
+    while hit is None or data.time < hit + after:
+        mujoco.mj_step(model, data)
+        if hit is None and any({data.contact[i].geom1, data.contact[i].geom2} == {first, second} for i in range(data.ncon)):
+            hit = data.time
+        if not np.isfinite(data.qvel).all() or data.time > 2.0:
+            return np.full(N, np.nan), float("nan")
+    return -data.qvel * LENGTH / incoming, (energy(data) - e_rest) / e0
+
+
+def head_on(solref: str, dt: float = 1e-4) -> tuple[float, float]:
+    model = mujoco.MjModel.from_xml_string(f"""<mujoco><option timestep="{dt}" gravity="0 0 0"/><worldbody>
+    <body><joint type="slide" axis="1 0 0"/><geom type="sphere" size="{R}" mass="{MASS}" condim="1" solref="{solref}"/></body>
+    <body pos="0.05 0 0"><joint type="slide" axis="1 0 0"/><geom type="sphere" size="{R}" mass="{MASS}" condim="1" solref="{solref}"/></body>
+    </worldbody></mujoco>""")
+    data = mujoco.MjData(model)
+    data.qvel[0] = 1.0
+    for _ in range(round(0.05 / dt)):
+        mujoco.mj_step(model, data)
+    return float(data.qvel[0]), float(data.qvel[1])
+
+
+if __name__ == "__main__":
+    print(f"MuJoCo {mujoco.__version__}; balls of {MASS} kg, radius {100 * R:.0f} cm, on {LENGTH} m pendulums; timestep 0.1 ms")
+    print("(1) two balls head-on at 1 m/s: velocities after the collision, and the restitution")
+    for label, solref in SETTINGS.items():
+        v0, v1 = head_on(solref)
+        print(f"    {label:<40} {v0:+.3f} and {v1:+.3f} m/s, restitution {v1 - v0:.3f}")
+    print("(2) the cradle, first ball lifted 30 deg: velocities 30 ms after the first impact (fraction of the incoming"
+          " speed, along +x) and mechanical energy left")
+    for label, solref in SETTINGS.items():
+        for gap in (0.0, 0.0001, 0.001):
+            v, e = release(cradle(solref, gap))
+            print(f"    {label:<40} gap {1000 * gap:3.1f} mm: " + " ".join(f"{x:+.3f}" for x in v) + f"   energy {e:.3f}")
+    print("(3) two balls lifted together, stiff spring, gap 1.0 mm")
+    v, e = release(cradle(SETTINGS["stiff spring, solref (-1e7, -10)"], 0.001), lifted=2)
+    print("    " + " ".join(f"{x:+.3f}" for x in v) + f"   energy {e:.3f}")
+```
+Output:
+
+```text
+MuJoCo 3.14.0; balls of 0.26 kg, radius 2 cm, on 0.2 m pendulums; timestep 0.1 ms
+(1) two balls head-on at 1 m/s: velocities after the collision, and the restitution
+    default soft contact, solref (0.02, 1)   +0.432 and +0.568 m/s, restitution 0.136
+    less damping, solref (0.02, 0.1)         +0.125 and +0.875 m/s, restitution 0.750
+    stiff spring, solref (-1e7, -10)         -0.003 and +1.003 m/s, restitution 1.006
+(2) the cradle, first ball lifted 30 deg: velocities 30 ms after the first impact (fraction of the incoming speed, along +x) and mechanical energy left
+    default soft contact, solref (0.02, 1)   gap 0.0 mm: +0.107 +0.219 +0.218 +0.216 +0.216   energy 0.212
+    default soft contact, solref (0.02, 1)   gap 0.1 mm: +0.098 +0.211 +0.220 +0.223 +0.223   energy 0.215
+    default soft contact, solref (0.02, 1)   gap 1.0 mm: +0.160 +0.271 +0.279 +0.228 +0.037   energy 0.250
+    less damping, solref (0.02, 0.1)         gap 0.0 mm: -0.387 +0.291 +0.334 +0.362 +0.376   energy 0.642
+    less damping, solref (0.02, 0.1)         gap 0.1 mm: -0.415 +0.116 +0.256 +0.424 +0.594   energy 0.810
+    less damping, solref (0.02, 0.1)         gap 1.0 mm: -0.049 +0.051 +0.075 +0.208 +0.689   energy 0.542
+    stiff spring, solref (-1e7, -10)         gap 0.0 mm: -0.588 +0.317 +0.381 +0.423 +0.443   energy 1.013
+    stiff spring, solref (-1e7, -10)         gap 0.1 mm: -0.260 -0.050 -0.018 +0.306 +0.998   energy 1.211
+    stiff spring, solref (-1e7, -10)         gap 1.0 mm: +0.001 +0.000 +0.000 +0.000 +0.972   energy 0.977
+(3) two balls lifted together, stiff spring, gap 1.0 mm
+    +0.001 +0.001 +0.001 +0.973 +0.972   energy 0.983
+```

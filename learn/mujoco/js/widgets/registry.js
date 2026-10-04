@@ -32,6 +32,7 @@ const MODULES = {
   perf: () => import("./perf.js"),
   mpc: () => import("./mpc.js"),
   chaos: () => import("./chaos.js"),
+  cradle: () => import("./cradle.js"),
 };
 
 export function hasWidget(name) { return name in MODULES; }
