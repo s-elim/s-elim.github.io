@@ -185,7 +185,6 @@ async function route() {
 async function renderHome(main) {
   const c = state.course;
   const nLessons = state.lessons.length;
-  const nWritten = state.lessons.filter((l) => l.status !== "planned").length;
   const minutes = state.lessons.reduce((a, l) => a + l.minutes, 0);
   const last = store.get().last;
   const resume = last && last.startsWith("#/lesson/") ? `<a class="btn" href="${last}">Resume where you left off</a>` : "";
@@ -210,7 +209,7 @@ async function renderHome(main) {
   </section>
   <div class="facts">
     <div class="fact"><b>${c.levels.length}</b><span>levels, 0 to ${c.levels.length - 1}</span></div>
-    <div class="fact"><b>${nLessons}</b><span>lessons (${nWritten} written so far)</span></div>
+    <div class="fact"><b>${nLessons}</b><span>lessons</span></div>
     <div class="fact"><b>${Math.round(minutes / 60)} h</b><span>estimated study time, labs excluded</span></div>
     <div class="fact"><b>20 + 8</b><span>projects and capstones</span></div>
   </div>
