@@ -4,6 +4,8 @@
   "mujoco": "3.14.0",
   "updated": "2026-10-03",
   "author": "Md Selim Sarowar",
+  "project": "IITP",
+  "pi": "Prof. Sungho Kim",
   "statuses": {
     "complete": "Written, every code block executed against MuJoCo 3.14.0, labs tested in a browser.",
     "draft": "Written and executable, still being reviewed for depth and exercises.",
