@@ -388,7 +388,10 @@ code { font-family: var(--mono); font-size: .88em; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2rem; align-items: center; margin-bottom: 2.4rem; }
 .hero h1 { font: 800 clamp(2rem, 4.4vw, 3.2rem)/1.04 var(--display); letter-spacing: -.025em; margin: .2rem 0 .8rem; }
 .hero p { font: 400 1.08rem/1.65 var(--body); color: var(--ink-2); margin: .5rem 0; max-width: 60ch; }
-.hero .kicker { font: 600 .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.hero .kicker { font: 600 .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.hero .kicker__primary { color: var(--accent); }
+.hero .kicker__sep { color: var(--line-strong); user-select: none; }
+.hero .kicker__secondary { color: var(--t-derivation); font-weight: 600; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.1rem; }
 .hero__lab { min-height: 320px; }
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem; margin: 0 0 2.2rem; }

@@ -193,7 +193,7 @@ async function renderHome(main) {
   wrap.innerHTML = `
   <section class="hero">
     <div>
-      <div class="kicker">Interactive course, MuJoCo ${esc(c.mujoco)} &middot; Project: IITP, PI: Prof. Sungho Kim</div>
+      <div class="kicker"><span class="kicker__primary">Project: IITP, PI: Prof. Sungho Kim</span><span class="kicker__sep">&middot;</span><span class="kicker__secondary">Interactive course, MuJoCo ${esc(c.mujoco)}</span></div>
       <h1>MuJoCo, from zero to research</h1>
       <p>A course that starts with what a physics simulator computes and ends with experiments a reviewer would accept: MJCF, the Python and JavaScript APIs, kinematics, dynamics, control, contact, manipulation, cameras, Gymnasium, reinforcement and imitation learning, vision and language conditioning, domain randomization, system identification, sim-to-real, the engine's internals, and research methodology.</p>
       <p>The labs on these pages run the real MuJoCo engine, compiled to WebAssembly, in your browser. Every lab has a Python counterpart in the companion package, and every code block in a lesson marked complete was executed against MuJoCo ${esc(c.mujoco)}.</p>
