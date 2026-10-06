@@ -455,14 +455,15 @@ code { font-family: var(--mono); font-size: .88em; }
 .home { padding: 0.6rem clamp(16px, 4vw, 56px) 3rem; max-width: 1240px; margin: 0 auto; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2rem; align-items: start; margin-top: 0; margin-bottom: 2rem; }
 .hero > div { display: flex; flex-direction: column; justify-content: flex-start; margin-top: 0; padding-top: 0; }
-.hero h1 { font: 800 clamp(2rem, 4.4vw, 3.2rem)/1.04 var(--display); letter-spacing: -.025em; margin: 0 0 .8rem; padding: 0; }
-.hero p { font: 400 1.08rem/1.65 var(--body); color: var(--ink-2); margin: .4rem 0; max-width: 60ch; }
-.hero .kicker { font: 700 .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 0 0 .35rem; padding: 0; }
+.hero .kicker { font: 600 .78rem var(--ui); letter-spacing: .04em; text-transform: uppercase; color: var(--accent); display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; margin: 0 0 .35rem; padding: 0; }
 .hero .kicker__primary, .gradient-hover {
+  font-family: var(--ui);
+  font-size: .88rem;
   color: #1c64b8;
   transition: all .25s ease;
   cursor: default;
   font-weight: 700;
+  letter-spacing: .01em;
 }
 :root[data-theme="dark"] .hero .kicker__primary,
 :root[data-theme="dark"] .gradient-hover {
