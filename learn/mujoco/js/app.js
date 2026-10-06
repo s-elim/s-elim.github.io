@@ -116,6 +116,7 @@ function buildNav() {
     ${link("#/page/about", "How this course works")}
     ${link("#/playground", "Playground")}
     ${link("#/page/showcase", "Showcase")}
+    ${link("#/page/author", "Author and licence")}
   </div><div class="nav-section"><div class="nav-section__title">Levels</div>`;
   for (const level of state.course.levels) {
     html += `<details class="nav-level" data-level="${level.id}"><summary><span class="nav-level__num">L${level.id}</span>${esc(level.title)}<span class="nav-level__done" data-level-done="${level.id}"></span></summary><div class="nav-level__lessons">`;
@@ -125,7 +126,7 @@ function buildNav() {
     html += `</div></details>`;
   }
   html += `</div><div class="nav-section"><div class="nav-section__title">Labs and practice</div>`;
-  for (const p of pages) if (!["about", "playground", "showcase"].includes(p.id)) html += link(`#/page/${p.id}`, p.title);
+  for (const p of pages) if (!["about", "playground", "showcase", "author"].includes(p.id)) html += link(`#/page/${p.id}`, p.title);
   html += `</div>`;
   tree.innerHTML = html;
   refreshNavDone();
