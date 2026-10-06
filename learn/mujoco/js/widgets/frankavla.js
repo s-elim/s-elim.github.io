@@ -510,15 +510,12 @@ export async function mount(el, config = {}) {
   };
   requestAnimationFrame(tick);
 
-  const noteEl = h("p", { class: "widget__note" }, TASKS.spatial[0].note);
-
   const taskSelectRow = select({
     label: "Task instruction",
     options: TASKS.spatial.map((t, idx) => [t.label, idx]),
     value: 0,
     onChange: (v) => {
       opt.taskIdx = parseInt(v, 10);
-      noteEl.textContent = ((TASKS[opt.suite] || TASKS.spatial)[opt.taskIdx] || {}).note || "";
     },
   });
 
@@ -541,7 +538,6 @@ export async function mount(el, config = {}) {
         });
         selEl.value = "0";
       }
-      noteEl.textContent = list[0]?.note || "";
     },
   });
 
@@ -592,13 +588,7 @@ export async function mount(el, config = {}) {
       button("Reset Scene", resetScene, "btn")
     ),
     h("div", { class: "controls" }, suiteSelectRow, taskSelectRow, cameraSelectRow, chunkSelectRow, noiseSliderRow),
-    h("div", { class: "readouts" }, Object.values(outs)),
-    noteEl,
-    h(
-      "p",
-      { class: "widget__note" },
-      "In robot learning benchmarks such as LIBERO, a Vision-Language-Action policy consumes dual camera observations (overhead context and wrist egocentric context) together with proprioception to generate action chunks. Spatial generalization tests coordinate grounding across relative table locations, object generalization isolates novel distractor configurations, goal conditioning tests diverse destination specifications, and LIBERO-10 measures compounding error over multi-stage composite sequences."
-    )
+    h("div", { class: "readouts" }, Object.values(outs))
   );
 
   return {

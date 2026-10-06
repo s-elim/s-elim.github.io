@@ -173,7 +173,7 @@ async function route() {
     else if (parts[0] === "page") await renderPage(main, parts[1]);
     else if (parts[0] === "project" || parts[0] === "capstone") await renderReadme(main, parts[0], parts[1]);
     else main.innerHTML = `<div class="home"><h1>Not found</h1><p><a href="#/">Back to the course map</a></p></div>`;
-    store.setLast(hash);
+    if (parts.length > 0 && parts[0] === "lesson") store.setLast(hash);
   } catch (err) {
     console.error(err);
     main.innerHTML = `<div class="home"><div class="widget__error">${esc(err.message)}</div><p><a href="#/">Back to the course map</a></p></div>`;
@@ -188,13 +188,15 @@ async function renderHome(main) {
   const nLessons = state.lessons.length;
   const minutes = state.lessons.reduce((a, l) => a + l.minutes, 0);
   const last = store.get().last;
-  const resume = last && last.startsWith("#/lesson/") ? `<a class="btn" href="${last}">Resume where you left off</a>` : "";
+  const firstIncomplete = state.lessons.find((l) => !store.isDone(l.id))?.id || "0.1";
+  const resumeHref = (last && last.startsWith("#/lesson/")) ? last : `#/lesson/${firstIncomplete}`;
+  const resume = `<a class="btn" href="${resumeHref}">Resume where you left off</a>`;
   const wrap = document.createElement("div");
   wrap.className = "home";
   wrap.innerHTML = `
   <section class="hero">
     <div>
-      <div class="kicker"><span class="kicker__primary">Project: IITP, PI: Prof. Sungho Kim</span><span class="kicker__sep">&middot;</span><span class="kicker__secondary">Interactive course, MuJoCo ${esc(c.mujoco)}</span></div>
+      <div class="kicker"><span class="kicker__primary"><b>PI: Prof. Sungho Kim, Project: IITP</b></span><span class="kicker__sep">&middot;</span><span class="kicker__secondary">Interactive course, MuJoCo ${esc(c.mujoco)}</span></div>
       <h1>MuJoCo, from zero to research</h1>
       <p>A course that starts with what a physics simulator computes and ends with experiments a reviewer would accept: MJCF, the Python and JavaScript APIs, kinematics, dynamics, control, contact, manipulation, cameras, Gymnasium, reinforcement and imitation learning, vision and language conditioning, domain randomization, system identification, sim-to-real, the engine's internals, and research methodology.</p>
       <p>The labs on these pages run the real MuJoCo engine, compiled to WebAssembly, in your browser. Every lab has a Python counterpart in the companion package, and every code block in a lesson marked complete was executed against MuJoCo ${esc(c.mujoco)}.</p>
@@ -204,6 +206,14 @@ async function renderHome(main) {
         <a class="btn" href="#/page/showcase">See the showcase</a>
         <a class="btn" href="#/playground">Open the playground</a>
         <a class="btn" href="#/page/about">How the course works</a>
+      </div>
+      <div class="hero__box">
+        <div class="hero__box-header">
+          <span class="hero__box-tag">Benchmark Focus</span>
+          <span class="hero__box-pointer">Interactive Lab (right) &rarr;</span>
+        </div>
+        <div class="hero__box-title">Tests 3D spatial grounding: transferring object to an elevated tray container.</div>
+        <p class="hero__box-text">In robot learning benchmarks such as LIBERO, a Vision-Language-Action policy consumes dual camera observations (overhead context and wrist egocentric context) together with proprioception to generate action chunks. Spatial generalization tests coordinate grounding across relative table locations, object generalization isolates novel distractor configurations, goal conditioning tests diverse destination specifications, and LIBERO-10 measures compounding error over multi-stage composite sequences.</p>
       </div>
     </div>
     <div class="hero__lab" id="hero-lab"></div>

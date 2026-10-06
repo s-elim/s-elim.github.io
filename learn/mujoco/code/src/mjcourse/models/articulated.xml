@@ -45,7 +45,7 @@
       <!-- Drawer in the lower-right bay: slides along -x out of the cabinet. -->
       <body name="drawer" pos="-0.02 -0.14 0.1">
         <joint name="drawer" type="slide" axis="-1 0 0" range="0 0.2" damping="5" frictionloss="0.5"/>
-        <geom name="drawer_front" class="cabinet" size="0.01 0.12 0.075" pos="-0.12 0 0" rgba=".72 .62 .48 1"/>
+        <geom name="drawer" class="cabinet" size="0.01 0.12 0.075" pos="-0.12 0 0" rgba=".72 .62 .48 1"/>
         <geom name="drawer_bottom" class="cabinet" size="0.12 0.11 0.005" pos="0 0 -0.07"/>
         <geom name="drawer_side_l" class="cabinet" size="0.12 0.005 0.05" pos="0 0.11 -0.02"/>
         <geom name="drawer_side_r" class="cabinet" size="0.12 0.005 0.05" pos="0 -0.11 -0.02"/>
