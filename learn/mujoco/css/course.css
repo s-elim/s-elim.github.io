@@ -389,7 +389,15 @@ code { font-family: var(--mono); font-size: .88em; }
 .hero h1 { font: 800 clamp(2rem, 4.4vw, 3.2rem)/1.04 var(--display); letter-spacing: -.025em; margin: .2rem 0 .8rem; }
 .hero p { font: 400 1.08rem/1.65 var(--body); color: var(--ink-2); margin: .5rem 0; max-width: 60ch; }
 .hero .kicker { font: 600 .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
-.hero .kicker__primary { color: var(--accent); }
+.hero .kicker__primary { color: var(--accent); transition: all .25s ease; cursor: default; }
+.hero .kicker__primary:hover, .gradient-hover:hover {
+  background: linear-gradient(135deg, var(--accent) 0%, #1c64b8 50%, #6b4ea8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 6px rgba(13, 122, 114, 0.3));
+}
+.gradient-hover { transition: all .25s ease; cursor: default; font-weight: 600; }
 .hero .kicker__sep { color: var(--line-strong); user-select: none; }
 .hero .kicker__secondary { color: var(--t-derivation); font-weight: 600; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.1rem; }

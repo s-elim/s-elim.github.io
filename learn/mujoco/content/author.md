@@ -1,4 +1,4 @@
-Written and built by [Md Selim Sarowar](/). Project: IITP, PI: Prof. Sungho Kim.
+Written and built by [Md Selim Sarowar](/). <span class="gradient-hover">Project: IITP, PI: Prof. Sungho Kim.</span>
 
 The companion code is MIT-licensed; MuJoCo itself is Apache-2.0 (Google DeepMind). Corrections are welcome through the [repository](https://github.com/s-elim/s-elim.github.io) or the anonymous message form on the home page.
 

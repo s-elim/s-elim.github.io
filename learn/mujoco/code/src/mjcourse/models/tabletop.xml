@@ -1,0 +1,84 @@
+<!--
+  tabletop.xml : the shared scene of the VLA and world-model tracks (Levels 22 and 23).
+
+  A planar pusher and three coloured pucks on a table seen from above. Instructions name a puck by
+  colour and one of four zones ("push the red puck to the left zone"); a vision-language-action
+  policy reads the top camera, the instruction and the pusher's state, and a world model predicts
+  where the pucks will go.
+
+  Frames. World x points up in the top camera's image, y to the image's left, z toward the camera.
+  The zones are named as they appear in that image: "upper" (+x), "lower" (-x), "left" (+y),
+  "right" (-y). This is a convention of the course, not a MuJoCo rule.
+
+  Pusher. Two slide joints (x, y) with velocity actuators: ctrl is the commanded velocity in m/s,
+  tracked with kv = 40 N s/m against a 0.5 kg body, a time constant of 12.5 ms. The pusher has no
+  z joint and collides only with the pucks (contype 2, conaffinity 2 against the pucks' 3), so it
+  slides without touching the table.
+
+  Pucks. Free bodies, so their sliding friction (0.4 against the table) comes from real contacts.
+  Radius 30 mm, height 20 mm, mass 0.1 kg. They collide with the table, the pusher, each other and
+  the low rim that keeps them on the table.
+
+  Cameras. "top" looks straight down at the table from 0.9 m (fovy 38: the 0.62 m square table fills
+  the image). "top_shifted" is the same camera moved 3 cm and tilted 3 degrees, for the camera axis
+  of the evaluation (Lesson 22.5).
+-->
+<mujoco model="tabletop">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.005" integrator="implicitfast"/>
+
+  <visual>
+    <headlight ambient=".35 .35 .35" diffuse=".55 .55 .55" specular="0 0 0"/>
+    <global offwidth="640" offheight="640"/>
+  </visual>
+
+  <default>
+    <default class="puck">
+      <geom type="cylinder" size="0.03 0.01" mass="0.1" friction="0.4 0.005 0.0001" contype="3" conaffinity="3"/>
+    </default>
+    <default class="rim">
+      <geom type="box" rgba=".55 .5 .45 1" contype="1" conaffinity="1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" diffuse=".4 .4 .4"/>
+    <geom name="table" type="plane" size="0.31 0.31 0.01" rgba=".82 .8 .76 1" friction="0.4 0.005 0.0001" contype="1" conaffinity="1"/>
+    <geom name="rim_px" class="rim" size="0.005 0.315 0.015" pos="0.315 0 0.015"/>
+    <geom name="rim_nx" class="rim" size="0.005 0.315 0.015" pos="-0.315 0 0.015"/>
+    <geom name="rim_py" class="rim" size="0.31 0.005 0.015" pos="0 0.315 0.015"/>
+    <geom name="rim_ny" class="rim" size="0.31 0.005 0.015" pos="0 -0.315 0.015"/>
+
+    <site name="zone_upper" type="cylinder" size="0.06 0.0005" pos="0.21 0 0.0005" rgba=".35 .35 .35 .35"/>
+    <site name="zone_lower" type="cylinder" size="0.06 0.0005" pos="-0.21 0 0.0005" rgba=".35 .35 .35 .35"/>
+    <site name="zone_left" type="cylinder" size="0.06 0.0005" pos="0 0.21 0.0005" rgba=".35 .35 .35 .35"/>
+    <site name="zone_right" type="cylinder" size="0.06 0.0005" pos="0 -0.21 0.0005" rgba=".35 .35 .35 .35"/>
+
+    <camera name="top" pos="0 0 0.9" xyaxes="0 -1 0 1 0 0" fovy="38"/>
+    <camera name="top_shifted" pos="0.03 0.0 0.9" xyaxes="0 -1 0 0.99863 0 0.05234" fovy="38"/>
+
+    <body name="pusher" pos="0 0 0.012">
+      <joint name="pusher_x" type="slide" axis="1 0 0" range="-0.29 0.29" damping="1"/>
+      <joint name="pusher_y" type="slide" axis="0 1 0" range="-0.29 0.29" damping="1"/>
+      <geom name="pusher" type="cylinder" size="0.015 0.01" mass="0.5" rgba=".15 .15 .15 1" contype="2" conaffinity="2"/>
+    </body>
+
+    <body name="red_puck" pos="0.1 0.1 0.01">
+      <freejoint name="red_puck"/>
+      <geom name="red_puck" class="puck" rgba=".85 .15 .12 1"/>
+    </body>
+    <body name="green_puck" pos="0.1 -0.1 0.01">
+      <freejoint name="green_puck"/>
+      <geom name="green_puck" class="puck" rgba=".15 .65 .2 1"/>
+    </body>
+    <body name="blue_puck" pos="-0.1 0.0 0.01">
+      <freejoint name="blue_puck"/>
+      <geom name="blue_puck" class="puck" rgba=".15 .3 .85 1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <velocity name="pusher_vx" joint="pusher_x" kv="40" ctrlrange="-0.25 0.25" forcerange="-15 15"/>
+    <velocity name="pusher_vy" joint="pusher_y" kv="40" ctrlrange="-0.25 0.25" forcerange="-15 15"/>
+  </actuator>
+</mujoco>

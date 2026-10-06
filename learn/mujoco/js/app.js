@@ -241,10 +241,8 @@ async function renderHome(main) {
   </div>`;
   main.appendChild(wrap);
   const heroLab = wrap.querySelector("#hero-lab");
-  const h = await mountWidget("simlab", heroLab, {
-    kind: "Live", title: "A double pendulum, simulated by MuJoCo in this page", model: "double_pendulum", key: 0, height: 260, autoplay: true,
-    camera: { azimuth: -90, elevation: 5, distance: 1.9, target: [0, 0, 0.7] }, trail: "tip",
-    readouts: [{ label: "time (s)", expr: "data.time" }, { label: "energy (J)", expr: "lib.energy().total", digits: 4 }],
+  const h = await mountWidget("frankavla", heroLab, {
+    kind: "Lab", title: "7-DOF Franka Panda on LIBERO Benchmark Tasks", height: 340,
   });
   state.cleanup = () => h?.destroy();
 }
