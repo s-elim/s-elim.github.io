@@ -10,9 +10,9 @@
 #  Update openings: python scripts/manage.py openings run
 # ==========================================================================
 
-last_updated: '2026-10-06T00:42:33.269127+00:00'
+last_updated: '2026-10-06T22:58:12.766765+00:00'
 last_updated_human: 6 October 2026
-total_count: 76
+total_count: 96
 openings:
   - id: ellis-institute-finland-tampere-university-phd-postd
     title: 'PhD & Postdoc Positions in Embodied AI and Robot Learning'
@@ -527,7 +527,7 @@ openings:
                            The CVG group is part of the Institute for Visual Computing (IVC).
                            Our research and education focuses on computer vision with a particular focus on
                            geometric aspects. Our goal is to study and develop techniques to extract 3D shape, motion,
-                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research Geometry Minimal Solvers Solving polynomial systems that arise in solving the Computer Vision problems Read More Geometry Line Features and Hybrid Methods Line features for 3D reconstruction and visual localization. Read More 3D Scenes 3D Scene
+                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research Geometry Minimal Solvers Solving polynomial systems that arise in solving the Computer Vision problems Read More Geometry Structure-from-Motion 3D Reconstruction of image collections. Read More Geometry Privacy Preservance Privacy preserving te
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -689,47 +689,6 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from TU Munich (Cremers Lab)
-  - id: max-planck-institute-postdoctoral-fellowships-in-aut
-    title: Postdoctoral Fellowships in Autonomous Systems and Robot Learning
-    position_type: Postdoc
-    institution: Max Planck Institute
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: Germany
-    region: Europe
-    research_topics:
-      - Robot Learning
-      - Autonomous Systems
-    description: >-
-      Bot Detection Please wait while we check if you are a Human JavaScript needs to be enabled to complete this challenge. This website is protected with BunkerWeb
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Robot Learning
-        - Autonomous Systems
-      technical_alignment: Involves Robot Learning, Autonomous Systems methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: Max Planck Institute for Intelligent Systems
-    source_url: 'https://is.mpg.de/jobs'
-    application_url: 'https://is.mpg.de/jobs'
-    first_seen: '2026-10-06'
-    last_seen: '2026-10-06'
-    last_verified: '2026-10-06'
-    history:
-      - date: '2026-10-06'
-        event: Discovered from Max Planck Institute for Intelligent Systems
   - id: university-of-oxford-postdoctoral-research-assistant
     title: Postdoctoral Research Assistant in Autonomous Robot Navigation and Learning
     position_type: Postdoc
@@ -794,8 +753,9 @@ openings:
       - Robot Learning
       - Machine Learning
       - Autonomous Systems
-    description: "Robot Intelligence Lab | Research groups | Imperial College London Skip to main content View accessibility support page Search Search Menu Study Research Faculties News Events About Get involved Giving Shop Imperial Search Search Website navigation Close Key links This section Skip to section navigation Global site navigation Study Course search Subjects Apply Fees and funding Student life Visit Help centre Request info International students Lifelong Learning Summer schools Research Faculties Faculty of Engineering Faculty of Medicine Faculty of Natural Sciences Imperial Business School Administrative and support services News News Imperial Stories Imperial Magazine Events What's on Great Exhibition Road Festival Imperial Lates Graduation About President Provost and Deputy President Council Imperial Strategy League tables and rankings Imperial Global Sustainable Imperial School of Convergence Science Governance Campuses Our academics Jobs at Imperial Get involved Giving\
-      \ Schools outreach Imperial Global Summer School Societal engagement Volunteering and outreach Women at Imperial Giving Shop Imperial User links navigation For staff Current students Imperial for business For schools Alumni Research groups Robot Intelligence Lab navigation News Blog Events Past events Research Publications Robot Manipulation Robot Locomotion Robot Cognition Robot Design and Control Kinematic-free Robot Control Funding Posters People Alumni Robots FRANKA EMIKA Panda ResQbot SLIDER Robot DE NIRO "
+    description: >-
+      Robot Intelligence Lab | Research groups | Imperial College London Skip to main content View accessibility support page Search Search Menu Study Research Faculties News Events About Get involved Giving Shop Imperial Search Search Website navigation Close Key links This section Skip to section navigation Global site navigation Study Course search Subjects Apply Fees and funding Student life Visit Help centre Request info International students Lifelong Learning Summer schools Research Faculties Faculty of Engineering Faculty of Medicine Faculty of Natural Sciences Imperial Business School Administrative and support services News News Imperial Stories Imperial Magazine Events What's on Great Exhibition Road Festival Imperial Lates Graduation About President Provost and Deputy President Council Imperial Strategy League tables and rankings Imperial Global Sustainable Imperial School of Convergence Science Equality, diversity and inclusion Governance Campuses Our academics Jobs at Imperial
+      Get involved Giving Schools outreach Imperial Global Summer School Societal engagement Volunteering and outreach Women at Imperial Giving Shop Imperial User links navigation For staff Current students Imperial for business For schools Alumni Research groups Robot Intelligence Lab navigation News Blog Events Past events Research Publications Robot Manipulation Robot Locomotion Robot Cognition Robot Design and Control Kinematic-free Robot Control Funding Posters People Alumni Robots FRANKA EMIKA P
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1029,44 +989,6 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from LinkedIn (Oak Ridge National Laboratory)
-  - id: ut-battelle-postdoctoral-research-associate-robotics
-    title: Postdoctoral Research Associate - Robotics and Navigation
-    position_type: Postdoc
-    institution: UT-Battelle
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Oak Ridge
-    country: USA
-    region: USA
-    research_topics:
-      - Robot Learning
-    description: >-
-      Postdoctoral Research Associate - Robotics and Navigation at UT-Battelle. Location: Oak Ridge, TN. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Robot Learning
-      technical_alignment: Involves Robot Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (UT-Battelle)
-    source_url: 'https://linkedin.com/jobs/view/postdoctoral-research-associate-robotics-and-navigation-at-ut-battelle-4475815445'
-    first_seen: '2026-10-06'
-    last_seen: '2026-10-06'
-    last_verified: '2026-10-06'
-    history:
-      - date: '2026-10-06'
-        event: Discovered from LinkedIn (UT-Battelle)
   - id: johns-hopkins-applied-physics-laboratory-2027-phd-gr
     title: 2027 PhD Graduate - Postdoctoral Researcher in Robotics and Autonomous Systems
     position_type: Postdoc
@@ -1110,20 +1032,20 @@ openings:
         event: Discovered from LinkedIn (Johns Hopkins Applied Physics Laboratory)
       - date: '2026-10-06'
         event: Description updated from source
-  - id: ludo-robotics-postdoctoral-fellowship-robotics-and-a
-    title: Postdoctoral Fellowship - Robotics and AI
+  - id: florida-international-university-postdoctoral-resear
+    title: Postdoctoral Researcher - Applied Robotics
     position_type: Postdoc
-    institution: Ludo Robotics
+    institution: Florida International University
     department: Not specified
     lab: Not specified
     principal_investigator: Not specified
-    city: San Francisco
+    city: Miami
     country: USA
     region: USA
     research_topics:
       - Robot Learning
     description: >-
-      Postdoctoral Fellowship - Robotics and AI at Ludo Robotics. Location: San Francisco, CA. Public research opening tracked via LinkedIn academic search.
+      Postdoctoral Researcher - Applied Robotics at Florida International University. Location: Miami, FL. Public research opening tracked via LinkedIn academic search.
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1140,14 +1062,14 @@ openings:
       research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
-    source: LinkedIn (Ludo Robotics)
-    source_url: 'https://linkedin.com/jobs/view/postdoctoral-fellowship-robotics-and-ai-at-ludo-robotics-4424792905'
+    source: LinkedIn (Florida International University)
+    source_url: 'https://linkedin.com/jobs/view/postdoctoral-researcher-applied-robotics-at-florida-international-university-4475118058'
     first_seen: '2026-10-06'
     last_seen: '2026-10-06'
     last_verified: '2026-10-06'
     history:
       - date: '2026-10-06'
-        event: Discovered from LinkedIn (Ludo Robotics)
+        event: Discovered from LinkedIn (Florida International University)
   - id: cedars-sinai-postdoctoral-scientist-center-for-auton
     title: Postdoctoral Scientist -Center for Autonomous Robotic Surgery (Robotics Track)
     position_type: Postdoc
@@ -1212,7 +1134,7 @@ openings:
     deadline_human: Rolling / Open until filled
     start_date: Not specified
     employment_type: Full-time
-    status: New
+    status: Updated
     relevance: Highly Relevant
     relevance_explanation:
       matched_topics:
@@ -1232,6 +1154,51 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from LinkedIn (Brookhaven National Laboratory)
+      - date: '2026-10-06'
+        event: Description updated from source
+      - date: '2026-10-06'
+        event: Description updated from source
+  - id: florida-atlantic-university-postdoctoral-fellow-appl
+    title: Postdoctoral Fellow Application of Machine Learning and Robotics
+    position_type: Postdoc
+    institution: Florida Atlantic University
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Fort Pierce
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+      - Machine Learning
+    description: >-
+      Postdoctoral Fellow Application of Machine Learning and Robotics at Florida Atlantic University. Location: Fort Pierce, FL. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Machine Learning
+      technical_alignment: Involves Robot Learning, Machine Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Florida Atlantic University)
+    source_url: >-
+      https://linkedin.com/jobs/view/postdoctoral-fellow-application-of-machine-learning-and-robotics-at-florida-atlantic-university-4389409007
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Florida Atlantic University)
   - id: nvidia-senior-research-scientist-autonomous-vehicles
     title: Senior Research Scientist - Autonomous Vehicles
     position_type: Research Scientist
@@ -1549,21 +1516,562 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from LinkedIn (The University of Texas at El Paso)
-  - id: florida-atlantic-university-postdoctoral-fellow-appl
-    title: Postdoctoral Fellow Application of Machine Learning and Robotics
+  - id: basis-research-institute-postdoctoral-fellow-mara-ro
+    title: 'Postdoctoral Fellow, MARA & Robotics'
     position_type: Postdoc
-    institution: Florida Atlantic University
+    institution: Basis Research Institute
     department: Not specified
     lab: Not specified
     principal_investigator: Not specified
-    city: Fort Pierce
+    city: New York
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Postdoctoral Fellow, MARA & Robotics at Basis Research Institute. Location: New York, NY. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Basis Research Institute)
+    source_url: 'https://linkedin.com/jobs/view/postdoctoral-fellow-mara-robotics-at-basis-research-institute-4466378393'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Basis Research Institute)
+  - id: waymo-research-scientist-rl-for-autonomous-planning-
+    title: 'Research Scientist, RL for Autonomous Planning & World Modeling'
+    position_type: Research Scientist
+    institution: Waymo
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: New York
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+      - Autonomous Systems
+    description: >-
+      Research Scientist, RL for Autonomous Planning & World Modeling at Waymo. Location: New York, NY. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Autonomous Systems
+      technical_alignment: Involves Robot Learning, Autonomous Systems methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Waymo)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-rl-for-autonomous-planning-world-modeling-at-waymo-4459726545'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Waymo)
+  - id: waymo-senior-research-scientist-perception-research-
+    title: Senior Research Scientist, Perception
+    position_type: Research Scientist
+    institution: Waymo
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: New York
+    country: USA
+    region: USA
+    research_topics:
+      - Computer Vision
+    description: >-
+      Senior Research Scientist, Perception at Waymo. Location: New York, NY. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Computer Vision
+      technical_alignment: Touches related methods in Computer Vision.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Waymo)
+    source_url: 'https://linkedin.com/jobs/view/senior-research-scientist-perception-at-waymo-4427266069'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Waymo)
+  - id: waymo-staff-research-scientist-perception-research-s
+    title: Staff Research Scientist, Perception
+    position_type: Research Scientist
+    institution: Waymo
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: New York
+    country: USA
+    region: USA
+    research_topics:
+      - Computer Vision
+    description: >-
+      Staff Research Scientist, Perception at Waymo. Location: New York, NY. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Computer Vision
+      technical_alignment: Touches related methods in Computer Vision.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Waymo)
+    source_url: 'https://linkedin.com/jobs/view/staff-research-scientist-perception-at-waymo-4423995107'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Waymo)
+  - id: oscar-research-scientist-robotics-research-scientist
+    title: Research Scientist / Robotics
+    position_type: Research Scientist
+    institution: Oscar
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: San Jose
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Research Scientist / Robotics at Oscar. Location: San Jose, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Oscar)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-robotics-at-oscar-4469341884'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Oscar)
+  - id: applied-intuition-research-scientist-world-action-fo
+    title: Research Scientist - World-Action Foundation Model, Robotics
+    position_type: Research Scientist
+    institution: Applied Intuition
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Sunnyvale
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+      - Foundation Models
+    description: >-
+      Research Scientist - World-Action Foundation Model, Robotics at Applied Intuition. Location: Sunnyvale, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Foundation Models
+      technical_alignment: Focuses directly on Robot Learning and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Applied Intuition)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-world-action-foundation-model-robotics-at-applied-intuition-4423972050'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Applied Intuition)
+  - id: bosch-usa-research-scientist-robotics-ai-research-sc
+    title: Research Scientist- Robotics AI
+    position_type: Research Scientist
+    institution: Bosch USA
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Sunnyvale
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Research Scientist- Robotics AI at Bosch USA. Location: Sunnyvale, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Bosch USA)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-robotics-ai-at-bosch-usa-4473082519'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Bosch USA)
+  - id: mecka-research-scientist-computer-vision-body-pose-d
+    title: Research Scientist - Computer Vision (Body Pose Detection)
+    position_type: Research Scientist
+    institution: Mecka
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: New York
+    country: USA
+    region: USA
+    research_topics:
+      - Computer Vision
+    description: >-
+      Research Scientist - Computer Vision (Body Pose Detection) at Mecka. Location: New York, United States. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Computer Vision
+      technical_alignment: Touches related methods in Computer Vision.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Mecka)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-%E2%80%93-computer-vision-body-pose-detection-at-mecka-4473011102'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Mecka)
+  - id: united-imaging-intelligence-sr-research-scientist-co
+    title: Sr. Research Scientist, Computer Vision and Robotics
+    position_type: Research Scientist
+    institution: United Imaging Intelligence
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Greater Boston
+    country: Not specified
+    region: Europe
+    research_topics:
+      - Robot Learning
+      - Computer Vision
+    description: >-
+      Sr. Research Scientist, Computer Vision and Robotics at United Imaging Intelligence. Location: Greater Boston. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Computer Vision
+      technical_alignment: Involves Robot Learning, Computer Vision methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (United Imaging Intelligence)
+    source_url: >-
+      https://linkedin.com/jobs/view/sr-research-scientist-computer-vision-and-robotics-at-united-imaging-intelligence-4427716184
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (United Imaging Intelligence)
+  - id: general-robotics-robotics-engineer-navigation-focus-
+    title: Robotics Engineer - Navigation focus
+    position_type: Research Engineer
+    institution: General Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Redmond
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Robotics Engineer - Navigation focus at General Robotics. Location: Redmond, WA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (General Robotics)
+    source_url: 'https://linkedin.com/jobs/view/robotics-engineer-navigation-focus-at-general-robotics-4441404740'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (General Robotics)
+  - id: general-robotics-robotics-engineer-manipulation-focu
+    title: Robotics Engineer - Manipulation focus
+    position_type: Research Engineer
+    institution: General Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Redmond
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Robotics Engineer - Manipulation focus at General Robotics. Location: Redmond, WA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (General Robotics)
+    source_url: 'https://linkedin.com/jobs/view/robotics-engineer-manipulation-focus-at-general-robotics-4465016039'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (General Robotics)
+  - id: general-robotics-robotics-engineer-foundation-model-
+    title: 'Robotics Engineer: Foundation Model Training'
+    position_type: Research Engineer
+    institution: General Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Redmond
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+      - Foundation Models
+    description: >-
+      Robotics Engineer: Foundation Model Training at General Robotics. Location: Redmond, WA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Foundation Models
+      technical_alignment: Focuses directly on Robot Learning and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (General Robotics)
+    source_url: 'https://linkedin.com/jobs/view/robotics-engineer-foundation-model-training-at-general-robotics-4467032002'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (General Robotics)
+  - id: general-robotics-robotics-engineer-humanoids-focus-r
+    title: Robotics Engineer - Humanoids focus
+    position_type: Research Engineer
+    institution: General Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Redmond
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Robotics Engineer - Humanoids focus at General Robotics. Location: Redmond, WA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (General Robotics)
+    source_url: 'https://linkedin.com/jobs/view/robotics-engineer-humanoids-focus-at-general-robotics-4465020054'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (General Robotics)
+  - id: deft-robotics-research-scientist-research-scientist-
+    title: Research Scientist
+    position_type: Research Scientist
+    institution: Deft Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: San Francisco
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Research Scientist at Deft Robotics. Location: San Francisco, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Deft Robotics)
+    source_url: 'https://linkedin.com/jobs/view/research-scientist-at-deft-robotics-4441104036'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Deft Robotics)
+  - id: path-robotics-machine-learning-engineer-robot-learni
+    title: Machine Learning Engineer, Robot Learning, Loco-Manipulation
+    position_type: Research Engineer
+    institution: Path Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Columbus
     country: USA
     region: USA
     research_topics:
       - Robot Learning
       - Machine Learning
     description: >-
-      Postdoctoral Fellow Application of Machine Learning and Robotics at Florida Atlantic University. Location: Fort Pierce, FL. Public research opening tracked via LinkedIn academic search.
+      Machine Learning Engineer, Robot Learning, Loco-Manipulation at Path Robotics. Location: Columbus, OH. Public research opening tracked via LinkedIn academic search.
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1581,15 +2089,205 @@ openings:
       research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
-    source: LinkedIn (Florida Atlantic University)
-    source_url: >-
-      https://linkedin.com/jobs/view/postdoctoral-fellow-application-of-machine-learning-and-robotics-at-florida-atlantic-university-4389409007
+    source: LinkedIn (Path Robotics)
+    source_url: 'https://linkedin.com/jobs/view/machine-learning-engineer-robot-learning-loco-manipulation-at-path-robotics-4440032853'
     first_seen: '2026-10-06'
     last_seen: '2026-10-06'
     last_verified: '2026-10-06'
     history:
       - date: '2026-10-06'
-        event: Discovered from LinkedIn (Florida Atlantic University)
+        event: Discovered from LinkedIn (Path Robotics)
+  - id: molg-robotics-engineer-research-engineer-2026
+    title: Robotics Engineer
+    position_type: Research Engineer
+    institution: Molg
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Sterling
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: 'Robotics Engineer at Molg. Location: Sterling, VA. Public research opening tracked via LinkedIn academic search.'
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Molg)
+    source_url: 'https://linkedin.com/jobs/view/robotics-engineer-at-molg-4443548799'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Molg)
+  - id: boost-robotics-robotics-ml-research-engineer-foundin
+    title: Robotics ML Research Engineer, Founding
+    position_type: Research Engineer
+    institution: Boost Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Cambridge
+    country: UK
+    region: UK
+    research_topics:
+      - Robot Learning
+    description: >-
+      Robotics ML Research Engineer, Founding at Boost Robotics. Location: Cambridge, MA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Boost Robotics)
+    source_url: 'https://linkedin.com/jobs/view/robotics-ml-research-engineer-founding-at-boost-robotics-4450907943'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Boost Robotics)
+  - id: world-labs-research-engineer-scientist-robot-learnin
+    title: Research Engineer / Scientist (Robot Learning)
+    position_type: Research Engineer
+    institution: World Labs
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: San Francisco
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Research Engineer / Scientist (Robot Learning) at World Labs. Location: San Francisco, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (World Labs)
+    source_url: 'https://linkedin.com/jobs/view/research-engineer-scientist-robot-learning-at-world-labs-4464103846'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (World Labs)
+  - id: molg-senior-robotics-engineer-research-engineer-2026
+    title: Senior Robotics Engineer
+    position_type: Research Engineer
+    institution: Molg
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Sterling
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: 'Senior Robotics Engineer at Molg. Location: Sterling, VA. Public research opening tracked via LinkedIn academic search.'
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Molg)
+    source_url: 'https://linkedin.com/jobs/view/senior-robotics-engineer-at-molg-4443559328'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (Molg)
+  - id: mbzuai-mohamed-bin-zayed-university-of-artificial-in
+    title: 'Computing and Mathematical Sciences Division - Postdoctoral Researcher: CryoSTEM Foundation Models'
+    position_type: Postdoc
+    institution: MBZUAI (Mohamed bin Zayed University of Artificial Intelligence)
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Abu Dhabi
+    country: UAE
+    region: Middle East
+    research_topics:
+      - Machine Learning
+      - Foundation Models
+    description: >-
+      Computing and Mathematical Sciences Division - Postdoctoral Researcher: CryoSTEM Foundation Models at MBZUAI (Mohamed bin Zayed University of Artificial Intelligence). Location: Abu Dhabi, Abu Dhabi Emirate, United Arab Emirates. Regional research opportunity.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Machine Learning
+        - Foundation Models
+      technical_alignment: Involves Machine Learning, Foundation Models methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (MBZUAI (Mohamed bin Zayed University of Artificial Intelligence))
+    source_url: >-
+      https://ae.linkedin.com/jobs/view/computing-and-mathematical-sciences-division-postdoctoral-researcher-cryostem-foundation-models-at-mbzuai-mohamed-bin-zayed-university-of-artificial-intelligence-4460842864
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from LinkedIn (MBZUAI (Mohamed bin Zayed University of Artificial Intelligence))
   - id: uk-academic-institution-lecturer-in-robotics-phd-202
     title: Lecturer in Robotics
     position_type: PhD
@@ -1748,8 +2446,49 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
-  - id: uk-academic-institution-phd-studentship-physical-int
-    title: 'PhD studentship: Physical intelligence in robotic materials'
+  - id: imperial-college-london-research-associate-in-dexter
+    title: Research Associate in Dexterous Manipulation and Robot Learning
+    position_type: Research Associate
+    institution: Imperial College London
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: UK
+    region: UK
+    research_topics:
+      - Robot Learning
+      - Manipulation
+    description: >-
+      Research Associate in Dexterous Manipulation and Robot Learning Department of Computing Imperial College London Location: London Salary: £50,733 to £59,484 per annum Date Placed: 06 Oct
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Manipulation
+      technical_alignment: Focuses directly on Robot Learning and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: jobs.ac.uk (UK Academic Institution)
+    source_url: 'https://jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
+    application_url: 'https://www.jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from jobs.ac.uk (UK Academic Institution)
+  - id: uk-academic-institution-phd-studentship-the-physics-
+    title: 'PhD Studentship: The Physics of Learning in Robotic Metamaterials'
     position_type: PhD
     institution: UK Academic Institution
     department: Not specified
@@ -1761,7 +2500,7 @@ openings:
     research_topics:
       - Robot Learning
     description: >-
-      PhD studentship: Physical intelligence in robotic materials School of Engineering University of Birmingham Location: Birmingham Salary: £21,805 Date Placed: 06 Aug
+      PhD Studentship: The Physics of Learning in Robotic Metamaterials School of Engineering University of Birmingham Location: Birmingham Salary: £21,805 Date Placed: 06 Aug
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1779,8 +2518,8 @@ openings:
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
     source: jobs.ac.uk (UK Academic Institution)
-    source_url: 'https://jobs.ac.uk/job/DSN384/phd-studentship-physical-intelligence-in-robotic-materials'
-    application_url: 'https://www.jobs.ac.uk/job/DSN384/phd-studentship-physical-intelligence-in-robotic-materials'
+    source_url: 'https://jobs.ac.uk/job/DSN384/phd-studentship-the-physics-of-learning-in-robotic-metamaterials'
+    application_url: 'https://www.jobs.ac.uk/job/DSN384/phd-studentship-the-physics-of-learning-in-robotic-metamaterials'
     first_seen: '2026-10-06'
     last_seen: '2026-10-06'
     last_verified: '2026-10-06'
@@ -2141,6 +2880,45 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTA231/senior-research-fellow-on-agentic-ai-and-verification'
     application_url: 'https://www.jobs.ac.uk/job/DTA231/senior-research-fellow-on-agentic-ai-and-verification'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from jobs.ac.uk (UK Academic Institution)
+  - id: uk-academic-institution-machine-learning-scientist-k
+    title: Machine Learning Scientist (KTP Associate) in AI-Driven Peptide Design
+    position_type: PhD
+    institution: UK Academic Institution
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: UK
+    region: UK
+    research_topics:
+      - Machine Learning
+    description: >-
+      Machine Learning Scientist (KTP Associate) in AI-Driven Peptide Design Digital Environment Research Institute (DERI) Queen Mary University of London Location: London Salary: £38,419 to £50,419 Date Placed: 06 Oct
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Machine Learning
+      technical_alignment: Touches related methods in Machine Learning.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: jobs.ac.uk (UK Academic Institution)
+    source_url: 'https://jobs.ac.uk/job/DTE328/machine-learning-scientist-ktp-associate-in-ai-driven-peptide-design'
+    application_url: 'https://www.jobs.ac.uk/job/DTE328/machine-learning-scientist-ktp-associate-in-ai-driven-peptide-design'
     first_seen: '2026-10-06'
     last_seen: '2026-10-06'
     last_verified: '2026-10-06'
@@ -3061,46 +3839,6 @@ openings:
     history:
       - date: '2026-10-06'
         event: Discovered from Public Academic Search
-  - id: university-research-institute-two-fully-funded-phd-p
-    title: 'Two Fully Funded PhD Positions in World Models & Embodied ... - LinkedIn'
-    position_type: PhD
-    institution: University / Research Institute
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: Not specified
-    region: Europe
-    research_topics:
-      - World Models
-      - Manipulation
-    description: >-
-      We invite applications for two fully funded PhD positions in the are aof WorldModels & Embodied Tactile based Grasping an Manipulation of Indutrial Objectsat the RoboTac Lab, BMW Center of AI ...
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Highly Relevant
-    relevance_explanation:
-      matched_topics:
-        - World Models
-        - Manipulation
-      technical_alignment: Focuses directly on World Models and physical robot control.
-      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: Public Academic Search
-    source_url: 'https://linkedin.com/pulse/two-fully-funded-phd-positions-world-models-embodied-tactile-rwj3e'
-    first_seen: '2026-10-06'
-    last_seen: '2026-10-06'
-    last_verified: '2026-10-06'
-    history:
-      - date: '2026-10-06'
-        event: Discovered from Public Academic Search
   - id: kth-royal-institute-of-technology-world-models-phd-p
     title: 'World Models PhD Positions & Scholarships 2026 | Scholar Nexus'
     position_type: PhD
@@ -3139,6 +3877,46 @@ openings:
       potential_gaps: None identified
     source: Public Academic Search
     source_url: 'https://scholarnexus.ai/positions/phds/World-Models?searchQuery=World+Models&program=0'
+    first_seen: '2026-10-06'
+    last_seen: '2026-10-06'
+    last_verified: '2026-10-06'
+    history:
+      - date: '2026-10-06'
+        event: Discovered from Public Academic Search
+  - id: university-research-institute-two-fully-funded-phd-p
+    title: 'Two Fully Funded PhD Positions in World Models & Embodied ... - LinkedIn'
+    position_type: PhD
+    institution: University / Research Institute
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: Not specified
+    region: Europe
+    research_topics:
+      - World Models
+      - Manipulation
+    description: >-
+      We invite applications for two fully funded PhD positions in the are aof WorldModels & Embodied Tactile based Grasping an Manipulation of Indutrial Objectsat the RoboTac Lab, BMW Center of AI ...
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - World Models
+        - Manipulation
+      technical_alignment: Focuses directly on World Models and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: Public Academic Search
+    source_url: 'https://linkedin.com/pulse/two-fully-funded-phd-positions-world-models-embodied-tactile-rwj3e'
     first_seen: '2026-10-06'
     last_seen: '2026-10-06'
     last_verified: '2026-10-06'
