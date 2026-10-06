@@ -28,10 +28,12 @@ const MODULES = {
   pipeline: () => import("./pipeline.js"),
   perf: () => import("./perf.js"),
   mpc: () => import("./mpc.js"),
+  wmrollout: () => import("./wmrollout.js"),
   chaos: () => import("./chaos.js"),
   cradle: () => import("./cradle.js"),
   write: () => import("./write.js"),
   cloth: () => import("./cloth.js"),
+  frankavla: () => import("./frankavla.js"),
 };
 
 export function hasWidget(name) { return name in MODULES; }

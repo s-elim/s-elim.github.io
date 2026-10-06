@@ -1,4 +1,4 @@
-"""Acceptance checks for capstone environments (Lesson 22.1).
+"""Acceptance checks for capstone environments (Lesson 24.1).
 
     python -m mjcourse.capstone mjcourse.envs.push:PushEnv --kwargs '{"action_mode": "ee_delta"}' --object puck
 

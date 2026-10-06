@@ -297,11 +297,55 @@
       "checkpoint": {"title": "Checkpoint 21: design a valid experiment", "task": "Write a one-page experimental protocol for a hypothesis of your choice (for example, 'depth input improves grasp success under camera-pose shift'), including baselines, controlled variables, seeds, splits, metrics, statistical test and the result that would falsify the hypothesis. Then run it at small scale.", "accept": ["Protocol written before running", "Falsifying result stated", "Small-scale run with intervals"]}
     },
     {
-      "id": 22, "title": "Capstone projects", "track": "research",
+      "id": 22, "title": "Vision-language-action models", "track": "research",
+      "summary": "What makes a policy a VLA, how vision, language, state and action are represented, a minimal VLA built and trained on a CPU, evaluation one generalization axis at a time, and failures attributed to the stage of the pipeline that caused them.",
+      "lessons": [
+        {"id": "22.1", "slug": "what-is-a-vla", "title": "What makes a policy a vision-language-action model", "minutes": 40, "difficulty": 3, "status": "draft", "lab": null,
+         "prereqs": ["15.1", "16.1"], "objectives": ["Define a VLA by its interface, separately from scale, pretraining and generality", "Distinguish VLMs, VLAs, imitation-learning, multimodal, foundation and agentic policies", "State what RT-1, RT-2, Octo, OpenVLA and pi0 take in and put out"]},
+        {"id": "22.2", "slug": "vla-architecture", "title": "VLA architecture: tokens, fusion and action heads", "minutes": 60, "difficulty": 4, "status": "draft", "lab": null,
+         "prereqs": ["22.1", "14.1"], "objectives": ["Trace one observation through a VLA, tensor by tensor", "Compare patch tokens, FiLM-conditioned keypoints and privileged object tokens", "Explain attention as the fusion of vision, language and state"]},
+        {"id": "22.3", "slug": "action-representation", "title": "Action representation: what one output means", "minutes": 60, "difficulty": 4, "status": "draft", "lab": null,
+         "prereqs": ["22.1", "6.2", "8.1"], "objectives": ["Map six action representations to what runs in MuJoCo", "Measure how a representation changes cloning, robustness to a payload and to the control rate", "Find a shortcut in the observation by ablation"]},
+        {"id": "22.4", "slug": "minimal-vla", "title": "Build a minimal VLA", "minutes": 75, "difficulty": 4, "status": "draft", "lab": null,
+         "prereqs": ["22.2", "22.3", "14.1"], "objectives": ["Generate demonstrations, train and evaluate a small VLA on the tabletop", "Diagnose a policy that copies its own velocity", "Inspect failures episode by episode"]},
+        {"id": "22.5", "slug": "vla-evaluation", "title": "Evaluating a VLA one axis at a time", "minutes": 60, "difficulty": 5, "status": "draft", "lab": "frankavla",
+         "prereqs": ["22.4", "21.2", "21.5"], "objectives": ["Separate in-distribution from compositional and out-of-distribution performance", "Evaluate language, object, spatial, initial-state, camera and embodiment axes separately", "Report seeds, intervals and gaps matched by seed"]},
+        {"id": "22.6", "slug": "vla-failure-analysis", "title": "Where a VLA fails: attributing failures to the pipeline", "minutes": 60, "difficulty": 5, "status": "draft", "lab": null,
+         "prereqs": ["22.5"], "objectives": ["Attribute failures to perception, grounding, spatial reasoning, action, control or contact", "Design counterfactual replays that repair one stage at a time", "State what an attribution procedure cannot distinguish"]},
+        {"id": "22.7", "slug": "vla-research-project", "title": "A VLA research project", "minutes": 30, "difficulty": 5, "status": "draft", "lab": null,
+         "prereqs": ["22.6", "21.2"], "objectives": ["Pose a question about a VLA that an experiment can answer", "Pre-register hypothesis, baseline, conditions, metrics, seeds and analysis", "Report with intervals, an ablation, a failure taxonomy and a reproducibility record"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 22: a VLA you can explain", "task": "Train a MiniVLA variant of your own design on the tabletop, evaluate it on every axis of Lesson 22.5 with three seeds, and attribute every failure with the procedure of Lesson 22.6.", "accept": ["In-distribution and generalization results reported separately, with intervals", "Every failure attributed to a stage, with the counterfactual evidence", "A run record that reproduces the numbers"]}
+    },
+    {
+      "id": 23, "title": "World models and model-based robotics", "track": "research",
+      "summary": "A precise definition of a world model, learned dynamics measured over horizons, latent models from pixels, model-predictive control with MuJoCo and with a learned model, compounding error, distribution shift, and a VLA whose proposals a world model evaluates.",
+      "lessons": [
+        {"id": "23.1", "slug": "what-is-a-world-model", "title": "What is a world model?", "minutes": 40, "difficulty": 3, "status": "draft", "lab": null,
+         "prereqs": ["21.4"], "objectives": ["Distinguish simulators, forward-dynamics, system-identification, latent and world models", "State an operational definition and what it excludes", "Compare four models of one scene against MuJoCo"]},
+        {"id": "23.2", "slug": "learning-dynamics", "title": "Learning a dynamics model, and its error over the horizon", "minutes": 60, "difficulty": 4, "status": "draft", "lab": "wmrollout",
+         "prereqs": ["23.1"], "objectives": ["Collect transitions with coverage of the dynamics that matter", "Train a dynamics model and evaluate it 1 to 50 steps ahead", "Explain how a millimetre error becomes a missed contact"]},
+        {"id": "23.3", "slug": "latent-world-models", "title": "Latent world models from pixels", "minutes": 60, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["23.2", "15.1"], "objectives": ["Build an encoder, latent transition and decoder", "Score predicted images by pixels and by where the objects are", "Explain why predicting pixels well is not predicting what control needs"]},
+        {"id": "23.4", "slug": "planning-with-learned-models", "title": "Planning with a learned world model", "minutes": 60, "difficulty": 4, "status": "draft", "lab": null,
+         "prereqs": ["23.2", "21.4"], "objectives": ["Run the same MPC with MuJoCo and with a learned model", "Measure how the model's errors change the ranking of candidate plans", "Explain why replanning absorbs model error"]},
+        {"id": "23.5", "slug": "compounding-error", "title": "Model error and compounding error", "minutes": 60, "difficulty": 5, "status": "draft", "lab": null,
+         "prereqs": ["23.4"], "objectives": ["Measure prediction error against horizon and control success against planning horizon", "Show that a low one-step error does not imply good control", "Measure model exploitation by the planner"]},
+        {"id": "23.6", "slug": "world-models-under-shift", "title": "World models under distribution shift", "minutes": 60, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["23.5", "17.1"], "objectives": ["Separate prediction generalization from control generalization", "Compare a learned model with a misspecified simulator under shift", "Find shifts that feedback absorbs and shifts it does not"]},
+        {"id": "23.7", "slug": "world-model-research-project", "title": "A world-model research project", "minutes": 30, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["23.5", "21.2"], "objectives": ["Separate model quality from control utility in a research question", "Pre-register baseline, alternative objective, multi-step and control evaluations, ablation", "Report with seeds, intervals and failure analysis"]},
+        {"id": "23.8", "slug": "vla-and-world-models", "title": "A VLA proposes, a world model predicts", "minutes": 75, "difficulty": 5, "status": "planned", "lab": null,
+         "prereqs": ["22.5", "23.4"], "objectives": ["Explain how a VLA and a world model complement each other", "Build a loop: VLA proposals, world-model rollouts, scoring, selection, execution", "Measure when the world model's ranking helps and when it hurts"]}
+      ],
+      "checkpoint": {"title": "Checkpoint 23: a world model judged by control", "task": "Train a world model of your own design on the tabletop, report its prediction error over five horizons, its MPC success against MuJoCo-MPC, and its behaviour under two distribution shifts.", "accept": ["Model quality and control utility reported separately", "MuJoCo as the reference model in every control comparison", "Seeds and intervals for every control result"]}
+    },
+    {
+      "id": 24, "title": "Capstone projects", "track": "research",
       "summary": "Seven expert capstones, a final research-grade capstone and the final examination.",
       "lessons": [
-        {"id": "22.1", "slug": "capstones", "title": "Capstones A to G and the final capstone", "minutes": 30, "difficulty": 5, "status": "draft", "lab": null,
-         "prereqs": ["21.2"], "objectives": ["Choose a capstone that matches your research question", "Meet the specification, rubric and reporting standard", "Produce a reproducible experiment report"]}
+        {"id": "24.1", "slug": "capstones", "title": "Capstones A to G and the final capstone", "minutes": 30, "difficulty": 5, "status": "draft", "lab": null,
+         "prereqs": ["21.2", "22.5", "23.5"], "objectives": ["Choose a capstone that matches your research question", "Meet the specification, rubric and reporting standard", "Produce a reproducible experiment report"]}
       ],
       "checkpoint": {"title": "Final checkpoint", "task": "Complete the final capstone and the final expert examination.", "accept": ["See the capstone rubric", "See the exam marking guide"]}
     }

@@ -83,7 +83,7 @@ cd .. && python -m http.server 8000   # then open http://localhost:8000/
 | `code/src/mjcourse/` | the Python package: spatial math, kinematics, control, environments, learning |
 | `code/examples/` | one script per lesson; lessons embed these files verbatim |
 | `code/projects/` | project specifications, starters, solutions, tests |
-| `code/capstones/` | where capstone work goes; the specifications are in Lesson 22.1 and the acceptance checker is `mjcourse.capstone` (no reference solutions) |
+| `code/capstones/` | where capstone work goes; the specifications are in Lesson 24.1 and the acceptance checker is `mjcourse.capstone` (no reference solutions) |
 | `code/tests/` | pytest suite |
 | `tools/` | content checks, code sync, search index, browser checks |
 

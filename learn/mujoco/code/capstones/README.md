@@ -1,7 +1,7 @@
 # Capstones
 
-The seven capstones (A to G) and the final capstone are specified in Lesson 22.1
-(`lessons/22.1-capstones.md`, on the site at `#/lesson/22.1`): objective, what each builds on,
+The seven capstones (A to G) and the final capstone are specified in Lesson 24.1
+(`lessons/24.1-capstones.md`, on the site at `#/lesson/24.1`): objective, what each builds on,
 acceptance criteria, common failures and extensions, with the rubric and reporting standard they share.
 
 They are specifications. The course provides no reference solutions for them; it provides the tools
