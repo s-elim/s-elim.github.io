@@ -33,7 +33,7 @@
   type: 'conference'
   flagship: 'robotics'
   rank: 'A*'
-  status: 'In Preparation'
+  status: 'Under Review'
   image: '/images/affordx-framework.webp'
   thumb: "CVPR '27"
   url: 'https://physical-agi.github.io/AFFORD-X/'
