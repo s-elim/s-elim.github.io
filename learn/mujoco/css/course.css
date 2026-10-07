@@ -37,7 +37,7 @@
 
   --topbar-h: 56px;
   --nav-w: 290px;
-  --lab-w: min(480px, 40vw);
+  --lab-w: min(640px, 48vw);
   --radius: 10px;
   --shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 6px 24px rgba(0, 0, 0, .06);
   color-scheme: light;
@@ -241,6 +241,34 @@ code { font-family: var(--mono); font-size: .88em; }
   border-left: 1px solid var(--line); background: var(--surface); padding: 12px; overscroll-behavior: contain;
 }
 .labdock__title { font: 600 .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: .2rem 0 .5rem; display: flex; justify-content: space-between; align-items: center; }
+.labdock__expand-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 3px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-3);
+  font: 600 .65rem var(--mono);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transition: all .15s ease;
+}
+.labdock__expand-btn:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.labdock__expand-btn.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.lesson--widelab {
+  --lab-w: min(880px, 62vw) !important;
+}
 
 .crumbs { font: 500 .76rem var(--mono); color: var(--ink-3); display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
 .crumbs a { color: var(--ink-3); text-decoration: none; }
@@ -617,8 +645,14 @@ dialog::backdrop { background: rgba(0, 0, 0, .35); }
 .shortcuts dd { margin: 0; color: var(--ink-2); }
 
 /* -------------------------------------------------------------- responsive */
+@media (min-width: 1500px) {
+  :root { --lab-w: min(720px, 50vw); }
+}
+@media (min-width: 1800px) {
+  :root { --lab-w: min(800px, 52vw); }
+}
 @media (max-width: 1320px) {
-  :root { --lab-w: min(420px, 42vw); --nav-w: 260px; }
+  :root { --lab-w: min(540px, 48vw); --nav-w: 260px; }
 }
 @media (max-width: 1100px) {
   .shell { grid-template-columns: minmax(0, 1fr); }
@@ -664,3 +698,167 @@ dialog::backdrop { background: rgba(0, 0, 0, .35); }
 .pipeline__row { display: grid; grid-template-columns: minmax(150px, max-content) 1fr; gap: .6rem; align-items: start; }
 .pipeline__row .btn { font-family: var(--mono, monospace); font-size: .8rem; }
 .pipeline__out { font-family: var(--mono, monospace); font-size: .75rem; line-height: 1.45; color: var(--ink-2, inherit); word-break: break-word; }
+
+/* H-JEPA Multimodal Lab & Media Elements (Lesson 23.9) */
+.hjepa-controls-row, .hjepa-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+  margin: .65rem 0;
+}
+.hjepa-modality-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  background: var(--bg-card);
+  padding: .25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.hjepa-modality-tabs button {
+  font-family: var(--ui);
+  font-size: .78rem;
+  font-weight: 600;
+  padding: .35rem .65rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.hjepa-modality-tabs button:hover {
+  color: var(--ink);
+  background: var(--bg-hover, rgba(0, 0, 0, .04));
+}
+.hjepa-modality-tabs button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.hjepa-readouts, .hjepa-readouts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .5rem;
+  margin: .75rem 0;
+}
+.telemetry-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .45rem .65rem;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.telemetry-chip .label {
+  font-family: var(--mono);
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--ink-muted);
+}
+.telemetry-chip .val {
+  font-family: var(--mono);
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.telemetry-chip .val.active {
+  color: #28a745;
+}
+.hjepa-modality-display {
+  margin-top: .75rem;
+}
+.modality-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .85rem 1rem;
+}
+.modality-title {
+  font-family: var(--ui);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .4rem;
+}
+.modality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.sensor-col code {
+  font-family: var(--mono);
+  font-size: .8em;
+  background: var(--bg-code, rgba(0, 0, 0, .04));
+  padding: .15em .35em;
+  border-radius: 4px;
+}
+.hjepa-interactive-frame {
+  width: 100%;
+  min-height: 620px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.25rem 0;
+  background: #ffffff;
+}
+.hjepa-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+.hjepa-video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.hjepa-video-card video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+}
+.hjepa-video-caption {
+  padding: .65rem .85rem;
+  font-size: .82rem;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.hjepa-video-caption strong {
+  color: var(--ink);
+}
+.hjepa-guide-note {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand, #0284c7);
+  border-radius: 6px;
+  padding: .45rem .75rem;
+  font-size: .8rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin-bottom: .6rem;
+}
+.hjepa-guide-note strong {
+  color: var(--ink);
+}
+.hjepa-guide-note kbd {
+  font-family: var(--mono);
+  font-size: .75rem;
+  background: var(--bg-code, rgba(0,0,0,.06));
+  padding: .1rem .3rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+

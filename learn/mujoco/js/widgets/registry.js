@@ -34,6 +34,7 @@ const MODULES = {
   write: () => import("./write.js"),
   cloth: () => import("./cloth.js"),
   frankavla: () => import("./frankavla.js"),
+  hjepalab: () => import("./hjepalab.js?v=20261007_4"),
 };
 
 export function hasWidget(name) { return name in MODULES; }

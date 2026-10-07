@@ -1,0 +1,82 @@
+<!--
+  industrial_machining.xml : Franka Panda 7-DOF arm in a CNC Machining &
+  Thermal Quenching workcell.
+  Features aerospace titanium alloy bracket, hardened tool steel coupling,
+  and a dynamic distractor part for hierarchical world model latent invariance verification.
+  Objects:
+    turbine_bracket   : Titanium Ti-6Al-4V aerospace bracket
+    machined_coupling : Hardened tool steel spline coupling
+    coolant_distractor: Dynamic distractor scrap slug
+  Fixtures:
+    cnc_vise          : Precision hydraulic machine vise
+    quench_rack       : Thermal quenching station
+-->
+<mujoco model="industrial_machining">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <visual>
+    <headlight ambient=".18 .18 .18" diffuse=".45 .45 .45" specular=".2 .2 .2"/>
+  </visual>
+
+  <asset>
+    <model name="arm" file="arm7_gripper.xml"/>
+    <texture name="castiron_tex" type="2d" builtin="checker" rgb1=".25 .27 .28" rgb2=".20 .22 .23" width="256" height="256"/>
+    <material name="machinebed_mat" texture="castiron_tex" texrepeat="8 8" reflectance="0.1"/>
+    <material name="ti_mat" rgba=".65 .68 .72 1" reflectance="0.5"/>
+    <material name="toolsteel_mat" rgba=".28 .32 .36 1" reflectance="0.3"/>
+    <material name="distractor_mat" rgba=".9 .75 .2 1" reflectance="0.2"/>
+    <material name="vise_mat" rgba=".3 .35 .4 1" reflectance="0.2"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1" diffuse=".65 .65 .65"/>
+    <light pos="0.5 0.8 1.8" dir="0 -0.5 -1" diffuse=".35 .35 .35"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="machinebed_mat"/>
+
+    <attach model="arm" body="link0" prefix=""/>
+
+    <!-- Aerospace Titanium Bracket (Ti-6Al-4V) -->
+    <body name="turbine_bracket" pos="0.46 0.12 0.025">
+      <freejoint name="turbine_bracket"/>
+      <geom name="bracket_base" type="box" size="0.022 0.025 0.012" material="ti_mat" mass="0.09" friction="1.1 0.005 0.0001" condim="4"/>
+      <geom name="bracket_boss" type="cylinder" size="0.012 0.022" pos="0 0 0.015" material="ti_mat" mass="0.04"/>
+      <site name="bracket_scan_pt" pos="0 0 0.025" size="0.006" rgba="0.3 0.7 1 0.5"/>
+    </body>
+
+    <!-- Hardened Tool Steel Spline Coupling -->
+    <body name="machined_coupling" pos="0.42 -0.16 0.025">
+      <freejoint name="machined_coupling"/>
+      <geom name="coupling_shaft" type="cylinder" size="0.016 0.025" material="toolsteel_mat" mass="0.11" friction="1.0 0.005 0.0001" condim="4"/>
+      <geom name="coupling_spline" type="box" size="0.02 0.008 0.018" pos="0 0 0.008" material="toolsteel_mat" mass="0.03"/>
+      <site name="coupling_scan_pt" pos="0 0 0.025" size="0.006" rgba="0.8 0.4 0.2 0.5"/>
+    </body>
+
+    <!-- Dynamic Perturbation Distractor Part -->
+    <body name="coolant_distractor" pos="0.54 -0.04 0.015">
+      <freejoint name="coolant_distractor"/>
+      <geom name="distractor_geom" type="cylinder" size="0.014 0.014" material="distractor_mat" mass="0.04" friction="0.8 0.005 0.0001"/>
+      <site name="distractor_scan_pt" pos="0 0 0.014" size="0.005" rgba="1 1 0 0.5"/>
+    </body>
+
+    <!-- CNC Hydraulic Vise Fixture -->
+    <body name="cnc_vise" pos="0.62 0.20 0">
+      <geom name="vise_body" type="box" size="0.08 0.08 0.008" pos="0 0 0.008" material="vise_mat" friction="1 0.005 0.0001"/>
+      <geom name="vise_jaw_fixed" type="box" size="0.015 0.07 0.025" pos="0.05 0 0.025" rgba=".2 .22 .25 1"/>
+      <geom name="vise_jaw_moving" type="box" size="0.015 0.07 0.025" pos="-0.05 0 0.025" rgba=".2 .22 .25 1"/>
+      <site name="cnc_target" pos="0 0 0.025" size="0.01" rgba="0 1 1 0.4"/>
+    </body>
+
+    <!-- Thermal Quench & Cooling Station -->
+    <body name="quench_rack" pos="0.50 -0.32 0">
+      <geom name="quench_base" type="box" size="0.07 0.07 0.006" pos="0 0 0.006" rgba=".22 .25 .3 1"/>
+      <geom name="quench_grate1" type="box" size="0.06 0.005 0.015" pos="0 0.03 0.015" rgba=".4 .45 .5 1"/>
+      <geom name="quench_grate2" type="box" size="0.06 0.005 0.015" pos="0 -0.03 0.015" rgba=".4 .45 .5 1"/>
+      <site name="quench_target" pos="0 0 0.025" size="0.01" rgba="0.3 0.8 0.9 0.4"/>
+    </body>
+
+    <camera name="front" pos="1.35 0 0.75" xyaxes="0 1 0 -0.6357 0 0.7719" fovy="45"/>
+    <camera name="side" pos="0.5 -1.0 0.6" xyaxes="1 0 0 0 0.4819 0.8762" fovy="45"/>
+    <camera name="top" pos="0.5 0 1.4" xyaxes="0 -1 0 1 0 0" fovy="45"/>
+  </worldbody>
+</mujoco>

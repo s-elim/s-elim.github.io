@@ -1,0 +1,92 @@
+<!--
+  industrial_battery.xml : Franka Panda 7-DOF arm with parallel gripper in an
+  Automotive Battery Module Assembly workcell.
+  Objects:
+    battery_cell      : Li-ion prismatic battery cell with positive and negative terminals
+    insulator_bushing : Polyamide dielectric isolation bushing
+    terminal_busbar   : Aluminum 6061 stamped busbar connector
+  Fixtures:
+    battery_chassis   : Industrial battery module chassis pocket
+    isolation_fixture : Dielectric isolation bay fixture
+    terminal_dock     : Anodized busbar clamping receptacle
+-->
+<mujoco model="industrial_battery">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <visual>
+    <headlight ambient=".2 .2 .2" diffuse=".45 .45 .45" specular=".15 .15 .15"/>
+  </visual>
+
+  <asset>
+    <model name="arm" file="arm7_gripper.xml"/>
+    <texture name="bench_tex" type="2d" builtin="checker" rgb1=".35 .38 .4" rgb2=".28 .3 .33" width="256" height="256"/>
+    <material name="bench_mat" texture="bench_tex" texrepeat="12 12" reflectance="0.15"/>
+    <material name="battery_mat" rgba=".18 .22 .28 1" reflectance="0.2"/>
+    <material name="copper_mat" rgba=".85 .45 .2 1" reflectance="0.5"/>
+    <material name="alu_mat" rgba=".75 .78 .82 1" reflectance="0.6"/>
+    <material name="nylon_mat" rgba=".92 .92 .88 1" reflectance="0.1"/>
+    <material name="steel_mat" rgba=".35 .38 .42 1" reflectance="0.4"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1" diffuse=".65 .65 .65"/>
+    <light pos="0.5 0.8 1.8" dir="0 -0.5 -1" diffuse=".35 .35 .35"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="bench_mat"/>
+
+    <attach model="arm" body="link0" prefix=""/>
+
+    <!-- Prismatic Lithium-Ion Battery Cell -->
+    <body name="battery_cell" pos="0.45 0.12 0.025">
+      <freejoint name="battery_cell"/>
+      <geom name="cell_casing" type="box" size="0.018 0.032 0.025" material="battery_mat" mass="0.12" friction="1.2 0.005 0.0001" condim="4"/>
+      <geom name="term_pos" type="cylinder" size="0.004 0.006" pos="0 0.018 0.031" material="copper_mat" mass="0.005"/>
+      <geom name="term_neg" type="cylinder" size="0.004 0.006" pos="0 -0.018 0.031" material="alu_mat" mass="0.005"/>
+      <site name="cell_scan_pt" pos="0 0 0.026" size="0.006" rgba="1 0 0 0.5"/>
+    </body>
+
+    <!-- Polyamide Dielectric Insulator Bushing -->
+    <body name="insulator_bushing" pos="0.55 -0.05 0.025">
+      <freejoint name="insulator_bushing"/>
+      <geom name="bushing_body" type="cylinder" size="0.015 0.025" material="nylon_mat" mass="0.06" friction="1.1 0.005 0.0001" condim="4"/>
+      <geom name="bushing_collar" type="cylinder" size="0.02 0.004" pos="0 0 0.02" material="nylon_mat" mass="0.02"/>
+      <site name="bushing_scan_pt" pos="0 0 0.025" size="0.006" rgba="0 1 0 0.5"/>
+    </body>
+
+    <!-- Aluminum 6061 Terminal Busbar Connector -->
+    <body name="terminal_busbar" pos="0.42 -0.16 0.015">
+      <freejoint name="terminal_busbar"/>
+      <geom name="busbar_plate" type="box" size="0.032 0.012 0.008" material="alu_mat" mass="0.07" friction="1.0 0.005 0.0001" condim="4"/>
+      <geom name="busbar_contact" type="box" size="0.01 0.012 0.015" pos="0.022 0 0.015" material="copper_mat" mass="0.03"/>
+      <site name="busbar_scan_pt" pos="0 0 0.015" size="0.006" rgba="0 0 1 0.5"/>
+    </body>
+
+    <!-- Battery Pack Module Chassis Nest -->
+    <body name="battery_chassis" pos="0.62 0.20 0">
+      <geom name="chassis_base" type="box" size="0.09 0.09 0.006" pos="0 0 0.006" material="steel_mat" friction="1 0.005 0.0001"/>
+      <geom name="chassis_w_px" type="box" size="0.006 0.09 0.025" pos="0.084 0 0.031" material="steel_mat"/>
+      <geom name="chassis_w_nx" type="box" size="0.006 0.09 0.025" pos="-0.084 0 0.031" material="steel_mat"/>
+      <geom name="chassis_w_py" type="box" size="0.078 0.006 0.025" pos="0 0.084 0.031" material="steel_mat"/>
+      <geom name="chassis_w_ny" type="box" size="0.078 0.006 0.025" pos="0 -0.084 0.031" material="steel_mat"/>
+      <site name="chassis_target" pos="0 0 0.03" size="0.01" rgba="0 1 1 0.4"/>
+    </body>
+
+    <!-- Dielectric Isolation Bay Fixture -->
+    <body name="isolation_fixture" pos="0.50 0.32 0">
+      <geom name="iso_base" type="box" size="0.06 0.06 0.006" pos="0 0 0.006" rgba=".25 .35 .45 1"/>
+      <geom name="iso_pin" type="cylinder" size="0.008 0.02" pos="0 0 0.02" material="alu_mat"/>
+      <site name="isolation_target" pos="0 0 0.025" size="0.01" rgba="0.2 0.6 0.9 0.4"/>
+    </body>
+
+    <!-- Terminal Docking Receptacle -->
+    <body name="terminal_dock" pos="0.50 -0.32 0">
+      <geom name="dock_base" type="box" size="0.06 0.06 0.006" pos="0 0 0.006" rgba=".45 .35 .25 1"/>
+      <geom name="dock_anvil" type="box" size="0.02 0.05 0.015" pos="0 0 0.015" material="steel_mat"/>
+      <site name="dock_target" pos="0 0 0.025" size="0.01" rgba="0.9 0.6 0.2 0.4"/>
+    </body>
+
+    <camera name="front" pos="1.35 0 0.75" xyaxes="0 1 0 -0.6357 0 0.7719" fovy="45"/>
+    <camera name="side" pos="0.5 -1.0 0.6" xyaxes="1 0 0 0 0.4819 0.8762" fovy="45"/>
+    <camera name="top" pos="0.5 0 1.4" xyaxes="0 -1 0 1 0 0" fovy="45"/>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>H-JEPA · Interleaved training animation</title>
+<script>if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embedded');</script>
+<style>
+:root { color-scheme: light; --ink:#29495d; --state:#286494; --action:#b76622; --cost:#77529c; --line:#b5c6d2; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f5f7f8; color:var(--ink); font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+main { max-width:1160px; padding:44px 24px; margin:auto; }
+.eyebrow { margin:0 0 6px; color:#6e808d; font-size:11px; font-weight:650; letter-spacing:.14em; text-transform:uppercase; }
+h1 { margin:0; font:600 32px/1.2 Georgia,serif; letter-spacing:-.025em; }
+.intro { margin:10px 0 25px; color:#667780; }
+.card { background:white; border:1px solid #d7e0e6; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px #29495d06; }
+.steps { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid #e1e7ec; }
+button { font:inherit; cursor:pointer; }
+.step { padding:15px 14px; border:0; border-right:1px solid #e1e7ec; background:white; color:#6c7b85; text-align:left; font-size:12px; transition:background .2s; }
+.step:last-child { border-right:0; }
+.step span { display:block; font-size:10px; letter-spacing:.08em; margin-bottom:3px; }
+.step[aria-current="step"] { background:#eaf2f6; color:var(--ink); box-shadow:inset 0 -3px var(--state); }
+.step:hover { background:#f2f6f8; }
+:focus-visible { outline:3px solid #b76622; outline-offset:-3px; }
+.diagram-scroll { overflow-x:auto; padding:4px 14px 0; }
+svg { display:block; width:100%; height:auto; min-width:700px; }
+svg text { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill:var(--ink); }
+svg .math, svg .math text { font-family:"STIX Two Text","STIXGeneral","Cambria Math","Times New Roman",serif; font-style:italic; font-weight:400; font-size:26px; }
+svg .math text { fill:inherit; white-space:pre; }
+svg .math .math-script { font-size:16px; font-style:normal; }
+svg .state { fill:var(--state); }
+svg .action { fill:var(--action); }
+svg .cost { fill:var(--cost); }
+svg .small { font-size:14px; fill:#617480; }
+svg .diagram-meta { font-size:18px; }
+svg .label { font-size:14px; font-weight:500; }
+svg .level { font-size:13px; font-weight:600; fill:#637986; letter-spacing:.07em; }
+.wire { fill:none; stroke:#80929e; stroke-width:1.6; marker-end:url(#arrow); }
+.wire.purple { stroke:var(--cost); marker-end:url(#purple-arrow); }
+.gate { fill:#f3f6f8; stroke:#8195a3; stroke-width:1.3; }
+.objective { fill:#f5f1fa; stroke:#b49cc9; stroke-width:1.3; }
+[data-phase] { opacity:.2; transition:opacity .5s; }
+[data-phase].done { opacity:.8; }
+[data-phase].active { opacity:1; }
+.active .wire { stroke-dasharray:6 4; animation:flow .8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset:-20; } }
+.halo { fill:#eaf2f6; stroke:#94b5cc; stroke-width:1.2; }
+.active .halo { animation:breathe 2s ease-in-out infinite; }
+@keyframes breathe { 50% { stroke-width:3; } }
+.execution { transition:opacity .5s; }
+.description { margin:0 24px; border-top:1px solid #e5ebef; padding:16px 0; min-height:80px; }
+.description p { color:#586c7a; margin:0; font-size:14px; max-width:690px; }
+.controls { display:flex; align-items:center; gap:12px; padding:15px 24px; background:#fafbfc; border-top:1px solid #e5ebef; }
+.control { padding:7px 14px; border:1px solid #cad6de; border-radius:5px; background:white; color:var(--ink); font-size:12px; min-width:68px; }
+.control:hover { background:#eaf2f6; }
+input[type=range] { flex:1; min-width:50px; accent-color:var(--state); cursor:pointer; }
+.time { white-space:nowrap; font-size:11px; color:#71838f; font-variant-numeric:tabular-nums; }
+.note { color:#778893; font-size:12px; margin:14px 2px 0; }
+.legend { display:flex; gap:20px; flex-wrap:wrap; margin-top:18px; font-size:12px; color:#647885; }
+.legend i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.paused .active .wire,.paused .active .halo { animation-play-state:paused; }
+@media(max-width:650px) {
+ main { padding:24px 12px; } h1 { font-size:27px; } .intro { font-size:13px; }
+ .step { padding:12px 8px; font-size:11px; } .step span { font-size:9px; }
+ .description { margin:0 16px; min-height:116px; }
+ .description p { font-size:13px; }
+ .controls { padding:12px; gap:8px; } .control { padding:7px 10px; min-width:54px; }
+ .time { display:none; } .diagram-scroll { padding:0 6px; }
+}
+@media(prefers-reduced-motion:reduce) { * { transition:none !important; } .active .wire,.active .halo { animation:none; } }
+.embedded body { background:white; }
+.embedded main { max-width:none; padding:0; }
+.embedded .eyebrow,.embedded h1,.embedded .intro,.embedded .legend,.embedded .note { display:none; }
+svg .panel-heading { font-size:18px; font-weight:500; }
+.hierarchy-built .intermediate { opacity:.4; }
+svg .math .math-upright { font-style:normal; }
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">H-JEPA · Animation study</p>
+<h1>Learning from an interleaved trajectory</h1>
+<p class="intro">An alternate view with observations and actions in temporal order, from o₀ through o₄.</p>
+<div class="card" id="animation">
+<nav class="steps" aria-label="Animation steps">
+<button class="step" data-step="0" aria-current="step"><span>01</span>Encode Level 1</button>
+<button class="step" data-step="1"><span>02</span>Encode Level 2</button>
+<button class="step" data-step="2"><span>03</span>Train jointly</button>
+</nav>
+<div class="diagram-scroll" tabindex="0" role="region" aria-label="Training diagram; scroll horizontally on small screens">
+<svg viewBox="0 0 1120 580" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Hierarchical training with interleaved observations and actions</title>
+<desc id="diagram-desc">The input trajectory alternates o0, a0, o1, a1, o2, a2, o3, a3, o4. Level 1 encodes all five observations and four actions. With stride two and state window one, level 2 encodes states at times zero, two, and four into three states. Its first macro-action aggregates action embeddings zero and one; its second aggregates two and three. Every level trains with predictive loss and SIGReg, with gradients flowing through the hierarchy.</desc>
+<defs>
+ <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#80929e"/></marker>
+ <marker id="purple-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#77529c"/></marker>
+ <g id="encoder"><path class="gate" d="M-23 19V-1C-23-29 23-29 23-1V19Z"/></g>
+ <g id="predictor"><path class="gate" d="M-27-23H-1C34-23 34 23-1 23H-27Z"/></g>
+</defs>
+<text x="24" y="35" class="small diagram-meta" text-anchor="start">Two levels · stride s₂ = 2 · state window w₂ = 1</text>
+<text x="24" y="79" class="panel-heading" text-anchor="start">Build the hierarchy</text>
+<text x="641" y="79" class="panel-heading" text-anchor="start">Train each level</text>
+<text x="24" y="170" class="level" text-anchor="start">LEVEL 2</text>
+<text x="24" y="371" class="level" text-anchor="start">LEVEL 1</text>
+<g data-phase="0" data-also="1,2">
+<g class="selected-state" data-input-kind="observation" data-input-index="0">
+<text x="100" y="498" class="math state" text-anchor="middle" data-math="o_{0}">o_{0}</text>
+<path class="wire" d="M100 478V454"/>
+<use href="#encoder" x="100" y="435"/>
+<text x="100" y="442" class="math " text-anchor="middle" data-math="E^{(1)}">E^{(1)}</text>
+<path class="wire" d="M100 409V386"/>
+<text x="100" y="372" class="math state" text-anchor="middle" data-math="z_{0}^{(1)}">z_{0}^{(1)}</text>
+</g>
+<g class="action-column" data-input-kind="action" data-input-index="0">
+<text x="160" y="498" class="math action" text-anchor="middle" data-math="a_{0}">a_{0}</text>
+<path class="wire" d="M160 478V454"/>
+<use href="#encoder" x="160" y="435"/>
+<text x="160" y="442" class="math " text-anchor="middle" data-math="A^{(1)}">A^{(1)}</text>
+<path class="wire" d="M160 409V386"/>
+<text x="160" y="372" class="math action" text-anchor="middle" data-math="a_{0}^{(1)}">a_{0}^{(1)}</text>
+</g>
+<g class="intermediate" data-input-kind="observation" data-input-index="1">
+<text x="220" y="498" class="math state" text-anchor="middle" data-math="o_{1}">o_{1}</text>
+<path class="wire" d="M220 478V454"/>
+<use href="#encoder" x="220" y="435"/>
+<text x="220" y="442" class="math " text-anchor="middle" data-math="E^{(1)}">E^{(1)}</text>
+<path class="wire" d="M220 409V386"/>
+<text x="220" y="372" class="math state" text-anchor="middle" data-math="z_{1}^{(1)}">z_{1}^{(1)}</text>
+</g>
+<g class="action-column" data-input-kind="action" data-input-index="1">
+<text x="280" y="498" class="math action" text-anchor="middle" data-math="a_{1}">a_{1}</text>
+<path class="wire" d="M280 478V454"/>
+<use href="#encoder" x="280" y="435"/>
+<text x="280" y="442" class="math " text-anchor="middle" data-math="A^{(1)}">A^{(1)}</text>
+<path class="wire" d="M280 409V386"/>
+<text x="280" y="372" class="math action" text-anchor="middle" data-math="a_{1}^{(1)}">a_{1}^{(1)}</text>
+</g>
+<g class="selected-state" data-input-kind="observation" data-input-index="2">
+<text x="340" y="498" class="math state" text-anchor="middle" data-math="o_{2}">o_{2}</text>
+<path class="wire" d="M340 478V454"/>
+<use href="#encoder" x="340" y="435"/>
+<text x="340" y="442" class="math " text-anchor="middle" data-math="E^{(1)}">E^{(1)}</text>
+<path class="wire" d="M340 409V386"/>
+<text x="340" y="372" class="math state" text-anchor="middle" data-math="z_{2}^{(1)}">z_{2}^{(1)}</text>
+</g>
+<g class="action-column" data-input-kind="action" data-input-index="2">
+<text x="400" y="498" class="math action" text-anchor="middle" data-math="a_{2}">a_{2}</text>
+<path class="wire" d="M400 478V454"/>
+<use href="#encoder" x="400" y="435"/>
+<text x="400" y="442" class="math " text-anchor="middle" data-math="A^{(1)}">A^{(1)}</text>
+<path class="wire" d="M400 409V386"/>
+<text x="400" y="372" class="math action" text-anchor="middle" data-math="a_{2}^{(1)}">a_{2}^{(1)}</text>
+</g>
+<g class="intermediate" data-input-kind="observation" data-input-index="3">
+<text x="460" y="498" class="math state" text-anchor="middle" data-math="o_{3}">o_{3}</text>
+<path class="wire" d="M460 478V454"/>
+<use href="#encoder" x="460" y="435"/>
+<text x="460" y="442" class="math " text-anchor="middle" data-math="E^{(1)}">E^{(1)}</text>
+<path class="wire" d="M460 409V386"/>
+<text x="460" y="372" class="math state" text-anchor="middle" data-math="z_{3}^{(1)}">z_{3}^{(1)}</text>
+</g>
+<g class="action-column" data-input-kind="action" data-input-index="3">
+<text x="520" y="498" class="math action" text-anchor="middle" data-math="a_{3}">a_{3}</text>
+<path class="wire" d="M520 478V454"/>
+<use href="#encoder" x="520" y="435"/>
+<text x="520" y="442" class="math " text-anchor="middle" data-math="A^{(1)}">A^{(1)}</text>
+<path class="wire" d="M520 409V386"/>
+<text x="520" y="372" class="math action" text-anchor="middle" data-math="a_{3}^{(1)}">a_{3}^{(1)}</text>
+</g>
+<g class="selected-state" data-input-kind="observation" data-input-index="4">
+<text x="580" y="498" class="math state" text-anchor="middle" data-math="o_{4}">o_{4}</text>
+<path class="wire" d="M580 478V454"/>
+<use href="#encoder" x="580" y="435"/>
+<text x="580" y="442" class="math " text-anchor="middle" data-math="E^{(1)}">E^{(1)}</text>
+<path class="wire" d="M580 409V386"/>
+<text x="580" y="372" class="math state" text-anchor="middle" data-math="z_{4}^{(1)}">z_{4}^{(1)}</text>
+</g>
+<text x="340" y="558" class="small" text-anchor="middle">Observation–action trajectory</text>
+</g>
+<g data-phase="1" data-also="2">
+<g class="upper-state" data-source-time="0">
+<path class="wire" d="M100 344V279"/>
+<use href="#encoder" x="100" y="260"/>
+<text x="100" y="267" class="math " text-anchor="middle" data-math="E^{(2)}">E^{(2)}</text>
+<path class="wire" d="M100 234V190"/>
+<text x="100" y="171" class="math state" text-anchor="middle" data-math="z_{0}^{(2)}">z_{0}^{(2)}</text>
+</g>
+<g class="upper-state" data-source-time="2">
+<path class="wire" d="M340 344V279"/>
+<use href="#encoder" x="340" y="260"/>
+<text x="340" y="267" class="math " text-anchor="middle" data-math="E^{(2)}">E^{(2)}</text>
+<path class="wire" d="M340 234V190"/>
+<text x="340" y="171" class="math state" text-anchor="middle" data-math="z_{1}^{(2)}">z_{1}^{(2)}</text>
+</g>
+<g class="upper-state" data-source-time="4">
+<path class="wire" d="M580 344V279"/>
+<use href="#encoder" x="580" y="260"/>
+<text x="580" y="267" class="math " text-anchor="middle" data-math="E^{(2)}">E^{(2)}</text>
+<path class="wire" d="M580 234V190"/>
+<text x="580" y="171" class="math state" text-anchor="middle" data-math="z_{2}^{(2)}">z_{2}^{(2)}</text>
+</g>
+<g class="upper-action" data-source-actions="0,1">
+<path class="wire" d="M160 344L209 279"/>
+<path class="wire" d="M280 344L231 279"/>
+<use href="#encoder" x="220" y="260"/>
+<text x="220" y="267" class="math " text-anchor="middle" data-math="A^{(2)}">A^{(2)}</text>
+<path class="wire" d="M220 234V190"/>
+<text x="220" y="171" class="math action" text-anchor="middle" data-math="a_{0}^{(2)}">a_{0}^{(2)}</text>
+</g>
+<g class="upper-action" data-source-actions="2,3">
+<path class="wire" d="M400 344L449 279"/>
+<path class="wire" d="M520 344L471 279"/>
+<use href="#encoder" x="460" y="260"/>
+<text x="460" y="267" class="math " text-anchor="middle" data-math="A^{(2)}">A^{(2)}</text>
+<path class="wire" d="M460 234V190"/>
+<text x="460" y="171" class="math action" text-anchor="middle" data-math="a_{1}^{(2)}">a_{1}^{(2)}</text>
+</g>
+</g>
+<g data-phase="2">
+<text x="641" y="115" class="small" text-anchor="start">For each level ℓ = 1, 2</text>
+<text x="682" y="181" class="math state" text-anchor="middle" data-math="z_{t}^{(ℓ)}">z_{t}^{(ℓ)}</text>
+<use href="#predictor" x="800" y="174"/>
+<text x="800" y="181" class="math " text-anchor="middle" data-math="F^{(ℓ)}">F^{(ℓ)}</text>
+<text x="918" y="181" class="math state" text-anchor="middle" data-math="ẑ_{t+1}^{(ℓ)}">ẑ_{t+1}^{(ℓ)}</text>
+<rect x="1004" y="149" width="86" height="50" rx="6" class="objective"/>
+<text x="1047" y="181" class="math cost" text-anchor="middle" data-math="ℒ_{pred}^{(ℓ)}">ℒ_{pred}^{(ℓ)}</text>
+<path class="wire" d="M710 174H770"/>
+<path class="wire" d="M829 174H879"/>
+<path class="wire purple" d="M954 174H1000"/>
+<text x="800" y="279" class="math action" text-anchor="middle" data-math="a_{t}^{(ℓ)}">a_{t}^{(ℓ)}</text>
+<text x="1047" y="279" class="math state" text-anchor="middle" data-math="z_{t+1}^{(ℓ)}">z_{t+1}^{(ℓ)}</text>
+<path class="wire" d="M800 253V201"/>
+<path class="wire purple" d="M1047 253V203"/>
+<text x="682" y="222" class="small" text-anchor="middle">Context</text>
+<text x="918" y="222" class="small" text-anchor="middle">Prediction</text>
+<text x="800" y="311" class="label action" text-anchor="middle">Action</text>
+<text x="1047" y="311" class="small" text-anchor="middle">Target</text>
+</g>
+<g data-phase="2" data-delay="1.5">
+<text x="641" y="357" class="label cost" text-anchor="start">Regularize encoded states</text>
+<text x="641" y="391" class="math cost" text-anchor="start" data-math="SIGReg(Z^{(ℓ)})">SIGReg(Z^{(ℓ)})</text>
+<text x="862" y="383" class="small" text-anchor="start">Z: encoded states across</text>
+<text x="862" y="403" class="small" text-anchor="start">the batch and time</text>
+</g>
+<g data-phase="2" data-delay="2.5">
+<rect x="632" y="434" width="466" height="98" rx="7" fill="#faf8fc"/>
+<text x="650" y="461" class="label cost" text-anchor="start">Per-level objective</text>
+<g transform="translate(650 502) scale(.9)">
+<text x="0" y="0" class="math cost" text-anchor="start" data-math="ℒ^{(ℓ)} = ℒ_{pred}^{(ℓ)} + λ_{ℓ} SIGReg(Z^{(ℓ)})">ℒ^{(ℓ)} = ℒ_{pred}^{(ℓ)} + λ_{ℓ} SIGReg(Z^{(ℓ)})</text>
+</g>
+<text x="641" y="558" class="small" text-anchor="start">Sum the objectives and train all levels jointly.</text>
+</g>
+
+</svg>
+</div>
+<div class="description" aria-live="off">
+<p id="step-description">Encode each observation and primitive action into its own latent representation.</p>
+</div>
+<div class="controls">
+<button class="control" id="toggle" aria-label="Pause animation">Pause</button>
+<button class="control" id="replay">Replay</button>
+<input id="timeline" type="range" min="0" max="14" step="0.05" value="0" aria-label="Animation timeline, in seconds">
+<span class="time" id="time">0:00 / 0:14</span>
+</div>
+</div>
+<div class="legend" aria-label="Diagram legend"><span><i style="background:#286494"></i>Latent states</span><span><i style="background:#b76622"></i>Encoded actions</span><span><i style="background:#77529c"></i>Training objectives</span></div>
+<p class="note">Adapted from the original training TikZ. E denotes a state encoder, A an action encoder, and F a predictor. The same construction extends to deeper hierarchies and larger state windows.</p>
+<noscript><p>Enable JavaScript to play the animation. The diagram’s full description is available to screen readers.</p></noscript>
+</main>
+<script>
+// Set mathematical indices with one font and explicit SVG baselines.
+// Each original text label remains a readable fallback until fonts are ready.
+function typesetDiagramMath() {
+ const ns = 'http://www.w3.org/2000/svg';
+ for (const source of document.querySelectorAll('svg text[data-math]')) {
+  const group = document.createElementNS(ns, 'g');
+  group.setAttribute('class', source.getAttribute('class'));
+  group.setAttribute('role', 'img');
+  group.setAttribute('aria-label', source.textContent);
+  source.after(group);
+  const addText = (text, x, y, script = false) => {
+   const node = document.createElementNS(ns, 'text');
+   for (const fragment of text.split(/(SIGReg)/)) {
+    const span = document.createElementNS(ns, 'tspan');
+    span.textContent = fragment;
+    if (fragment === 'SIGReg') span.setAttribute('class', 'math-upright');
+    node.append(span);
+   }
+   node.setAttribute('x', x);
+   node.setAttribute('y', y);
+   if (script) node.setAttribute('class', 'math-script');
+   group.append(node);
+   return node.getComputedTextLength();
+  };
+  let cursor = 0;
+  for (const token of source.dataset.math.matchAll(/([^_^]+)((?:[_^]\{[^}]+\})*)/g)) {
+   cursor += addText(token[1], cursor, 0);
+   let scriptWidth = 0;
+   for (const script of token[2].matchAll(/([_^])\{([^}]+)\}/g)) {
+    scriptWidth = Math.max(scriptWidth, addText(script[2], cursor + 1, script[1] === '^' ? -11 : 6, true));
+   }
+   if (scriptWidth) cursor += scriptWidth + 2;
+  }
+  const anchor = source.getAttribute('text-anchor') || source.parentElement.getAttribute('text-anchor');
+  const x = Number(source.getAttribute('x')) - (anchor === 'middle' ? cursor / 2 : anchor === 'end' ? cursor : 0);
+  group.setAttribute('text-anchor', 'start');
+  group.setAttribute('transform', `translate(${x},${source.getAttribute('y')})`);
+  source.remove();
+ }
+}
+document.fonts.ready.then(typesetDiagramMath);
+const stages = [
+ [
+  "Encode Level 1",
+  "Encode each observation and primitive action into its own latent representation."
+ ],
+ [
+  "Encode Level 2",
+  "Encode windows of lower-level states at the chosen stride, and aggregate the actions spanning each higher-level transition."
+ ],
+ [
+  "Train jointly",
+  "Train all levels with prediction losses and SIGReg, with gradients flowing through the hierarchy."
+ ]
+];
+const stageDurations = [4, 4, 6];
+const stageStarts = stageDurations.map((_, index) => stageDurations.slice(0, index).reduce((sum, seconds) => sum + seconds, 0));
+const duration = stageDurations.reduce((sum, seconds) => sum + seconds, 0);
+const card = document.querySelector('#animation');
+const timeline = document.querySelector('#timeline');
+timeline.max = duration;
+const toggle = document.querySelector('#toggle');
+const steps = [...document.querySelectorAll('[data-step]')];
+const groups = [...document.querySelectorAll('[data-phase]')];
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+let frameVisible = window.parent === window;
+let playing = frameVisible && !motion.matches, elapsed = 0, previousTime = null, currentStage = -1;
+function render() {
+ const nextStage = stageStarts.findIndex(start => start > elapsed);
+ const stage = nextStage === -1 ? stages.length - 1 : nextStage - 1;
+ const stageElapsed = elapsed - stageStarts[stage];
+ card.classList.toggle('hierarchy-built', stage >= 1);
+ for (const group of groups) {
+  const first = Number(group.dataset.phase);
+  const active = (first === stage && stageElapsed >= Number(group.dataset.delay || 0)) || (group.dataset.also || '').split(',').filter(Boolean).map(Number).includes(stage);
+  group.classList.toggle('active', active);
+  group.classList.toggle('done', !active && first < stage);
+ }
+ if (stage !== currentStage) {
+  currentStage = stage;
+  for (const button of steps) {
+   if (Number(button.dataset.step) === stage) button.setAttribute('aria-current', 'step');
+   else button.removeAttribute('aria-current');
+  }
+  document.querySelector('#step-description').textContent = stages[stage][1];
+ }
+ timeline.value = elapsed;
+ timeline.setAttribute('aria-valuetext', `${Math.floor(elapsed)} seconds: ${stages[stage][0]}`);
+ document.querySelector('#time').textContent = `0:${String(Math.floor(elapsed)).padStart(2, '0')} / 0:${duration}`;
+}
+function setPlaying(value) {
+ playing = value;
+ previousTime = null;
+ card.classList.toggle('paused', !playing);
+ toggle.textContent = playing ? 'Pause' : 'Play';
+ toggle.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+}
+window.addEventListener('message', event => {
+ if (window.parent === window || event.source !== window.parent || event.origin !== location.origin) return;
+ if (event.data?.type !== 'hjepa-animation-visibility' || typeof event.data.visible !== 'boolean') return;
+ if (frameVisible === event.data.visible) return;
+ frameVisible = event.data.visible;
+ elapsed = 0;
+ setPlaying(frameVisible && !motion.matches);
+ render();
+});
+toggle.addEventListener('click', () => setPlaying(!playing));
+document.querySelector('#replay').addEventListener('click', () => { elapsed = 0; setPlaying(true); render(); });
+for (const button of steps) button.addEventListener('click', () => { elapsed = stageStarts[Number(button.dataset.step)]; setPlaying(false); render(); });
+timeline.addEventListener('input', () => { elapsed = Number(timeline.value); setPlaying(false); render(); });
+motion.addEventListener('change', event => { if (event.matches) setPlaying(false); });
+document.addEventListener('visibilitychange', () => { previousTime = null; });
+function tick(now) {
+ if (playing && frameVisible && !document.hidden) {
+  if (previousTime !== null) elapsed = (elapsed + Math.min((now - previousTime) / 1000, .1)) % duration;
+  previousTime = now;
+  render();
+ }
+ requestAnimationFrame(tick);
+}
+setPlaying(playing);
+render();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

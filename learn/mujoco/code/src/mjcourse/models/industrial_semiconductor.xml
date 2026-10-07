@@ -1,0 +1,81 @@
+<!--
+  industrial_semiconductor.xml : Franka Panda 7-DOF arm in a Cleanroom
+  Semiconductor Wafer Carrier Handling & Kitting cell.
+  Features a physical obstacle partition barrier wall that requires LiDAR ToF
+  high-elevation clearance obstacle traversal.
+  Objects:
+    wafer_cassette   : Silicon wafer FOUP cassette pod
+    quartz_boat      : Fused silica quartz wafer carrier boat
+  Fixtures:
+    cleanroom_barrier: Partition barrier wall (obstacle)
+    vacuum_chuck     : High-purity vacuum chuck fixture
+    inspection_stage : Laser metrology stage
+-->
+<mujoco model="industrial_semiconductor">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <visual>
+    <headlight ambient=".25 .25 .25" diffuse=".55 .55 .55" specular=".2 .2 .2"/>
+  </visual>
+
+  <asset>
+    <model name="arm" file="arm7_gripper.xml"/>
+    <texture name="clean_tex" type="2d" builtin="checker" rgb1=".85 .88 .92" rgb2=".78 .82 .86" width="256" height="256"/>
+    <material name="clean_mat" texture="clean_tex" texrepeat="10 10" reflectance="0.2"/>
+    <material name="wafer_mat" rgba=".25 .18 .12 0.95" reflectance="0.4"/>
+    <material name="quartz_mat" rgba=".75 .85 .95 0.75" reflectance="0.5"/>
+    <material name="barrier_mat" rgba=".8 .3 .2 0.85" reflectance="0.1"/>
+    <material name="anodized_mat" rgba=".2 .35 .45 1" reflectance="0.3"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.5 -0.8 1.8" dir="0 0.5 -1" diffuse=".7 .7 .7"/>
+    <light pos="0.5 0.8 1.8" dir="0 -0.5 -1" diffuse=".4 .4 .4"/>
+    <geom name="floor" type="plane" size="2 2 0.05" material="clean_mat"/>
+
+    <attach model="arm" body="link0" prefix=""/>
+
+    <!-- Cleanroom Physical Obstacle Barrier Wall -->
+    <body name="cleanroom_barrier" pos="0.52 0.05 0.05">
+      <geom name="barrier_geom" type="box" size="0.008 0.24 0.05" material="barrier_mat" mass="5"/>
+      <geom name="barrier_post1" type="cylinder" size="0.012 0.055" pos="0 0.24 0" rgba=".3 .3 .35 1"/>
+      <geom name="barrier_post2" type="cylinder" size="0.012 0.055" pos="0 -0.24 0" rgba=".3 .3 .35 1"/>
+      <site name="barrier_edge" pos="0 0 0.055" size="0.006" rgba="1 1 0 0.6"/>
+    </body>
+
+    <!-- Silicon Wafer Cassette (FOUP) -->
+    <body name="wafer_cassette" pos="0.45 -0.12 0.025">
+      <freejoint name="wafer_cassette"/>
+      <geom name="cassette_box" type="box" size="0.025 0.025 0.025" material="wafer_mat" mass="0.10" friction="1.1 0.005 0.0001" condim="4"/>
+      <geom name="cassette_handle" type="box" size="0.005 0.018 0.006" pos="0 0 0.028" material="anodized_mat" mass="0.01"/>
+      <site name="cassette_scan_pt" pos="0 0 0.025" size="0.006" rgba="1 0.5 0 0.5"/>
+    </body>
+
+    <!-- Quartz Wafer Carrier Boat -->
+    <body name="quartz_boat" pos="0.42 0.22 0.025">
+      <freejoint name="quartz_boat"/>
+      <geom name="quartz_body" type="cylinder" size="0.016 0.024" material="quartz_mat" mass="0.07" friction="1.0 0.005 0.0001" condim="4"/>
+      <geom name="quartz_ribs" type="cylinder" size="0.02 0.003" pos="0 0 0.015" material="quartz_mat" mass="0.01"/>
+      <site name="quartz_scan_pt" pos="0 0 0.024" size="0.006" rgba="0 0.8 1 0.5"/>
+    </body>
+
+    <!-- Cleanroom Vacuum Chuck Fixture (Past Barrier) -->
+    <body name="vacuum_chuck" pos="0.62 -0.12 0">
+      <geom name="chuck_base" type="box" size="0.08 0.08 0.006" pos="0 0 0.006" material="anodized_mat" friction="1 0.005 0.0001"/>
+      <geom name="chuck_ring" type="cylinder" size="0.035 0.01" pos="0 0 0.01" rgba=".25 .4 .5 1"/>
+      <site name="chuck_target" pos="0 0 0.025" size="0.01" rgba="0 1 1 0.4"/>
+    </body>
+
+    <!-- Laser Metrology Stage -->
+    <body name="inspection_stage" pos="0.60 0.22 0">
+      <geom name="stage_base" type="box" size="0.07 0.07 0.006" pos="0 0 0.006" rgba=".25 .28 .32 1"/>
+      <geom name="stage_pin" type="cylinder" size="0.01 0.015" pos="0 0 0.015" rgba=".7 .75 .8 1"/>
+      <site name="stage_target" pos="0 0 0.025" size="0.01" rgba="0.3 0.9 0.4 0.4"/>
+    </body>
+
+    <camera name="front" pos="1.35 0 0.75" xyaxes="0 1 0 -0.6357 0 0.7719" fovy="45"/>
+    <camera name="side" pos="0.5 -1.0 0.6" xyaxes="1 0 0 0 0.4819 0.8762" fovy="45"/>
+    <camera name="top" pos="0.5 0 1.4" xyaxes="0 -1 0 1 0 0" fovy="45"/>
+  </worldbody>
+</mujoco>

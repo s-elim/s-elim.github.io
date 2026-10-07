@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>H-JEPA · Hierarchical planning animation</title>
+<script>if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embedded');</script>
+<style>
+:root { color-scheme: light; --ink:#29495d; --state:#286494; --action:#b76622; --cost:#77529c; --line:#b5c6d2; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f5f7f8; color:var(--ink); font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+main { max-width:1160px; padding:44px 24px; margin:auto; }
+.eyebrow { margin:0 0 6px; color:#6e808d; font-size:11px; font-weight:650; letter-spacing:.14em; text-transform:uppercase; }
+h1 { margin:0; font:600 32px/1.2 Georgia,serif; letter-spacing:-.025em; }
+.intro { margin:10px 0 25px; color:#667780; }
+.card { background:white; border:1px solid #d7e0e6; border-radius:12px; overflow:hidden; box-shadow:0 8px 30px #29495d06; }
+.steps { display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid #e1e7ec; }
+button { font:inherit; cursor:pointer; }
+.step { padding:15px 14px; border:0; border-right:1px solid #e1e7ec; background:white; color:#6c7b85; text-align:left; font-size:12px; transition:background .2s; }
+.step:last-child { border-right:0; }
+.step span { display:block; font-size:10px; letter-spacing:.08em; margin-bottom:3px; }
+.step[aria-current="step"] { background:#eaf2f6; color:var(--ink); box-shadow:inset 0 -3px var(--state); }
+.step:hover { background:#f2f6f8; }
+:focus-visible { outline:3px solid #b76622; outline-offset:-3px; }
+.diagram-scroll { overflow-x:auto; padding:4px 14px 0; }
+svg { display:block; width:100%; height:auto; min-width:700px; }
+svg text { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; fill:var(--ink); }
+svg .math, svg .math text { font-family:"STIX Two Text","STIXGeneral","Cambria Math","Times New Roman",serif; font-style:italic; font-weight:400; font-size:26px; }
+svg .math text { fill:inherit; white-space:pre; }
+svg .math .math-script { font-size:16px; font-style:normal; }
+svg .state { fill:var(--state); }
+svg .action { fill:var(--action); }
+svg .cost { fill:var(--cost); }
+svg .small { font-size:14px; fill:#617480; }
+svg .diagram-meta { font-size:18px; }
+svg .label { font-size:14px; font-weight:500; }
+svg .level { font-size:13px; font-weight:600; fill:#637986; letter-spacing:.07em; }
+.wire { fill:none; stroke:#80929e; stroke-width:1.6; marker-end:url(#arrow); }
+.wire.purple { stroke:var(--cost); marker-end:url(#purple-arrow); }
+.gate { fill:#f3f6f8; stroke:#8195a3; stroke-width:1.3; }
+.objective { fill:#f5f1fa; stroke:#b49cc9; stroke-width:1.3; }
+[data-phase] { opacity:.2; transition:opacity .5s; }
+[data-phase].done { opacity:.8; }
+[data-phase].active { opacity:1; }
+.active .wire { stroke-dasharray:6 4; animation:flow .8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset:-20; } }
+.halo { fill:#eaf2f6; stroke:#94b5cc; stroke-width:1.2; }
+.active .halo { animation:breathe 2s ease-in-out infinite; }
+@keyframes breathe { 50% { stroke-width:3; } }
+.execution { transition:opacity .5s; }
+.description { margin:0 24px; border-top:1px solid #e5ebef; padding:16px 0; min-height:80px; }
+.description p { color:#586c7a; margin:0; font-size:14px; max-width:690px; }
+.controls { display:flex; align-items:center; gap:12px; padding:15px 24px; background:#fafbfc; border-top:1px solid #e5ebef; }
+.control { padding:7px 14px; border:1px solid #cad6de; border-radius:5px; background:white; color:var(--ink); font-size:12px; min-width:68px; }
+.control:hover { background:#eaf2f6; }
+input[type=range] { flex:1; min-width:50px; accent-color:var(--state); cursor:pointer; }
+.time { white-space:nowrap; font-size:11px; color:#71838f; font-variant-numeric:tabular-nums; }
+.note { color:#778893; font-size:12px; margin:14px 2px 0; }
+.legend { display:flex; gap:20px; flex-wrap:wrap; margin-top:18px; font-size:12px; color:#647885; }
+.legend i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.paused .active .wire,.paused .active .halo { animation-play-state:paused; }
+@media(max-width:650px) {
+ main { padding:24px 12px; } h1 { font-size:27px; } .intro { font-size:13px; }
+ .step { padding:12px 8px; font-size:11px; } .step span { font-size:9px; }
+ .description { margin:0 16px; min-height:116px; }
+ .description p { font-size:13px; }
+ .controls { padding:12px; gap:8px; } .control { padding:7px 10px; min-width:54px; }
+ .time { display:none; } .diagram-scroll { padding:0 6px; }
+}
+@media(prefers-reduced-motion:reduce) { * { transition:none !important; } .active .wire,.active .halo { animation:none; } }
+.embedded body { background:white; }
+.embedded main { max-width:none; padding:0; }
+.embedded .eyebrow,.embedded h1,.embedded .intro,.embedded .legend,.embedded .note { display:none; }
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">H-JEPA · Animation study</p>
+<h1>From goals to subgoals to actions</h1>
+<p class="intro">A two-level example of hierarchical planning. Follow the sequence, or select a step to inspect it.</p>
+<div class="card" id="animation">
+<nav class="steps" aria-label="Animation steps">
+<button class="step" data-step="0" aria-current="step"><span>01</span>Encode</button>
+<button class="step" data-step="1"><span>02</span>Coarse plan</button>
+<button class="step" data-step="2"><span>03</span>Refine a subgoal</button>
+<button class="step" data-step="3"><span>04</span>Execute &amp; replan</button>
+</nav>
+<div class="diagram-scroll" tabindex="0" role="region" aria-label="Planning diagram; scroll horizontally on small screens">
+<svg viewBox="0 0 1120 565" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Two-level hierarchical planning</title>
+<desc id="diagram-desc">Encode current and goal observations at both levels. Optimize level-2 macro-actions to approach the goal. Use the first level-2 prediction as a subgoal. Optimize two level-1 primitive actions by comparing their final prediction, lifted through the level-2 encoder, with that subgoal. Execute an action prefix, observe, and replan.</desc>
+<defs>
+ <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#80929e"/></marker>
+ <marker id="purple-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#77529c"/></marker>
+ <g id="encoder"><path class="gate" d="M-23 19V-1C-23-29 23-29 23-1V19Z"/></g>
+ <g id="predictor"><path class="gate" d="M-27-23H-1C34-23 34 23-1 23H-27Z"/></g>
+</defs>
+<text x="24" y="35" class="small diagram-meta">Two levels · stride s₂ = 2 · state window w₂ = 1 · subgoals K₂ = 1</text>
+<text x="24" y="76" class="level">LEVEL 2</text>
+<text x="24" y="332" class="level">LEVEL 1</text>
+<!-- Initial and goal encoding columns, mirroring the TikZ. -->
+<g data-phase="0" data-also="1,2">
+ <path class="wire" d="M110 492V457"/><path class="wire" d="M110 411V380"/><path class="wire" d="M110 342V250"/><path class="wire" d="M110 207V127"/>
+ <path class="wire" d="M1040 492V457"/><path class="wire" d="M1040 411V380"/><path class="wire" d="M1040 342V250"/><path class="wire" d="M1040 207V127"/>
+ <use href="#encoder" x="110" y="438"/><use href="#encoder" x="110" y="231"/>
+ <use href="#encoder" x="1040" y="438"/><use href="#encoder" x="1040" y="231"/>
+ <g text-anchor="middle">
+ <text x="110" y="511" class="math state" data-math="o_{0}">o₀</text><text x="110" y="534" class="small">Current observation</text>
+ <text x="1040" y="511" class="math state" data-math="o_{g}">o<tspan baseline-shift="sub" font-size="13">g</tspan></text><text x="1040" y="534" class="small">Goal observation</text>
+ <text x="110" y="445" class="math" data-math="E^{(1)}">E¹</text><text x="110" y="238" class="math" data-math="E^{(2)}">E²</text>
+ <text x="1040" y="445" class="math" data-math="E^{(1)}">E¹</text><text x="1040" y="238" class="math" data-math="E^{(2)}">E²</text>
+ <text x="110" y="369" class="math state" data-math="z_{0}^{(1)}">z₀⁽¹⁾</text><text x="110" y="116" class="math state" data-math="z_{0}^{(2)}">z₀⁽²⁾</text>
+ <text x="1040" y="369" class="math state" data-math="g^{(1)}">g⁽¹⁾</text><text x="1040" y="116" class="math state" data-math="g^{(2)}">g⁽²⁾</text>
+ </g>
+</g>
+<!-- Coarse rollout and goal objective. -->
+<g data-phase="1">
+ <path class="wire" d="M139 109H258M313 109H426M494 109H548M579 109H633M688 109H749"/>
+ <path class="wire purple" d="M831 109H889M1010 109H947"/>
+ <use href="#predictor" x="285" y="109"/><use href="#predictor" x="660" y="109"/>
+ <text x="285" y="116" class="math" text-anchor="middle" data-math="F^{(2)}">F²</text><text x="660" y="116" class="math" text-anchor="middle" data-math="F^{(2)}">F²</text>
+ <text x="563" y="116" class="math" text-anchor="middle">⋯</text>
+ <text x="790" y="116" class="math state" text-anchor="middle" data-math="ẑ_{H₂}^{(2)}">ẑ<tspan baseline-shift="sub" font-size="13">H₂</tspan><tspan baseline-shift="super" font-size="13">(2)</tspan></text>
+ <rect x="890" y="88" width="56" height="42" rx="6" class="objective"/><text x="918" y="116" class="math cost" text-anchor="middle" data-math="C^{(2)}">C²</text>
+ <path class="wire" d="M285 192V136M660 192V136"/>
+ <text x="285" y="217" class="math action" text-anchor="middle" data-math="a_{0}^{(2)}">a₀⁽²⁾</text>
+ <text x="660" y="217" class="math action" text-anchor="middle" data-math="a_{H₂−1}^{(2)}">a<tspan baseline-shift="sub" font-size="13">H₂−1</tspan><tspan baseline-shift="super" font-size="13">(2)</tspan></text>
+ <text x="563" y="66" class="small" text-anchor="middle">Predicted coarse trajectory</text>
+ <rect x="608" y="252" width="385" height="102" rx="7" fill="#faf8fc"/>
+ <text x="624" y="276" class="label cost">Match the final prediction to the goal</text>
+ <text x="624" y="307" class="math cost" data-math="C^{(2)} = ‖ẑ_{H₂}^{(2)} − g^{(2)}‖^{2}">C² = ‖ẑ<tspan baseline-shift="sub" font-size="13">H₂</tspan><tspan baseline-shift="super" font-size="13">(2)</tspan> − g⁽²⁾‖²</text>
+ <g transform="translate(624 340)" class="optimization-line">
+  <text x="0" y="0" class="label action">Optimize</text>
+  <g transform="translate(66 0) scale(.75)"><text x="0" y="0" class="math action" data-math="a_{0}^{(2)}, …, a_{H₂−1}^{(2)}">a₀⁽²⁾, …, a⁽²⁾<tspan baseline-shift="sub" font-size="16">H₂−1</tspan></text></g>
+ </g>
+</g>
+<!-- First coarse prediction becomes the lower-level target. -->
+<g data-phase="2" data-also="1">
+ <text x="460" y="116" class="math state" text-anchor="middle" data-math="ẑ_{1}^{(2)}">ẑ₁⁽²⁾</text>
+</g>
+<g data-phase="2">
+ <path class="wire purple" d="M460 136V168.333"/>
+ <text x="481" y="157" class="label cost">Subgoal</text>
+ <rect x="432" y="172.333" width="56" height="42" rx="6" class="objective"/>
+ <text x="460" y="200.333" class="math cost" text-anchor="middle" data-math="C^{(1)}">C¹</text>
+</g>
+<!-- Fine rollout: two primitive actions and lift into level-2 space. -->
+<g data-phase="2" data-delay="1">
+ <text x="285" y="319" class="small" text-anchor="middle">Predicted fine trajectory</text>
+ <path class="wire" d="M139 362H169M225 362H261M300 362H335M390 362H433"/>
+ <use href="#predictor" x="196" y="362"/><use href="#predictor" x="362" y="362"/>
+ <g text-anchor="middle">
+ <text x="196" y="369" class="math" data-math="F^{(1)}">F¹</text><text x="362" y="369" class="math" data-math="F^{(1)}">F¹</text>
+ <text x="281" y="369" class="math state" data-math="ẑ_{1}^{(1)}">ẑ₁⁽¹⁾</text><text x="460" y="369" class="math state" data-math="ẑ_{2}^{(1)}">ẑ₂⁽¹⁾</text>
+ <text x="196" y="438" class="math action" data-math="a_{0}^{(1)}">a₀⁽¹⁾</text><text x="362" y="438" class="math action" data-math="a_{1}^{(1)}">a₁⁽¹⁾</text>
+ </g>
+ <path class="wire" d="M196 412V389M362 412V389"/>
+ <path class="wire purple" d="M460 345V296.667"/><path class="wire purple" d="M460 252.667V218.333"/>
+ <use href="#encoder" x="460" y="277.667"/><text x="460" y="284.667" class="math" text-anchor="middle" data-math="E^{(2)}">E²</text>
+ <text x="490" y="255" class="small">Lift to level 2</text>
+ <rect x="608" y="368" width="385" height="102" rx="7" fill="#faf8fc"/>
+ <text x="624" y="392" class="label cost">Match the lifted prediction to the subgoal</text>
+ <text x="624" y="423" class="math cost" data-math="C^{(1)} = ‖E^{(2)}(ẑ_{2}^{(1)}) − ẑ_{1}^{(2)}‖^{2}">C¹ = ‖E²(ẑ₂⁽¹⁾) − ẑ₁⁽²⁾‖²</text>
+ <g transform="translate(624 456)" class="optimization-line">
+  <text x="0" y="0" class="label action">Optimize</text>
+  <g transform="translate(66 0) scale(.75)"><text x="0" y="0" class="math action" data-math="a_{0}^{(1)}, a_{1}^{(1)}">a₀⁽¹⁾, a₁⁽¹⁾</text></g>
+ </g>
+</g>
+<!-- Execution is an explanatory addition to the source schematic. -->
+<g data-phase="3" class="execution">
+ <rect x="200" y="478" width="695" height="59" rx="8" fill="#fbf5ee" stroke="#e8cfb5"/>
+ <text x="219" y="502" class="label action">Execute an action prefix</text>
+ <text x="219" y="525" class="small">Use the optimized primitive actions</text>
+ <path class="wire" d="M451 500H482M597 507H649"/>
+ <text x="499" y="512" class="label">Observe</text><text x="670" y="512" class="label">Replan from the new state</text>
+</g>
+</svg>
+</div>
+<div class="description" aria-live="off">
+<p id="step-description">The current observation and goal are encoded progressively through the hierarchy, producing an initial state and a goal representation at every level.</p>
+</div>
+<div class="controls">
+<button class="control" id="toggle" aria-label="Pause animation">Pause</button>
+<button class="control" id="replay">Replay</button>
+<input id="timeline" type="range" min="0" max="18" step="0.05" value="0" aria-label="Animation timeline, in seconds">
+<span class="time" id="time">0:00 / 0:18</span>
+</div>
+</div>
+<div class="legend" aria-label="Diagram legend"><span><i style="background:#286494"></i>Latent states</span><span><i style="background:#b76622"></i>Actions being optimized</span><span><i style="background:#77529c"></i>Planning objectives</span></div>
+<p class="note">Adapted from the original TikZ schematic. E denotes an encoder; F denotes a predictor. This preview illustrates the planning sequence, not measured optimization trajectories.</p>
+<noscript><p>Enable JavaScript to play the animation. The diagram’s full description is available to screen readers.</p></noscript>
+</main>
+<script>
+// Set mathematical indices with one font and explicit SVG baselines.
+// Each original text label remains a readable fallback until fonts are ready.
+function typesetDiagramMath() {
+ const ns = 'http://www.w3.org/2000/svg';
+ for (const source of document.querySelectorAll('svg text[data-math]')) {
+  const group = document.createElementNS(ns, 'g');
+  group.setAttribute('class', source.getAttribute('class'));
+  group.setAttribute('role', 'img');
+  group.setAttribute('aria-label', source.textContent);
+  source.after(group);
+  const addText = (text, x, y, script = false) => {
+   const node = document.createElementNS(ns, 'text');
+   node.textContent = text;
+   node.setAttribute('x', x);
+   node.setAttribute('y', y);
+   if (script) node.setAttribute('class', 'math-script');
+   group.append(node);
+   return node.getComputedTextLength();
+  };
+  let cursor = 0;
+  for (const token of source.dataset.math.matchAll(/([^_^]+)((?:[_^]\{[^}]+\})*)/g)) {
+   cursor += addText(token[1], cursor, 0);
+   let scriptWidth = 0;
+   for (const script of token[2].matchAll(/([_^])\{([^}]+)\}/g)) {
+    scriptWidth = Math.max(scriptWidth, addText(script[2], cursor + 1, script[1] === '^' ? -11 : 6, true));
+   }
+   if (scriptWidth) cursor += scriptWidth + 2;
+  }
+  const anchor = source.getAttribute('text-anchor') || source.parentElement.getAttribute('text-anchor');
+  const x = Number(source.getAttribute('x')) - (anchor === 'middle' ? cursor / 2 : anchor === 'end' ? cursor : 0);
+  group.setAttribute('text-anchor', 'start');
+  group.setAttribute('transform', `translate(${x},${source.getAttribute('y')})`);
+  source.remove();
+ }
+}
+document.fonts.ready.then(typesetDiagramMath);
+const stages = [
+ ['Encode current state and goal', 'The current observation and goal are encoded progressively through the hierarchy, producing an initial state and a goal representation at every level.'],
+ ['Plan toward the goal', 'The level-2 planner optimizes macro-actions by unrolling its predictor over candidate action sequences. Its objective compares the final predicted state with the goal in the level-2 latent space.'],
+ ['Refine a subgoal', 'The first optimized level-2 prediction becomes the target for level 1. The level-1 planner optimizes primitive actions by mapping its final prediction through the level-2 encoder E⁽²⁾ and comparing it with this subgoal.'],
+ ['Execute, observe, and replan', 'The lowest level executes a prefix of its optimized actions. A new observation provides the starting state for the next planning cycle; the goal stays fixed.']
+];
+const stageDurations = [4, 4, 6, 4];
+const stageStarts = stageDurations.map((_, index) => stageDurations.slice(0, index).reduce((sum, seconds) => sum + seconds, 0));
+const duration = stageDurations.reduce((sum, seconds) => sum + seconds, 0);
+const card = document.querySelector('#animation');
+const timeline = document.querySelector('#timeline');
+timeline.max = duration;
+const toggle = document.querySelector('#toggle');
+const steps = [...document.querySelectorAll('[data-step]')];
+const groups = [...document.querySelectorAll('[data-phase]')];
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+let frameVisible = window.parent === window;
+let playing = frameVisible && !motion.matches, elapsed = 0, previousTime = null, currentStage = -1;
+function render() {
+ const nextStage = stageStarts.findIndex(start => start > elapsed);
+ const stage = nextStage === -1 ? stages.length - 1 : nextStage - 1;
+ const stageElapsed = elapsed - stageStarts[stage];
+ for (const group of groups) {
+  const first = Number(group.dataset.phase);
+  const active = (first === stage && stageElapsed >= Number(group.dataset.delay || 0)) || (group.dataset.also || '').split(',').filter(Boolean).map(Number).includes(stage);
+  group.classList.toggle('active', active);
+  group.classList.toggle('done', !active && first < stage);
+ }
+ if (stage !== currentStage) {
+  currentStage = stage;
+  for (const button of steps) {
+   if (Number(button.dataset.step) === stage) button.setAttribute('aria-current', 'step');
+   else button.removeAttribute('aria-current');
+  }
+  document.querySelector('#step-description').textContent = stages[stage][1];
+ }
+ timeline.value = elapsed;
+ timeline.setAttribute('aria-valuetext', `${Math.floor(elapsed)} seconds: ${stages[stage][0]}`);
+ document.querySelector('#time').textContent = `0:${String(Math.floor(elapsed)).padStart(2, '0')} / 0:${duration}`;
+}
+function setPlaying(value) {
+ playing = value;
+ previousTime = null;
+ card.classList.toggle('paused', !playing);
+ toggle.textContent = playing ? 'Pause' : 'Play';
+ toggle.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+}
+window.addEventListener('message', event => {
+ if (window.parent === window || event.source !== window.parent || event.origin !== location.origin) return;
+ if (event.data?.type !== 'hjepa-animation-visibility' || typeof event.data.visible !== 'boolean') return;
+ if (frameVisible === event.data.visible) return;
+ frameVisible = event.data.visible;
+ elapsed = 0;
+ setPlaying(frameVisible && !motion.matches);
+ render();
+});
+toggle.addEventListener('click', () => setPlaying(!playing));
+document.querySelector('#replay').addEventListener('click', () => { elapsed = 0; setPlaying(true); render(); });
+for (const button of steps) button.addEventListener('click', () => { elapsed = stageStarts[Number(button.dataset.step)]; setPlaying(false); render(); });
+timeline.addEventListener('input', () => { elapsed = Number(timeline.value); setPlaying(false); render(); });
+motion.addEventListener('change', event => { if (event.matches) setPlaying(false); });
+document.addEventListener('visibilitychange', () => { previousTime = null; });
+function tick(now) {
+ if (playing && frameVisible && !document.hidden) {
+  if (previousTime !== null) elapsed = (elapsed + Math.min((now - previousTime) / 1000, .1)) % duration;
+  previousTime = now;
+  render();
+ }
+ requestAnimationFrame(tick);
+}
+setPlaying(playing);
+render();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

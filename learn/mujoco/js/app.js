@@ -301,10 +301,30 @@ async function renderLesson(main, id) {
         ${next ? `<a class="next" href="#/lesson/${next.id}"><small>Next lesson</small>${esc(next.id)} ${esc(next.title)}</a>` : ""}
       </nav>
     </article>
-    ${lesson.lab ? `<aside class="labdock" aria-label="Lesson lab"><div class="labdock__title">Lab for this lesson</div><div id="lab-slot"></div></aside>` : ""}`;
+    ${lesson.lab ? `<aside class="labdock" aria-label="Lesson lab"><div class="labdock__title"><span>Lab for this lesson</span><button type="button" class="labdock__expand-btn" id="labdock-expand" title="Toggle wide / standard lab width" aria-label="Toggle wide lab width"><span>Wide</span><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></div><div id="lab-slot"></div></aside>` : ""}`;
   main.appendChild(wrap);
   syncDoneButton(lesson);
   wrap.querySelector("#done-btn").onclick = () => { store.setDone(lesson.id, !store.isDone(lesson.id)); syncDoneButton(lesson); };
+
+  const expandBtn = wrap.querySelector("#labdock-expand");
+  if (expandBtn) {
+    let wide = false;
+    try { wide = localStorage.getItem("lab_wide") === "1"; } catch (_) {}
+    if (wide) {
+      wrap.classList.add("lesson--widelab");
+      expandBtn.classList.add("is-active");
+      const labelSpan = expandBtn.querySelector("span");
+      if (labelSpan) labelSpan.textContent = "Standard";
+    }
+    expandBtn.onclick = () => {
+      const isWide = wrap.classList.toggle("lesson--widelab");
+      expandBtn.classList.toggle("is-active", isWide);
+      const labelSpan = expandBtn.querySelector("span");
+      if (labelSpan) labelSpan.textContent = isWide ? "Standard" : "Wide";
+      try { localStorage.setItem("lab_wide", isWide ? "1" : "0"); } catch (_) {}
+      window.dispatchEvent(new Event("resize"));
+    };
+  }
 
   const prose = wrap.querySelector("#lesson-prose");
   const disposers = [];
