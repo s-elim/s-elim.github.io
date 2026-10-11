@@ -1,0 +1,40 @@
+{%- comment -%}
+  ---- Research desk (owner only) ----
+  A private planner over ideas, tasks, deadlines, Google Calendar and Notion.
+  Nothing private is in this page: the section stays empty and hidden, and the
+  scripts in assets/js/desk/ load only for a browser that already holds a desk
+  token, opens /research-ideas/#desk, or opens the standalone /desk/ page
+  (include.standalone). All data comes from the Worker in
+  workers/desk/ after the passphrase unlocks it. Watched conference dates come
+  from assets/data/desk-conferences.json, the public /deadlines/ data.
+{%- endcomment -%}
+{% if site.desk.endpoint %}
+{% assign desk_standalone = include.standalone | default: false %}
+{% assign desk_v = site.github.build_revision | default: site.time | slugify %}
+<section class="desk{% if desk_standalone %} desk--standalone{% endif %}" id="desk" hidden aria-label="Private research desk"{% if desk_standalone %} data-standalone="1"{% endif %}
+         data-endpoint="{{ site.desk.endpoint }}"
+         data-conferences="{{ '/assets/data/desk-conferences.json' | relative_url }}?v={{ desk_v }}"
+         data-scripts="{{ '/assets/js/desk/core.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/editor.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/calendar.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/app.js' | relative_url }}?v={{ desk_v }}"></section>
+<script>
+  (function () {
+    var host = document.getElementById("desk");
+    if (!host) return;
+    function load() {
+      if (host.getAttribute("data-loading")) return;
+      host.setAttribute("data-loading", "1");
+      var list = host.getAttribute("data-scripts").split(" ");
+      (function next(i) {
+        if (i >= list.length) return;
+        var s = document.createElement("script");
+        s.src = list[i];
+        s.onload = function () { next(i + 1); };
+        document.body.appendChild(s);
+      })(0);
+    }
+    var owner = false;
+    try { owner = !!localStorage.getItem("desk.token"); } catch (e) {}
+    if (owner || host.hasAttribute("data-standalone") || location.hash === "#desk") load();
+    else window.addEventListener("hashchange", function () { if (location.hash === "#desk") load(); });
+  })();
+</script>
+{% endif %}

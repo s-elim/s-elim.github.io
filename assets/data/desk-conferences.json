@@ -1,0 +1,12 @@
+---
+layout: null
+sitemap: false
+---
+[
+{%- for c in site.data.conferences -%}
+{%- unless forloop.first %},{% endunless -%}
+{"name":{{ c.name | jsonify }},"edition":{{ c.edition | jsonify }},"website":{{ c.website | default: "" | jsonify }},"timeline":[
+{%- for t in c.timeline -%}{%- unless forloop.first %},{% endunless -%}{"label":{{ t.label | jsonify }},"date":{{ t.date | date: "%Y-%m-%d" | default: t.date | jsonify }},"time":{{ t.time | default: "" | jsonify }},"tz":{{ t.tz | default: "" | jsonify }}}{%- endfor -%}
+]}
+{%- endfor -%}
+]

@@ -1,0 +1,14 @@
+<!doctype html>
+{%- comment -%}
+  Standalone shell for the private research desk (/desk/): the site's head,
+  fonts and theme tokens, none of its navigation, footer or analytics.
+{%- endcomment -%}
+<html lang="{{ site.locale | slice: 0,2 | default: 'en' }}">
+  <head>
+    {% include head.html %}
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+  <body class="desk-page">
+    {{ content }}
+  </body>
+</html>
