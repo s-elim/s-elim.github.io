@@ -1,13 +1,13 @@
 # Research Desk
 
-A planner for ideas, plans, goals, tasks, deadlines and the calendar. On
-[/research-ideas/](https://s-elim.github.io/research-ideas/) it hides behind the
-lock icon next to the page subtitle: click the lock and it opens, click it again
-(or the lock in the desk's sidebar, or press Esc) and it hides. It also opens on
-its own at [/desk/](https://s-elim.github.io/desk/).
+A planner for ideas, plans, goals, tasks, deadlines and the calendar, on its
+own page at [/desk/](https://s-elim.github.io/desk/). On
+[/research-ideas/](https://s-elim.github.io/research-ideas/) only a lock icon
+beside the subtitle leads there (it unlocks on hover); the arrow in the desk's
+sidebar leads back.
 
-Anyone who opens it can read and edit it; that is the owner's choice. Visitors
-who never click the lock download nothing.
+Anyone who opens it can read and edit it; that is the owner's choice. The
+Research Resources page itself loads none of it.
 
 ```
 page (assets/js/desk/*)  --POST-->  Google Apps Script web app (Code.gs), running as you
@@ -103,7 +103,7 @@ Version **New version** > **Deploy**. The URL stays the same.
   pins, images, history, Send to Notion and Add to Calendar.
 - **Calendar**: month, week, day; click an empty slot for a new event.
 - Keys: `1`-`4` views, `N` new entry, `T` quick add, `/` search, `R` refresh,
-  `F` full screen, `[` `]` move the calendar, `Esc` hide, `Ctrl+S` save.
+  `[` `]` move the calendar, `Ctrl+S` save.
 
 ## Develop and test
 

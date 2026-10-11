@@ -1,47 +1,17 @@
 {%- comment -%}
-  ---- Research desk (owner only) ----
-  A planner over ideas, tasks, deadlines, Google Calendar and Notion that
-  anyone can open and edit (the owner's choice). On /research-ideas/ it stays
-  hidden behind the lock icon in the page header ([data-desk-key]); its
-  scripts load on the first click, on #desk, or on the standalone /desk/ page
-  (include.standalone). Data comes from the Google Apps Script web app in
-  workers/desk/Code.gs, whose URL is desk.endpoint in _config.yml. Watched conference dates come
-  from assets/data/desk-conferences.json, the public /deadlines/ data.
+  ---- Research desk ----
+  A planner over ideas, tasks, deadlines, Google Calendar and Notion, on its
+  own page at /desk/ (opened from the lock icon on /research-ideas/). Anyone
+  can open and edit it (the owner's choice). Data comes from the Google Apps
+  Script web app in workers/desk/Code.gs, whose URL is desk.endpoint in
+  _config.yml; watched conference dates come from
+  assets/data/desk-conferences.json, the public /deadlines/ data.
 {%- endcomment -%}
-{% assign desk_standalone = include.standalone | default: false %}
 {% assign desk_v = site.github.build_revision | default: site.time | slugify %}
-<section class="desk{% if desk_standalone %} desk--standalone{% endif %}" id="desk" hidden aria-label="Research desk"{% if desk_standalone %} data-standalone="1"{% endif %}
+<section class="desk" id="desk" aria-label="Research desk"
          data-endpoint="{{ site.desk.endpoint }}"
-         data-conferences="{{ '/assets/data/desk-conferences.json' | relative_url }}?v={{ desk_v }}"
-         data-scripts="{{ '/assets/js/desk/core.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/editor.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/calendar.js' | relative_url }}?v={{ desk_v }} {{ '/assets/js/desk/app.js' | relative_url }}?v={{ desk_v }}"></section>
-<script>
-  (function () {
-    var host = document.getElementById("desk");
-    if (!host) return;
-    var keys = Array.prototype.slice.call(document.querySelectorAll("[data-desk-key]"));
-    function load() {
-      if (host.getAttribute("data-loading")) return false;
-      host.setAttribute("data-loading", "1");
-      var list = host.getAttribute("data-scripts").split(" ");
-      (function next(i) {
-        if (i >= list.length) return;
-        var s = document.createElement("script");
-        s.src = list[i];
-        s.onload = function () { next(i + 1); };
-        document.body.appendChild(s);
-      })(0);
-      return true;
-    }
-    function open() { if (!load()) document.dispatchEvent(new CustomEvent("desk:toggle")); }
-    keys.forEach(function (k) { k.addEventListener("click", function (e) { e.preventDefault(); open(); }); });
-    document.addEventListener("desk:visibility", function (e) {
-      keys.forEach(function (k) {
-        k.setAttribute("aria-expanded", String(e.detail.open));
-        k.classList.toggle("is-open", e.detail.open);
-        k.querySelector("i").className = "fas " + (e.detail.open ? "fa-lock-open" : "fa-lock");
-      });
-    });
-    if (host.hasAttribute("data-standalone") || location.hash === "#desk") load();
-    else window.addEventListener("hashchange", function () { if (location.hash === "#desk") open(); });
-  })();
-</script>
+         data-conferences="{{ '/assets/data/desk-conferences.json' | relative_url }}?v={{ desk_v }}"></section>
+{% assign desk_files = "core,editor,calendar,app" | split: "," %}
+{% for f in desk_files %}
+<script src="{{ '/assets/js/desk/' | append: f | append: '.js' | relative_url }}?v={{ desk_v }}" defer></script>
+{% endfor %}

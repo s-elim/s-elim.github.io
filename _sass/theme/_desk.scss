@@ -1,8 +1,9 @@
 // ==========================================================================
-//  Research Desk - the owner-only workspace at the top of /research-ideas/
-//  Markup is drawn by assets/js/desk/*.js; visitors never load it. Colours
-//  come from the theme tokens, plus per-item hues passed in as --c / --ax, so
-//  light and dark mode need no extra rules here.
+//  Research Desk - the planner on its own page, /desk/ (_pages/desk.html),
+//  reached from the lock icon on /research-ideas/ (.desk-key, at the end).
+//  Markup is drawn by assets/js/desk/*.js. Colours come from the theme tokens,
+//  plus per-item hues passed in as --c / --ax, so light and dark mode need no
+//  extra rules here.
 // ==========================================================================
 
 .desk {
@@ -12,24 +13,10 @@
   --dk-hot: #dc2626;
   --dk-near: #d97706;
   --dk-far: var(--accent);
-  margin: 0 0 2.25rem;
-  scroll-margin-top: 5.5rem;
   &.is-compact { --dk-gap: .55rem; --dk-pad: .7rem; }
   &[hidden] { display: none; }
 }
 
-// Full screen (and the standalone /desk/ page): the app fills the viewport.
-html.desk-focus {
-  overflow: hidden;
-  .desk {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    margin: 0;
-    background: var(--bg);
-  }
-  .dk-app { height: 100vh; height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
-}
 body.desk-page { margin: 0; background: var(--bg); }
 
 // ---- shared controls --------------------------------------------------------
@@ -182,8 +169,7 @@ kbd {
 }
 
 // ---- sign in ----------------------------------------------------------------
-.desk--locked { max-width: 760px; }
-.desk--standalone.desk--locked { display: grid; place-items: center; max-width: none; min-height: 100vh; padding: 1rem; .dk-signin { width: min(620px, 100%); } }
+.desk--locked { display: grid; place-items: center; min-height: 100vh; padding: 1rem; .dk-signin { width: min(620px, 100%); } }
 .dk-signin {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -214,12 +200,10 @@ kbd {
 .dk-app {
   display: grid;
   grid-template-columns: 252px minmax(0, 1fr);
-  height: clamp(640px, 86vh, 1000px);
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 18px;
   background: var(--surface);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 28px 64px -30px rgba(15, 23, 42, .32);
 }
 
 .dk-side {
@@ -355,12 +339,8 @@ i.dk-dot::before { margin-top: .35rem; }
 .dk-top__a { display: flex; align-items: center; gap: .4rem; }
 .dk-body { flex: 1; min-height: 0; overflow-y: auto; padding: 1.25rem 1.6rem 2rem; scroll-behavior: smooth; }
 
-.desk--standalone .dk-app { height: 100vh; height: 100dvh; }
-
 @media (max-width: 900px) {
-  .dk-app { grid-template-columns: minmax(0, 1fr); height: auto; overflow: visible; }
-  html.desk-focus .desk { overflow-y: auto; }
-  html.desk-focus .dk-app { height: auto; min-height: 100vh; }
+  .dk-app { grid-template-columns: minmax(0, 1fr); height: auto; min-height: 100vh; overflow: visible; }
   .dk-side { flex-direction: row; flex-wrap: wrap; align-items: center; gap: .6rem; padding: .7rem .8rem; border-right: 0; border-bottom: 1px solid var(--border); overflow: visible; }
   .dk-brand { flex: 1; }
   .dk-brand__kicker { display: none; }
@@ -1041,7 +1021,8 @@ span.dk-dl__b { cursor: default; }
   .dk-toast__x { opacity: .7; }
 }
 
-// The lock in the page header that opens and hides the desk.
+// The lock beside the /research-ideas/ subtitle that leads to /desk/; it
+// unlocks on hover.
 .desk-key {
   display: inline-grid;
   place-items: center;
@@ -1055,10 +1036,12 @@ span.dk-dl__b { cursor: default; }
   color: var(--muted);
   font-size: .78rem;
   vertical-align: middle;
-  cursor: pointer;
-  transition: color .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease), transform .15s var(--ease);
-  &:hover { color: var(--accent); border-color: var(--accent); transform: rotate(-8deg); }
-  &.is-open { color: var(--accent-contrast); background: var(--accent); border-color: var(--accent); }
+  text-decoration: none;
+  transition: color .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease);
+  .fa-lock-open { display: none; }
+  &:hover, &:focus-visible { color: var(--accent-contrast); background: var(--accent); border-color: var(--accent); }
+  &:hover .fa-lock, &:focus-visible .fa-lock { display: none; }
+  &:hover .fa-lock-open, &:focus-visible .fa-lock-open { display: inline; }
   &:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
 }
 

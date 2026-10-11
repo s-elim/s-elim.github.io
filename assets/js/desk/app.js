@@ -1,8 +1,8 @@
 /* ==========================================================================
    Research desk - shell, data and the Today / Board / Notion views.
-   Loaded last by the loader in _includes/desk.html, after core.js, editor.js
-   and calendar.js have registered themselves on window.Desk. Backend: the
-   Google Apps Script web app in workers/desk/Code.gs (desk.endpoint).
+   The desk page is /desk/ (_pages/desk.html); this loads last, after core.js,
+   editor.js and calendar.js have registered themselves on window.Desk.
+   Backend: the Google Apps Script web app in workers/desk/Code.gs.
    ========================================================================== */
 (function () {
   "use strict";
@@ -35,7 +35,7 @@
     syncing: false,
     offline: false,
     conferences: [],
-    ui: { view: "today", focus: false, density: "comfy", quickMode: "task",
+    ui: { view: "today", density: "comfy", quickMode: "task",
           board: { q: "", kind: "all", axis: "all", status: "open", sort: "pinned", layout: "cards" },
           notionHideDone: true, showDoneTasks: false }
   };
@@ -373,9 +373,7 @@
 
   function renderCard(title, text, formHtml) {
     host.hidden = false;
-    host.className = "desk desk--locked" + (standalone ? " desk--standalone" : "");
-    document.documentElement.classList.remove("desk-focus");
-    placeHost(false);
+    host.className = "desk desk--locked";
     host.innerHTML =
       '<div class="dk-signin">' +
         '<span class="dk-signin__mark" aria-hidden="true"><i class="fas ' + (formHtml ? "fa-lock" : "fa-compass") + '"></i></span>' +
@@ -411,7 +409,6 @@
   }
 
   /* ---- shell ---------------------------------------------------------- */
-  var standalone = host.hasAttribute("data-standalone");
   var TITLES = {
     today: function () {
       var n = new Date();
@@ -425,8 +422,7 @@
   function mount() {
     S.mounted = true;
     host.hidden = false;
-    announce(true);
-    host.className = "desk" + (standalone ? " desk--standalone" : "");
+    host.className = "desk";
     host.innerHTML =
       '<div class="dk-app">' +
         '<aside class="dk-side" aria-label="Desk navigation">' +
@@ -441,11 +437,7 @@
             '<div class="dk-sync" id="dk-sync" role="status"></div>' +
             '<div class="dk-side__btns">' +
               '<button type="button" class="dk-icon" id="dk-settings" title="Settings and connections" aria-label="Settings"><i class="fas fa-cog" aria-hidden="true"></i></button>' +
-              (standalone
-                ? '<a class="dk-icon" href="/research-ideas/" title="Back to the site" aria-label="Back to the site"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>'
-                : '<button type="button" class="dk-icon" id="dk-focus" title="Full screen (F)" aria-label="Full screen" aria-pressed="false"><i class="fas fa-expand" aria-hidden="true"></i></button>' +
-                  '<a class="dk-icon" href="/desk/" title="Open the desk on its own page" aria-label="Open the desk on its own page"><i class="fas fa-external-link-alt" aria-hidden="true"></i></a>' +
-                  '<button type="button" class="dk-icon" id="dk-collapse" title="Hide the desk behind the lock" aria-label="Hide the desk"><i class="fas fa-lock" aria-hidden="true"></i></button>') +
+              '<a class="dk-icon" href="/research-ideas/" title="Back to Research Resources" aria-label="Back to Research Resources"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>' +
             '</div>' +
           '</div>' +
         '</aside>' +
@@ -460,14 +452,12 @@
       '</div>' +
       '<div class="dk-toast" id="dk-toast" role="status" aria-live="polite"></div>';
 
-    if ($("dk-collapse")) $("dk-collapse").addEventListener("click", hideDesk);
     host.querySelector(".dk-nav").addEventListener("click", function (e) {
       var b = e.target.closest("[data-view]");
       if (b) setView(b.getAttribute("data-view"));
     });
     $("dk-minical").addEventListener("click", onMiniClick);
     $("dk-refresh").addEventListener("click", function () { refresh(false); });
-    if ($("dk-focus")) $("dk-focus").addEventListener("click", toggleFocus);
     $("dk-settings").addEventListener("click", openSettings);
     $("dk-new").addEventListener("click", function () { Desk.editor.open(null); });
     $("dk-body").addEventListener("click", onBodyClick);
@@ -485,39 +475,9 @@
     var body = $("dk-body");
     if (body) body.scrollTop = 0;
   }
-  function toggleFocus() {
-    if (standalone) return;
-    S.ui.focus = !S.ui.focus;
-    saveUi();
-    render();
-  }
-
-  // Full screen lifts the desk out of the page: an ancestor with a transform
-  // would otherwise turn position:fixed into "fixed to that ancestor".
-  var homeMarker = null;
-  function placeHost(full) {
-    if (standalone) return;
-    if (full && host.parentNode !== document.body) {
-      homeMarker = homeMarker || document.createComment("desk");
-      host.parentNode.insertBefore(homeMarker, host);
-      document.body.appendChild(host);
-    } else if (!full && homeMarker && homeMarker.parentNode && host.parentNode === document.body) {
-      homeMarker.parentNode.insertBefore(host, homeMarker);
-      host.scrollIntoView({ block: "start" });
-    }
-  }
-
   function render() {
     if (!S.mounted || !$("dk-body")) return;
-    if (host.hidden) return;
-    var full = standalone || !!S.ui.focus;
-    placeHost(full);
-    document.documentElement.classList.toggle("desk-focus", full);
     host.classList.toggle("is-compact", S.ui.density === "compact");
-    if ($("dk-focus")) {
-      $("dk-focus").setAttribute("aria-pressed", String(!!S.ui.focus));
-      $("dk-focus").innerHTML = '<i class="fas ' + (S.ui.focus ? "fa-compress" : "fa-expand") + '" aria-hidden="true"></i>';
-    }
     host.querySelectorAll(".dk-navi").forEach(function (b) {
       b.setAttribute("aria-selected", String(b.getAttribute("data-view") === S.ui.view));
     });
@@ -540,27 +500,6 @@
     else if (S.ui.view === "board") renderBoardInto(body);
     else if (S.ui.view === "calendar") Desk.calendar.render(body);
     else body.innerHTML = viewNotion();
-  }
-
-  // On /research-ideas/ the desk sits behind the lock icon in the page header:
-  // the loader opens it, the icon or the desk's own lock button hides it again.
-  function announce(open) {
-    document.dispatchEvent(new CustomEvent("desk:visibility", { detail: { open: open } }));
-  }
-  function hideDesk() {
-    if (standalone) return;
-    S.ui.focus = false;
-    saveUi();
-    placeHost(false);
-    document.documentElement.classList.remove("desk-focus");
-    host.hidden = true;
-    announce(false);
-  }
-  function showDesk() {
-    host.hidden = false;
-    announce(true);
-    render();
-    host.scrollIntoView({ block: "start", behavior: "smooth" });
   }
 
   function renderStatus() {
@@ -1176,14 +1115,13 @@
       '<section class="dk-set"><h4>Research OS link</h4><div class="dk-row"><input type="url" class="dk-input" id="dk-notion-home" placeholder="https://www.notion.so/…" value="' + esc(S.prefs.data.notionHome || "") + '">' +
         '<button type="button" class="dk-btn" id="dk-notion-home-save">Save</button></div></section>' +
       '<section class="dk-set"><h4>Display on this device</h4><div class="dk-row">' +
-        '<label class="dk-toggle"><input type="checkbox" id="dk-compact"' + (S.ui.density === "compact" ? " checked" : "") + '> Compact</label>' +
-        '<label class="dk-toggle"><input type="checkbox" id="dk-focus-default"' + (S.ui.focus ? " checked" : "") + '> Full screen</label></div></section>' +
+        '<label class="dk-toggle"><input type="checkbox" id="dk-compact"' + (S.ui.density === "compact" ? " checked" : "") + '> Compact</label></div></section>' +
       '<section class="dk-set"><h4>Your data</h4><p class="dk-hint">Every save keeps a revision on the server. Export a JSON copy each quarter' +
         (S.prefs.data.lastExportAt ? " (last: " + esc(fmtDate(S.prefs.data.lastExportAt.slice(0, 10), { day: "numeric", month: "short", year: "numeric" })) + ")" : "") + '.</p>' +
         '<div class="dk-row"><button type="button" class="dk-btn" id="dk-export"><i class="fas fa-download" aria-hidden="true"></i> Export JSON</button>' +
         '<label class="dk-btn dk-file"><i class="fas fa-upload" aria-hidden="true"></i> Import JSON<input type="file" id="dk-import" accept="application/json,.json" hidden></label></div>' +
         '<p class="dk-hint" id="dk-import-msg" role="status"></p></section>' +
-      '<section class="dk-set"><h4>Keyboard</h4><p class="dk-hint"><kbd>1</kbd>–<kbd>4</kbd> views · <kbd>N</kbd> new entry · <kbd>T</kbd> quick add · <kbd>/</kbd> search · <kbd>R</kbd> refresh · <kbd>F</kbd> full screen · <kbd>[</kbd> <kbd>]</kbd> move the calendar · <kbd>Ctrl</kbd>+<kbd>S</kbd> save in the editor</p></section>';
+      '<section class="dk-set"><h4>Keyboard</h4><p class="dk-hint"><kbd>1</kbd>–<kbd>4</kbd> views · <kbd>N</kbd> new entry · <kbd>T</kbd> quick add · <kbd>/</kbd> search · <kbd>R</kbd> refresh · <kbd>[</kbd> <kbd>]</kbd> move the calendar · <kbd>Ctrl</kbd>+<kbd>S</kbd> save in the editor</p></section>';
     var d = dialog("dk-settings-d", "Desk settings", body, S.mode === "private" ? '<button type="button" class="dk-btn dk-btn--danger" id="dk-signout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign out on this device</button>' : "");
     d.querySelector("#dk-watch").addEventListener("click", function (e) {
       var b = e.target.closest("[data-watch]");
@@ -1199,7 +1137,6 @@
       savePrefs({ notionHome: v }).then(function () { toast("Saved."); });
     });
     d.querySelector("#dk-compact").addEventListener("change", function (e) { S.ui.density = e.target.checked ? "compact" : "comfy"; saveUi(); render(); });
-    d.querySelector("#dk-focus-default").addEventListener("change", function (e) { S.ui.focus = e.target.checked; saveUi(); render(); });
     d.querySelector("#dk-export").addEventListener("click", exportJson);
     d.querySelector("#dk-import").addEventListener("change", importJson);
     if (d.querySelector("#dk-signout")) d.querySelector("#dk-signout").addEventListener("click", function () { d.close(); signOut("Signed out on this device."); });
@@ -1277,12 +1214,9 @@
     if (k >= "1" && k <= "4") { setView(VIEWS[+k - 1].id); e.preventDefault(); }
     else if (k === "n") { Desk.editor.open(null); e.preventDefault(); }
     else if (k === "r") { refresh(false); e.preventDefault(); }
-    else if (k === "f") { toggleFocus(); e.preventDefault(); }
     else if (k === "t") { setView("today"); setTimeout(function () { var q = $("dk-quick-text"); if (q) q.focus(); }, 0); e.preventDefault(); }
     else if (k === "/") { setView("board"); setTimeout(function () { var q = $("dk-q"); if (q) q.focus(); }, 0); e.preventDefault(); }
     else if ((k === "[" || k === "]") && S.ui.view === "calendar") { Desk.calendar.shift(k === "]" ? 1 : -1); e.preventDefault(); }
-    else if (k === "Escape" && S.ui.focus && !standalone) { toggleFocus(); }
-    else if (k === "Escape" && !standalone) { hideDesk(); }
   }
 
   /* ---- boot ----------------------------------------------------------- */
@@ -1305,10 +1239,8 @@
     var ui = load(KEY.ui);
     if (ui) { S.ui = Object.assign(S.ui, ui); S.ui.board = Object.assign({}, S.ui.board, ui.board || {}); }
     S.token = load(KEY.token) || "";
-    document.addEventListener("desk:toggle", function () { if (host.hidden) showDesk(); else hideDesk(); });
     if (!S.endpoint) {
       renderNotice("Research Desk", "The desk is not connected yet: its Google Apps Script URL is not set in the site's _config.yml (desk.endpoint).");
-      announce(true);
       return;
     }
     document.addEventListener("keydown", onKey);
@@ -1324,17 +1256,15 @@
       mount();
     } else {
       renderNotice("Research Desk", "Opening…");
-      announce(true);
     }
     refresh(true);
     setInterval(function () {
-      if (document.visibilityState === "visible" && !host.hidden && S.mounted) refresh(true);
+      if (document.visibilityState === "visible" && S.mounted) refresh(true);
     }, AUTO_REFRESH_MS);
     document.addEventListener("visibilitychange", function () {
       if (document.visibilityState !== "visible" || !S.mounted || !S.sync) return;
       if (Date.now() - Date.parse(S.sync.at) > 2 * 60e3) refresh(true);
     });
-    if (!standalone) host.scrollIntoView({ block: "start" });
   }
   boot();
 })();
