@@ -22,7 +22,7 @@
  * Install: see README.md beside this file (paste, Run setup, Deploy).
  */
 
-var VERSION = '2026.10.12';
+var VERSION = '2026.10.12-passcode';
 var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
   importDocs: 500,

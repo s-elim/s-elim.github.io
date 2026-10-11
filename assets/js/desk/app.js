@@ -1256,9 +1256,11 @@
     }
     document.addEventListener("keydown", onKey);
     wireLanes();
-    // Show the last copy at once, then bring it up to date.
+    // Show the last copy at once, then bring it up to date; but only on a
+    // signed-in device, so a locked desk never flashes old data before the
+    // server has checked the passcode.
     var cache = load(KEY.cache);
-    if (cache && cache.sync) {
+    if (cache && cache.sync && S.token) {
       S.mode = cache.mode || "open";
       S.entries = cache.entries || [];
       S.deskTasks = cache.deskTasks || [];
