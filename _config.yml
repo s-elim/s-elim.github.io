@@ -23,7 +23,7 @@ contact:
 # Research desk behind the lock icon on /research-ideas/ and at /desk/
 # (workers/desk/README.md): the Google Apps Script web app URL, ending in /exec.
 desk:
-  endpoint: ""
+  endpoint: "https://script.google.com/macros/s/AKfycbxMdafp94PUrrLsrDaczhUrevPbvemP3Z8W3yxXN4CcxXuYjUFWZoXu-QhO6ITUY8Ie/exec"
 url                      : https://s-elim.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "s-elim.github.io"
