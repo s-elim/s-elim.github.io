@@ -203,7 +203,8 @@
     return {
       id: ev.id + "@" + (ev.calendarId || ""), title: ev.title || "(no title)", start: start, end: end, allDay: allDay,
       color: ev.color || "#3b82f6", calendar: ev.calendar || "", link: ev.link || "", video: ev.video || "",
-      location: ev.location || "", description: ev.description || "", attendees: ev.attendees || 0
+      location: ev.location || "", description: ev.description || "", attendees: ev.attendees || 0,
+      eventId: ev.id, calendarId: ev.calendarId || "", editable: !!ev.editable, recurring: !!ev.recurring
     };
   }
   // Does an event touch a given local day? All-day ends are exclusive.
@@ -309,7 +310,8 @@
       conviction: Number(d.conviction) || 3, venue: d.venue || "", deadline: d.deadline || "",
       tags: Array.isArray(d.tags) ? d.tags : [], sourceLabel: d.sourceLabel || "", sourceUrl: d.sourceUrl || "",
       thesis: d.thesis || "", gap: d.gap || "", experiment: d.experiment || "", risk: d.risk || "",
-      pinned: !!d.pinned, images: Array.isArray(d.images) ? d.images : [],
+      pinned: !!d.pinned,
+      images: (Array.isArray(d.images) ? d.images : []).filter(function (im) { return im && typeof im === "object" && /^https:\/\//.test(im.url || ""); }),
       notionUrl: d.notionUrl || "", calendarUrl: d.calendarUrl || "",
       addedAt: d.addedAt || "", updatedAt: d.updatedAt || ""
     };

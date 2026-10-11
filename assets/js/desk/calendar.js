@@ -260,7 +260,7 @@
       if (!o.title) { document.getElementById("dk-ne-title").focus(); return; }
       if (!g) { window.open(C.gcalTemplateUrl(o), "_blank", "noopener"); d.close(); return; }
       document.getElementById("dk-ne-go").disabled = true;
-      a.api("POST", "/google", { action: "createEvent", title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz }).then(function () {
+      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz }).then(function () {
         d.close(); a.toast("Event created."); cal.extra = null; a.refresh(true);
       }, function (err) { document.getElementById("dk-ne-go").disabled = false; document.getElementById("dk-ne-msg").textContent = err.message; });
     };

@@ -20,10 +20,10 @@ flag_counter_id: "AbBN" # Optional: Add your 4-character flagcounter.com ID here
 contact:
   endpoint: "https://homepage-contact.selim-sarowar12.workers.dev"
   turnstile_sitekey: "0x4AAAAAAE_SY8HhkOMV2BKT"   # Cloudflare Turnstile site key (public)
-# Private research desk on /research-ideas/ (workers/desk/README.md). The URL is
-# public by design; every route behind it needs the owner's passphrase.
+# Research desk behind the lock icon on /research-ideas/ and at /desk/
+# (workers/desk/README.md): the Google Apps Script web app URL, ending in /exec.
 desk:
-  endpoint: "https://homepage-desk.selim-sarowar12.workers.dev"
+  endpoint: ""
 url                      : https://s-elim.github.io/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "s-elim.github.io"

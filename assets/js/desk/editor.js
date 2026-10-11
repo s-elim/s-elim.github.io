@@ -20,7 +20,6 @@
   var MAX_IMAGES = 8;
 
   var ed = { id: null, version: null, clean: "", forced: false, images: [], active: null, saving: false };
-  var imageCache = {};
 
   function $(id) { return document.getElementById(id); }
 
@@ -58,7 +57,7 @@
             return '<div class="dk-field"><span>' + PH[f][0] + ' <em>' + PH[f][1] + '</em></span>' +
               '<div class="dk-rt dk-rt--edit" id="dk-ed-' + f + '" contenteditable="true" role="textbox" aria-multiline="true" aria-label="' + PH[f][0] + '" data-ph="' + PH[f][2] + '"></div></div>';
           }).join("") +
-          '<div class="dk-field"><span>Images</span><div class="dk-thumbs" id="dk-ed-thumbs"></div>' +
+          '<div class="dk-field"><span>Images <em>kept in the “Research Desk images” Drive folder, visible to anyone with the link</em></span><div class="dk-thumbs" id="dk-ed-thumbs"></div>' +
             '<div class="dk-row"><label class="dk-btn dk-file"><i class="fas fa-image" aria-hidden="true"></i> Attach<input type="file" id="dk-ed-img" accept="image/*" multiple hidden></label>' +
             '<span class="dk-hint" id="dk-ed-imghint">Up to ' + MAX_IMAGES + '. Resized to 1600 px before upload.</span></div></div>' +
           '<p class="dk-hint" id="dk-ed-links"></p>' +
@@ -301,25 +300,14 @@
   }
 
   /* ---- images --------------------------------------------------------- */
-  function loadImage(id) {
-    if (imageCache[id]) return Promise.resolve(imageCache[id]);
-    return A().api("GET", "/docs/images/" + encodeURIComponent(id)).then(function (r) {
-      imageCache[id] = r.doc.data.url;
-      return imageCache[id];
-    });
-  }
-  Desk.loadImage = loadImage;
-
   function renderThumbs() {
     var box = $("dk-ed-thumbs");
     if (!ed.images.length) { box.innerHTML = '<span class="dk-quiet">None.</span>'; return; }
-    box.innerHTML = ed.images.map(function (id, i) {
-      return '<span class="dk-thumb"><img alt="Attachment ' + (i + 1) + '" data-img="' + A().esc(id) + '" data-full="1">' +
+    box.innerHTML = ed.images.map(function (im, i) {
+      var url = im && A().safeUrl(im.url);
+      return '<span class="dk-thumb">' + (url ? '<img alt="Attachment ' + (i + 1) + '" src="' + A().esc(url) + '" data-full="1" loading="lazy">' : '<span class="dk-quiet">Image ' + (i + 1) + '</span>') +
         '<button type="button" data-rmimg="' + i + '" aria-label="Remove image"><i class="fas fa-times" aria-hidden="true"></i></button></span>';
     }).join("");
-    box.querySelectorAll("img[data-img]").forEach(function (img) {
-      loadImage(img.getAttribute("data-img")).then(function (url) { if (/^data:image\//.test(url)) img.src = url; }, function () { img.alt = "Image unavailable"; });
-    });
   }
 
   function downscale(file) {
@@ -352,10 +340,8 @@
     files.reduce(function (p, file) {
       return p.then(function () {
         return downscale(file).then(function (img) {
-          var id = A().newId("img");
-          return A().api("PUT", "/docs/images/" + id, { data: { url: img.url, w: img.w, h: img.h, name: file.name.slice(0, 120), entry: ed.id } }).then(function () {
-            imageCache[id] = img.url;
-            ed.images.push(id);
+          return A().call("uploadImage", { name: file.name.slice(0, 100), dataUrl: img.url }).then(function (r) {
+            ed.images.push({ id: r.image.id, url: r.image.url });
             markDirty();
             renderThumbs();
           });
@@ -369,7 +355,7 @@
   function openHistory() {
     var a = A(), id = ed.id;
     var d = a.dialog("dk-history", "Earlier versions", '<p class="dk-quiet">Loading…</p>');
-    a.api("GET", "/docs/entries/" + encodeURIComponent(id) + "/revisions").then(function (r) {
+    a.call("revisions", { collection: "entries", id: id }).then(function (r) {
       var body = d.querySelector(".dk-dialog__body");
       if (!r.revisions.length) { body.innerHTML = '<p class="dk-quiet">No history yet.</p>'; return; }
       body.innerHTML = '<ol class="dk-revs">' + r.revisions.map(function (v) {
@@ -380,7 +366,7 @@
         var b = e.target.closest("[data-rev]");
         if (!b) return;
         body.querySelectorAll(".dk-rev").forEach(function (x) { x.classList.toggle("is-on", x === b); });
-        a.api("GET", "/docs/entries/" + encodeURIComponent(id) + "/revisions/" + b.getAttribute("data-rev")).then(function (rv) {
+        a.call("revision", { collection: "entries", id: id, version: +b.getAttribute("data-rev") }).then(function (rv) {
           var e2 = C.normaliseEntry(id, rv.revision.data);
           $("dk-revview").innerHTML = '<h4>' + a.esc(e2.title) + '</h4>' +
             C.RT_FIELDS.map(function (f) { var t = a.plain(e2[f]); return t ? '<p><b>' + C.RT_LABEL[f] + ':</b> ' + a.esc(t.slice(0, 600)) + '</p>' : ""; }).join("") +
@@ -407,7 +393,7 @@
     d.querySelector("[data-close2]").addEventListener("click", function () { d.close(); });
     var body = d.querySelector(".dk-dialog__body");
     var schema = null;
-    a.api("GET", "/notion/targets").then(function (r) {
+    a.call("notionTargets").then(function (r) {
       if (!r.notion) { body.innerHTML = '<p class="dk-hint is-bad">Notion is not connected. See Settings.</p>'; return; }
       body.innerHTML =
         (e.notionUrl ? '<p class="dk-hint">This entry already has a Notion row. Creating another adds a second row; nothing is overwritten.</p>' : "") +
@@ -419,7 +405,7 @@
       var pick = function () {
         $("dk-push-go").disabled = true;
         $("dk-push-fields").innerHTML = '<p class="dk-quiet">Reading columns…</p>';
-        a.api("GET", "/notion/schema?id=" + encodeURIComponent($("dk-push-db").value)).then(function (s) {
+        a.call("notionSchema", { id: $("dk-push-db").value }).then(function (s) {
           schema = s;
           var defs = C.notionDefaults(e, s.fields);
           $("dk-push-fields").innerHTML = s.fields.filter(function (f) { return f.type !== "title"; }).map(function (f, i) {
@@ -449,7 +435,7 @@
       });
       $("dk-push-go").disabled = true;
       $("dk-push-msg").textContent = "Creating…";
-      a.api("POST", "/notion/pages", { target: $("dk-push-db").value, title: $("dk-push-title").value.trim() || e.title, fields: fields, body: C.entryMarkdown(e) }).then(function (r) {
+      a.call("notionCreate", { target: $("dk-push-db").value, title: $("dk-push-title").value.trim() || e.title, fields: fields, body: C.entryMarkdown(e) }).then(function (r) {
         $("dk-push-msg").innerHTML = 'Created. ' + (a.safeUrl(r.url) ? '<a href="' + a.esc(r.url) + '" target="_blank" rel="noopener">Open it in Notion</a>.' : "");
         var cur = a.entryDoc(ed.id);
         if (cur && r.url) {
@@ -486,7 +472,7 @@
       if (!g) { window.open(C.gcalTemplateUrl({ title: o.title, date: o.date, start: o.allDay ? "" : o.start, end: o.end, allDay: o.allDay, details: o.description, tz: o.tz }), "_blank", "noopener"); d.close(); return; }
       $("dk-c-go").disabled = true;
       $("dk-c-msg").textContent = "Creating…";
-      a.api("POST", "/google", { action: "createEvent", title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, description: o.description, tz: o.tz,
+      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, description: o.description, tz: o.tz,
         calendarId: $("dk-c-cal") ? $("dk-c-cal").value : undefined }).then(function (r) {
         $("dk-c-msg").innerHTML = "Created. " + (a.safeUrl(r.link) ? '<a href="' + a.esc(r.link) + '" target="_blank" rel="noopener">Open it</a>.' : "");
         var cur = a.entryDoc(ed.id);

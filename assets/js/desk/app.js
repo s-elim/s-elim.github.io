@@ -1,9 +1,8 @@
 /* ==========================================================================
    Research desk - shell, data and the Today / Board / Notion views.
-   Loaded last by the loader in _pages/research-ideas.html, after core.js,
-   editor.js and calendar.js have registered themselves on window.Desk.
-   Server: workers/desk (Cloudflare Worker). Nothing private is in this file;
-   everything shown comes from the Worker after the passphrase unlocks it.
+   Loaded last by the loader in _includes/desk.html, after core.js, editor.js
+   and calendar.js have registered themselves on window.Desk. Backend: the
+   Google Apps Script web app in workers/desk/Code.gs (desk.endpoint).
    ========================================================================== */
 (function () {
   "use strict";
@@ -30,11 +29,13 @@
     entries: [],          // [{ id, version, e }]
     deskTasks: [],        // raw docs from the "tasks" collection
     prefs: { id: "prefs", version: 0, data: { watched: C.DEFAULT_WATCH.slice(), notionHome: "", lastExportAt: "" } },
-    sync: null,           // last /sync payload
+    sync: null,           // last Google + Notion snapshot
+    mode: "open",         // "open" (anyone edits) or "private" (passphrase)
+    mounted: false,
     syncing: false,
     offline: false,
     conferences: [],
-    ui: { view: "today", collapsed: false, focus: false, density: "comfy", quickMode: "task",
+    ui: { view: "today", focus: false, density: "comfy", quickMode: "task",
           board: { q: "", kind: "all", axis: "all", status: "open", sort: "pinned", layout: "cards" },
           notionHideDone: true, showDoneTasks: false }
   };
@@ -98,35 +99,43 @@
     return Array.prototype.slice.call(box.querySelectorAll("mark.pin")).map(function (m) { return (m.textContent || "").trim(); }).filter(Boolean);
   }
 
-  /* ---- network -------------------------------------------------------- */
-  function api(method, path, body) {
+  /* ---- network --------------------------------------------------------
+     Every call is one POST to the Apps Script web app (workers/desk/Code.gs).
+     The body goes as text/plain so the browser sends a simple request: Apps
+     Script cannot answer a CORS preflight. */
+  function call(action, payload) {
+    var body = Object.assign({ action: action }, payload || {});
+    if (S.token) body.token = S.token;
     var ctrl = window.AbortController ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 30000) : null;
-    var headers = {};
-    if (S.token) headers.Authorization = "Bearer " + S.token;
-    if (body !== undefined) headers["Content-Type"] = "application/json";
-    return fetch(S.endpoint + path, {
-      method: method, headers: headers, body: body === undefined ? undefined : JSON.stringify(body),
-      signal: ctrl ? ctrl.signal : undefined, cache: "no-store"
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 45000) : null;
+    var done = function () { if (timer) clearTimeout(timer); };
+    return fetch(S.endpoint, {
+      method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body),
+      redirect: "follow", cache: "no-store", signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (j) {
-        if (r.status === 401 && path !== "/auth") { signOut("Your session ended. Unlock the desk again."); }
-        if (!r.ok || j.ok === false) {
-          var err = new Error(j.error || "The desk server answered " + r.status + ".");
-          err.status = r.status; err.body = j;
-          throw err;
-        }
-        return j;
+      return r.json().catch(function () {
+        return { ok: false, status: 502, error: "The desk answered with a page, not data. Redeploy the web app with access set to Anyone." };
       });
     }, function (e) {
-      var err = new Error(e && e.name === "AbortError" ? "The desk server took too long to answer." : "Cannot reach the desk server.");
+      done();
+      var err = new Error(e && e.name === "AbortError" ? "The desk took too long to answer." : "Cannot reach the desk.");
       err.offline = true;
       throw err;
-    }).then(function (j) { if (timer) clearTimeout(timer); return j; }, function (e) { if (timer) clearTimeout(timer); throw e; });
+    }).then(function (j) {
+      done();
+      if (j && j.ok === false) {
+        var err = new Error(j.error || "The desk refused that.");
+        err.status = j.status || 500;
+        err.body = j;
+        if (err.status === 401 && action !== "auth") signOut("Unlock the desk again.");
+        throw err;
+      }
+      return j;
+    });
   }
 
   function persist() {
-    store(KEY.cache, { entries: S.entries, deskTasks: S.deskTasks, prefs: S.prefs, sync: S.sync });
+    store(KEY.cache, { mode: S.mode, entries: S.entries, deskTasks: S.deskTasks, prefs: S.prefs, sync: S.sync });
   }
   function saveUi() { store(KEY.ui, S.ui); }
 
@@ -172,11 +181,11 @@
   function saveEntry(id, data, baseVersion) {
     data.updatedAt = new Date().toISOString();
     if (!data.addedAt) data.addedAt = data.updatedAt;
-    return api("PUT", "/docs/entries/" + encodeURIComponent(id), { data: data, baseVersion: baseVersion })
+    return call("put", { collection: "entries", id: id, data: data, baseVersion: baseVersion })
       .then(function (r) { upsertEntry(r.doc); persist(); render(); return r.doc; }, function (err) {
         if (err.status === 409 && err.body && err.body.doc) {
           upsertEntry(err.body.doc); persist(); render();
-          toast("This entry changed on another device, so the newer copy is shown. Reapply your edit.", { error: true });
+          toast("Someone saved this entry a moment ago, so the newer copy is shown. Reapply your edit.", { error: true });
         }
         throw err;
       });
@@ -190,15 +199,24 @@
   function deleteEntry(id) {
     var rec = entryDoc(id);
     if (!rec) return Promise.resolve();
-    return api("DELETE", "/docs/entries/" + encodeURIComponent(id) + "?base=" + rec.version).then(function (r) {
+    return call("delete", { collection: "entries", id: id, base: rec.version }).then(function (r) {
       upsertEntry(r.doc); persist(); render();
-      toast("Entry deleted. Its history is kept on the server.");
+      toast("Entry deleted.", { action: "Undo", onAction: function () { restoreDoc("entries", id); } });
     });
   }
+  function restoreDoc(collection, id) {
+    return call("restore", { collection: collection, id: id }).then(function (r) {
+      if (collection === "entries") upsertEntry(r.doc);
+      else if (collection === "tasks") S.deskTasks.push(r.doc);
+      persist(); render();
+      toast("Restored.");
+      return r.doc;
+    }, function (err) { failed(err, "Not restored"); });
+  }
 
-  /* ---- desk tasks (used when Google Tasks is not connected) ----------- */
+  /* ---- tasks: Google Tasks, or desk tasks when Google Tasks is unavailable */
   function saveDeskTask(id, data, baseVersion) {
-    return api("PUT", "/docs/tasks/" + encodeURIComponent(id), { data: data, baseVersion: baseVersion }).then(function (r) {
+    return call("put", { collection: "tasks", id: id, data: data, baseVersion: baseVersion }).then(function (r) {
       var i = S.deskTasks.findIndex(function (d) { return d.id === id; });
       if (i === -1) S.deskTasks.push(r.doc); else S.deskTasks[i] = r.doc;
       persist(); render();
@@ -206,15 +224,22 @@
   }
 
   function googleReady() { return !!(S.sync && S.sync.google && S.sync.google.ok); }
+  function tasksReady() {
+    var g = S.sync && S.sync.google;
+    return !!(g && g.ok && !(g.warnings || []).some(function (w) { return /^Google Tasks/.test(w); }));
+  }
   function notionReady() { return !!(S.sync && S.sync.notion && S.sync.notion.configured); }
+  function googleTask(t) {
+    return ((S.sync && S.sync.google && S.sync.google.tasks) || []).filter(function (x) { return x.id === t.id && x.listId === t.listId; })[0];
+  }
 
   function toggleTask(key, done) {
     var t = allTasks().filter(function (x) { return x.key === key; })[0];
     if (!t) return;
     if (t.source === "google") {
-      var g = S.sync.google.tasks.filter(function (x) { return x.id === t.id && x.listId === t.listId; })[0];
+      var g = googleTask(t);
       if (g) { g.done = done; g.completed = done ? new Date().toISOString() : ""; render(); }
-      api("POST", "/google", { action: "setTask", listId: t.listId, id: t.id, done: done }).then(persist, function (err) {
+      call("setTask", { listId: t.listId, id: t.id, done: done }).then(persist, function (err) {
         if (g) { g.done = !done; render(); }
         failed(err, "Google Tasks");
       });
@@ -225,52 +250,98 @@
       saveDeskTask(d.id, data, d.version).catch(function (err) { failed(err, "Task not saved"); });
     }
   }
-  function deleteDeskTask(id) {
-    var d = S.deskTasks.filter(function (x) { return x.id === id; })[0];
-    if (!d) return;
-    api("DELETE", "/docs/tasks/" + encodeURIComponent(id) + "?base=" + d.version).then(function () {
-      S.deskTasks = S.deskTasks.filter(function (x) { return x.id !== id; });
+  function deleteTask(t) {
+    if (t.source === "google") {
+      return call("deleteTask", { listId: t.listId, id: t.id }).then(function () {
+        S.sync.google.tasks = S.sync.google.tasks.filter(function (x) { return !(x.id === t.id && x.listId === t.listId); });
+        persist(); render();
+        toast("Task deleted from Google Tasks.");
+      });
+    }
+    var d = S.deskTasks.filter(function (x) { return x.id === t.id; })[0];
+    if (!d) return Promise.resolve();
+    return call("delete", { collection: "tasks", id: d.id, base: d.version }).then(function () {
+      S.deskTasks = S.deskTasks.filter(function (x) { return x.id !== d.id; });
       persist(); render();
-    }, function (err) { failed(err, "Task not deleted"); });
+      toast("Task deleted.", { action: "Undo", onAction: function () { restoreDoc("tasks", d.id); } });
+    });
+  }
+  function editTask(key) {
+    var t = allTasks().filter(function (x) { return x.key === key; })[0];
+    if (!t) return;
+    var d = dialog("dk-task", "Task",
+      '<label class="dk-field"><span>Title</span><input type="text" class="dk-input" id="dk-t-title" value="' + esc(t.title) + '"></label>' +
+      '<div class="dk-grid2"><label class="dk-field"><span>Due</span><input type="date" class="dk-input" id="dk-t-due" value="' + esc(t.due) + '"></label>' +
+      '<label class="dk-field"><span>List</span><input type="text" class="dk-input" value="' + esc(t.list || (t.source === "google" ? "Google Tasks" : "Desk")) + '" disabled></label></div>' +
+      '<label class="dk-field"><span>Notes</span><textarea class="dk-input" id="dk-t-notes" rows="3">' + esc(t.notes) + '</textarea></label>' +
+      '<p class="dk-hint" id="dk-t-msg" role="status"></p>',
+      '<button type="button" class="dk-btn dk-btn--danger" id="dk-t-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' +
+      '<button type="button" class="dk-btn dk-btn--primary" id="dk-t-save">Save</button>');
+    var msg = $("dk-t-msg");
+    $("dk-t-save").addEventListener("click", function () {
+      var title = $("dk-t-title").value.trim(), due = $("dk-t-due").value, notes = $("dk-t-notes").value;
+      if (!title) { $("dk-t-title").focus(); return; }
+      $("dk-t-save").disabled = true;
+      msg.textContent = "Saving…";
+      var p;
+      if (t.source === "google") {
+        p = call("setTask", { listId: t.listId, id: t.id, title: title, due: due, notes: notes }).then(function () {
+          var g = googleTask(t);
+          if (g) { g.title = title; g.due = due; g.notes = notes; }
+        });
+      } else {
+        var dt = S.deskTasks.filter(function (x) { return x.id === t.id; })[0];
+        p = saveDeskTask(dt.id, Object.assign({}, dt.data, { title: title, due: due, notes: notes }), dt.version);
+      }
+      p.then(function () { persist(); render(); d.close(); toast("Task saved."); },
+        function (err) { $("dk-t-save").disabled = false; msg.textContent = err.message; });
+    });
+    $("dk-t-del").addEventListener("click", function () {
+      if (!window.confirm("Delete this task?")) return;
+      deleteTask(t).then(function () { d.close(); }, function (err) { msg.textContent = err.message; });
+    });
   }
   function allTasks() {
     return C.unifyTasks(S.sync && S.sync.google && S.sync.google.tasks, S.deskTasks);
   }
 
-  /* ---- sync ----------------------------------------------------------- */
+  /* ---- load and sync -------------------------------------------------- */
   function defaultRange() {
     var t = new Date(), from = C.addDays(t, -21), to = C.addDays(t, 120);
-    return { from: C.ymd(from), to: C.ymd(to), timeMin: from.toISOString(), timeMax: C.addDays(to, 1).toISOString() };
+    return { from: C.ymd(from), to: C.ymd(to), timeMin: from.toISOString(), timeMax: C.addDays(to, 1).toISOString(), tz: tz() };
   }
-  function syncQuery(r) {
-    return "/sync?from=" + r.from + "&to=" + r.to + "&timeMin=" + encodeURIComponent(r.timeMin) +
-      "&timeMax=" + encodeURIComponent(r.timeMax) + "&tz=" + encodeURIComponent(tz());
-  }
-  function fetchSync(range) { return api("GET", syncQuery(range)); }
+  function fetchSync(range) { return call("sync", Object.assign({ tz: tz() }, range)); }
 
-  function loadDocs() {
-    return Promise.all([api("GET", "/docs/entries"), api("GET", "/docs/tasks"), api("GET", "/docs/settings")]).then(function (res) {
-      S.entries = [];
-      res[0].docs.forEach(upsertEntry);
-      S.deskTasks = res[1].docs;
-      var p = res[2].docs.filter(function (d) { return d.id === "prefs"; })[0];
-      if (p) S.prefs = { id: "prefs", version: p.version, data: Object.assign({}, S.prefs.data, p.data) };
-    });
+  function applyLoad(r) {
+    S.mode = r.mode || "open";
+    S.entries = [];
+    (r.docs.entries || []).forEach(upsertEntry);
+    S.deskTasks = r.docs.tasks || [];
+    var p = (r.docs.settings || []).filter(function (d) { return d.id === "prefs"; })[0];
+    if (p) S.prefs = { id: "prefs", version: p.version, data: Object.assign({}, S.prefs.data, p.data) };
+    if (r.sync) S.sync = r.sync;
   }
 
+  // One request brings the board, the tasks, the settings and the Google +
+  // Notion snapshot. A manual refresh asks the backend for a fresh snapshot.
   function refresh(quiet) {
-    if (S.syncing || !S.token) return Promise.resolve();
+    if (S.syncing) return Promise.resolve();
     S.syncing = true;
     renderStatus();
-    return Promise.all([loadDocs(), fetchSync(defaultRange())]).then(function (res) {
-      S.sync = res[1];
+    var range = defaultRange();
+    range.fresh = !quiet;
+    return call("load", { sync: range }).then(function (r) {
+      applyLoad(r);
       S.offline = false;
       if (Desk.calendar) Desk.calendar.invalidate();
       persist();
+      if (!S.mounted) mount();
       if (!quiet) toast("Up to date.");
     }, function (err) {
       S.offline = !!err.offline;
-      if (err.status !== 401) failed(err, "Refresh failed");
+      if (err.status === 401) return;
+      if (S.mounted) failed(err, "Refresh failed");
+      else renderNotice("The desk is not answering", err.message);
     }).then(function () {
       S.syncing = false;
       render();
@@ -281,7 +352,7 @@
     var data = Object.assign({}, S.prefs.data, delta);
     S.prefs.data = data;
     render();
-    return api("PUT", "/docs/settings/prefs", { data: data, baseVersion: S.prefs.version || undefined }).then(function (r) {
+    return call("put", { collection: "settings", id: "prefs", data: data, baseVersion: S.prefs.version || undefined }).then(function (r) {
       S.prefs = { id: "prefs", version: r.doc.version, data: r.doc.data };
       persist();
     }, function (err) {
@@ -290,51 +361,53 @@
     });
   }
 
-  /* ---- auth ----------------------------------------------------------- */
+  /* ---- private mode: sign in ------------------------------------------ */
   function signOut(msg) {
     S.token = "";
+    S.mounted = false;
     store(KEY.token, null);
     store(KEY.cache, null);
     S.entries = []; S.deskTasks = []; S.sync = null;
     renderSignIn(msg || "");
   }
 
-  function renderSignIn(msg) {
+  function renderCard(title, text, formHtml) {
     host.hidden = false;
     host.className = "desk desk--locked" + (standalone ? " desk--standalone" : "");
     document.documentElement.classList.remove("desk-focus");
     placeHost(false);
     host.innerHTML =
       '<div class="dk-signin">' +
-        '<span class="dk-signin__mark" aria-hidden="true"><i class="fas fa-lock"></i></span>' +
-        '<div class="dk-signin__text"><h2 class="dk-signin__title">Research Desk</h2>' +
-        '<p>Private workspace for ideas, plans, tasks, deadlines and the calendar. Owner only.</p></div>' +
-        '<form class="dk-signin__form" id="dk-signin" autocomplete="on">' +
-          '<input type="text" name="username" value="desk" autocomplete="username" hidden>' +
-          '<input type="password" id="dk-pass" name="password" autocomplete="current-password" placeholder="Passphrase" required aria-label="Passphrase">' +
-          '<button type="submit" class="dk-btn dk-btn--primary" id="dk-unlock">Unlock</button>' +
-        '</form>' +
-        '<p class="dk-signin__msg" id="dk-signin-msg" role="status">' + esc(msg) + '</p>' +
+        '<span class="dk-signin__mark" aria-hidden="true"><i class="fas ' + (formHtml ? "fa-lock" : "fa-compass") + '"></i></span>' +
+        '<div class="dk-signin__text"><h2 class="dk-signin__title">' + esc(title) + '</h2><p>' + esc(text) + '</p></div>' +
+        (formHtml || "") +
       '</div>';
+  }
+  function renderNotice(title, text) { renderCard(title, text, ""); }
+
+  function renderSignIn(msg) {
+    renderCard("Research Desk", "The desk is locked for now. Owner only.",
+      '<form class="dk-signin__form" id="dk-signin" autocomplete="on">' +
+        '<input type="text" name="username" value="desk" autocomplete="username" hidden>' +
+        '<input type="password" id="dk-pass" name="password" autocomplete="current-password" placeholder="Passphrase" required aria-label="Passphrase">' +
+        '<button type="submit" class="dk-btn dk-btn--primary" id="dk-unlock">Unlock</button>' +
+      '</form>' +
+      '<p class="dk-signin__msg" id="dk-signin-msg" role="status">' + esc(msg) + '</p>');
     $("dk-signin").addEventListener("submit", function (e) {
       e.preventDefault();
       var pass = $("dk-pass").value;
       if (!pass) return;
       $("dk-unlock").disabled = true;
       $("dk-signin-msg").textContent = "Checking…";
-      api("POST", "/auth", { passphrase: pass }).then(function (r) {
+      call("auth", { passphrase: pass }).then(function (r) {
         S.token = r.token;
         store(KEY.token, r.token);
-        mount();
         refresh(true);
       }, function (err) {
         $("dk-unlock").disabled = false;
-        $("dk-signin-msg").textContent = err.offline
-          ? "The desk server at " + S.endpoint + " is not answering. Deploy it first (workers/desk/README.md)."
-          : err.message;
+        $("dk-signin-msg").textContent = err.message;
       });
     });
-    if (location.hash === "#desk") setTimeout(function () { var p = $("dk-pass"); if (p) p.focus(); }, 50);
   }
 
   /* ---- shell ---------------------------------------------------------- */
@@ -350,7 +423,9 @@
   };
 
   function mount() {
+    S.mounted = true;
     host.hidden = false;
+    announce(true);
     host.className = "desk" + (standalone ? " desk--standalone" : "");
     host.innerHTML =
       '<div class="dk-app">' +
@@ -370,7 +445,7 @@
                 ? '<a class="dk-icon" href="/research-ideas/" title="Back to the site" aria-label="Back to the site"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>'
                 : '<button type="button" class="dk-icon" id="dk-focus" title="Full screen (F)" aria-label="Full screen" aria-pressed="false"><i class="fas fa-expand" aria-hidden="true"></i></button>' +
                   '<a class="dk-icon" href="/desk/" title="Open the desk on its own page" aria-label="Open the desk on its own page"><i class="fas fa-external-link-alt" aria-hidden="true"></i></a>' +
-                  '<button type="button" class="dk-icon" id="dk-collapse" title="Minimise" aria-label="Minimise"><i class="fas fa-window-minimize" aria-hidden="true"></i></button>') +
+                  '<button type="button" class="dk-icon" id="dk-collapse" title="Hide the desk behind the lock" aria-label="Hide the desk"><i class="fas fa-lock" aria-hidden="true"></i></button>') +
             '</div>' +
           '</div>' +
         '</aside>' +
@@ -383,14 +458,9 @@
           '<div class="dk-body" id="dk-body"></div>' +
         '</section>' +
       '</div>' +
-      '<button type="button" class="dk-strip" id="dk-strip" aria-label="Open the research desk">' +
-        '<span class="dk-brand__mark" aria-hidden="true"><i class="fas fa-compass"></i></span>' +
-        '<span class="dk-strip__t">Research Desk</span><span class="dk-strip__s" id="dk-strip-sum"></span>' +
-        '<i class="fas fa-chevron-down" aria-hidden="true"></i></button>' +
       '<div class="dk-toast" id="dk-toast" role="status" aria-live="polite"></div>';
 
-    if ($("dk-collapse")) $("dk-collapse").addEventListener("click", function () { S.ui.collapsed = true; S.ui.focus = false; saveUi(); render(); });
-    $("dk-strip").addEventListener("click", function () { S.ui.collapsed = false; saveUi(); render(); });
+    if ($("dk-collapse")) $("dk-collapse").addEventListener("click", hideDesk);
     host.querySelector(".dk-nav").addEventListener("click", function (e) {
       var b = e.target.closest("[data-view]");
       if (b) setView(b.getAttribute("data-view"));
@@ -410,7 +480,6 @@
   function setView(v) {
     if (!VIEWS.some(function (x) { return x.id === v; })) return;
     S.ui.view = v;
-    S.ui.collapsed = false;
     saveUi();
     render();
     var body = $("dk-body");
@@ -439,12 +508,11 @@
   }
 
   function render() {
-    if (!S.token || !$("dk-body")) return;
-    var collapsed = !standalone && !!S.ui.collapsed;
-    var full = standalone || (!!S.ui.focus && !collapsed);
+    if (!S.mounted || !$("dk-body")) return;
+    if (host.hidden) return;
+    var full = standalone || !!S.ui.focus;
     placeHost(full);
     document.documentElement.classList.toggle("desk-focus", full);
-    host.classList.toggle("is-collapsed", collapsed);
     host.classList.toggle("is-compact", S.ui.density === "compact");
     if ($("dk-focus")) {
       $("dk-focus").setAttribute("aria-pressed", String(!!S.ui.focus));
@@ -459,8 +527,6 @@
     renderStatus();
     renderCounts();
     renderMini();
-    $("dk-strip-sum").textContent = stripSummary();
-    if (collapsed) return;
     var body = $("dk-body");
     if (S.ui.view === "today") {
       // A background refresh must not eat what is being typed into quick add.
@@ -476,14 +542,25 @@
     else body.innerHTML = viewNotion();
   }
 
-  function stripSummary() {
-    var t = today(), b = C.bucketTasks(allTasks(), t);
-    var next = deadlines().filter(function (d) { return !d.done && d.days >= 0; })[0];
-    var bits = [];
-    var open = b.overdue.length + b.today.length;
-    bits.push(open ? plural(open, "task") + " due" : "no tasks due");
-    if (next) bits.push("next deadline: " + next.title + ", " + C.countdown(next.days));
-    return bits.join(" · ");
+  // On /research-ideas/ the desk sits behind the lock icon in the page header:
+  // the loader opens it, the icon or the desk's own lock button hides it again.
+  function announce(open) {
+    document.dispatchEvent(new CustomEvent("desk:visibility", { detail: { open: open } }));
+  }
+  function hideDesk() {
+    if (standalone) return;
+    S.ui.focus = false;
+    saveUi();
+    placeHost(false);
+    document.documentElement.classList.remove("desk-focus");
+    host.hidden = true;
+    announce(false);
+  }
+  function showDesk() {
+    host.hidden = false;
+    announce(true);
+    render();
+    host.scrollIntoView({ block: "start", behavior: "smooth" });
   }
 
   function renderStatus() {
@@ -658,12 +735,12 @@
     var due = task.due ? (task.due === t ? "" : C.countdown(C.dayDiff(t, task.due))) : "";
     var multi = S.sync && S.sync.google && (S.sync.google.tasklists || []).length > 1;
     return '<li class="dk-task' + (task.done ? " is-done" : "") + (task.parent ? " is-sub" : "") + '">' +
-      '<label class="dk-check"><input type="checkbox" data-task="' + esc(task.key) + '"' + (task.done ? " checked" : "") + '>' +
-      '<span class="dk-check__box" aria-hidden="true"></span><span class="dk-task__title">' + esc(task.title) + '</span></label>' +
+      '<label class="dk-check" title="' + (task.done ? "Mark as not done" : "Mark as done") + '"><input type="checkbox" data-task="' + esc(task.key) + '"' + (task.done ? " checked" : "") + ' aria-label="Done: ' + esc(task.title) + '">' +
+      '<span class="dk-check__box" aria-hidden="true"></span></label>' +
+      '<button type="button" class="dk-task__title" data-edittask="' + esc(task.key) + '" title="Edit, reschedule or delete">' + esc(task.title) + '</button>' +
       (task.time ? '<span class="dk-task__time">' + esc(task.time) + '</span>' : "") +
       (due ? '<span class="dk-task__due' + (task.due < t && !task.done ? " is-late" : "") + '">' + esc(due) + '</span>' : "") +
       ((multi && task.source === "google") || task.source === "desk" ? '<span class="dk-task__list">' + esc(task.list) + '</span>' : "") +
-      (task.source === "desk" ? '<button type="button" class="dk-x" data-deltask="' + esc(task.id) + '" aria-label="Delete task"><i class="fas fa-times" aria-hidden="true"></i></button>' : "") +
     '</li>';
   }
 
@@ -753,7 +830,7 @@
     var v = inp.value.trim();
     if (!v) { out.innerHTML = '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · #tags</span>'; return; }
     var p = C.parseQuick(v), mode = S.ui.quickMode;
-    var bits = [mode === "task" ? (googleReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
+    var bits = [mode === "task" ? (tasksReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
     bits.push("“" + (p.title || v) + "”");
     if (p.date) bits.push(fmtDate(p.date, { weekday: "short", day: "numeric", month: "short" }));
     else if (mode === "event") bits.push("today");
@@ -783,12 +860,17 @@
         done("Opened Google Calendar with the event filled in.");
         return;
       }
-      api("POST", "/google", { action: "createEvent", title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz })
-        .then(function () { done("Event added to Google Calendar."); refresh(true); }, function (err) { failed(err, "Google Calendar"); });
+      call("createEvent", { title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz })
+        .then(function (r) {
+          if (r.event) S.sync.google.events.push(r.event);
+          done("Event added to Google Calendar.");
+          render();
+          refresh(true);
+        }, function (err) { failed(err, "Google Calendar"); });
       return;
     }
-    if (googleReady()) {
-      api("POST", "/google", { action: "createTask", title: title, due: p.date, notes: p.start ? "At " + p.start + (p.end ? "–" + p.end : "") : "" }).then(function (r) {
+    if (tasksReady()) {
+      call("createTask", { title: title, due: p.date, notes: p.start ? "At " + p.start + (p.end ? "–" + p.end : "") : "" }).then(function (r) {
         S.sync.google.tasks.push(r.task);
         persist();
         done("Task added to Google Tasks.");
@@ -954,7 +1036,7 @@
     if ((v = t.getAttribute("data-event"))) { openEvent(v); return; }
     if ((v = t.getAttribute("data-go"))) { setView(v); return; }
     if ((v = t.getAttribute("data-quick"))) { S.ui.quickMode = v; saveUi(); host.querySelectorAll("[data-quick]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); }); paintQuickPreview(); $("dk-quick-text").focus(); return; }
-    if ((v = t.getAttribute("data-deltask"))) { deleteDeskTask(v); return; }
+    if ((v = t.getAttribute("data-edittask"))) { editTask(v); return; }
     if ((v = t.getAttribute("data-layout"))) { S.ui.board.layout = v; saveUi(); render(); return; }
     if ((v = t.getAttribute("data-axis"))) { S.ui.board.axis = v; saveUi(); render(); return; }
     if ((v = t.getAttribute("data-act"))) {
@@ -997,23 +1079,77 @@
     return d;
   }
 
-  function openEvent(id) {
+  function findEventById(id) {
     var e = events().filter(function (x) { return x.id === id; })[0];
     if (!e && Desk.calendar) e = Desk.calendar.findEvent(id);
+    return e || null;
+  }
+
+  function openEvent(id) {
+    var e = findEventById(id);
     if (!e) return;
-    var when = e.start.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }) +
-      (e.allDay ? " · all day" : " · " + hhmm(e.start) + "–" + hhmm(e.end));
-    var rows = [["When", esc(when)], ["Calendar", esc(e.calendar)]];
-    if (e.location) rows.push(["Where", esc(e.location)]);
-    if (e.attendees) rows.push(["Guests", String(e.attendees)]);
-    if (safeUrl(e.video)) rows.push(["Call", '<a href="' + esc(safeUrl(e.video)) + '" target="_blank" rel="noopener">Join the call</a>']);
-    if (e.description) rows.push(["Notes", '<span class="dk-pre">' + esc(e.description) + '</span>']);
-    dialog("dk-event", e.title, '<dl class="dk-kv">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + '</dl>',
-      safeUrl(e.link) ? '<a class="dk-btn" href="' + esc(safeUrl(e.link)) + '" target="_blank" rel="noopener">Open in Google Calendar</a>' : "");
+    var link = safeUrl(e.link) ? '<a class="dk-btn dk-btn--quiet" href="' + esc(safeUrl(e.link)) + '" target="_blank" rel="noopener"><i class="fas fa-external-link-alt" aria-hidden="true"></i> Google Calendar</a>' : "";
+    if (!e.editable) {
+      var when = e.start.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" }) +
+        (e.allDay ? " · all day" : " · " + hhmm(e.start) + "–" + hhmm(e.end));
+      var rows = [["When", esc(when)], ["Calendar", esc(e.calendar) + " (read-only)"]];
+      if (e.location) rows.push(["Where", esc(e.location)]);
+      if (safeUrl(e.video)) rows.push(["Call", '<a href="' + esc(safeUrl(e.video)) + '" target="_blank" rel="noopener">Join the call</a>']);
+      if (e.description) rows.push(["Notes", '<span class="dk-pre">' + esc(e.description) + '</span>']);
+      dialog("dk-event", e.title, '<dl class="dk-kv">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + '</dl>', link);
+      return;
+    }
+    var multiDay = e.allDay && e.end - e.start > 864e5;
+    var notes = [];
+    if (e.recurring) notes.push("A repeating event: changes apply to this occurrence only.");
+    if (multiDay) notes.push("This spans several days; change its dates in Google Calendar.");
+    var d = dialog("dk-event", "Event",
+      '<label class="dk-field"><span>Title</span><input type="text" class="dk-input dk-input--title" id="dk-e-title" value="' + esc(e.title) + '"></label>' +
+      '<div class="dk-grid3"><label class="dk-field"><span>Date</span><input type="date" class="dk-input" id="dk-e-date" value="' + C.ymd(e.start) + '"' + (multiDay ? " disabled" : "") + '></label>' +
+      '<label class="dk-field"><span>Start</span><input type="time" class="dk-input" id="dk-e-start" value="' + (e.allDay ? "09:00" : hhmm(e.start)) + '"' + (e.allDay ? " disabled" : "") + '></label>' +
+      '<label class="dk-field"><span>End</span><input type="time" class="dk-input" id="dk-e-end" value="' + (e.allDay ? "10:00" : hhmm(e.end)) + '"' + (e.allDay ? " disabled" : "") + '></label></div>' +
+      '<label class="dk-toggle"><input type="checkbox" id="dk-e-allday"' + (e.allDay ? " checked" : "") + (multiDay ? " disabled" : "") + '> All day</label>' +
+      '<label class="dk-field"><span>Where</span><input type="text" class="dk-input" id="dk-e-loc" value="' + esc(e.location) + '"></label>' +
+      '<label class="dk-field"><span>Notes</span><textarea class="dk-input" id="dk-e-desc" rows="4">' + esc(e.description) + '</textarea></label>' +
+      '<p class="dk-hint">' + esc(e.calendar) + (notes.length ? " · " + esc(notes.join(" ")) : "") + '</p>' +
+      '<p class="dk-hint" id="dk-e-msg" role="status"></p>',
+      '<button type="button" class="dk-btn dk-btn--danger" id="dk-e-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' + link +
+      '<button type="button" class="dk-btn dk-btn--primary" id="dk-e-save">Save</button>');
+    var msg = $("dk-e-msg");
+    $("dk-e-allday").addEventListener("change", function (ev) { $("dk-e-start").disabled = ev.target.checked; $("dk-e-end").disabled = ev.target.checked; });
+    $("dk-e-save").addEventListener("click", function () {
+      var req = { calendarId: e.calendarId, id: e.eventId, title: $("dk-e-title").value.trim() || e.title,
+        location: $("dk-e-loc").value, description: $("dk-e-desc").value, tz: tz() };
+      if (!multiDay) {
+        req.date = $("dk-e-date").value || C.ymd(e.start);
+        req.allDay = $("dk-e-allday").checked;
+        req.start = $("dk-e-start").value;
+        req.end = $("dk-e-end").value;
+      }
+      $("dk-e-save").disabled = true;
+      msg.textContent = "Saving to Google Calendar…";
+      call("updateEvent", req).then(function () {
+        d.close();
+        toast("Event updated.");
+        if (Desk.calendar) Desk.calendar.invalidate();
+        refresh(true);
+      }, function (err) { $("dk-e-save").disabled = false; msg.textContent = err.message; });
+    });
+    $("dk-e-del").addEventListener("click", function () {
+      if (!window.confirm("Delete “" + e.title + "” from Google Calendar?")) return;
+      call("deleteEvent", { calendarId: e.calendarId, id: e.eventId }).then(function () {
+        S.sync.google.events = S.sync.google.events.filter(function (x) { return !(x.id === e.eventId && x.calendarId === e.calendarId); });
+        if (Desk.calendar) Desk.calendar.invalidate();
+        persist();
+        d.close();
+        render();
+        toast("Event deleted.");
+      }, function (err) { msg.textContent = err.message; });
+    });
   }
 
   function openSettings() {
-    var h = S.health || {}, cfg = h.configured || {}, g = S.sync && S.sync.google, n = S.sync && S.sync.notion;
+    var h = S.health || {}, g = S.sync && S.sync.google, n = S.sync && S.sync.notion;
     var line = function (ok, label, detail) {
       return '<li class="dk-conn' + (ok === true ? " is-on" : ok === false ? " is-bad" : "") + '"><i class="dk-dot is-on' + (ok === false ? " is-bad" : "") + '"></i><b>' + esc(label) + '</b><span>' + detail + '</span></li>';
     };
@@ -1023,14 +1159,17 @@
     var watched = S.prefs.data.watched || [];
     var body =
       '<section class="dk-set"><h4>Connections</h4><ul class="dk-conns">' +
-        line(true, "Desk server", esc(S.endpoint) + (h.version ? " · v" + esc(h.version) : "")) +
-        line(g && g.ok ? true : cfg.google || (g && g.configured) ? false : null, "Google Calendar + Tasks",
+        line(!S.offline, "Desk", "Google Apps Script in your account" + (h.version ? " · v" + esc(h.version) : "") + " · data in the “Research Desk data” Sheet") +
+        line(g && g.ok ? true : g ? false : null, "Google Calendar + Tasks",
           g && g.ok ? plural((g.calendars || []).length, "calendar") + ", " + plural((g.tasklists || []).length, "task list") + (g.warnings && g.warnings.length ? " · " + esc(g.warnings.join("; ")) : "")
-            : g && g.configured ? esc(g.error || "failing") : "Not connected. Deploy the Apps Script bridge, then set GOOGLE_BRIDGE_URL and GOOGLE_BRIDGE_SECRET.") +
+            : g ? esc(g.error || "failing") : "Not read yet.") +
         line(n && n.ok ? true : n && n.configured ? false : null, "Notion Research OS",
           n && n.configured ? (n.sources || []).map(function (s) { return esc(s.label) + (s.error ? " (failing)" : " (" + s.rows.length + ")"); }).join(", ")
-            : "Not connected. Create an internal integration, share Research OS with it, set NOTION_TOKEN.") +
-      '</ul><p class="dk-hint"><a href="' + README + '" target="_blank" rel="noopener">Step-by-step setup</a> · Refresh after changing a setting in Cloudflare.</p></section>' +
+            : "Not connected. Add NOTION_TOKEN under the script's Project Settings > Script properties.") +
+        line(true, "Access", S.mode === "private" ? "Private: only someone with the passphrase can open it."
+          : "Open: anyone can view and edit. To lock it, set DESK_MODE to private and add DESK_PASSPHRASE in Script properties.") +
+      '</ul><p class="dk-hint"><a href="' + README + '" target="_blank" rel="noopener">Setup guide</a></p></section>' +
+      '<section class="dk-set"><h4>Recently deleted</h4><div id="dk-deleted"><button type="button" class="dk-btn" id="dk-deleted-show"><i class="fas fa-trash-restore" aria-hidden="true"></i> Show deleted entries and tasks</button></div></section>' +
       '<section class="dk-set"><h4>Conference deadlines on the desk</h4><div class="dk-chips" id="dk-watch">' + names.map(function (nm) {
         return '<button type="button" class="dk-chip" data-watch="' + esc(nm) + '" aria-pressed="' + (watched.indexOf(nm) !== -1) + '">' + esc(nm) + '</button>';
       }).join("") + '</div></section>' +
@@ -1045,7 +1184,7 @@
         '<label class="dk-btn dk-file"><i class="fas fa-upload" aria-hidden="true"></i> Import JSON<input type="file" id="dk-import" accept="application/json,.json" hidden></label></div>' +
         '<p class="dk-hint" id="dk-import-msg" role="status"></p></section>' +
       '<section class="dk-set"><h4>Keyboard</h4><p class="dk-hint"><kbd>1</kbd>–<kbd>4</kbd> views · <kbd>N</kbd> new entry · <kbd>T</kbd> quick add · <kbd>/</kbd> search · <kbd>R</kbd> refresh · <kbd>F</kbd> full screen · <kbd>[</kbd> <kbd>]</kbd> move the calendar · <kbd>Ctrl</kbd>+<kbd>S</kbd> save in the editor</p></section>';
-    var d = dialog("dk-settings-d", "Desk settings", body, '<button type="button" class="dk-btn dk-btn--danger" id="dk-signout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign out on this device</button>');
+    var d = dialog("dk-settings-d", "Desk settings", body, S.mode === "private" ? '<button type="button" class="dk-btn dk-btn--danger" id="dk-signout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign out on this device</button>' : "");
     d.querySelector("#dk-watch").addEventListener("click", function (e) {
       var b = e.target.closest("[data-watch]");
       if (!b) return;
@@ -1063,12 +1202,34 @@
     d.querySelector("#dk-focus-default").addEventListener("change", function (e) { S.ui.focus = e.target.checked; saveUi(); render(); });
     d.querySelector("#dk-export").addEventListener("click", exportJson);
     d.querySelector("#dk-import").addEventListener("change", importJson);
-    d.querySelector("#dk-signout").addEventListener("click", function () { d.close(); signOut("Signed out on this device."); });
-    api("GET", "/health").then(function (r) { S.health = r; }, function () {});
+    if (d.querySelector("#dk-signout")) d.querySelector("#dk-signout").addEventListener("click", function () { d.close(); signOut("Signed out on this device."); });
+    d.querySelector("#dk-deleted-show").addEventListener("click", showDeleted);
+    call("health").then(function (r) { S.health = r; }, function () {});
+  }
+
+  function showDeleted() {
+    var box = $("dk-deleted");
+    box.innerHTML = '<p class="dk-quiet">Loading…</p>';
+    Promise.all([call("list", { collection: "entries", deleted: true }), call("list", { collection: "tasks", deleted: true })]).then(function (res) {
+      var rows = res[0].docs.map(function (d) { return { c: "entries", d: d, label: d.data.title || "Untitled", kind: "Entry" }; })
+        .concat(res[1].docs.map(function (d) { return { c: "tasks", d: d, label: d.data.title || "Untitled", kind: "Desk task" }; }));
+      if (!rows.length) { box.innerHTML = '<p class="dk-quiet">Nothing has been deleted.</p>'; return; }
+      box.innerHTML = '<ul class="dk-deleted">' + rows.map(function (r) {
+        return '<li><span><b>' + esc(r.label) + '</b> <em>' + r.kind + ' · ' + esc(new Date(r.d.updatedAt).toLocaleString()) + '</em></span>' +
+          '<button type="button" class="dk-btn" data-restore="' + r.c + ':' + esc(r.d.id) + '">Restore</button></li>';
+      }).join("") + '</ul><p class="dk-hint">Deleted Google tasks and events go to Google’s own bin, not here.</p>';
+      box.querySelector(".dk-deleted").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-restore]");
+        if (!b) return;
+        var parts = b.getAttribute("data-restore").split(":");
+        b.disabled = true;
+        restoreDoc(parts[0], parts.slice(1).join(":")).then(function () { b.closest("li").remove(); });
+      });
+    }, function (err) { box.innerHTML = '<p class="dk-hint is-bad">' + esc(err.message) + '</p>'; });
   }
 
   function exportJson() {
-    api("GET", "/export?images=1").then(function (r) {
+    call("export").then(function (r) {
       var blob = new Blob([JSON.stringify(r, null, 2)], { type: "application/json" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1097,7 +1258,7 @@
       var total = { written: 0, unchanged: 0, skipped: 0 };
       return chunks.reduce(function (p, chunk) {
         return p.then(function () {
-          return api("POST", "/import", { docs: chunk }).then(function (r) { total.written += r.written; total.unchanged += r.unchanged; total.skipped += r.skipped.length; });
+          return call("import", { docs: chunk }).then(function (r) { total.written += r.written; total.unchanged += r.unchanged; total.skipped += r.skipped.length; });
         });
       }, Promise.resolve()).then(function () {
         msg.textContent = "Imported " + total.written + ", unchanged " + total.unchanged + (total.skipped ? ", skipped " + total.skipped : "") + ".";
@@ -1108,7 +1269,7 @@
 
   /* ---- keyboard ------------------------------------------------------- */
   function onKey(e) {
-    if (!S.token || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (!S.mounted || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
     var tag = (e.target.tagName || "").toLowerCase();
     if (tag === "input" || tag === "textarea" || tag === "select" || e.target.isContentEditable) return;
     if (document.querySelector("dialog[open]")) return;
@@ -1121,14 +1282,15 @@
     else if (k === "/") { setView("board"); setTimeout(function () { var q = $("dk-q"); if (q) q.focus(); }, 0); e.preventDefault(); }
     else if ((k === "[" || k === "]") && S.ui.view === "calendar") { Desk.calendar.shift(k === "]" ? 1 : -1); e.preventDefault(); }
     else if (k === "Escape" && S.ui.focus && !standalone) { toggleFocus(); }
+    else if (k === "Escape" && !standalone) { hideDesk(); }
   }
 
   /* ---- boot ----------------------------------------------------------- */
   Desk.app = {
-    S: S, api: api, esc: esc, safeUrl: safeUrl, sanitize: sanitize, plain: plain, toast: toast, failed: failed, render: render,
+    S: S, call: call, esc: esc, safeUrl: safeUrl, sanitize: sanitize, plain: plain, toast: toast, failed: failed, render: render,
     today: today, tz: tz, hhmm: hhmm, fmtDate: fmtDate, newId: newId, dialog: dialog, deadlines: deadlines, events: events,
     allTasks: allTasks, entryDoc: entryDoc, entryData: entryData, saveEntry: saveEntry, deleteEntry: deleteEntry,
-    googleReady: googleReady, notionReady: notionReady, fetchSync: fetchSync, syncQuery: syncQuery, openEvent: openEvent,
+    googleReady: googleReady, tasksReady: tasksReady, notionReady: notionReady, fetchSync: fetchSync, openEvent: openEvent,
     toggleTask: toggleTask, refresh: refresh, cardHtml: cardHtml
   };
 
@@ -1143,28 +1305,36 @@
     var ui = load(KEY.ui);
     if (ui) { S.ui = Object.assign(S.ui, ui); S.ui.board = Object.assign({}, S.ui.board, ui.board || {}); }
     S.token = load(KEY.token) || "";
-    if (!S.endpoint) { host.hidden = false; host.innerHTML = '<p class="dk-empty">The desk endpoint is not set in _config.yml (desk.endpoint).</p>'; return; }
+    document.addEventListener("desk:toggle", function () { if (host.hidden) showDesk(); else hideDesk(); });
+    if (!S.endpoint) {
+      renderNotice("Research Desk", "The desk is not connected yet: its Google Apps Script URL is not set in the site's _config.yml (desk.endpoint).");
+      announce(true);
+      return;
+    }
     document.addEventListener("keydown", onKey);
     wireLanes();
-    api("GET", "/health").then(function (r) { S.health = r; }, function () {});
-    if (!S.token) { renderSignIn(""); return; }
+    // Show the last copy at once, then bring it up to date.
     var cache = load(KEY.cache);
-    if (cache) {
+    if (cache && cache.sync) {
+      S.mode = cache.mode || "open";
       S.entries = cache.entries || [];
       S.deskTasks = cache.deskTasks || [];
       if (cache.prefs) S.prefs = cache.prefs;
-      S.sync = cache.sync || null;
+      S.sync = cache.sync;
+      mount();
+    } else {
+      renderNotice("Research Desk", "Opening…");
+      announce(true);
     }
-    mount();
     refresh(true);
     setInterval(function () {
-      if (document.visibilityState === "visible" && !S.ui.collapsed && S.token) refresh(true);
+      if (document.visibilityState === "visible" && !host.hidden && S.mounted) refresh(true);
     }, AUTO_REFRESH_MS);
     document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState !== "visible" || !S.token || !S.sync) return;
+      if (document.visibilityState !== "visible" || !S.mounted || !S.sync) return;
       if (Date.now() - Date.parse(S.sync.at) > 2 * 60e3) refresh(true);
     });
-    if (location.hash === "#desk" && !standalone) host.scrollIntoView({ block: "start" });
+    if (!standalone) host.scrollIntoView({ block: "start" });
   }
   boot();
 })();
