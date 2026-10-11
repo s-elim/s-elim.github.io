@@ -1,6 +1,7 @@
 // Tests for Code.gs, run against the fakes in gas.mjs.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHmac } from 'node:crypto';
 import { makeGas } from './gas.mjs';
 
 const T0 = Date.parse('2026-10-11T09:00:00Z');
@@ -120,28 +121,60 @@ test('writes are metered per minute and per day; reads are not', () => {
 
 // ------------------------------------------------------------ private mode
 
-test('private mode needs a token, and the token dies with the passphrase', () => {
+test('private mode needs a token, and the token dies with the passcode', () => {
   const gas = ready();
   gas.props.DESK_MODE = 'private';
-  assert.equal(gas.call({ action: 'list', collection: 'entries' }).status, 503, 'no passphrase configured');
-  gas.props.DESK_PASSPHRASE = 'correct horse battery staple';
+  assert.equal(gas.call({ action: 'list', collection: 'entries' }).status, 503, 'no passcode configured');
+  gas.props.DESK_PASSPHRASE = '471';
+  assert.equal(gas.call({ action: 'auth', passphrase: '471' }).status, 503, 'shorter than 4 is refused');
+  gas.props.DESK_PASSPHRASE = '4711';
   assert.equal(gas.call({ action: 'list', collection: 'entries' }).status, 401);
-  assert.equal(gas.call({ action: 'auth', passphrase: 'nope' }).status, 401);
-  const { token } = gas.call({ action: 'auth', passphrase: 'correct horse battery staple' });
+  assert.equal(gas.call({ action: 'auth', passphrase: '0000' }).status, 401);
+  const { token } = gas.call({ action: 'auth', passphrase: '4711' });
   assert.equal(gas.call({ action: 'list', collection: 'entries', token }).ok, true);
+  assert.equal(gas.call({ action: 'sync', ...RANGE, token }).ok, true);
+  assert.equal(gas.call({ action: 'put', collection: 'entries', id: 'x', data: {}, token }).ok, true);
+  assert.equal(gas.call({ action: 'put', collection: 'entries', id: 'y', data: {} }).status, 401, 'writes need the token too');
   assert.equal(gas.call({ action: 'list', collection: 'entries', token: token.replace(/.$/, c => (c === 'A' ? 'B' : 'A')) }).status, 401);
-  gas.props.DESK_PASSPHRASE = 'another long passphrase';
+  gas.props.DESK_PASSPHRASE = '9999';
   assert.equal(gas.call({ action: 'list', collection: 'entries', token }).status, 401);
 });
 
-test('private mode tokens expire and wrong passphrases lock out after 20 tries', () => {
+test('a short passcode cannot be recovered by forging tokens offline', () => {
   const gas = ready();
-  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: 'correct horse battery staple' });
-  const { token } = gas.call({ action: 'auth', passphrase: 'correct horse battery staple' });
-  gas.tick(121 * 864e5);
+  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: '4711' });
+  gas.call({ action: 'auth', passphrase: '4711' });
+  assert.equal(gas.props.TOKEN_SECRET.length, 64, 'a random signing secret exists');
+  // An attacker who guesses the passcode right still cannot sign without the secret.
+  const payload = Buffer.from(JSON.stringify({ v: 2, exp: T0 + 9e9 })).toString('base64url');
+  for (const key of ['4711|desk-token-v2', '4711|desk-token-v1', '|4711|desk-token-v2']) {
+    const sig = createHmac('sha256', key).update(payload).digest('base64url');
+    assert.equal(gas.call({ action: 'list', collection: 'entries', token: payload + '.' + sig }).status, 401, key);
+  }
+});
+
+test('ten wrong passcodes in an hour close sign-in and email the owner once', () => {
+  const gas = ready();
+  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: '4711' });
+  const { token } = gas.call({ action: 'auth', passphrase: '4711' });
+  for (let i = 0; i < 10; i++) assert.equal(gas.call({ action: 'auth', passphrase: String(1000 + i) }).status, 401);
+  assert.equal(gas.call({ action: 'auth', passphrase: '4711' }).status, 429, 'even the right code waits');
+  assert.equal(gas.call({ action: 'auth', passphrase: '1234' }).status, 429);
+  assert.equal(gas.mail.length, 1);
+  assert.equal(gas.mail[0].to, 'owner@example.com');
+  assert.equal(gas.call({ action: 'list', collection: 'entries', token }).ok, true, 'signed-in devices keep working');
+  gas.tick(36e5);
+  assert.equal(gas.call({ action: 'auth', passphrase: '4711' }).ok, true, 'the next hour opens again');
+});
+
+test('private-mode tokens expire after 120 days', () => {
+  const gas = ready();
+  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: '4711' });
+  const { token } = gas.call({ action: 'auth', passphrase: '4711' });
+  gas.tick(119 * 864e5);
+  assert.equal(gas.call({ action: 'list', collection: 'entries', token }).ok, true);
+  gas.tick(2 * 864e5);
   assert.equal(gas.call({ action: 'list', collection: 'entries', token }).status, 401);
-  for (let i = 0; i < 20; i++) gas.call({ action: 'auth', passphrase: 'x' });
-  assert.equal(gas.call({ action: 'auth', passphrase: 'correct horse battery staple' }).status, 429);
 });
 
 test('auth in open mode is a no-op', () => {
@@ -221,8 +254,8 @@ test('sync merges Google and Notion, hides call links in open mode, and isolates
 
 test('private mode keeps call links', () => {
   const gas = ready({ google: GOOGLE });
-  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: 'correct horse battery staple' });
-  const { token } = gas.call({ action: 'auth', passphrase: 'correct horse battery staple' });
+  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: '4711' });
+  const { token } = gas.call({ action: 'auth', passphrase: '4711' });
   const s = gas.call({ action: 'sync', ...RANGE, token });
   assert.equal(s.google.events[0].video, 'https://meet.google.com/abc-defg-hij');
 });

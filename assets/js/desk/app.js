@@ -127,7 +127,7 @@
         var err = new Error(j.error || "The desk refused that.");
         err.status = j.status || 500;
         err.body = j;
-        if (err.status === 401 && action !== "auth") signOut("Unlock the desk again.");
+        if (err.status === 401 && action !== "auth") signOut(S.token ? "Your sign-in ended. Enter the passcode again." : "");
         throw err;
       }
       return j;
@@ -384,10 +384,10 @@
   function renderNotice(title, text) { renderCard(title, text, ""); }
 
   function renderSignIn(msg) {
-    renderCard("Research Desk", "The desk is locked for now. Owner only.",
+    renderCard("Research Desk", "Enter the passcode to open the desk. This device then stays signed in for four months.",
       '<form class="dk-signin__form" id="dk-signin" autocomplete="on">' +
         '<input type="text" name="username" value="desk" autocomplete="username" hidden>' +
-        '<input type="password" id="dk-pass" name="password" autocomplete="current-password" placeholder="Passphrase" required aria-label="Passphrase">' +
+        '<input type="password" id="dk-pass" name="password" autocomplete="current-password" placeholder="Passcode" required aria-label="Passcode">' +
         '<button type="submit" class="dk-btn dk-btn--primary" id="dk-unlock">Unlock</button>' +
       '</form>' +
       '<p class="dk-signin__msg" id="dk-signin-msg" role="status">' + esc(msg) + '</p>');
@@ -1114,8 +1114,8 @@
         line(n && n.ok ? true : n && n.configured ? false : null, "Notion Research OS",
           n && n.configured ? (n.sources || []).map(function (s) { return esc(s.label) + (s.error ? " (failing)" : " (" + s.rows.length + ")"); }).join(", ")
             : "Not connected. Add NOTION_TOKEN under the script's Project Settings > Script properties.") +
-        line(true, "Access", S.mode === "private" ? "Private: only someone with the passphrase can open it."
-          : "Open: anyone can view and edit. To lock it, set DESK_MODE to private and add DESK_PASSPHRASE in Script properties.") +
+        line(true, "Access", S.mode === "private" ? "Private: only someone with the passcode can open it. Change it in the script's Script properties (DESK_PASSPHRASE)."
+          : "Open: anyone can view and edit. To lock it, set DESK_MODE to private and DESK_PASSPHRASE to a passcode in Script properties.") +
       '</ul><p class="dk-hint"><a href="' + README + '" target="_blank" rel="noopener">Setup guide</a></p></section>' +
       '<section class="dk-set"><h4>Recently deleted</h4><div id="dk-deleted"><button type="button" class="dk-btn" id="dk-deleted-show"><i class="fas fa-trash-restore" aria-hidden="true"></i> Show deleted entries and tasks</button></div></section>' +
       '<section class="dk-set"><h4>Conference deadlines on the desk</h4><div class="dk-chips" id="dk-watch">' + names.map(function (nm) {

@@ -57,6 +57,7 @@ export function makeGas({ google = {}, notion = {}, now = () => Date.now() } = {
   const props = {};
   const cache = {};
   const drive = [];
+  const mail = [];
   const calls = { events: [], tasks: [], notion: [] };
   // Copies, so a test or the dev server can edit events and tasks without
   // touching the caller's fixture.
@@ -97,7 +98,8 @@ export function makeGas({ google = {}, notion = {}, now = () => Date.now() } = {
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => {} }) },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput: text => ({ text, setMimeType() { return this; } }) },
     Logger: { log() {} },
-    Session: { getScriptTimeZone: () => 'Asia/Seoul' },
+    Session: { getScriptTimeZone: () => 'Asia/Seoul', getEffectiveUser: () => ({ getEmail: () => 'owner@example.com' }) },
+    MailApp: { getRemainingDailyQuota: () => 100, sendEmail: (to, subject, body) => { mail.push({ to, subject, body }); } },
     SpreadsheetApp: fakeSpreadsheets(),
     Utilities: {
       getUuid: () => randomUUID(),
@@ -191,7 +193,7 @@ export function makeGas({ google = {}, notion = {}, now = () => Date.now() } = {
   // Objects built in the sandbox have that realm's prototypes; hand back plain copies.
   const plain = x => (x === undefined ? x : JSON.parse(JSON.stringify(x)));
   return {
-    ctx, props, cache, drive, calls,
+    ctx, props, cache, drive, calls, mail,
     call: req => plain(ctx.handle(req)),
     post: req => JSON.parse(ctx.doPost({ postData: { contents: typeof req === 'string' ? req : JSON.stringify(req) } }).text),
     fn: (name, ...args) => plain(ctx[name](...args)),

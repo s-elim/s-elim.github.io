@@ -76,8 +76,20 @@ Version **New version** > **Deploy**. The URL stays the same.
   rebuilt after any calendar or task change, so many visitors cost the same as
   one.
 - To lock it in seconds: **Script properties** > `DESK_MODE` = `private` and
-  `DESK_PASSPHRASE` = 12+ characters. The desk then asks for the passphrase.
-  Delete `DESK_MODE` to open it again.
+  `DESK_PASSPHRASE` = a passcode of 4 or more characters. Delete `DESK_MODE` to
+  open it again.
+
+## Locking it with a passcode
+
+In private mode the script refuses every read and write without a sign-in
+token, so the passcode protects the data itself, not just the page. Each device
+asks for the passcode once and stays signed in for 120 days; changing
+`DESK_PASSPHRASE` signs every device out. Tokens are signed with a random
+secret the script creates for itself (`TOKEN_SECRET`), so a short passcode
+cannot be worked out by forging tokens. Ten wrong passcodes in an hour close
+sign-in until the hour ends and email you once; devices already signed in keep
+working. A 4-digit code is still only 10,000 possibilities, so a longer one is
+safer if the email ever arrives.
 
 ## Keeping it for twenty years
 

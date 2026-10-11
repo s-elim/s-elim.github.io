@@ -13,7 +13,9 @@
  *                    save keeps a revision, call links never leave this script.
  *                    "private": every action except health and auth needs a
  *                    token issued for DESK_PASSPHRASE.
- *   DESK_PASSPHRASE  private mode only, at least 12 characters.
+ *   DESK_PASSPHRASE  private mode only: the passcode, at least 4 characters.
+ *                    Ten wrong tries an hour lock sign-in for the rest of the
+ *                    hour and email the owner. Changing it signs every device out.
  *   NOTION_TOKEN     optional, a Notion internal integration secret.
  *   NOTION_SOURCES / NOTION_TARGETS  optional JSON overriding the lists below.
  *
@@ -25,12 +27,12 @@ var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
   importDocs: 500,
   rangeDays: 400,
-  passphrase: 12,
+  passphrase: 4,
   writesPerMinute: 60,
   writesPerDay: 3000,
   imagesPerDay: 60,
   imageBase64: 2.2e6,       // about 1.6 MB of image
-  failedLogins: 20,         // per 15 minutes, everyone together
+  failedLogins: 10,         // per hour, everyone together
   syncFreshMs: 60e3,        // one shared Google + Notion answer per minute
   syncForceGapMs: 10e3,     // a forced refresh at most every 10 seconds
   cacheChunk: 90000         // CacheService keeps at most 100 KB per key
@@ -96,6 +98,8 @@ function setup() {
   // Touch every service once so the permission prompt covers them all now.
   Calendar.CalendarList.list({ maxResults: 1 });
   Tasks.Tasklists.list({ maxResults: 1 });
+  MailApp.getRemainingDailyQuota();
+  tokenSecret();
   Logger.log('Ready. Data: ' + ss.getUrl() + ' · mode: ' + mode() + ' · Notion: ' + (props.getProperty('NOTION_TOKEN') ? 'token set' : 'not set'));
 }
 
@@ -213,16 +217,31 @@ function pruneProps(prefix, keep) {
 
 function passphrase() {
   var p = String(prop('DESK_PASSPHRASE') || '');
-  if (p.length < LIMITS.passphrase) throw fail(503, 'Private mode needs DESK_PASSPHRASE (12+ characters) in Script Properties.');
+  if (p.length < LIMITS.passphrase) throw fail(503, 'Private mode needs DESK_PASSPHRASE (4+ characters) in Script Properties.');
   return p;
 }
 
+// Tokens are signed with a random secret the script keeps to itself, never
+// with the passcode alone: a short passcode signing its own tokens could be
+// recovered by forging tokens offline and trying them, which no sign-in limit
+// would see. The passcode is folded in so changing it revokes every token.
+function tokenSecret() {
+  var props = PropertiesService.getScriptProperties(), s = props.getProperty('TOKEN_SECRET');
+  if (!s) {
+    s = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
+    props.setProperty('TOKEN_SECRET', s);
+  }
+  return s;
+}
+
 function b64(bytesOrText) { return Utilities.base64EncodeWebSafe(bytesOrText).replace(/=+$/, ''); }
-function signToken(pass, payload) { return b64(Utilities.computeHmacSha256Signature(payload, pass + '|desk-token-v1')); }
+function signToken(pass, payload) {
+  return b64(Utilities.computeHmacSha256Signature(payload, tokenSecret() + '|' + pass + '|desk-token-v2'));
+}
 
 function issueToken(pass) {
   var exp = clock() + TOKEN_DAYS * 864e5;
-  var payload = b64(JSON.stringify({ v: 1, exp: exp }));
+  var payload = b64(JSON.stringify({ v: 2, exp: exp }));
   return { token: payload + '.' + signToken(pass, payload), exp: exp };
 }
 
@@ -232,7 +251,7 @@ function verifyToken(pass, token) {
   try {
     var pad = parts[0] + '==='.slice((parts[0].length + 3) % 4);
     var claims = JSON.parse(Utilities.newBlob(Utilities.base64DecodeWebSafe(pad)).getDataAsString());
-    return claims.v === 1 && claims.exp > clock();
+    return claims.v === 2 && claims.exp > clock();
   } catch (err) {
     return false;
   }
@@ -242,18 +261,34 @@ function requireToken(req) {
   if (!verifyToken(passphrase(), req.token)) throw fail(401, 'Sign in again.');
 }
 
+// One counter for everyone (Apps Script cannot see addresses): ten wrong
+// passcodes in an hour close sign-in until the hour ends, and the owner gets
+// one email about it. Devices already signed in are not affected.
 function login(req) {
   if (mode() !== 'private') return { ok: true, token: '', exp: 0, mode: 'open' };
   var pass = passphrase();
-  var cache = CacheService.getScriptCache(), key = 'auth:fail:' + Math.floor(clock() / 9e5);
-  var fails = Number(cache.get(key) || 0);
-  if (fails >= LIMITS.failedLogins) throw fail(429, 'Too many wrong attempts. Wait 15 minutes.');
-  if (String(req.passphrase || '') !== pass) {
-    cache.put(key, String(fails + 1), 1000);
-    throw fail(401, 'That passphrase is not right.');
+  return withLock(function () {
+    var cache = CacheService.getScriptCache(), key = 'auth:fail:' + Math.floor(clock() / 36e5);
+    var fails = Number(cache.get(key) || 0);
+    if (fails >= LIMITS.failedLogins) throw fail(429, 'Too many wrong passcodes. Sign-in reopens within the hour.');
+    if (String(req.passphrase || '') !== pass) {
+      cache.put(key, String(fails + 1), 3700);
+      if (fails + 1 === LIMITS.failedLogins) alertOwner();
+      throw fail(401, 'That passcode is not right.');
+    }
+    var t = issueToken(pass);
+    return { ok: true, token: t.token, exp: t.exp, mode: 'private' };
+  });
+}
+
+function alertOwner() {
+  try {
+    MailApp.sendEmail(Session.getEffectiveUser().getEmail(), 'Research Desk: sign-in locked for this hour',
+      LIMITS.failedLogins + ' wrong passcodes were tried on your research desk within an hour, so sign-in is closed until the hour ends. ' +
+      'Your signed-in devices keep working. If it was not you, change DESK_PASSPHRASE in the script\'s Script properties.');
+  } catch (err) {
+    console.warn('desk: could not email the owner: ' + err);
   }
-  var t = issueToken(pass);
-  return { ok: true, token: t.token, exp: t.exp, mode: 'private' };
 }
 
 /* ======================================================================
