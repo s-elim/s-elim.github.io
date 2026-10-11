@@ -507,6 +507,11 @@
     if (!el) return;
     var btn = $("dk-refresh");
     if (btn) btn.classList.toggle("is-spinning", !!S.syncing);
+    var gear = $("dk-settings");
+    if (gear) {
+      gear.classList.toggle("has-dot", exportDue());
+      gear.title = exportDue() ? "Settings · an export is due" : "Settings and connections";
+    }
     var g = S.sync && S.sync.google, n = S.sync && S.sync.notion;
     var at = S.sync && S.sync.at ? new Date(S.sync.at) : null;
     var dot = function (name, on, bad, title) {
@@ -597,11 +602,12 @@
           '<div class="dk-seg" role="group" aria-label="What to add">' + modes.map(function (m) {
             return '<button type="button" class="dk-seg__b" data-quick="' + m[0] + '" aria-pressed="' + (S.ui.quickMode === m[0]) + '"><i class="fas ' + m[2] + '" aria-hidden="true"></i> ' + m[1] + '</button>';
           }).join("") + '</div>' +
+          '<button type="button" class="dk-quick__help" data-act="quick-help" aria-expanded="' + !!S.quickHelp + '" title="What quick add understands">?</button>' +
           '<button type="submit" class="dk-btn dk-btn--primary">Add</button>' +
         '</div>' +
         '<p class="dk-quick__preview" id="dk-quick-preview" aria-live="polite"></p>' +
       '</form>';
-    return '<div class="dk-today">' + head + exportNudge() +
+    return '<div class="dk-today">' + head +
       '<div class="dk-today__grid">' + panelAgenda(t) + panelTasks(t) + panelDeadlines() + '</div>' +
       panelPinned() + '</div>';
   }
@@ -614,14 +620,11 @@
     return Math.ceil(((x - y0) / 864e5 + 1) / 7);
   }
 
-  function exportNudge() {
+  // The quarterly export reminder lives on the Settings gear (a dot) and in
+  // Settings > Your data, not on Today.
+  function exportDue() {
     var last = S.prefs.data.lastExportAt;
-    var age = last ? (Date.now() - Date.parse(last)) / 864e5 : Infinity;
-    if (age < 90 || S.entries.length === 0) return "";
-    return '<div class="dk-nudge"><i class="fas fa-archive" aria-hidden="true"></i><span>' +
-      (last ? "Last export " + Math.round(age) + " days ago." : "No export yet.") +
-      ' A quarterly JSON export keeps the desk independent of any one service.</span>' +
-      '<button type="button" class="dk-link" data-act="export">Export now</button></div>';
+    return S.entries.length > 0 && (!last || (Date.now() - Date.parse(last)) / 864e5 >= 90);
   }
 
   function connectCta(what) {
@@ -767,7 +770,7 @@
     var inp = $("dk-quick-text"), out = $("dk-quick-preview");
     if (!inp || !out) return;
     var v = inp.value.trim();
-    if (!v) { out.innerHTML = '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · #tags</span>'; return; }
+    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · #tags</span>' : ""; return; }
     var p = C.parseQuick(v), mode = S.ui.quickMode;
     var bits = [mode === "task" ? (tasksReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
     bits.push("“" + (p.title || v) + "”");
@@ -981,6 +984,12 @@
     if ((v = t.getAttribute("data-act"))) {
       if (v === "settings") openSettings();
       else if (v === "export") exportJson();
+      else if (v === "quick-help") {
+        S.quickHelp = !S.quickHelp;
+        t.setAttribute("aria-expanded", String(S.quickHelp));
+        paintQuickPreview();
+        $("dk-quick-text").focus();
+      }
       else if (v === "toggle-done") { S.ui.showDoneTasks = !S.ui.showDoneTasks; saveUi(); render(); }
     }
   }
@@ -1116,7 +1125,9 @@
         '<button type="button" class="dk-btn" id="dk-notion-home-save">Save</button></div></section>' +
       '<section class="dk-set"><h4>Display on this device</h4><div class="dk-row">' +
         '<label class="dk-toggle"><input type="checkbox" id="dk-compact"' + (S.ui.density === "compact" ? " checked" : "") + '> Compact</label></div></section>' +
-      '<section class="dk-set"><h4>Your data</h4><p class="dk-hint">Every save keeps a revision on the server. Export a JSON copy each quarter' +
+      '<section class="dk-set"><h4>Your data</h4>' +
+        (exportDue() ? '<p class="dk-due"><i class="fas fa-archive" aria-hidden="true"></i> ' + (S.prefs.data.lastExportAt ? "The last export is over three months old." : "No export yet.") + ' Export a copy to keep the desk independent of any one service.</p>' : "") +
+        '<p class="dk-hint">Every save keeps a revision in the Sheet. Export a JSON copy each quarter' +
         (S.prefs.data.lastExportAt ? " (last: " + esc(fmtDate(S.prefs.data.lastExportAt.slice(0, 10), { day: "numeric", month: "short", year: "numeric" })) + ")" : "") + '.</p>' +
         '<div class="dk-row"><button type="button" class="dk-btn" id="dk-export"><i class="fas fa-download" aria-hidden="true"></i> Export JSON</button>' +
         '<label class="dk-btn dk-file"><i class="fas fa-upload" aria-hidden="true"></i> Import JSON<input type="file" id="dk-import" accept="application/json,.json" hidden></label></div>' +

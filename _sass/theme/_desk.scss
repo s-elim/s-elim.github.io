@@ -381,19 +381,39 @@ i.dk-dot::before { margin-top: .35rem; }
   &::placeholder { color: var(--muted); font-weight: 400; }
 }
 .dk-quick__row .dk-seg { border-color: var(--border); }
-.dk-quick__preview { margin: .45rem .3rem 0; min-height: 1.2em; color: var(--muted); font: 500 .76rem var(--font-mono); }
-
-.dk-nudge {
+.dk-quick__preview { margin: .45rem .3rem 0; color: var(--muted); font: 500 .76rem var(--font-mono); &:empty { display: none; } }
+.dk-quick__help {
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font: 700 .8rem var(--font-body);
+  cursor: pointer;
+  &:hover, &[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+}
+.dk-icon.has-dot { position: relative; }
+.dk-icon.has-dot::after {
+  content: "";
+  position: absolute;
+  top: .3rem;
+  right: .3rem;
+  width: .45rem;
+  height: .45rem;
+  border-radius: 50%;
+  background: var(--dk-near);
+  box-shadow: 0 0 0 2px var(--surface-2);
+}
+.dk-due {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: .5rem;
-  margin-bottom: var(--dk-gap);
-  padding: .55rem .8rem;
+  margin: 0 0 .5rem;
+  padding: .5rem .7rem;
   border: 1px solid color-mix(in srgb, var(--dk-near) 40%, var(--border));
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--dk-near) 7%, var(--surface));
-  color: var(--text);
   font-size: .84rem;
   i { color: var(--dk-near); }
 }
