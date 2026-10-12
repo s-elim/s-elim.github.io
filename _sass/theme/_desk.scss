@@ -640,7 +640,12 @@ span.dk-dl__b { cursor: default; }
   input { flex: 1; min-width: 0; padding: .5rem 0; border: 0; background: none; color: var(--text-strong); font: 400 .9rem var(--font-body); outline: none; }
 }
 .dk-board .dk-chips { margin-bottom: var(--dk-gap); }
-.dk-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--dk-gap); }
+.dk-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--dk-gap);
+  @media (max-width: $bp-sm) { grid-template-columns: minmax(0, 1fr); }
+}
 .dk-card {
   position: relative;
   display: flex;
@@ -695,7 +700,8 @@ span.dk-dl__b { cursor: default; }
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  white-space: pre-line;
+  overflow-wrap: anywhere;
+  p, div, ul, ol, li { margin: 0; }
 }
 .dk-card__meta {
   display: flex;
@@ -938,12 +944,10 @@ span.dk-dl__b { cursor: default; }
 .dk-sw { width: 1.05rem; height: 1.05rem; border: 1px solid var(--border-strong); border-radius: 50%; cursor: pointer; padding: 0; &:hover { transform: scale(1.15); } }
 .dk-sw--hl { border-radius: 4px; }
 
-.dk-rt {
-  color: var(--text-strong);
-  font-size: .95rem;
-  line-height: 1.6;
-  p { margin: 0 0 .5em; }
-  ul, ol { margin: .3em 0; padding-left: 1.3em; }
+// Formatting marks shared by the editor and the card preview.
+.dk-rt { color: var(--text-strong); font-size: .95rem; line-height: 1.6; p { margin: 0 0 .5em; } ul, ol { margin: .3em 0; } }
+.dk-rt, .dk-card__thesis {
+  ul, ol { padding-left: 1.3em; }
   code { padding: .05em .3em; border-radius: 4px; background: var(--surface-2); font: .86em var(--font-mono); }
   a { color: var(--accent); }
   .tc-1 { color: #ba302c; } .tc-2 { color: #b46622; } .tc-3 { color: #957818; }
@@ -953,7 +957,7 @@ span.dk-dl__b { cursor: default; }
   mark { color: inherit; border-radius: 2px; }
   .pin { background: var(--accent-soft); border-bottom: 1px dashed var(--accent); }
 }
-:root[data-theme="dark"] .dk-rt {
+:root[data-theme="dark"] .dk-rt, :root[data-theme="dark"] .dk-card__thesis {
   .tc-1 { color: #ea8986; } .tc-2 { color: #eba970; } .tc-3 { color: #edca5a; }
   .tc-4 { color: #6ecf9e; } .tc-5 { color: #7dbae8; } .tc-6 { color: #c99de7; }
   .hl-1 { background: #6a5a1b; } .hl-2 { background: #224f38; } .hl-3 { background: #214963; }

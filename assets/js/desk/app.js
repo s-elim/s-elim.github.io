@@ -63,10 +63,12 @@
   // Rich text from the editor is stored as HTML; only this whitelist survives.
   var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, S: 1, STRIKE: 1, CODE: 1, BR: 1, UL: 1, OL: 1, LI: 1, P: 1, DIV: 1, SPAN: 1, MARK: 1, A: 1 };
   var OK_CLASS = /^(tc-[1-6]|hl-[1-5]|pin)$/;
+  var DROP_TAGS = { SCRIPT: 1, STYLE: 1, TEMPLATE: 1, NOSCRIPT: 1, IFRAME: 1, OBJECT: 1, TITLE: 1 };
   function scrub(n) {
     if (n.nodeType === 3) return;
     if (n.nodeType !== 1) { n.parentNode.removeChild(n); return; }
     var tag = n.tagName.toUpperCase(), i;
+    if (DROP_TAGS[tag]) { n.parentNode.removeChild(n); return; }
     if (!OK_TAGS[tag]) {
       var p = n.parentNode, moved = [];
       while (n.firstChild) { moved.push(n.firstChild); p.insertBefore(n.firstChild, n); }
@@ -86,8 +88,11 @@
     if (tag === "A" && n.getAttribute("href")) { n.setAttribute("target", "_blank"); n.setAttribute("rel", "noopener noreferrer"); }
     Array.prototype.slice.call(n.childNodes).forEach(scrub);
   }
+  // Parsed in a detached document: nothing in it loads or runs, so handlers
+  // such as <img onerror> never fire before scrub removes them.
+  var inert = document.implementation.createHTMLDocument("");
   function sanitize(html) {
-    var box = document.createElement("div");
+    var box = inert.createElement("div");
     box.innerHTML = String(html == null ? "" : html).slice(0, 60000);
     Array.prototype.slice.call(box.childNodes).forEach(scrub);
     return box.innerHTML;
@@ -835,7 +840,7 @@
       var days = C.dayDiff(today(), e.deadline);
       due = '<span class="dk-cd dk-cd--' + (e.status === "done" ? "done" : C.urgency(days)) + '" title="' + esc(fmtDate(e.deadline, { day: "numeric", month: "short", year: "numeric" })) + '">' + esc(C.countdown(days)) + '</span>';
     }
-    var thesis = plain(e.thesis);
+    var thesis = plain(e.thesis) ? sanitize(e.thesis) : "";
     return '<article class="dk-card' + (e.pinned ? " is-pinned" : "") + (e.status === "done" || e.status === "parked" ? " is-quiet" : "") + '" style="--ax:' + ax.color + '">' +
       '<button type="button" class="dk-card__open" data-entry="' + esc(e.id) + '" aria-label="Open ' + esc(e.title || "entry") + '"></button>' +
       '<header class="dk-card__head"><span class="dk-kind">' + esc(kind.label) + '</span>' +
@@ -843,7 +848,7 @@
         '<button type="button" class="dk-pin' + (e.pinned ? " is-on" : "") + '" data-pin="' + esc(e.id) + '" aria-pressed="' + e.pinned + '" title="' + (e.pinned ? "Unpin" : "Pin to Today") + '"><i class="fas fa-thumbtack" aria-hidden="true"></i></button>' +
       '</header>' +
       '<h3 class="dk-card__title">' + esc(e.title || "Untitled") + '</h3>' +
-      (thesis ? '<p class="dk-card__thesis">' + esc(thesis.slice(0, 420)) + '</p>' : "") +
+      (thesis ? '<div class="dk-card__thesis">' + thesis + '</div>' : "") +
       '<footer class="dk-card__meta"><span class="dk-axis"><i class="dk-swatch" style="--c:' + ax.color + '"></i>' + esc(ax.label) + '</span>' +
         '<span class="dk-conv" title="Conviction ' + e.conviction + ' of 5">' + dots + '</span>' +
         (e.venue ? '<span class="dk-venue">' + esc(e.venue) + '</span>' : "") +
