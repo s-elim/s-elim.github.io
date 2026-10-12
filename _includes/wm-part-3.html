@@ -1,0 +1,325 @@
+<!-- 12 ===================================================================== -->
+<section class="part" id="wm-hjepa">
+  <div class="part__num">Part 12</div>
+  <h2>H-JEPA: a stack of world models, one per timescale</h2>
+  <p class="claim">Each level is an action-conditioned JEPA in its own latent space. Higher levels look further ahead, in
+    coarser time, over states built from the level below.
+    <small>Zhang, Terver, Rabbat, LeCun, Balestriero, arXiv 2610.06805 <span class="g g--m">H-JEPA §2.1</span></small></p>
+  <p>The problem it addresses: a single-level JEPA world model rolled over a long horizon compounds its error (Lab 10) and
+    searches an action space that grows with every step, and one latent space has to serve both short-range dynamics and goal
+    matching, even when the goal ("reach that room") is more abstract than the state that satisfies it. H-JEPA's answer is a
+    hierarchy trained end to end from pixels. Level 1 encodes each observation, z<sup>(1)</sup><sub>t</sub> = E<sup>(1)</sup>(o<sub>t</sub>),
+    and each action block, a<sup>(1)</sup><sub>t</sub> = A<sup>(1)</sup>(a<sub>t</sub>). Level ℓ &gt; 1 pools the level below with a
+    stride s<sub>ℓ</sub> (how far each window advances) and a window w<sub>ℓ</sub> (how many steps it spans):</p>
+  <div class="eq">
+    <math display="block"><msubsup><mi>z</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>=</mo><msup><mi>E</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo>(</mo><msubsup><mi>z</mi><mrow><mi>t</mi><msub><mi>s</mi><mi>ℓ</mi></msub><mo>:</mo><mi>t</mi><msub><mi>s</mi><mi>ℓ</mi></msub><mo>+</mo><msub><mi>w</mi><mi>ℓ</mi></msub></mrow><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup><mo>)</mo><mo>,</mo><mspace width="1em"/><msubsup><mi>a</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>=</mo><msup><mi>A</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo>(</mo><msubsup><mi>a</mi><mrow><mi>t</mi><msub><mi>s</mi><mi>ℓ</mi></msub><mo>+</mo><msub><mi>w</mi><mi>ℓ</mi></msub><mo>−</mo><mn>1</mn><mspace width="0.2em"/><mo>:</mo><mspace width="0.2em"/><mo stretchy="false">(</mo><mi>t</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msub><mi>s</mi><mi>ℓ</mi></msub><mo>+</mo><msub><mi>w</mi><mi>ℓ</mi></msub><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></msubsup><mo>)</mo></math>
+    <span class="eq__cap">Eq. 1. The state encoder pools a w-step window into one abstract state; the action encoder pools the s action embeddings that move the system to the next upper-level state (a macro-action). All experiments use w = 1.</span>
+  </div>
+  <p>Every level is then trained as its own JEPA, by one-step teacher forcing over a context of c<sub>ℓ</sub> states, plus a
+    regulariser on its batch of embeddings, and all levels are summed and trained together, with upper-level losses
+    backpropagating into the encoders below:</p>
+  <div class="eq">
+    <math display="block"><msup><mi>L</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo>=</mo><mfrac><mn>1</mn><msub><mi>c</mi><mi>ℓ</mi></msub></mfrac><munderover><mo>∑</mo><mrow><mi>τ</mi><mo>=</mo><mn>1</mn></mrow><msub><mi>c</mi><mi>ℓ</mi></msub></munderover><msubsup><mrow><mo>‖</mo><msup><mi>F</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo stretchy="false">(</mo><msubsup><mi>z</mi><mrow><mn>1</mn><mo>:</mo><mi>τ</mi></mrow><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>,</mo><msubsup><mi>a</mi><mrow><mn>1</mn><mo>:</mo><mi>τ</mi></mrow><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo stretchy="false">)</mo><mo>−</mo><msubsup><mi>z</mi><mrow><mi>τ</mi><mo>+</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup><mo>+</mo><msub><mi>λ</mi><mi>ℓ</mi></msub><mspace width="0.1em"/><mi>SIGReg</mi><mo stretchy="false">(</mo><msup><mi>Z</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup><mo stretchy="false">)</mo><mo>+</mo><msub><mi>γ</mi><mi>ℓ</mi></msub><mspace width="0.1em"/><msubsup><mi>L</mi><mtext>idm</mtext><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>,</mo><mspace width="1em"/><mi>L</mi><mo>=</mo><munder><mo>∑</mo><mi>ℓ</mi></munder><msup><mi>L</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo></mrow></msup></math>
+    <span class="eq__cap">Eqs. 2, 3 and 8. No EMA target, no stop-gradient on targets, no pretrained weights. The inverse-dynamics term (γ &gt; 0) is used on DROID only. Eq. 2 prints the context as z<sub>&lt;τ</sub>; the line above follows the text's causal description.</span>
+  </div>
+  <p data-depth="2"><b>Simulation models.</b> Level 1 is LeWM: a ViT-Tiny encoder read through its [CLS] token and an MLP
+    projector with BatchNorm, and a causal transformer predictor (4 layers, 8 heads, width 192) conditioned on actions through
+    adaptive LayerNorm; a level-1 step is 5 environment steps. Upper levels: a two-layer MLP encoder on one lower-level latent,
+    a one-layer transformer pooling two action embeddings into a 4-D macro-action, a causal transformer predictor; s = 2 and
+    w = 1, so each level up doubles the time a prediction spans. AdamW, H200 GPUs, three seeds. <span class="g g--m">H-JEPA App. C.1</span></p>
+
+  <div class="lab lab--wide" id="lab-hier">
+    <div class="lab__head"><span class="lab__tag">Lab 12</span><h3>Build the hierarchy</h3>
+      <p>Choose depth, stride and window. The page lays one training sample out on level-1 time, computes how many level-1
+        frames it needs and how long a clip must be, and checks the result against the paper's Table 3.</p></div>
+    <div style="padding:1rem 1.15rem"><div id="hier-host"></div></div>
+    <div class="lab__foot">
+      <div><h4>The arithmetic</h4>The top level needs n<sub>L</sub> = 4 states; then n<sub>ℓ−1</sub> = (n<sub>ℓ</sub> − 1)s<sub>ℓ</sub> + w<sub>ℓ</sub>,
+        and a clip spans 5(n<sub>1</sub> − 1) + 1 environment steps. To cover K upper-level subgoals, a lower level plans
+        H<sub>ℓ</sub> = K·s<sub>ℓ+1</sub> + w<sub>ℓ+1</sub> − 1 steps. <span class="g g--m">App. C.1, §2.2</span></div>
+      <div><h4>Why depth costs data</h4>A clip must lie inside one episode. Four levels need 121-step clips, so short-episode
+        datasets such as Push-T yield only 14% of the flat model's training transitions per epoch, and four-level Push-T fails.
+        <span class="g g--m">Table 3, §4.1</span></div>
+    </div>
+  </div>
+  <div class="wm-code"><i># the DROID model (two levels), from Table 5</i>
+<b>level 1</b>  frame 256×256, 5 fps → ViT-S/16 → [CLS] → projector → z<sup>(1)</sup> ∈ ℝ<sup>384</sup>;  action ∈ ℝ<sup>7</sup> via adaptive LayerNorm
+         predictor: causal transformer, width 384, depth 12, 6 heads, FF 1536; context 7 states
+         loss: prediction + 0.08·SIGReg + 100·IDM
+<b>level 2</b>  stride 3: z<sup>(2)</sup><sub>t</sub> = MLP<sub>768</sub>(z<sup>(1)</sup><sub>3t</sub>);  macro-action = MLP(64)+LN(3 × 7 commands) ∈ ℝ<sup>8</sup>, with 0.005·SIGReg
+         predictor width 384, depth 12; context 2 states; loss: prediction + 0.16·SIGReg + 50·IDM
+<b>train</b>    AdamW, batch 256, peak lr 5e-4, 100 epochs × 292 iterations, bf16, three seeds</div>
+  <h3>What each level keeps</h3>
+  <p>Probes on the frozen latents of four-level models show <b>selective abstraction</b>: on Visual AntMaze the ant's joint
+    configuration becomes less recoverable at each level up while its position stays recoverable; on FourRoom the randomly
+    moving distractor fades while the agent stays. The effect appears only when the fast and slow factors in the data move at
+    timescales at least about 2× apart (AntMaze, Humanoid, FourRoom), not in Push-T or Cube. The mechanism is the joint
+    training: each encoder gets gradient from a predictor working at its own stride, so it keeps what is predictable at that
+    stride. <span class="g g--m">§3, Figs. 4 and 5</span></p>
+</section>
+
+<!-- 13 ===================================================================== -->
+<section class="part" id="wm-sigreg">
+  <div class="part__num">Part 13</div>
+  <h2>Collapse without a teacher: SIGReg, and why diverse scenes need inverse dynamics</h2>
+  <p class="claim">H-JEPA drops the EMA teacher. It keeps embeddings alive by pushing each batch toward an isotropic Gaussian,
+    and on varied robot scenes it must add a head that recovers the action from consecutive states.
+    <small>H-JEPA App. K, L; LeJEPA <span class="g g--m">Papers</span></small></p>
+  <p><b>SIGReg</b> (Balestriero and LeCun, LeJEPA) tests normality one direction at a time. Project the n embeddings of a
+    batch onto M random unit directions u<sub>m</sub>, and for each projection compare its empirical characteristic function
+    with that of a standard normal. By the Cramér–Wold theorem, matching every one-dimensional projection means matching the
+    whole distribution.</p>
+  <div class="eq">
+    <math display="block"><mi>SIGReg</mi><mo stretchy="false">(</mo><mi>Z</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>M</mi></mfrac><munderover><mo>∑</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><msub><mi>T</mi><mtext>EP</mtext></msub><mo stretchy="false">(</mo><mi>Z</mi><msub><mi>u</mi><mi>m</mi></msub><mo stretchy="false">)</mo><mo>,</mo><mspace width="1em"/><msub><mi>T</mi><mtext>EP</mtext></msub><mo stretchy="false">(</mo><mi>h</mi><mo stretchy="false">)</mo><mo>=</mo><mi>n</mi><mo>∫</mo><msup><mrow><mo>|</mo><msub><mover><mi>φ</mi><mo>^</mo></mover><mi>h</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><msup><mi>t</mi><mn>2</mn></msup><mo>/</mo><mn>2</mn></mrow></msup><mo>|</mo></mrow><mn>2</mn></msup><mi>w</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mi>d</mi><mi>t</mi><mo>,</mo><mspace width="1em"/><msub><mover><mi>φ</mi><mo>^</mo></mover><mi>h</mi></msub><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><munder><mo>∑</mo><mi>i</mi></munder><msup><mi>e</mi><mrow><mi>i</mi><mi>t</mi><msub><mi>h</mi><mi>i</mi></msub></mrow></msup></math>
+    <span class="eq__cap">Eq. 9 with the Epps–Pulley statistic; Gaussian weight w(t). The LeWM implementation evaluates the integral on [0, 3] with 17 trapezoidal knots, using that the integrand is even. On Gaussian data the statistic sits at a floor of about 1; on collapsed data it grows linearly with n.</span>
+  </div>
+
+  <div class="lab lab--wide" id="lab-sig">
+    <div class="lab__head"><span class="lab__tag">Lab 13</span><h3>Run SIGReg on a batch of embeddings</h3>
+      <p>Draw n embeddings of dimension 16 from a distribution, project them on M random directions and compute the
+        Epps–Pulley statistic of each projection, the way Eq. 9 does. The histogram shows one bar per direction.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="sig-cv" width="900" height="460" aria-label="Statistic per projection and the projected samples"></canvas></div>
+      <div class="lab__side">
+        <div class="chips" id="sig-dist" role="group" aria-label="Distribution"></div>
+        <div class="ctl"><label for="sg-n">Batch size n <output id="sg-n-o"></output></label><input type="range" id="sg-n" min="16" max="1024" step="16" value="256"></div>
+        <div class="ctl"><label for="sg-M">Directions M <output id="sg-M-o"></output></label><input type="range" id="sg-M" min="1" max="256" step="1" value="64"></div>
+        <div class="btns"><button type="button" class="btn btn--sm" id="sg-new">Resample</button></div>
+        <div class="reads">
+          <div class="read"><b id="sg-val">-</b><span>SIGReg</span></div>
+          <div class="read"><b id="sg-floor">-</b><span>Gaussian floor</span></div>
+        </div>
+        <p class="status" id="sg-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Isotropic Gaussian: about 1 whatever n is.</li><li>Collapsed, then double n: the statistic doubles, so the push away from collapse per sample stays constant, the property H-JEPA's App. K.3 relies on.</li><li>Low-rank: most random directions see a Gaussian of the wrong width.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>The statistic and its scaling, computed exactly on the sampled batch
+        with the quadrature described. Its weighting constants may differ in detail from the released code. <span class="g g--w">Toy</span> <span class="g g--d">computed</span></div>
+    </div>
+  </div>
+
+  <h3>Slow-feature collapse</h3>
+  <p>On DROID the scene, lighting, camera pose and objects change every episode, and within one episode the background is the
+    most predictable thing in view. A purely predictive encoder can therefore keep the scene identity and drop the moving arm:
+    its latents stay constant within each episode and next-step prediction becomes trivial. The paper calls this slow-feature
+    collapse and measures it by the within-episode share of latent variance, χ, which is 0 at exact collapse. Latent variance
+    is 75% between episodes on DROID against 28% on OGBench Cube. <span class="g g--m">§4.3, App. L.1, L.2</span></p>
+  <p>Its key results: <b>no regulariser that looks only at the distribution of single embeddings can prevent it</b>, SIGReg
+    included, because a background-only encoder can have any distribution you like (Proposition 1); the prediction objective
+    actually prefers it, since it has zero irreducible error (Theorem 1); and an <b>inverse-dynamics</b> head, which must recover
+    a<sub>t</sub> from (z<sub>t</sub>, z<sub>t+1</sub>), makes collapse cost at least the action variance that episode
+    identity cannot explain (Proposition 3).</p>
+
+  <div class="lab lab--wide" id="lab-slow">
+    <div class="lab__head"><span class="lab__tag">Lab 14</span><h3>Why the objective prefers the background</h3>
+      <p>A one-feature world: a background b that is constant within an episode, and an agent x that moves with the action plus
+        a random innovation ε. The encoder mixes them, z = cos φ·b + sin φ·x + noise, with the same variance for every φ, so a
+        marginal regulariser cannot tell encoders apart. The plot shows each loss as a function of φ.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="slow-cv" width="900" height="460" aria-label="Losses against the encoder's mixing angle"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="sl-e"><span>Agent innovation σ<sub>ε</sub></span> <output id="sl-e-o"></output></label><input type="range" id="sl-e" min="0.05" max="1" step="0.05" value="0.5"></div>
+        <div class="ctl"><label for="sl-n"><span>Sensor noise σ<sub>η</sub></span> <output id="sl-n-o"></output></label><input type="range" id="sl-n" min="0.01" max="0.3" step="0.01" value="0.05"></div>
+        <div class="ctl"><label for="sl-g">Inverse-dynamics weight γ <output id="sl-g-o"></output></label><input type="range" id="sl-g" min="0" max="50" step="0.25" value="0"></div>
+        <div class="reads">
+          <div class="read"><b id="sl-opt">-</b><span>optimal φ</span></div>
+          <div class="read"><b id="sl-share">-</b><span>variance on agent</span></div>
+        </div>
+        <p class="status" id="sl-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>The formulas</h4>L<sub>pred</sub>(φ) = sin²φ·σ<sub>ε</sub>² + 2σ<sub>η</sub>²: reading the agent pays its innovation.
+        L<sub>idm</sub>(φ) = σ<sub>a</sub>² − sin²φ·σ<sub>a</sub>⁴ / (sin²φ(σ<sub>a</sub>² + σ<sub>ε</sub>²) + 2σ<sub>η</sub>²), with
+        σ<sub>a</sub> = 1: at φ = 0 it pays the whole action variance, the floor of Proposition 3. <span class="g g--t">Derived</span></div>
+      <div><h4>Try</h4>At γ = 0 the optimum is φ = 0, pure background: collapse. Any γ above σ<sub>ε</sub>²·2σ<sub>η</sub>² moves it off
+        zero, and the agent's share grows with γ; at the default noise and γ = 50, the paper's DROID weight, it reaches 80%.
+        H-JEPA's runs agree: without the term, every DROID run collapsed; with γ = 50, fidelity reached 30.7%. <span class="g g--m">Table 12</span> <span class="g g--w">Toy</span></div>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table class="tbl tp">
+      <thead><tr><th>DROID, level 1, 5 fps</th><th>Representation</th><th>Planning (Fréchet fidelity)</th></tr></thead>
+      <tbody>
+        <tr><td>No SIGReg, any IDM weight</td><td>effective rank 1 to 14 of 384</td><td>below the do-nothing floor</td></tr>
+        <tr><td>SIGReg only (five weights)</td><td>collapses later at larger λ; action sensitivity below 0.05</td><td>−81% final at the largest λ</td></tr>
+        <tr><td>SIGReg + time repulsion</td><td>keeps moving within episodes</td><td>never clears the floor</td></tr>
+        <tr class="hl"><td>SIGReg + IDM, γ = 50</td><td>χ = 0.12, sensitivity 0.28</td><td>30.66%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="wm-mini" style="margin-top:-.6rem">Fig. 17 and Table 12, three seeds, 100 epochs. <span class="g g--m">H-JEPA App. K.1, L.5 to L.7</span></p>
+</section>
+
+<!-- 14 ===================================================================== -->
+<section class="part" id="wm-hplan">
+  <div class="part__num">Part 14</div>
+  <h2>Planning top-down, and what it buys</h2>
+  <p class="claim">The top level plans macro-actions toward its own goal latent. Its predicted states become the targets of the
+    level below, which plans finer actions to reach them, down to primitive actions.
+    <small>H-JEPA §2.2 <span class="g g--m">Paper</span></small></p>
+  <div class="eq">
+    <math display="block"><msup><mi>a</mi><mrow><mo stretchy="false">(</mo><mi>L</mi><mo stretchy="false">)</mo><mo>,</mo><mo>⋆</mo></mrow></msup><mo>=</mo><mi>argmin</mi><mspace width="0.2em"/><msubsup><mrow><mo>‖</mo><msubsup><mover><mi>z</mi><mo>^</mo></mover><msub><mi>H</mi><mi>L</mi></msub><mrow><mo stretchy="false">(</mo><mi>L</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>−</mo><msup><mi>g</mi><mrow><mo stretchy="false">(</mo><mi>L</mi><mo stretchy="false">)</mo></mrow></msup><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup><mo>,</mo><mspace width="1em"/><msup><mi>a</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo stretchy="false">)</mo><mo>,</mo><mo>⋆</mo></mrow></msup><mo>=</mo><mi>argmin</mi><mo>[</mo><msup><mrow><mo>‖</mo><msub><mover><mi>z</mi><mo>~</mo></mover><mi>K</mi></msub><mo>−</mo><msubsup><mover><mi>z</mi><mo>^</mo></mover><mi>K</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo>⋆</mo></mrow></msubsup><mo>‖</mo></mrow><mn>2</mn></msup><mo>+</mo><mi>β</mi><munder><mo>∑</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>K</mi></mrow></munder><msup><mrow><mo>‖</mo><msub><mover><mi>z</mi><mo>~</mo></mover><mi>i</mi></msub><mo>−</mo><msubsup><mover><mi>z</mi><mo>^</mo></mover><mi>i</mi><mrow><mo stretchy="false">(</mo><mi>ℓ</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>,</mo><mo>⋆</mo></mrow></msubsup><mo>‖</mo></mrow><mn>2</mn></msup><mo>]</mo></math>
+    <span class="eq__cap">Eqs. 4 to 6. z̃<sub>i</sub> = E<sup>(ℓ+1)</sup>(lower-level rollout at the i-th upper step): the lower plan is lifted into the upper space and compared with the upper level's predictions. K = 1 is closed-loop (track only the first subgoal); β weights intermediate subgoals.</span>
+  </div>
+  <p>Unlike V-JEPA 2-AC, every level optimises its actions by gradient descent through its own rollout (AdamW, at most 90
+    steps, early stopping), not by CEM. Upper levels have no natural action bounds, so their search starts from a Gaussian
+    fitted to the last 4,000 training macro-actions and is clipped to their 2nd–98th percentiles. The agent executes two
+    level-1 blocks (10 environment steps) and replans from scratch. <span class="g g--m">App. E</span></p>
+  <p>Two things change at once, and the paper separates them. <b>Temporal decomposition</b>: tracking the next subgoal is an
+    easy, short problem; along expert trajectories the subgoal-tracking cost falls monotonically (−Spearman 0.89 to 1.00) where
+    the full-horizon goal cost does not (0.48 to 0.75). <b>A better space to measure progress</b>: keeping level-1 rollouts
+    fixed and only measuring goal distance through the upper encoders raises success on AntMaze and FourRoom; level-1 distances
+    are nearly flat far from the goal, upper-level distances rise smoothly along corridors. <span class="g g--m">§4.2, Tables 1, 10, Fig. 7</span></p>
+
+  <div class="lab lab--wide" id="lab-maze">
+    <div class="lab__head"><span class="lab__tag">Lab 15</span><h3>Cost geometry and subgoals on a maze</h3>
+      <p>A greedy planner moves one cell at a time downhill in a cost. Compare four costs: one that saturates away from the goal
+        (like a level-1 latent), straight-line distance, a graded geodesic distance (like an upper level), and subgoals along that
+        geodesic tracked with the straight-line cost (temporal decomposition).</p></div>
+    <div style="padding:1rem 1.15rem"><div id="maze-host"></div></div>
+    <div class="lab__foot">
+      <div><h4>What it shows</h4>Why a graded cost helps a local optimiser, and why short subproblems make even a poor local cost
+        work, the two levers of §4.2. <span class="g g--w">Toy</span></div>
+      <div><h4>What it does not</h4>The paper's planner is gradient descent in learned spaces, not a grid search, and its costs
+        are learned, not designed. The resemblance to Fig. 7 is qualitative. <span class="g g--t">Derived</span></div>
+    </div>
+  </div>
+
+  <h3>Every result the paper tabulates in simulation</h3>
+  <div class="panel"><div id="wm-hres"></div>
+    <p class="wm-mini" style="margin:.6rem 0 0">Success (%), mean ± SE over three seeds, 50 tasks per environment; planner settings chosen beforehand on a separate task set under a 100-TFLOP budget. Tables 1 and 9. <span class="g g--m">H-JEPA §4, App. E, H</span></p></div>
+
+  <h3>DROID: real robot video, offline</h3>
+  <p>DROID has no usable simulator, so every DROID number is offline and open-loop: one plan covers a 108-frame window (about
+    7.2 s) centred on the grasp of 16 hand-picked pick-and-place clips, and nothing is executed. Plans are scored by Fréchet
+    fidelity (Part 15). Read from the labels of Fig. 9b: LeWM with inverse dynamics about 34%, HWM about 35%, H-JEPA about 40%,
+    the last at lower planner compute; without inverse dynamics the model collapses. The public V-JEPA 2-AC and JEPA-WM
+    checkpoints, run at their native 1 fps on 15 clips, reach lower fidelity at orders of magnitude more planner compute.
+    <span class="g g--m">§4.3, Fig. 9</span> <span class="g g--t">read from the figure</span></p>
+  <aside class="mn"><span class="mn__h">Read it carefully</span>
+    <p>The DROID result shows a better planned path, not a robot succeeding more often: no plan was executed, the clips were
+      chosen for visibility, and the baselines ran at a different frame rate on a different set. The authors name closed-loop
+      control on a physical robot as their next step.</p>
+  </aside>
+</section>
+
+<!-- 15 ===================================================================== -->
+<section class="part" id="wm-eval">
+  <div class="part__num">Part 15</div>
+  <h2>Evaluating a world model</h2>
+  <p class="claim">A low prediction error certifies little. Measure four things separately: how faithful the rollouts are, how
+    much the predictions respond to the action, whether the planner's energy tracks real progress, and whether the task gets
+    done.
+    <small>An evaluation protocol <span class="g g--t">Derived</span></small></p>
+  <div class="tbl-wrap">
+    <table class="tbl tp">
+      <thead><tr><th>Axis</th><th>Why one number is not enough</th><th>A protocol that measures it</th></tr></thead>
+      <tbody>
+        <tr><td><b>Latent fidelity</b></td><td>error is measured in a space the model chose; collapse makes it zero</td><td>open-loop k-step error normalised by ‖z<sub>t+k</sub> − z<sub>t</sub>‖, plus a probe of a physical quantity on ẑ</td></tr>
+        <tr><td><b>Controllability</b></td><td>a model can track passive motion while ignoring the action</td><td>action sensitivity: change of the rollout when actions are swapped (H-JEPA uses it); an inverse-dynamics probe</td></tr>
+        <tr><td><b>Planning quality</b></td><td>the planner exploits wherever the model is optimistically wrong</td><td>rank correlation between energy and realised distance to goal over executed plans</td></tr>
+        <tr><td><b>Task success</b></td><td>10 trials per cell cannot separate 60% from 80%</td><td>three or more seeds, 50 or more episodes per task, Wilson intervals</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Fréchet fidelity, H-JEPA's offline metric, compares the whole planned end-effector path with the expert's, relative to not
+    moving at all. It exists because a net-displacement error is blind to the detour that pick-and-place requires.</p>
+  <div class="eq">
+    <math display="block"><mtext>fidelity</mtext><mo>=</mo><mfrac><mrow><msub><mi>d</mi><mi>F</mi></msub><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mover><mi>p</mi><mo>~</mo></mover><mo stretchy="false">)</mo><mo>−</mo><msub><mi>d</mi><mi>F</mi></msub><mo stretchy="false">(</mo><mi>p</mi><mo>,</mo><mover><mi>p</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow><mrow><msub><mi>d</mi><mi>F</mi></msub><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mover><mi>p</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow></mfrac></math>
+    <span class="eq__cap">Eq. 7. p: planned cumulative path; p̃: expert path; 0: staying still; d<sub>F</sub>: discrete Fréchet distance. 0 means no better than standing still, 100% the expert path.</span>
+  </div>
+  <div class="lab lab--wide" id="lab-frechet">
+    <div class="lab__head"><span class="lab__tag">Lab 16</span><h3>Score a planned path</h3>
+      <p>The expert reaches down to an object, lifts it and carries it to a target (side view). Shape the planned path and
+        compare Fréchet fidelity with the net-displacement error earlier work used.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="fr-cv" width="900" height="460" aria-label="Expert path and planned path"></canvas></div>
+      <div class="lab__side">
+        <div class="chips" id="fr-pre" role="group" aria-label="Presets"></div>
+        <div class="ctl"><label for="fr-f">Follows the detour <output id="fr-f-o"></output></label><input type="range" id="fr-f" min="0" max="1" step="0.01" value="0.5"></div>
+        <div class="ctl"><label for="fr-s">Progress along the path <output id="fr-s-o"></output></label><input type="range" id="fr-s" min="0" max="1" step="0.01" value="1"></div>
+        <div class="ctl"><label for="fr-n">Wobble <output id="fr-n-o"></output></label><input type="range" id="fr-n" min="0" max="0.1" step="0.005" value="0"></div>
+        <div class="reads">
+          <div class="read"><b id="fr-fid">-</b><span>Fréchet fidelity</span></div>
+          <div class="read"><b id="fr-net">-</b><span>net displacement error</span></div>
+        </div>
+        <p class="status" id="fr-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>"Straight to the goal": net displacement error 0, so the old metric calls it perfect; Fréchet fidelity says it missed the object.</li><li>Stop halfway along a good path: fidelity counts how far along the expert path the plan got, which is what the paper found it ranks on RoboCasa.</li></ul></div>
+      <div><h4>Its limits</h4>On OGBench Cube no episode succeeds below a fidelity floor, but clearing it does not predict success:
+        a grasp either closes or not. Read a fidelity gap as a direction, not a size. <span class="g g--m">App. J.2</span></div>
+    </div>
+  </div>
+
+  <h3>What is established, and what is not</h3>
+  <div class="chips" id="wm-ledger-f" role="group" aria-label="Filter"></div>
+  <div class="tbl-wrap">
+    <table class="tbl tp" id="wm-ledger">
+      <thead><tr><th>Claim</th><th>Status</th><th>Evidence and protocol</th></tr></thead>
+      <tbody>
+        <tr data-st="est"><td>Predicting features beats predicting pixels for frozen video representations</td><td><span class="wm-flag ok">established</span></td><td>V-JEPA's matched ablation; V-JEPA 2 at 75.3 on frozen SSv2 against at most 55.4 for image encoders, one protocol</td></tr>
+        <tr data-st="part"><td>V-JEPA 2-AC plans zero-shot pick-and-place in unseen labs</td><td><span class="wm-flag">partly</span></td><td>with human sub-goal images, 10 trials per cell, one model, camera placed by hand</td></tr>
+        <tr data-st="ref"><td>A flat V-JEPA 2-AC planner solves tasks from one goal image</td><td><span class="wm-flag">contradicted</span></td><td>0 of 50 for cup and box pick-and-place in HWM's Franka test</td></tr>
+        <tr data-st="part"><td>A temporal hierarchy makes single-goal pick-and-place work on a real arm</td><td><span class="wm-flag">partly</span></td><td>HWM: 35 / 50 and 30 / 50, one lab</td></tr>
+        <tr data-st="est"><td>Separate latent spaces per level add to a temporal hierarchy</td><td><span class="wm-flag ok">in simulation</span></td><td>about twice HWM's success on Visual AntMaze; ties on FourRoom and Push-T; three seeds</td></tr>
+        <tr data-st="hyp"><td>H-JEPA improves real-robot control</td><td><span class="wm-flag">untested</span></td><td>DROID results are offline path fidelity on 16 clips</td></tr>
+        <tr data-st="ref"><td>SIGReg alone prevents collapse</td><td><span class="wm-flag">not on diverse scenes</span></td><td>every SIGReg-only DROID run collapses; Propositions 1 and 3 explain why</td></tr>
+        <tr data-st="hyp"><td>Video pretraining is what makes V-JEPA 2-AC work</td><td><span class="wm-flag">untested</span></td><td>no encoder ablation at the action-conditioned stage</td></tr>
+        <tr data-st="est"><td>V-JEPA 2-AC's frames are about 1 s apart in real time</td><td><span class="wm-flag ok">measured</span></td><td>DROID files tagged 60 fps for 15 Hz capture; the released loader strides by the tag; H-JEPA App. J.1 agrees</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 16 ===================================================================== -->
+<section class="part" id="wm-next">
+  <div class="part__num">Part 16</div>
+  <h2>Research directions, and the sources</h2>
+  <p class="lead">Six experiments I would run next, ordered by what they would teach per unit of cost. Each names what would
+    falsify it. These are proposals, not results. <span class="g g--r">Open</span></p>
+  <div class="wm-dirs" id="wm-dirs"></div>
+  <div class="mn" style="float:none;margin:1.2rem 0;width:auto;background:var(--red-soft);padding:.8rem 1rem;border-radius:0 10px 10px 0">
+    <span class="mn__h">How this maps onto my work</span>
+    <p>Agentic latent world models: top-down subgoal refinement is latent lookahead across timescales, and HWM's 0% to 70% is
+      the clearest evidence yet that a manipulation planner needs it. Representation: an upper level that keeps only what it can
+      predict at its stride is close to the outcome-sufficient representations I study, and the per-entity probes are the test
+      I would reuse. Dexterous manipulation: whether a hierarchy separates finger joints from object pose decides whether it helps
+      hands at all. None of this is a result yet.</p>
+  </div>
+
+  <h3>Glossary</h3>
+  <p class="wm-mini">Click a term for its one-line mathematics.</p>
+  <div class="gloss" id="wm-gloss"></div>
+
+  <h3>Sources</h3>
+  <div class="refs">
+    <h4>The models</h4>
+    <ul>
+      <li>Assran, Bardes, Fan, Garrido et al., <a href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener">V-JEPA 2</a>, arXiv 2506.09985v1, and <a href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener">facebookresearch/vjepa2</a> at 204698b</li>
+      <li>Zhang, Terver, Rabbat, LeCun, Balestriero, <a href="https://arxiv.org/abs/2610.06805" target="_blank" rel="noopener">H-JEPA</a>, arXiv 2610.06805v1, and <a href="https://github.com/kevinghst/H-JEPA" target="_blank" rel="noopener">kevinghst/H-JEPA</a></li>
+      <li><a href="https://arxiv.org/abs/2301.08243" target="_blank" rel="noopener">I-JEPA</a>; <a href="https://arxiv.org/abs/2404.08471" target="_blank" rel="noopener">V-JEPA</a>; <a href="https://arxiv.org/abs/2603.14482" target="_blank" rel="noopener">V-JEPA 2.1</a></li>
+    </ul>
+    <h4>World models and anti-collapse</h4>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2604.03208" target="_blank" rel="noopener">HWM</a>; <a href="https://arxiv.org/abs/2603.19312" target="_blank" rel="noopener">LeWM</a>; <a href="https://arxiv.org/abs/2511.08544" target="_blank" rel="noopener">LeJEPA (SIGReg)</a></li>
+      <li><a href="https://arxiv.org/abs/2512.24497" target="_blank" rel="noopener">JEPA-WMs</a>; <a href="https://arxiv.org/abs/2411.04983" target="_blank" rel="noopener">DINO-WM</a>; <a href="https://arxiv.org/abs/2211.10831" target="_blank" rel="noopener">JEPAs focus on slow features</a></li>
+    </ul>
+    <h4>Background and naming</h4>
+    <ul>
+      <li>LeCun, <a href="https://openreview.net/forum?id=BZ5a1r-kVsf" target="_blank" rel="noopener">A Path Towards Autonomous Machine Intelligence</a>; Dawid and LeCun, <a href="https://arxiv.org/abs/2306.02572" target="_blank" rel="noopener">arXiv 2306.02572</a></li>
+      <li>Unrelated, same name: <a href="https://arxiv.org/abs/2602.07000" target="_blank" rel="noopener">Hierarchical JEPA for B5G remote control</a></li>
+    </ul>
+    <h4>Data</h4>
+    <ul><li>DROID raw 1.0.1, two episodes read from the public bucket on 12 Oct 2026</li></ul>
+  </div>
+  <p class="endnote" id="wm-verify">
+    Built by Md Selim Sarowar on 12 Oct 2026. Every number graded Paper was read from the cited paper that day; Code facts were
+    read from facebookresearch/vjepa2 at 204698b or measured on DROID files; the toys run small models in the page and are
+    labelled as such. The full teardown with its sixteen-step 3D tour, story mode and audit is at
+    <a href="/notes/v-jepa/teardown/">/notes/v-jepa/teardown/</a>.
+  </p>
+</section>

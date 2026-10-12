@@ -1,6 +1,6 @@
 ---
-# A standalone document: opt out of the site-wide `layout: single` default
-# in _config.yml so this page is not wrapped in the portfolio chrome.
+# A standalone lecture with its own design: opt out of the site-wide
+# `layout: single` default so the portfolio chrome does not wrap it.
 layout: null
 permalink: /notes/v-jepa/
 ---
@@ -9,12 +9,12 @@ permalink: /notes/v-jepa/
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>V-JEPA, V-JEPA 2-AC and H-JEPA Handbook · Md Selim Sarowar</title>
-  <meta name="description" content="A research handbook on the JEPA family from I-JEPA to V-JEPA 2, V-JEPA 2-AC and H-JEPA (arXiv 2610.06805), checked against the papers and the code: objectives, block-causal prediction, CEM planning, the DROID frame-rate mismatch, hierarchical planning with SIGReg and inverse dynamics, an evaluation audit with intervals, a sixteen-step 3D tour and research directions for manipulation.">
+  <title>How a Latent World Model Works: V-JEPA 2, V-JEPA 2-AC and H-JEPA · Md Selim Sarowar</title>
+  <meta name="description" content="An interactive lecture on latent world models: how V-JEPA 2 learns features by masked prediction, how V-JEPA 2-AC turns them into an action-conditioned predictor that plans with the cross-entropy method, and how H-JEPA stacks such models across timescales, from input tensor to output action, with sixteen labs that run in the page.">
   <link rel="canonical" href="{{ '/notes/v-jepa/' | absolute_url }}">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="V-JEPA, V-JEPA 2-AC and H-JEPA Handbook">
-  <meta property="og:description" content="Masked video prediction in feature space, an action-conditioned predictor that plans on a real Franka arm, and H-JEPA's hierarchy of latent world models, with every number checked.">
+  <meta property="og:title" content="How a Latent World Model Works">
+  <meta property="og:description" content="V-JEPA 2, V-JEPA 2-AC and H-JEPA taken apart, with the mathematics, the released code and sixteen labs in which you train, break and plan with small world models.">
   <meta property="og:url" content="{{ '/notes/v-jepa/' | absolute_url }}">
   <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
   <script>
@@ -23,25 +23,8 @@ permalink: /notes/v-jepa/
       if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
     } catch (e) {}
   </script>
-  <style>
-    :root { color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-    body { margin: 0; }
-    img { max-width: 100%; }
-    [hidden] { display: none !important; }
-    .backbar {
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-      max-width: 1120px; margin: 0 auto; padding: .7rem 20px 0;
-      font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .74rem;
-    }
-    .backbar a { color: var(--accent, #0d7a72); text-decoration: none; }
-    .backbar a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  </style>
 </head>
-<body>
-  <nav class="backbar">
-    <a href="{{ '/research-ideas/' | relative_url }}">← Research ideas</a>
-    <a href="{{ '/' | relative_url }}">s-elim.github.io</a>
-  </nav>
-  {% include vjepa-explainer.html %}
+<body data-depth="2">
+  {% include wm-lecture.html %}
 </body>
 </html>

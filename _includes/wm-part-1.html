@@ -1,0 +1,297 @@
+<!-- 01 ===================================================================== -->
+<section class="part" id="wm-what">
+  <div class="part__num">Part 01</div>
+  <h2>What a world model is, and why predict in a learned space</h2>
+  <p class="claim">A world model maps what the agent has seen and what it is about to do onto what it will see next. Plan
+    with it by asking that question for many candidate actions before moving.
+    <small>The definition used throughout <span class="g g--t">Derived</span></small></p>
+  <p class="lead">
+    Formally it is a conditional predictor ŝ<sub>t+1</sub> = f(s<sub>≤t</sub>, a<sub>t</sub>). The choice that separates the
+    families is what s is. A video model such as Cosmos or Genie predicts pixels, or a compressed code it can decode back to
+    pixels. A JEPA predicts an embedding produced by an encoder that is trained jointly with the predictor, and never decodes.
+  </p>
+  <p>The argument for the second choice is a decomposition. For any prediction ŷ of a target y given a context x, the expected
+    squared error splits in two:</p>
+  <div class="eq">
+    <math display="block"><mi mathvariant="double-struck">E</mi><msup><mrow><mo>‖</mo><mi>y</mi><mo>−</mo><mover><mi>y</mi><mo>^</mo></mover><mo>‖</mo></mrow><mn>2</mn></msup><mo>=</mo><munder><munder><msup><mrow><mo>‖</mo><mi mathvariant="double-struck">E</mi><mo stretchy="false">[</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false">]</mo><mo>−</mo><mover><mi>y</mi><mo>^</mo></mover><mo>‖</mo></mrow><mn>2</mn></msup><mo>⏟</mo></munder><mtext>what a model can fix</mtext></munder><mo>+</mo><munder><munder><mrow><mi>tr</mi><mo>&#x2061;</mo><mi>Cov</mi><mo stretchy="false">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo>⏟</mo></munder><mtext>irreducible</mtext></munder></math>
+    <span class="eq__cap">The second term is the variance of the target that the context cannot explain.</span>
+  </div>
+  <p>In pixels, the irreducible term is dominated by things nothing can forecast: leaves, water, sensor noise, specular
+    highlights. A pixel loss still spends gradient on them. In a learned space the encoder is free to drop what it cannot
+    predict, so the loss pays only for what is predictable. The V-JEPA 2 paper makes the same point about "each blade of
+    grass in a field". <span class="g g--m">Paper §1</span></p>
+
+  <div class="lab lab--wide" id="lab-pix">
+    <div class="lab__head"><span class="lab__tag">Lab 1</span><h3>Predict pixels, or predict features?</h3>
+      <p>A one-dimensional "video": an object moves predictably across 64 pixels, under per-pixel flicker that nothing can
+        forecast. Compare the best possible pixel prediction with a prediction in a feature space that keeps only the object.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="pix-cv" width="900" height="520" aria-label="Frames, the best pixel prediction and the feature prediction"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="pix-noise">Unpredictable flicker <output id="pix-noise-o"></output></label><input type="range" id="pix-noise" min="0" max="0.6" step="0.01" value="0.3"></div>
+        <div class="ctl"><label for="pix-speed">Object speed (px per frame) <output id="pix-speed-o"></output></label><input type="range" id="pix-speed" min="0" max="4" step="0.5" value="2"></div>
+        <div class="ctl"><label for="pix-band">Encoder bandwidth <output id="pix-band-o"></output></label><input type="range" id="pix-band" min="1" max="32" step="1" value="12"></div>
+        <div class="reads">
+          <div class="read"><b id="pix-fix">-</b><span>pixel: fixable</span></div>
+          <div class="read"><b id="pix-irr">-</b><span>pixel: irreducible</span></div>
+          <div class="read"><b id="pix-share">-</b><span>share wasted</span></div>
+          <div class="read"><b id="pix-feat">-</b><span>feature loss</span></div>
+        </div>
+        <p class="status" id="pix-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Raise the flicker: the pixel loss grows while nothing about the object changed. That growth is the irreducible term.</li><li>Raise the encoder bandwidth: the feature space starts to keep flicker, and its share climbs back toward the pixel value. Lower it below 6: the encoder blurs away the object too, and the share climbs again. A JEPA encoder is rewarded for keeping what moves and dropping what flickers.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>Why a learned space can spend capacity on the predictable part. The
+        toy's encoder is a fixed low-pass filter; a real JEPA learns its encoder, which is what creates the collapse problem of
+        Part 06. <span class="g g--w">Toy</span></div>
+    </div>
+  </div>
+
+  <h3>The energy view</h3>
+  <p>LeCun's 2022 position paper frames this as an energy-based model: a scalar that is low when a continuation y fits a
+    context x, with no need to be a normalised probability. A joint-embedding predictive architecture computes that energy in
+    representation space. <span class="g g--m">LeCun 2022</span></p>
+  <div class="eq">
+    <math display="block"><mi>E</mi><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo stretchy="false">)</mo><mo>=</mo><mi>D</mi><mo>(</mo><msub><mi>P</mi><mi>φ</mi></msub><mo stretchy="false">(</mo><msub><mi>E</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>,</mo><mi>z</mi><mo stretchy="false">)</mo><mo>,</mo><mspace width="0.2em"/><mi>sg</mi><mo stretchy="false">(</mo><msub><mi>E</mi><mover><mi>θ</mi><mo>¯</mo></mover></msub><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>)</mo></math>
+    <span class="eq__cap">E<sub>θ</sub>: online encoder. E<sub>θ̄</sub>: target encoder. P<sub>φ</sub>: predictor. z: what the predictor is told about the target (masked positions, or an action). D: a distance (L1 or L2). sg: stop-gradient.</span>
+  </div>
+  <p data-depth="2">Every model in this lecture is an instance. In V-JEPA 2, x is the visible part of a clip, y the hidden part
+    and z the positions to fill. In V-JEPA 2-AC, x is the past frames, y the next frame and z the action. In H-JEPA there is one
+    such energy per timescale. Planning then searches over z (actions) to make the energy between the predicted future and a
+    goal low.</p>
+  <aside class="mn"><span class="mn__h">The catch</span>
+    <p>A deterministic predictor trained with L1 converges to the conditional median of the target features. A learned space
+      removes multimodality only if the encoder maps different outcomes close together, which means it discarded the random
+      factor. In manipulation that factor (does the cup slip?) can be the one that decides the task.</p>
+  </aside>
+</section>
+
+<!-- 02 ===================================================================== -->
+<section class="part" id="wm-family">
+  <div class="part__num">Part 02</div>
+  <h2>The family on one map</h2>
+  <p class="claim">One move repeated: encode the visible, predict the encoding of the hidden or the future. Five design
+    choices change from model to model.
+    <small>The lineage, I-JEPA to H-JEPA <span class="g g--t">Derived</span></small></p>
+  <p>The five choices: what is hidden (image blocks, video tubes, the next frame, a state several steps ahead), what the
+    prediction is conditioned on (positions, actions, pooled macro-actions), the distance (L2 or L1), how collapse is
+    prevented (a slow teacher, a batch regulariser, an action-regression head), and what the result is used for (frozen
+    features, or a simulator a planner searches). Click a node.</p>
+  <div class="panel">
+    <div class="wm-lin" id="wm-lineage"></div>
+    <div class="wm-card" id="wm-lineage-card" aria-live="polite"></div>
+  </div>
+  <div class="tbl-wrap">
+    <table class="tbl tp">
+      <thead><tr><th>Model</th><th>Predicts</th><th>Anti-collapse</th><th>Headline, with its protocol</th></tr></thead>
+      <tbody>
+        <tr><td><b>I-JEPA</b> 2023</td><td>4 image blocks from one context block, L2</td><td>EMA teacher, stop-gradient</td><td>81.1% ImageNet linear probe, ViT-H/16 at 448 px (Table 1)</td></tr>
+        <tr><td><b>V-JEPA</b> 2024</td><td>masked video tubes, L1</td><td>EMA teacher, stop-gradient</td><td>81.9 K400, 72.2 SSv2, 77.9 IN1K, frozen ViT-H/16 at 384 px</td></tr>
+        <tr><td><b>V-JEPA 2</b> 2025</td><td>masked tubes at 1B parameters</td><td>EMA fixed at 0.99925</td><td>75.3 SSv2 frozen at 256 px, one protocol for every encoder (Table 4)</td></tr>
+        <tr class="hl"><td><b>V-JEPA 2-AC</b> 2025</td><td>next-frame latents given action and state</td><td>frozen encoder</td><td>pick-and-place 80% / 80% (Lab 1) and 80% / 50% (Lab 2) with human sub-goal images, 10 trials per cell</td></tr>
+        <tr><td><b>LeWM</b> 2026</td><td>next global latent, from pixels</td><td>SIGReg only</td><td>about 15M parameters, one GPU, hours</td></tr>
+        <tr><td><b>HWM</b> 2026</td><td>two timescales, one shared space</td><td>its backbone's</td><td>single-goal Franka pick-and-place 70% / 60% against 0% flat, 50 trials each</td></tr>
+        <tr class="hl2"><td><b>H-JEPA</b> Oct 2026</td><td>up to four timescales, one space each</td><td>SIGReg per level, plus inverse dynamics on DROID</td><td>Visual AntMaze 73.3 ± 3.5% (3 levels) against 18.0 ± 3.5% flat, 3 seeds</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p data-depth="2"><b>Which H-JEPA?</b> Three things share the name. LeCun's 2022 proposal of stacked JEPAs (no experiments;
+    restated in Dawid and LeCun, arXiv 2306.02572, §6.2). An unrelated wireless-control paper (Girgis, Labriji and Bennis,
+    arXiv 2602.07000) and several unrelated repositories. And the method this lecture covers: Zhang, Terver, Rabbat, LeCun and
+    Balestriero, arXiv 2610.06805, code at github.com/kevinghst/H-JEPA. <span class="g g--m">Papers</span></p>
+</section>
+
+<!-- 03 ===================================================================== -->
+<section class="part" id="wm-tokens">
+  <div class="part__num">Part 03</div>
+  <h2>From pixels to tokens</h2>
+  <p class="claim">A Vision Transformer never sees pixels one by one. It cuts the input into bricks, flattens each brick and
+    projects it to a vector: one token per brick.
+    <small>Patch and tubelet embedding <span class="g g--m">Paper §2.1</span></small></p>
+  <p>For a video x ∈ ℝ<sup>3×T×H×W</sup>, V-JEPA 2 uses a 3D convolution whose kernel equals its stride, 2 × 16 × 16. Each
+    brick of 2 frames × 16 × 16 pixels × 3 colours (1,536 numbers) becomes one d-dimensional token; d = 1408 for the 1B ViT-g.
+    The number of tokens is</p>
+  <div class="eq">
+    <math display="block"><mi>N</mi><mo>=</mo><mfrac><mi>T</mi><msub><mi>t</mi><mi>p</mi></msub></mfrac><mo>·</mo><mfrac><mi>H</mi><mi>p</mi></mfrac><mo>·</mo><mfrac><mi>W</mi><mi>p</mi></mfrac><mo>,</mo><mspace width="1em"/><mi>N</mi><mo>=</mo><mn>8</mn><mo>·</mo><mn>16</mn><mo>·</mo><mn>16</mn><mo>=</mo><mn>2048</mn><mspace width="0.5em"/><mtext>for 16 frames at 256 px</mtext></math>
+    <span class="eq__cap">t<sub>p</sub> = 2 frames per tubelet, p = 16 pixels per side. A 64-frame clip at 384 px gives 32 · 24 · 24 = 18,432 tokens.</span>
+  </div>
+  <p>Attention compares every token with every other, so its cost grows with N², and a 9× longer sequence costs about 81×
+    more per layer. That is why V-JEPA 2 trains at 16 frames and 256 px and only cools down at 64 frames and 384 px.
+    <span class="g g--m">Paper §2.4, Table 9</span></p>
+
+  <div class="lab lab--wide" id="lab-tok">
+    <div class="lab__head"><span class="lab__tag">Lab 2</span><h3>Tokenize an input</h3>
+      <p>Pick a model's input recipe or set your own. The page draws the brick grid and computes the token count, the tensor
+        shape after embedding, and the cost of one transformer layer.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="tok-cv" width="900" height="480" aria-label="Brick grid over a clip"></canvas></div>
+      <div class="lab__side">
+        <div class="chips" id="tok-pre" role="group" aria-label="Presets"></div>
+        <div class="ctl"><label for="tk-T">Frames T <output id="tk-T-o"></output></label><input type="range" id="tk-T" min="1" max="64" step="1" value="16"></div>
+        <div class="ctl"><label for="tk-R">Resolution (px) <output id="tk-R-o"></output></label><input type="range" id="tk-R" min="64" max="448" step="16" value="256"></div>
+        <div class="ctl"><label for="tk-p">Patch size p <output id="tk-p-o"></output></label><select id="tk-p"><option>14</option><option selected>16</option><option>32</option></select></div>
+        <div class="ctl"><label for="tk-t">Tubelet depth <output id="tk-t-o"></output></label><select id="tk-t"><option>1</option><option selected>2</option></select></div>
+        <div class="ctl"><label for="tk-d">Width d <output id="tk-d-o"></output></label><select id="tk-d"><option>384</option><option>1024</option><option>1280</option><option selected>1408</option></select></div>
+        <div class="reads">
+          <div class="read"><b id="tk-N">-</b><span>tokens N</span></div>
+          <div class="read"><b id="tk-att">-</b><span>attention entries</span></div>
+          <div class="read"><b id="tk-fl">-</b><span>GFLOP per layer</span></div>
+        </div>
+        <div class="wm-shape" id="tk-shape"></div>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Preset "V-JEPA 2-AC frame": one frame duplicated into a 2-frame tubelet gives 256 tokens, the unit the world model predicts.</li><li>Go from the pretraining preset to the cooldown preset and watch the attention entries grow about 81×.</li></ul></div>
+      <div><h4>How the cost is computed</h4>Per layer ≈ 24·N·d² + 4·N²·d floating-point operations: the projections and an
+        MLP of width 4d, plus the attention scores and weighted sum. ViT-g's MLP is 6144 wide (4.4d), so this slightly
+        underestimates it. <span class="g g--t">Derived</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 ===================================================================== -->
+<section class="part" id="wm-attn">
+  <div class="part__num">Part 04</div>
+  <h2>Inside the encoder: attention and 3D rotary positions</h2>
+  <p class="claim">Each of ViT-g's 40 blocks lets every token read every other, weighted by how well their queries and keys
+    match, then transforms each token on its own.
+    <small>The transformer block <span class="g g--m">Paper Table 12</span></small></p>
+  <div class="eq">
+    <math display="block"><mi>h</mi><mo>=</mo><mi>x</mi><mo>+</mo><mi>MHSA</mi><mo stretchy="false">(</mo><mi>LN</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>,</mo><mspace width="1em"/><mi>y</mi><mo>=</mo><mi>h</mi><mo>+</mo><mi>MLP</mi><mo stretchy="false">(</mo><mi>LN</mi><mo stretchy="false">(</mo><mi>h</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>,</mo><mspace width="1em"/><mi>Attn</mi><mo stretchy="false">(</mo><mi>Q</mi><mo>,</mo><mi>K</mi><mo>,</mo><mi>V</mi><mo stretchy="false">)</mo><mo>=</mo><mi>softmax</mi><mo>(</mo><mfrac><mrow><mi>Q</mi><msup><mi>K</mi><mo>⊤</mo></msup></mrow><msqrt><msub><mi>d</mi><mi>h</mi></msub></msqrt></mfrac><mo>)</mo><mi>V</mi></math>
+    <span class="eq__cap">ViT-g: width 1408, 40 blocks, 22 heads of d<sub>h</sub> = 64, MLP width 6144. Q, K, V are linear maps of the normalised tokens.</span>
+  </div>
+  <p>Attention by itself does not know where a token is. V-JEPA 2 tells it with 3D rotary position embedding (RoPE): each
+    head's 64 dimensions are split into three segments of 20, rotated by the token's time, row and column index respectively,
+    and the last 4 are left alone. Rotating queries and keys by angles proportional to position makes their dot product depend
+    on the difference of positions, so attention sees relative offsets. <span class="g g--m">Paper §2.1</span>
+    <span class="g g--d">modules.py</span></p>
+  <div class="eq">
+    <math display="block"><mrow><mo>(</mo><mtable><mtr><mtd><msubsup><mi>q</mi><mrow><mn>2</mn><mi>j</mi></mrow><mo>′</mo></msubsup></mtd></mtr><mtr><mtd><msubsup><mi>q</mi><mrow><mn>2</mn><mi>j</mi><mo>+</mo><mn>1</mn></mrow><mo>′</mo></msubsup></mtd></mtr></mtable><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><mi>cos</mi><mi>p</mi><msub><mi>ω</mi><mi>j</mi></msub></mtd><mtd><mo>−</mo><mi>sin</mi><mi>p</mi><msub><mi>ω</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd><mi>sin</mi><mi>p</mi><msub><mi>ω</mi><mi>j</mi></msub></mtd><mtd><mi>cos</mi><mi>p</mi><msub><mi>ω</mi><mi>j</mi></msub></mtd></mtr></mtable><mo>)</mo></mrow><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>q</mi><mrow><mn>2</mn><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd><msub><mi>q</mi><mrow><mn>2</mn><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow><mo>,</mo><mspace width="0.6em"/><msub><mi>ω</mi><mi>j</mi></msub><mo>=</mo><msup><mn>10000</mn><mrow><mo>−</mo><mi>j</mi><mo>/</mo><mo stretchy="false">(</mo><mi>D</mi><mo>/</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></msup><mo>,</mo><mspace width="0.6em"/><mo>⟨</mo><msub><mi>R</mi><mi>p</mi></msub><mi>q</mi><mo>,</mo><msub><mi>R</mi><mrow><mi>p</mi><mo>′</mo></mrow></msub><mi>k</mi><mo>⟩</mo><mo>=</mo><mo>⟨</mo><mi>q</mi><mo>,</mo><msub><mi>R</mi><mrow><mi>p</mi><mo>′</mo><mo>−</mo><mi>p</mi></mrow></msub><mi>k</mi><mo>⟩</mo></math>
+    <span class="eq__cap">Intended RoPE on one axis segment of size D. p is the token's index along that axis.</span>
+  </div>
+
+  <div class="lab lab--wide" id="lab-rope">
+    <div class="lab__head"><span class="lab__tag">Lab 3</span><h3>Rotary positions, intended and as implemented</h3>
+      <p>Score one query against one key as the key slides away along an axis, starting from two different base positions.
+        Intended RoPE gives the same curve from both starts. The released code tiles its frequencies instead of interleaving
+        them, which its own comment calls a bug kept for compatibility with the trained weights.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="rope-cv" width="900" height="460" aria-label="Attention score against relative offset"></canvas></div>
+      <div class="lab__side">
+        <div class="chips" id="rope-mode" role="group" aria-label="Variant"></div>
+        <div class="ctl"><label for="rp-D">Segment size D <output id="rp-D-o"></output></label><input type="range" id="rp-D" min="4" max="32" step="2" value="20"></div>
+        <div class="ctl"><label for="rp-b">Second base position <output id="rp-b-o"></output></label><input type="range" id="rp-b" min="1" max="15" step="1" value="7"></div>
+        <div class="ctl"><label for="rp-s">Random query and key, seed <output id="rp-s-o"></output></label><input type="range" id="rp-s" min="1" max="20" step="1" value="1"></div>
+        <div class="reads">
+          <div class="read"><b id="rp-gap">-</b><span>max gap between curves</span></div>
+          <div class="read"><b id="rp-norm">-</b><span>norm after rotation</span></div>
+        </div>
+        <p class="status" id="rp-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>What the code does</h4>rotate_queries_or_keys builds sin and cos for D/2 frequencies, repeats them end to end
+        (ω<sub>0</sub>…ω<sub>D/2−1</sub>, ω<sub>0</sub>…) and applies them to adjacent pairs, so the two coordinates of a pair
+        get different angles and the map is not a rotation. <span class="g g--d">src/models/utils/modules.py @ 204698b</span></div>
+      <div><h4>Does it matter?</h4>The model was trained this way, so it learned around it; the measured gap shows only that
+        attention is not purely relative in position, which is a property papers often assume. <span class="g g--t">Derived</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 ===================================================================== -->
+<section class="part" id="wm-objective">
+  <div class="part__num">Part 05</div>
+  <h2>The JEPA objective: hide, encode, predict, compare</h2>
+  <p class="claim">Hide part of the input. Encode what is left. Ask a predictor for the encoding of what was hidden, and
+    compare it with what a slowly updated copy of the encoder says the hidden part looks like.
+    <small>I-JEPA, V-JEPA, V-JEPA 2 <span class="g g--m">Papers</span></small></p>
+  <p><b>I-JEPA</b> does this on images. From one large context block (85 to 100% of the image) it predicts the
+    representations of four target blocks (15 to 20% each, aspect 0.75 to 1.5), removed from the context, with an L2 loss.
+    <b>V-JEPA</b> and <b>V-JEPA 2</b> do it on video, with blocks that run through the whole clip in time (tubes) and an L1
+    loss, which V-JEPA found more stable:</p>
+  <div class="eq">
+    <math display="block"><munder><mi>min</mi><mrow><mi>θ</mi><mo>,</mo><mi>φ</mi><mo>,</mo><msub><mi>Δ</mi><mi>y</mi></msub></mrow></munder><mspace width="0.3em"/><mfrac><mn>1</mn><mrow><mo stretchy="false">|</mo><mi>M</mi><mo stretchy="false">|</mo></mrow></mfrac><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>M</mi></mrow></munder><msub><mrow><mo>‖</mo><msub><mi>P</mi><mi>φ</mi></msub><msub><mrow><mo stretchy="false">(</mo><msub><mi>Δ</mi><mi>y</mi></msub><mo>,</mo><msub><mi>E</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>x</mi><mi>C</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><mi>i</mi></msub><mo>−</mo><mi>sg</mi><mo stretchy="false">(</mo><mi>LN</mi><mo stretchy="false">(</mo><msub><mi>E</mi><mover><mi>θ</mi><mo>¯</mo></mover></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><msub><mo stretchy="false">)</mo><mi>i</mi></msub><mo>‖</mo></mrow><mn>1</mn></msub><mo>,</mo><mspace width="1em"/><mover><mi>θ</mi><mo>¯</mo></mover><mo>←</mo><mi>m</mi><mover><mi>θ</mi><mo>¯</mo></mover><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>m</mi><mo stretchy="false">)</mo><mi>θ</mi></math>
+    <span class="eq__cap">C: visible (context) tokens; M: masked tokens; Δ<sub>y</sub>: a learnable mask token placed at each hidden position; LN: LayerNorm on the targets; m = 0.99925 in V-JEPA 2, fixed. Loss averaged over the short-range and long-range masks.</span>
+  </div>
+  <p data-depth="2">Why tubes: neighbouring frames are almost identical, so a token hidden at time t but visible at t ± 1 could be
+    copied rather than inferred. Masking the whole time extent removes that shortcut. Because the context still contains every
+    frame, this is spatiotemporal inpainting, not extrapolation; the explicit predict-the-next-frame objective appears only in
+    V-JEPA 2-AC. V-JEPA's ablation: random tubes at 90% masking give 51.5 / 46.4 / 55.6 on K400 / SSv2 / IN1K against 72.9 /
+    67.4 / 72.8 for multiblock. <span class="g g--m">V-JEPA Table 4</span></p>
+
+  <div class="lab lab--wide" id="lab-mask">
+    <div class="lab__head"><span class="lab__tag">Lab 4</span><h3>Sample the masks</h3>
+      <p>The page runs a port of each released sampler. V-JEPA 2 draws one block size per batch and a position per clip, takes
+        the union of 8 small blocks (short-range) or 2 large ones (long-range), then truncates every clip's index lists to the
+        batch minimum.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="mask-cv" width="900" height="520" aria-label="Masked and visible tokens"></canvas></div>
+      <div class="lab__side">
+        <div class="chips" id="mask-mode" role="group" aria-label="Sampler"></div>
+        <div class="ctl"><label for="mk-B">Clips per GPU batch <output id="mk-B-o"></output></label><input type="range" id="mk-B" min="1" max="64" step="1" value="24"></div>
+        <div class="btns"><button type="button" class="btn btn--sm" id="mk-new">New sample</button></div>
+        <div class="reads">
+          <div class="read"><b id="mk-m">-</b><span>masked per clip</span></div>
+          <div class="read"><b id="mk-e">-</b><span>encoder sees</span></div>
+          <div class="read"><b id="mk-p">-</b><span>predicted</span></div>
+        </div>
+        <p class="status" id="mk-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Long-range at 24 clips: about 81% masked, but after truncation the encoder sees only a few percent of tokens.</li><li>Set the batch to 1: no truncation, so "encoder sees" becomes the complement of "masked".</li></ul></div>
+      <div><h4>Source</h4>Logic ported from src/masks/multiseq_multiblock3d.py (block size: h = round(√(n·a)), w = round(√(n/a)),
+        n = ⌊scale·H·W⌋) with Table 9's parameters; statistics over 200 batches. V-JEPA 1 described the same recipe as "about 90%"
+        masking. <span class="g g--d">Code, measured</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ===================================================================== -->
+<section class="part" id="wm-collapse">
+  <div class="part__num">Part 06</div>
+  <h2>Why it does not collapse</h2>
+  <p class="claim">The loss above has a perfect, useless minimum: an encoder that outputs the same vector for every input
+    predicts itself exactly. Something must keep the representation alive.
+    <small>Representation collapse <span class="g g--t">Derived</span></small></p>
+  <p>If E<sub>θ</sub>(x) = c for every x, then the predictor outputs c and the loss is zero. V-JEPA and V-JEPA 2 rely on three
+    asymmetries. A <b>stop-gradient</b> on the target branch, so the target is never pulled toward the prediction. An <b>EMA
+    teacher</b>, θ̄ ← mθ̄ + (1 − m)θ, a lagged copy; at m = 0.99925 it averages roughly the last 1/(1 − m) ≈ 1,333 steps. A
+    <b>predictor</b>, which gives the online branch a degree of freedom the target lacks. Tian, Chen and Ganguli (ICML 2021)
+    analyse why this works for linear networks; SimSiam showed the EMA is not needed if stop-gradient and a predictor are
+    kept. V-JEPA 2 reports no rank or spectrum diagnostic. <span class="g g--m">Paper §2.1</span> <span class="g g--m">Tian et al. 2021</span></p>
+
+  <div class="lab lab--wide" id="lab-collapse">
+    <div class="lab__head"><span class="lab__tag">Lab 5</span><h3>Train a linear JEPA and watch it collapse, or not</h3>
+      <p>An 8-dimensional input with decaying variances, two noisy views, a 4-dimensional linear encoder W, a linear predictor P,
+        an EMA target. The page trains it live with gradient descent and plots the singular values of W: the size of each
+        direction the representation keeps.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="col-cv" width="900" height="460" aria-label="Singular values of the encoder over training"></canvas></div>
+      <div class="lab__side">
+        <label class="chk"><input type="checkbox" id="col-sg" checked> Stop-gradient on the target</label>
+        <label class="chk"><input type="checkbox" id="col-pr" checked> Predictor P</label>
+        <div class="ctl"><label for="col-m">EMA momentum m <output id="col-m-o"></output></label><input type="range" id="col-m" min="0" max="0.995" step="0.005" value="0.99"></div>
+        <div class="ctl"><label for="col-wd">Weight decay <output id="col-wd-o"></output></label><input type="range" id="col-wd" min="0" max="0.02" step="0.001" value="0.005"></div>
+        <div class="btns"><button type="button" class="btn btn--sm" id="col-run">Train 4,000 steps</button>
+          <button type="button" class="btn btn--sm" data-col="1,1,0.99">Full recipe</button>
+          <button type="button" class="btn btn--sm" data-col="0,1,0.99">No stop-gradient</button>
+          <button type="button" class="btn btn--sm" data-col="1,0,0.99">No predictor</button>
+          <button type="button" class="btn btn--sm" data-col="1,1,0">No EMA</button></div>
+        <div class="reads">
+          <div class="read"><b id="col-rank">-</b><span>directions alive</span></div>
+          <div class="read"><b id="col-loss">-</b><span>final loss</span></div>
+        </div>
+        <p class="status" id="col-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>What to expect</h4><ul><li>No stop-gradient: every singular value falls to zero within about a thousand steps, and the loss reaches zero.</li><li>No predictor: a slower collapse.</li><li>Stop-gradient plus predictor, with or without EMA: no collapse; with the default weight decay all four directions stay.</li><li>The full recipe at weight decay 0: the weakest direction falls far below the others, in some runs to zero. That is the partial dimensional collapse the literature reports, and weight decay is one of the things holding it off here.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>The mechanism in the simplest setting where it can be computed: the
+        linear setting of Tian et al. A 1B-parameter ViT is not guaranteed to behave the same, and V-JEPA 2 does not measure it.
+        H-JEPA replaces all three tricks with a regulariser on the batch (Part 13). <span class="g g--w">Toy</span></div>
+    </div>
+  </div>
+</section>

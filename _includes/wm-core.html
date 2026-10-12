@@ -1,0 +1,295 @@
+{%- comment -%}
+  Core script for the latent world model lecture: shared helpers (window.WM),
+  top bar, rail, depth and theme, the hero animation, and the data widgets
+  (lineage, DROID clock, interval tables, H-JEPA results, ledger, glossary,
+  directions). Numbers are quoted from the paper named beside each array.
+{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+  var doc = document, root = doc.getElementById('wm');
+  if (!root) return;
+  var WM = window.WM = {};
+  function $(s, el) { return (el || doc).querySelector(s); }
+  function $$(s, el) { return Array.prototype.slice.call((el || doc).querySelectorAll(s)); }
+  function byId(id) { return doc.getElementById(id); }
+  function setText(id, t) { var e = byId(id); if (e) e.textContent = t; }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } return null; }
+  function rng(seed) { var s = seed >>> 0; return function () { s = (s + 0x6D2B79F5) >>> 0; var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(r) { var u = 1 - r(), v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function col() {
+    var cs = getComputedStyle(doc.documentElement);
+    function g(n) { return cs.getPropertyValue(n).trim() || '#888'; }
+    return { ink: g('--ink'), ink2: g('--ink-2'), ink3: g('--ink-3'), line: g('--line'), line2: g('--line-strong'), red: g('--red'), blue: g('--blue'),
+      ochre: g('--ochre'), sage: g('--sage'), plum: g('--plum'), plot: g('--plot'), s2: g('--surface-2'), surf: g('--surface'), paper: g('--paper') };
+  }
+  function alpha(hex, a) { var m = /^#?([0-9a-f]{6})$/i.exec(hex); if (!m) return hex; var n = parseInt(m[1], 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  function cv(el) {
+    if (!el.dataset.aspect) el.dataset.aspect = String(el.height / el.width);
+    var w = el.clientWidth || el.width, hh = Math.round(w * Number(el.dataset.aspect)), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (el.width !== Math.round(w * dpr) || el.height !== Math.round(hh * dpr)) { el.width = Math.round(w * dpr); el.height = Math.round(hh * dpr); }
+    el.style.height = hh + 'px';
+    var c = el.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, hh);
+    return { c: c, w: w, h: hh };
+  }
+  function font(c, size, mono, weight) { c.font = (weight || 400) + ' ' + size + 'px ' + (mono ? '"JetBrains Mono", monospace' : 'Inter, system-ui, sans-serif'); }
+  var redraws = [];
+  function reg(fn) { redraws.push(fn); try { fn(); } catch (e) { if (window.console) console.error(e); } }
+  function redrawAll() { redraws.forEach(function (f) { try { f(); } catch (e) { if (window.console) console.error(e); } }); }
+  var rz = null;
+  window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(redrawAll, 120); });
+  new MutationObserver(redrawAll).observe(doc.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (window.matchMedia) { var mq = window.matchMedia('(prefers-color-scheme: dark)'); if (mq.addEventListener) mq.addEventListener('change', redrawAll); }
+  function bind(ids, fn) { ids.forEach(function (id) { var e = byId(id); if (e) e.addEventListener('input', fn); }); }
+  function val(id) { return Number(byId(id).value); }
+  function chips(host, items, cur, on) {
+    host.innerHTML = '';
+    items.forEach(function (it) {
+      var b = doc.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = it[1]; b.setAttribute('aria-pressed', String(String(it[0]) === String(cur)));
+      b.addEventListener('click', function () { $$('.chip', host).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); on(it[0]); });
+      host.appendChild(b);
+    });
+  }
+  function wilson(k, n) { if (!n) return [0, 0]; var z = 1.96, p = k / n, d = 1 + z * z / n, c = (p + z * z / (2 * n)) / d, hw = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d; return [Math.max(0, c - hw), Math.min(1, c + hw)]; }
+  var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  WM.u = { $: $, $$: $$, byId: byId, setText: setText, clamp: clamp, esc: esc, rng: rng, gauss: gauss, col: col, alpha: alpha, cv: cv, font: font, reg: reg, bind: bind, val: val, chips: chips, wilson: wilson, reduced: reduced };
+
+  /* ---- top bar ----------------------------------------------------------- */
+  var DEPTH = { 1: 'Overview', 2: 'Lecture', 3: 'Seminar' };
+  function setDepth(d) {
+    doc.body.setAttribute('data-depth', d);
+    $$('[data-depth-set]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-depth-set') === String(d))); });
+    setText('rail-foot', 'Depth: ' + DEPTH[d]); store('wm-depth', d); redrawAll();
+  }
+  $$('[data-depth-set]').forEach(function (b) { b.addEventListener('click', function () { setDepth(Number(b.getAttribute('data-depth-set'))); }); });
+  setDepth(clamp(Number(store('wm-depth')) || 2, 1, 3));
+  byId('lr-theme').addEventListener('click', function () {
+    var cur = doc.documentElement.getAttribute('data-theme');
+    if (cur !== 'dark' && cur !== 'light') cur = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    var next = cur === 'dark' ? 'light' : 'dark'; doc.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+  var bar = byId('lr-progress');
+  function onScroll() { var hh = doc.documentElement.scrollHeight - window.innerHeight; bar.style.width = (hh > 0 ? clamp(window.scrollY / hh, 0, 1) * 100 : 0) + '%'; }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  var railLinks = $$('#rail-list a');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        railLinks.forEach(function (a) {
+          var on = a.getAttribute('href') === '#' + en.target.id;
+          a.classList.toggle('is-on', on);
+          if (on) { a.classList.add('is-done'); if (window.innerWidth <= 960) { var rl = a.closest('.rail'); if (rl) rl.scrollLeft = a.offsetLeft - 20; } }
+        });
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    $$('.part', root).forEach(function (s) { io.observe(s); });
+  }
+
+  /* ---- hero: CEM fanning out in a plane ------------------------------------ */
+  (function hero() {
+    var el = byId('hero-cv'); if (!el) return;
+    var r = rng(11), start = [0.16, 0.78], goal = [0.82, 0.24], mu, sd, it = 0, samples = [], elites = [], pos, path, phase = 0;
+    function reset() { pos = start.slice(); path = [pos.slice()]; mu = [[0, 0], [0, 0], [0, 0]]; sd = [[0.12, 0.12], [0.12, 0.12], [0.12, 0.12]]; it = 0; }
+    function iterate() {
+      samples = [];
+      for (var s = 0; s < 70; s++) {
+        var p = pos.slice(), pts = [p.slice()], A = [];
+        for (var k = 0; k < 3; k++) { var a = [mu[k][0] + sd[k][0] * gauss(r), mu[k][1] + sd[k][1] * gauss(r)]; a = [clamp(a[0], -0.13, 0.13), clamp(a[1], -0.13, 0.13)]; A.push(a); p = [p[0] + a[0], p[1] + a[1]]; pts.push(p.slice()); }
+        samples.push({ pts: pts, A: A, e: Math.abs(p[0] - goal[0]) + Math.abs(p[1] - goal[1]) });
+      }
+      samples.sort(function (a, b) { return a.e - b.e; }); elites = samples.slice(0, 8);
+      for (var k2 = 0; k2 < 3; k2++) for (var d = 0; d < 2; d++) {
+        var m = elites.reduce(function (s0, x) { return s0 + x.A[k2][d]; }, 0) / elites.length;
+        var v = Math.sqrt(elites.reduce(function (s0, x) { return s0 + (x.A[k2][d] - m) * (x.A[k2][d] - m); }, 0) / elites.length);
+        mu[k2][d] = 0.85 * m + 0.15 * mu[k2][d]; sd[k2][d] = Math.max(0.01, 0.85 * v + 0.15 * sd[k2][d]);
+      }
+      it++;
+    }
+    function act() { pos = [pos[0] + mu[0][0], pos[1] + mu[0][1]]; path.push(pos.slice()); mu = [mu[1], mu[2], [0, 0]]; sd = [[0.12, 0.12], [0.12, 0.12], [0.12, 0.12]]; it = 0; }
+    function draw() {
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h;
+      function X(x) { return 24 + x * (W - 48); } function Y(y) { return 24 + y * (H - 48); }
+      c.strokeStyle = C.line; c.lineWidth = 1;
+      for (var i = 0; i <= 8; i++) { c.beginPath(); c.moveTo(X(i / 8), Y(0)); c.lineTo(X(i / 8), Y(1)); c.stroke(); c.beginPath(); c.moveTo(X(0), Y(i / 8)); c.lineTo(X(1), Y(i / 8)); c.stroke(); }
+      samples.forEach(function (s) { var el2 = elites.indexOf(s) >= 0; c.strokeStyle = el2 ? C.red : alpha(C.blue.charAt(0) === '#' ? C.blue : '#2d4c95', 0.22); c.lineWidth = el2 ? 2 : 1; c.beginPath(); s.pts.forEach(function (p, j) { if (j) c.lineTo(X(p[0]), Y(p[1])); else c.moveTo(X(p[0]), Y(p[1])); }); c.stroke(); });
+      c.strokeStyle = C.ink; c.lineWidth = 3; c.beginPath(); path.forEach(function (p, j) { if (j) c.lineTo(X(p[0]), Y(p[1])); else c.moveTo(X(p[0]), Y(p[1])); }); c.stroke();
+      c.fillStyle = C.ink; c.beginPath(); c.arc(X(pos[0]), Y(pos[1]), 8, 0, 7); c.fill();
+      c.fillStyle = C.red; font(c, 30, false, 700); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('★', X(goal[0]), Y(goal[1]));
+      font(c, 13, true); c.fillStyle = C.ink3; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.fillText('iteration ' + it + ' · 70 imagined futures · 8 elites', 28, H - 30);
+    }
+    reset(); iterate();
+    if (reduced) { for (var q = 0; q < 4; q++) iterate(); reg(draw); return; }
+    reg(draw);
+    setInterval(function () {
+      if (doc.hidden) return;
+      phase++;
+      if (Math.abs(pos[0] - goal[0]) + Math.abs(pos[1] - goal[1]) < 0.05 || path.length > 30) { reset(); iterate(); }
+      else if (it < 4) iterate(); else { act(); iterate(); }
+      draw();
+    }, 650);
+  })();
+
+  /* ---- lineage ------------------------------------------------------------------- */
+  var LIN = [
+    { id: 'lecun', t: 'A Path Towards AMI', d: 2022.55, lane: 0, dy: 0, ev: 'ctx', meta: 'LeCun · OpenReview · 2022', url: 'https://openreview.net/forum?id=BZ5a1r-kVsf', f: [['Contribution', 'Proposes the JEPA as an energy-based building block for world models, and H-JEPA: stacked JEPAs predicting further ahead from more abstract representations, with planning across levels.'], ['Evidence', 'A position paper: no training recipe, no experiments.']] },
+    { id: 'ijepa', t: 'I-JEPA', d: 2023.05, lane: 1, dy: 0, ev: 'ctx', meta: 'Assran et al. · CVPR 2023 · arXiv 2301.08243', url: 'https://arxiv.org/abs/2301.08243', f: [['Predicts', '4 target blocks (scale 0.15 to 0.2) from one context block (0.85 to 1.0), L2.'], ['Anti-collapse', 'EMA 0.996 rising to 1.0, stop-gradient.'], ['Headline', '81.1% ImageNet linear probe, ViT-H/16 at 448 px; ViT-H/14 pretrained in under 1,200 GPU-hours.']] },
+    { id: 'vjepa', t: 'V-JEPA', d: 2024.12, lane: 1, dy: 0, ev: 'ctx', meta: 'Bardes et al. · arXiv 2404.08471', url: 'https://arxiv.org/abs/2404.08471', f: [['Predicts', 'Masked spatiotemporal tubes (multiblock), L1.'], ['Anti-collapse', 'EMA 0.998 rising to 1.0, stop-gradient.'], ['Headline', '81.9 K400, 72.2 SSv2, 77.9 IN1K, frozen ViT-H/16 at 384 px.']] },
+    { id: 'dinowm', t: 'DINO-WM', d: 2024.86, lane: 2, dy: 44, ev: 'ctx', meta: 'Zhou, Pan, LeCun, Pinto · ICML 2025', url: 'https://arxiv.org/abs/2411.04983', f: [['Predicts', 'Future frozen DINOv2 patch features from offline trajectories.'], ['Used for', 'Zero-shot planning toward an observation goal.']] },
+    { id: 'pldm', t: 'PLDM', d: 2025.14, lane: 2, dy: -44, ev: 'ctx', meta: 'Sobal, Zhang et al. · arXiv 2502.14819', url: 'https://arxiv.org/abs/2502.14819', f: [['Contribution', 'Planning in a JEPA latent dynamics model against goal-conditioned RL on reward-free navigation data.'], ['Role', 'HWM\'s maze backbone.']] },
+    { id: 'vjepa2', t: 'V-JEPA 2', d: 2025.45, lane: 1, dy: 0, ev: 'pap', meta: 'Assran, Bardes et al. · arXiv 2506.09985', url: 'https://arxiv.org/abs/2506.09985', f: [['Predicts', 'Masked tubes at 1B parameters, 3D-RoPE, progressive resolution.'], ['Anti-collapse', 'EMA fixed at 0.99925.'], ['Headline', '75.3 SSv2 frozen at 256 px, 77.3 at 384 px. Parts 03 to 07.']] },
+    { id: 'vjepa2ac', t: 'V-JEPA 2-AC', d: 2025.45, lane: 2, dy: 0, ev: 'pap', meta: 'same paper, §3 and §4', url: 'https://arxiv.org/abs/2506.09985', f: [['Predicts', 'Next-frame latents of the frozen encoder given 7-D action and state; 300M block-causal predictor.'], ['Planner', 'CEM, 800 samples, top 10, 10 iterations, horizon 1.'], ['Headline', 'Pick-and-place 80% / 80% and 80% / 50% in two labs with human sub-goal images. Parts 08 to 11.']] },
+    { id: 'lejepa', t: 'LeJEPA (SIGReg)', d: 2025.86, lane: 0, dy: 0, ev: 'ctx', meta: 'Balestriero, LeCun · arXiv 2511.08544', url: 'https://arxiv.org/abs/2511.08544', f: [['Contribution', 'Argues isotropic Gaussian embeddings minimise downstream risk; introduces SIGReg, a sketched normality test.'], ['Role', 'Replaces the EMA teacher in LeWM and H-JEPA. Part 13.']] },
+    { id: 'jepawm', t: 'JEPA-WMs', d: 2025.99, lane: 2, dy: -44, ev: 'ctx', meta: 'Terver et al. · TMLR 2026 · arXiv 2512.24497', url: 'https://arxiv.org/abs/2512.24497', f: [['Contribution', 'A study of architecture, objective and planner choices for JEPA world models; its design beats DINO-WM and V-JEPA 2-AC.']] },
+    { id: 'lewm', t: 'LeWM', d: 2026.2, lane: 2, dy: 44, ev: 'ctx', meta: 'Maes et al. · arXiv 2603.19312', url: 'https://arxiv.org/abs/2603.19312', f: [['Predicts', 'The next global embedding from pixels, end to end: prediction plus SIGReg.'], ['Scale', 'About 15M parameters, one GPU, a few hours.'], ['Role', 'Level 1 of every simulated H-JEPA.']] },
+    { id: 'vjepa21', t: 'V-JEPA 2.1', d: 2026.2, lane: 1, dy: 0, ev: 'ctx', meta: 'Mur-Labadia et al. · arXiv 2603.14482', url: 'https://arxiv.org/abs/2603.14482', f: [['Changes', 'Dense loss on visible tokens, deep self-supervision, 2B ViT-G.'], ['Headline', 'Grasp 60% to 70% with the same planner settings; 80% with an 8-step horizon.']] },
+    { id: 'hwm', t: 'HWM', d: 2026.3, lane: 2, dy: 0, ev: 'ctx', meta: 'Zhang, Terver et al. · arXiv 2604.03208', url: 'https://arxiv.org/abs/2604.03208', f: [['Predicts', 'Two timescales in one shared space; learned macro-actions.'], ['Headline', 'Single-goal Franka pick-and-place 70% cup, 60% box against 0% flat.']] },
+    { id: 'hjepa', t: 'H-JEPA', d: 2026.76, lane: 2, dy: 0, ev: 'hj', meta: 'Zhang, Terver, Rabbat, LeCun, Balestriero · arXiv 2610.06805', url: 'https://arxiv.org/abs/2610.06805', f: [['Predicts', 'One action-conditioned JEPA per timescale, each in its own space; SIGReg per level, inverse dynamics on DROID.'], ['Planner', 'Top-down, gradient descent at every level.'], ['Headline', 'Visual AntMaze 73.3% (3 levels) against 18.0% flat. Parts 12 to 14.']] }
+  ];
+  var EDGES = [['ijepa', 'vjepa'], ['vjepa', 'vjepa2'], ['vjepa2', 'vjepa2ac'], ['vjepa2', 'vjepa21'], ['vjepa2ac', 'hwm'], ['pldm', 'hwm'], ['dinowm', 'hwm'], ['lejepa', 'lewm'], ['lewm', 'hjepa'], ['hwm', 'hjepa'], ['dinowm', 'jepawm'], ['vjepa2ac', 'jepawm'], ['lecun', 'hjepa', 1], ['lecun', 'ijepa', 1]];
+  (function lineage() {
+    var host = byId('wm-lineage'), card = byId('wm-lineage-card'); if (!host) return;
+    var cur = 'hjepa', W = 900, H = 370, X0 = 2021.95, X1 = 2027.1, L = 24, R = 24, laneY = [64, 158, 272];
+    function x(d) { return L + (d - X0) / (X1 - X0) * (W - L - R); }
+    function node(id) { return LIN.filter(function (n) { return n.id === id; })[0]; }
+    function pos(n) { return [x(n.d), laneY[n.lane] + n.dy]; }
+    function draw() {
+      var C = col(), s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="Lineage map">';
+      ['proposal and theory', 'representation learning', 'world models and planning'].forEach(function (lab, i) { s += '<text x="' + L + '" y="' + (laneY[i] - 36) + '" font-family="JetBrains Mono, monospace" font-size="10.5" letter-spacing=".08em" fill="' + C.ink3 + '">' + lab.toUpperCase() + '</text>'; });
+      for (var yr = 2023; yr <= 2026; yr++) { s += '<line x1="' + x(yr) + '" x2="' + x(yr) + '" y1="22" y2="' + (H - 18) + '" stroke="' + C.line2 + '" stroke-dasharray="2 4" opacity=".6"/><text x="' + (x(yr) + 4) + '" y="' + (H - 6) + '" font-family="JetBrains Mono, monospace" font-size="10.5" fill="' + C.ink3 + '">' + yr + '</text>'; }
+      EDGES.forEach(function (e) { var a = pos(node(e[0])), b = pos(node(e[1])), mx = (a[0] + b[0]) / 2; s += '<path d="M' + a[0] + ' ' + a[1] + ' C' + mx + ' ' + a[1] + ' ' + mx + ' ' + b[1] + ' ' + b[0] + ' ' + b[1] + '" fill="none" stroke="' + (e[2] ? C.ink3 : C.line2) + '" stroke-width="1.4"' + (e[2] ? ' stroke-dasharray="5 4"' : '') + '/>'; });
+      LIN.forEach(function (n) {
+        var p = pos(n), on = n.id === cur, w = Math.max(54, n.t.length * 7 + 16), cc = n.ev === 'hj' ? C.red : n.ev === 'pap' ? C.blue : C.ink3;
+        s += '<g class="node" tabindex="0" role="button" aria-pressed="' + on + '" aria-label="' + esc(n.t) + '" data-id="' + n.id + '"><rect x="' + (p[0] - w / 2) + '" y="' + (p[1] - 12) + '" width="' + w + '" height="24" rx="12" fill="' + (on ? cc : C.surf) + '" stroke="' + cc + '" stroke-width="' + (on ? 2.2 : 1.4) + '"/><text x="' + p[0] + '" y="' + (p[1] + 4) + '" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="' + (on ? C.surf : C.ink) + '">' + esc(n.t) + '</text></g>';
+      });
+      host.innerHTML = s + '</svg>';
+      $$('.node', host).forEach(function (g) { function pick() { cur = g.getAttribute('data-id'); draw(); show(); } g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } }); });
+    }
+    function show() { var n = node(cur); card.innerHTML = '<h4>' + esc(n.t) + '</h4><div class="wm-mini">' + esc(n.meta) + ' · <a href="' + n.url + '" target="_blank" rel="noopener">source</a></div><dl>' + n.f.map(function (f) { return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('') + '</dl>'; }
+    reg(draw); show();
+  })();
+
+  /* ---- DROID clock --------------------------------------------------------------- */
+  (function clock() {
+    var host = byId('wm-clock'); if (!host) return;
+    host.innerHTML = '<div class="ctl" style="display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:end">' +
+      '<label class="chk">Configured fps <select id="ck-f"><option>4</option><option>5</option><option>8</option></select></label>' +
+      '<label class="chk">Frames per clip <select id="ck-n"><option>8</option><option selected>16</option></select></label>' +
+      '<label class="chk">Rate the file reports <select id="ck-t"><option value="60" selected>60 fps (DROID files)</option><option value="15">15 fps (true capture)</option></select></label></div>' +
+      '<div class="reads" id="ck-out" style="margin-top:.7rem"></div><p class="wm-mini" id="ck-note" style="margin:.5rem 0 0"></p>';
+    function up() {
+      var f = +byId('ck-f').value, n = +byId('ck-n').value, tag = +byId('ck-t').value, stride = Math.ceil(tag / f), dt = stride / 15;
+      byId('ck-out').innerHTML = '<div class="read"><b>' + stride + '</b><span>frames skipped per step</span></div><div class="read' + (dt > 0.5 ? ' is-bad' : '') + '"><b>' + dt.toFixed(2) + ' s</b><span>real time per frame</span></div><div class="read"><b>' + (n * dt).toFixed(1) + ' s</b><span>real span of a clip</span></div><div class="read"><b>× ' + (tag / 15).toFixed(0) + '</b><span>file time to real time</span></div>';
+      setText('ck-note', tag === 60 ? 'As released: the "4 s clip at 4 fps" spans ' + (16 * stride / 15).toFixed(0) + ' s of teleoperation, one frame per ' + dt.toFixed(1) + ' s.' : 'If the loader read the true 15 fps, the configured rate would hold: ' + (15 / stride).toFixed(2) + ' Hz.');
+    }
+    ['ck-f', 'ck-n', 'ck-t'].forEach(function (id) { byId(id).addEventListener('change', up); }); up();
+  })();
+
+  /* ---- interval tables -------------------------------------------------------------- */
+  function ciCell(k, n) {
+    if (k == null) return '<span class="wm-mini">not run</span>';
+    var w = wilson(k, n);
+    return '<span style="font-family:var(--mono)">' + k + '/' + n + ' · ' + Math.round(100 * k / n) + '%</span> <span class="wm-mini">[' + Math.round(100 * w[0]) + ', ' + Math.round(100 * w[1]) + ']</span><span class="wm-ci" aria-hidden="true"><i style="left:' + (100 * w[0]) + '%;width:' + (100 * (w[1] - w[0])) + '%"></i><b style="left:calc(' + (100 * k / n) + '% - 1px)"></b></span>';
+  }
+  (function robot() {
+    var host = byId('wm-ci'); if (!host) return;
+    var T = ['Reach', 'Grasp cup', 'Grasp box', 'Reach w/ cup', 'Reach w/ box', 'P&P cup', 'P&P box'];
+    var V = [[10, 10], [7, 6], [3, 2], [9, 6], [8, 7], [8, 8], [8, 5]], O = [[10, 10], [2, 1], [0, 0], [2, 1], [7, 7], [2, 1], [1, 1]], Co = [8, 0, 2, null, null, 0, 0];
+    host.innerHTML = '<table class="tbl"><thead><tr><th>Task</th><th>V-JEPA 2-AC</th><th>Octo</th><th>Cosmos (Lab 2)</th></tr></thead><tbody>' + T.map(function (t, i) {
+      return '<tr><td>' + t + '</td><td style="white-space:normal">' + ciCell(V[i][0] + V[i][1], 20) + '</td><td style="white-space:normal">' + ciCell(O[i][0] + O[i][1], 20) + '</td><td style="white-space:normal">' + ciCell(Co[i], 10) + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  })();
+  (function hwm() {
+    var host = byId('wm-hwm'); if (!host) return;
+    var rows = [['Octo', 0, 0, '43%'], ['π0-FAST-DROID', 26, 9, 'n/a'], ['π0.5-DROID', 34, 18, 'n/a'], ['V-JEPA 2-AC, flat', 0, 0, '30%'], ['V-JEPA 2-AC with HWM\'s hierarchy', 35, 30, '70%']];
+    host.innerHTML = '<table class="tbl"><thead><tr><th>Method</th><th>Pick-and-place, cup</th><th>Pick-and-place, box</th><th>Drawer</th></tr></thead><tbody>' + rows.map(function (r, i) {
+      return '<tr' + (i === 4 ? ' class="hl"' : '') + '><td>' + r[0] + '</td><td style="white-space:normal">' + ciCell(r[1], 50) + '</td><td style="white-space:normal">' + ciCell(r[2], 50) + '</td><td>' + r[3] + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  })();
+
+  /* ---- H-JEPA results (Tables 1 and 9) --------------------------------------------------- */
+  var RES = {
+    'Visual AntMaze': { flat: [18.0, 3.5], d: { 2: { native: [23.3, 3.3], L2: [31.3, 2.7], hier: [39.3, 3.7] }, 3: { native: [16.7, 1.8], L2: [20.7, 4.8], L3: [22.0, 2.3], hier: [73.3, 3.5] }, 4: { native: [10.0, 0.0], L2: [20.7, 1.8], L3: [21.3, 4.7], L4: [26.7, 2.9], hier: [63.3, 7.7] } } },
+    'FourRoom Distractors': { flat: [40.7, 6.8], d: { 2: { native: [9.3, 0.7], L2: [38.7, 6.6], hier: [81.3, 6.7] }, 3: { native: [43.3, 8.7], L2: [65.3, 5.5], L3: [71.3, 4.1], hier: [96.0, 1.1] }, 4: { native: [68.7, 4.7], L2: [72.0, 3.1], L3: [66.0, 3.1], L4: [70.7, 2.7], hier: [80.0, 4.0] } } },
+    'OGBench Cube': { flat: [32.0, 6.1], d: { 2: { native: [24.0, 1.2], L2: [13.3, 0.7], hier: [47.3, 2.7] }, 3: { native: [24.7, 1.3], L2: [28.0, 4.2], L3: [14.0, 3.5], hier: [60.0, 5.0] }, 4: { native: [26.7, 2.7], L2: [25.3, 2.4], L3: [12.0, 2.0], L4: [12.0, 2.3], hier: [55.3, 4.4] } } },
+    'Push-T': { flat: [40.0, 2.3], d: { 2: { native: [36.7, 1.8], L2: [38.0, 3.1], hier: [45.3, 1.3] }, 3: { native: [30.7, 1.8], L2: [28.0, 4.0], L3: [24.7, 4.1], hier: [17.3, 3.5] }, 4: { native: [1.3, 0.7], L2: [1.3, 0.7], L3: [0.7, 0.7], L4: [1.3, 1.3], hier: [0.7, 0.7] } } }
+  };
+  (function results() {
+    var host = byId('wm-hres'); if (!host) return;
+    var env = 'Visual AntMaze', view = 'depth', depth = 3;
+    host.innerHTML = '<div class="chips" id="hr-env"></div><div class="chips" id="hr-view" style="display:inline-flex"></div> <div class="chips" id="hr-depth" style="display:inline-flex"></div><div class="wm-bars" id="hr-bars"></div><p class="status" id="hr-note" style="margin-top:.7rem"></p>';
+    function bar(label, v, cls) { return '<div class="wm-bar"><span>' + label + '</span><span class="t"><span class="f ' + (cls || '') + '" style="width:' + v[0] + '%"></span>' + (v[1] > 0 ? '<span class="e" style="left:' + Math.max(0, v[0] - v[1]) + '%;width:' + (Math.min(100, v[0] + v[1]) - Math.max(0, v[0] - v[1])) + '%"></span>' : '') + '</span><b>' + v[0].toFixed(1) + ' ± ' + v[1].toFixed(1) + '</b></div>'; }
+    function draw() {
+      var E = RES[env], out = '';
+      if (view === 'depth') {
+        out += bar('flat LeWM', E.flat, 'ref'); [2, 3, 4].forEach(function (k) { out += bar(k + ' levels', E.d[k].hier, 'hot'); });
+        var best = [2, 3, 4].reduce(function (a, k) { return E.d[k].hier[0] > E.d[a].hier[0] ? k : a; }, 2);
+        setText('hr-note', env + ': best is ' + best + ' levels, ' + E.d[best].hier[0].toFixed(1) + '% against ' + E.flat[0].toFixed(1) + '% flat.');
+      } else {
+        var D = E.d[depth]; out += bar('flat LeWM', E.flat, 'ref') + bar('level-1 plan, level-1 cost', D.native);
+        ['L2', 'L3', 'L4'].forEach(function (k) { if (D[k]) out += bar('level-1 plan, ' + k + ' cost', D[k]); });
+        out += bar('full hierarchical planner', D.hier, 'hot');
+        var proj = ['L2', 'L3', 'L4'].filter(function (k) { return D[k]; }), bp = proj.reduce(function (a, k) { return D[k][0] > D[a][0] ? k : a; }, proj[0]);
+        setText('hr-note', env + ', ' + depth + ' levels: measuring goal distance in ' + bp + ' gives ' + D[bp][0].toFixed(1) + '% against ' + D.native[0].toFixed(1) + '% in level 1, with the same rollouts.');
+      }
+      byId('hr-bars').innerHTML = out; byId('hr-depth').style.display = view === 'cost' ? 'inline-flex' : 'none';
+    }
+    chips(byId('hr-env'), Object.keys(RES).map(function (k) { return [k, k]; }), env, function (k) { env = k; draw(); });
+    chips(byId('hr-view'), [['depth', 'success by depth'], ['cost', 'change only the cost space']], view, function (k) { view = k; draw(); });
+    chips(byId('hr-depth'), [[2, '2 levels'], [3, '3 levels'], [4, '4 levels']], depth, function (k) { depth = Number(k); draw(); });
+    draw();
+  })();
+
+  /* ---- ledger filter, glossary, directions ------------------------------------------------- */
+  (function ledger() {
+    var bar2 = byId('wm-ledger-f'), rows = $$('#wm-ledger tbody tr'); if (!bar2) return;
+    chips(bar2, [['all', 'all'], ['est', 'established'], ['part', 'partly'], ['hyp', 'untested'], ['ref', 'contradicted']], 'all', function (k) { rows.forEach(function (r) { r.hidden = !(k === 'all' || r.getAttribute('data-st') === k); }); });
+  })();
+  (function gloss() {
+    var host = byId('wm-gloss'); if (!host) return;
+    var G = [
+      ['World model', 'Predicts the next state from the history and an action.', 'ŝ<sub>t+1</sub> = f(s<sub>≤t</sub>, a<sub>t</sub>)'],
+      ['JEPA', 'Predict the embedding of the hidden part from the embedding of the visible part.', 'D(P(E<sub>θ</sub>(x), z), sg(E<sub>θ̄</sub>(y)))'],
+      ['Tubelet', 'A 2 × 16 × 16 brick of video turned into one token.', 'N = (T/2)(H/16)(W/16)'],
+      ['3D-RoPE', 'Rotates query and key segments by time, row and column so attention sees relative positions.', '⟨R<sub>p</sub>q, R<sub>p′</sub>k⟩ = ⟨q, R<sub>p′−p</sub>k⟩'],
+      ['Multiblock mask', 'A union of rectangular blocks that span the whole clip in time.', 'short: 8 × 15%; long: 2 × 70%'],
+      ['EMA teacher', 'A slowly averaged copy of the encoder that makes the targets.', 'θ̄ ← mθ̄ + (1 − m)θ, m = 0.99925'],
+      ['Stop-gradient', 'Treats the target as a constant during the backward pass.', '∂L/∂θ̄ = 0'],
+      ['Collapse', 'A constant encoder that makes prediction trivial.', 'E(x) = c ⇒ L = 0'],
+      ['Attentive probe', 'A small trained reader on a frozen encoder: a learned query cross-attends to all tokens.', 'ŷ = W softmax(qK<sup>⊤</sup>/√d)V'],
+      ['Block-causal mask', 'A token sees its own time step, including that step\'s action, and earlier steps only.', 'M<sub>ij</sub> = 1 ⇔ step(j) ≤ step(i)'],
+      ['Teacher forcing', 'Training each prediction from the true past.', 'ẑ<sub>k+1</sub> = P(z<sub>≤k</sub>)'],
+      ['Rollout loss', 'Training on the model\'s own predictions fed back in.', 'ẑ<sub>2</sub> = P(ẑ<sub>1</sub>, …)'],
+      ['Energy', 'The planner\'s cost: distance between the imagined future and the goal.', 'E = ‖P(a; z<sub>k</sub>) − z<sub>g</sub>‖<sub>1</sub>'],
+      ['Cross-entropy method', 'Sample actions, keep the best, refit the sampling distribution, repeat.', 'μ, σ ← elite mean, std'],
+      ['Model-predictive control', 'Plan, execute only the first action, observe, plan again.', 'a<sub>t</sub> = first(argmin E)'],
+      ['SIGReg', 'Pushes a batch of embeddings toward an isotropic Gaussian, one random projection at a time.', '(1/M) Σ T<sub>EP</sub>(Zu<sub>m</sub>)'],
+      ['Slow-feature collapse', 'Keeping only what is constant within an episode, such as the scene.', 'χ(E) → 0'],
+      ['Inverse dynamics', 'Recover the action from two consecutive latents.', '‖I(z<sub>t</sub>, z<sub>t+1</sub>) − a<sub>t</sub>‖²'],
+      ['Macro-action', 'An upper-level action pooled from the lower-level actions it spans.', 'a<sup>(ℓ)</sup><sub>t</sub> = A<sup>(ℓ)</sup>(a<sup>(ℓ−1)</sup> over a stride)'],
+      ['Fréchet fidelity', 'How closely a planned path follows the expert path, relative to standing still.', '(d<sub>F</sub>(0, p̃) − d<sub>F</sub>(p, p̃)) / d<sub>F</sub>(0, p̃)']
+    ];
+    G.forEach(function (g) {
+      var b = doc.createElement('button'); b.type = 'button'; b.className = 'gl'; var on = false;
+      function paint() { b.innerHTML = '<b>' + g[0] + '</b><span>' + (on ? '<span style="font-family:var(--mono)">' + g[2] + '</span>' : esc(g[1])) + '</span>'; }
+      b.addEventListener('click', function () { on = !on; paint(); }); paint(); host.appendChild(b);
+    });
+  })();
+  (function dirs() {
+    var host = byId('wm-dirs'); if (!host) return;
+    var D = [
+      ['Fix the clock, then re-measure', 'Training V-JEPA 2-AC on frames 0.25 s apart in real time, as the paper intended, changes what an action means and may change planning.', 'Retrain the action-conditioned predictor on DROID with the stride set from the 15 Hz robot timestamps; compare one-step error, the App. B.4 camera test and Reach and Grasp against the released checkpoint.', 'No difference outside the released model\'s intervals.', '≈ 1,000 A100-hours, cached features cut it; 2 robot-days'],
+      ['Closed-loop H-JEPA, wrist and exterior views', 'H-JEPA\'s stated next step. Separate latent spaces should beat HWM on a real arm, most of all with a wrist view for precision.', 'HWM\'s Franka protocol (10 start-goal pairs × 5 trials, cup and box) for flat, HWM and H-JEPA, with and without the wrist camera.', 'H-JEPA does not separate from HWM, overlapping 95% intervals.', 'small models; 4 to 6 robot-days'],
+      ['Contact events as level boundaries', 'Upper-level states placed at grasp and release instead of every third frame should give subgoals aligned with task phases and the timescale gap that abstraction needs.', 'Segment DROID at gripper events; train a two-level H-JEPA on event boundaries against stride 3; compare fidelity and per-entity probes.', 'No gain at matched planner compute.', '≈ 100 to 300 GPU-hours per run, 3 seeds'],
+      ['Which level owns the fingers?', 'In in-hand manipulation finger joints move fast and object pose slowly, so an upper level should drop the fingers and keep the object: the dexterous analogue of the ant\'s legs.', 'Measure the frequency gap on a simulated in-hand rotation dataset; train a three-level H-JEPA; probe finger joints and object pose per level.', 'The gap is under 2×, or level 2 keeps the fingers.', 'simulation, ≈ 200 GPU-hours'],
+      ['Inverse dynamics on a frozen-encoder predictor', 'H-JEPA shows the term is necessary for end-to-end encoders on DROID. On a frozen V-JEPA 2 encoder it might still sharpen the energy landscape by making the predictor respond to actions.', 'Add an IDM head on predicted latents of V-JEPA 2-AC at three weights; report action sensitivity and the energy-to-distance rank correlation.', 'Sensitivity and rank correlation unchanged.', '≈ 3,000 A100-hours with cached features'],
+      ['An energy that weights what matters', 'A uniform L1 over 256 × 1408 numbers lets the background dominate small objects. Weighting patches by their predicted sensitivity to the action should raise grasp success.', 'Compute per-patch action sensitivity from the predictor; plan with a sensitivity-weighted energy; Grasp and pick-and-place, 50 trials each.', 'Success within the uniform energy\'s interval.', 'no training; ≈ 2 robot-days']
+    ];
+    host.innerHTML = D.map(function (d, i) { return '<article class="wm-dir"><div class="wm-k">Direction ' + (i + 1) + '</div><h4>' + esc(d[0]) + '</h4><p><b>Hypothesis.</b> ' + esc(d[1]) + '</p><p><b>Experiment.</b> ' + esc(d[2]) + '</p><p><b>Falsified if.</b> ' + esc(d[3]) + '</p><div class="cost">Cost: ' + esc(d[4]) + '</div></article>'; }).join('');
+  })();
+})();
+</script>

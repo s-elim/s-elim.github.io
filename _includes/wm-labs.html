@@ -1,0 +1,412 @@
+{%- comment -%}
+  Labs 1 to 8 of the latent world model lecture. Plain JavaScript on canvas and
+  SVG, using the helpers in window.WM.u (wm-core.html). Samplers and formulas
+  are ported from facebookresearch/vjepa2 @ 204698b where the lab says so.
+{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+  var WM = window.WM; if (!WM || !WM.u) return;
+  var U = WM.u, $ = U.$, $$ = U.$$, byId = U.byId, setText = U.setText, clamp = U.clamp, esc = U.esc, rng = U.rng, gauss = U.gauss, col = U.col, alpha = U.alpha, cv = U.cv, font = U.font, reg = U.reg, bind = U.bind, val = U.val, chips = U.chips;
+  var doc = document;
+  // narrow screens get a taller canvas; returns true when narrow
+  function shape(el, wide, narrow) { var n = (el.clientWidth || el.width) < 520; el.dataset.aspect = String(n ? narrow : wide); return n; }
+  function axes(c, C, L, T, W, H, xl, yl) { c.strokeStyle = C.line; c.lineWidth = 1; c.strokeRect(L, T, W, H); font(c, 10.5, true); c.fillStyle = C.ink3; if (xl) { c.textAlign = 'right'; c.fillText(xl, L + W, T + H + 16); } if (yl) { c.textAlign = 'left'; c.fillText(yl, L + 4, T - 6); } }
+
+  /* ---- Lab 1: pixels or features ------------------------------------------- */
+  (function pix() {
+    var el = byId('pix-cv'); if (!el) return;
+    var N = 64;
+    function dctBasis() { var B = []; for (var k = 0; k < N; k++) { var row = []; for (var i = 0; i < N; i++) row.push(Math.sqrt((k === 0 ? 1 : 2) / N) * Math.cos(Math.PI / N * (i + 0.5) * k)); B.push(row); } return B; }
+    var Bs = dctBasis();
+    function bump(c) { var v = []; for (var i = 0; i < N; i++) { var d = Math.min(Math.abs(i - c), N - Math.abs(i - c)); v.push(Math.exp(-d * d / (2 * 3 * 3))); } return v; }
+    function lowpass(v, B) { var out = new Array(N).fill(0); for (var k = 0; k < B; k++) { var a = 0; for (var i = 0; i < N; i++) a += Bs[k][i] * v[i]; for (i = 0; i < N; i++) out[i] += a * Bs[k][i]; } return out; }
+    function mse(a, b) { var s = 0; for (var i = 0; i < N; i++) s += (a[i] - b[i]) * (a[i] - b[i]); return s / N; }
+    function update() {
+      var nz = val('pix-noise'), sp = val('pix-speed'), B = val('pix-band');
+      setText('pix-noise-o', nz.toFixed(2)); setText('pix-speed-o', sp.toFixed(1)); setText('pix-band-o', B + ' of 64');
+      var r = rng(3), c0 = 20, mean0 = bump(c0), mean1 = bump(c0 + sp), f0 = mean0.map(function (x) { return x + nz * gauss(r); }), f1 = mean1.map(function (x) { return x + nz * gauss(r); });
+      // an imperfect model that has not learned the motion predicts the last frame's mean
+      var fixP = mse(mean0, mean1), irrP = nz * nz, lp0 = lowpass(mean0, B), lp1 = lowpass(mean1, B), fixF = mse(lp0, lp1), irrF = nz * nz * B / N;
+      setText('pix-fix', fixP.toFixed(3)); setText('pix-irr', irrP.toFixed(3)); setText('pix-share', Math.round(100 * irrP / Math.max(1e-9, fixP + irrP)) + '%'); setText('pix-feat', (fixF + irrF).toFixed(3));
+      byId('pix-share').parentNode.className = 'read' + (irrP / Math.max(1e-9, fixP + irrP) > 0.5 ? ' is-bad' : '');
+      var st = byId('pix-status');
+      st.textContent = 'Pixel loss of a model that ignores motion: ' + (fixP + irrP).toFixed(3) + ', of which ' + Math.round(100 * irrP / Math.max(1e-9, fixP + irrP)) + '% is flicker no model can predict. In the ' + B + '-coefficient feature space the flicker share is ' + Math.round(100 * irrF / Math.max(1e-9, fixF + irrF)) + '%.';
+      var nw = shape(el, 520 / 900, 1.05), g = cv(el), cc = g.c, C = col(), W = g.w, H = g.h, L = nw ? 10 : 40, Rr = nw ? 8 : 12, rows = [[nw ? 'frame t' : 'frame t (observed)', f0, C.ink2], [nw ? 'frame t+1' : 'frame t+1 (observed)', f1, C.ink2], [nw ? 'best pixel prediction' : 'E[frame t+1 | past]: the best any pixel model can do', mean1, C.blue], [nw ? 'feature space, frame t+1' : 'feature space: frame t+1 through the encoder', lowpass(f1, B), C.red]];
+      var rh = (H - 30) / rows.length;
+      rows.forEach(function (rw, k) {
+        var top = 14 + k * rh, mid = top + rh * 0.6, amp = rh * 0.3;
+        cc.strokeStyle = C.line; cc.beginPath(); cc.moveTo(L, mid); cc.lineTo(W - Rr, mid); cc.stroke();
+        font(cc, 11, true); cc.fillStyle = C.ink3; cc.textAlign = 'left'; cc.fillText(rw[0], L, top + 10);
+        cc.strokeStyle = rw[2]; cc.lineWidth = 2; cc.beginPath();
+        rw[1].forEach(function (v, i) { var x = L + i / (N - 1) * (W - L - Rr), y = mid - clamp(v, -1.5, 1.5) * amp; if (i) cc.lineTo(x, y); else cc.moveTo(x, y); }); cc.stroke();
+      });
+    }
+    bind(['pix-noise', 'pix-speed', 'pix-band'], update); reg(update);
+  })();
+
+  /* ---- Lab 2: tokenizer ---------------------------------------------------- */
+  (function tok() {
+    var el = byId('tok-cv'); if (!el) return;
+    var PRE = [['ijepa', 'I-JEPA image', [1, 224, 14, 1, 1280]], ['vj2', 'V-JEPA 2 pretrain', [16, 256, 16, 2, 1408]], ['cool', 'V-JEPA 2 cooldown', [64, 384, 16, 2, 1408]], ['ac', 'V-JEPA 2-AC frame', [1, 256, 16, 2, 1408]], ['hj', 'H-JEPA level 1 (DROID)', [1, 256, 16, 1, 384]]];
+    function setPre(k) { var p = PRE.filter(function (x) { return x[0] === k; })[0][2]; byId('tk-T').value = p[0]; byId('tk-R').value = p[1]; byId('tk-p').value = p[2]; byId('tk-t').value = p[3]; byId('tk-d').value = p[4]; update(); }
+    chips(byId('tok-pre'), PRE.map(function (p) { return [p[0], p[1]]; }), 'vj2', setPre);
+    function update() {
+      var T = val('tk-T'), R = val('tk-R'), p = +byId('tk-p').value, t = +byId('tk-t').value, d = +byId('tk-d').value;
+      setText('tk-T-o', T); setText('tk-R-o', R); setText('tk-p-o', p); setText('tk-t-o', t); setText('tk-d-o', d);
+      var g1 = Math.floor(R / p), tt = t === 2 && T === 1 ? 1 : Math.max(1, Math.floor(T / t)), N = tt * g1 * g1, att = N * N, fl = (24 * N * d * d + 4 * N * N * d) / 1e9;
+      setText('tk-N', N.toLocaleString('en-US')); setText('tk-att', att >= 1e6 ? (att / 1e6).toFixed(1) + 'M' : att.toLocaleString('en-US')); setText('tk-fl', fl < 10 ? fl.toFixed(2) : fl.toFixed(0));
+      byId('tk-shape').textContent = 'x  (B, 3, ' + T + ', ' + R + ', ' + R + ')' + (t === 2 && T === 1 ? '  duplicate the frame → (B, 3, 2, ' + R + ', ' + R + ')' : '') + '\nConv3d  kernel = stride = (' + t + ', ' + p + ', ' + p + ')  3 → ' + d + '\n→ (B, ' + d + ', ' + tt + ', ' + g1 + ', ' + g1 + ')  flatten → (B, ' + N + ', ' + d + ')';
+      var nw = shape(el, 0.66, 1.0), g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, show = Math.min(tt, 8), dx = 18, cell = Math.min((W * 0.55) / Math.max(g1, 1), (H - 84 - 0.6 * dx * (show - 1)) / Math.max(g1, 1)), gw = cell * g1, x0 = nw ? 12 : 30, y0 = H - 64 - gw;
+      dx = Math.min(18, (W - gw - x0 - 12) / Math.max(show, 1));
+      for (var s = show - 1; s >= 0; s--) {
+        var ox = x0 + s * dx, oy = y0 - s * dx * 0.6;
+        c.fillStyle = s === 0 ? C.plot : C.s2; c.fillRect(ox, oy, gw, gw); c.strokeStyle = C.line2; c.lineWidth = 1; c.strokeRect(ox, oy, gw, gw);
+        if (s === 0 && g1 <= 48) { c.strokeStyle = C.line; for (var i = 1; i < g1; i++) { c.beginPath(); c.moveTo(ox + i * cell, oy); c.lineTo(ox + i * cell, oy + gw); c.stroke(); c.beginPath(); c.moveTo(ox, oy + i * cell); c.lineTo(ox + gw, oy + i * cell); c.stroke(); } }
+      }
+      c.fillStyle = C.red; c.globalAlpha = 0.85; c.fillRect(x0 + 2 * cell, y0 + 2 * cell, cell, cell); c.globalAlpha = 1;
+      font(c, 11, true); c.fillStyle = C.ink2; c.textAlign = 'left';
+      c.fillText(g1 + ' × ' + g1 + ' patches per slice', x0, y0 + gw + 18);
+      var sl = tt + ' slice' + (tt > 1 ? 's' : '') + ' in time' + (tt > show ? ' (' + show + ' drawn)' : ''), tok = 'one token = ' + t + ' × ' + p + ' × ' + p + ' × 3 = ' + (t * p * p * 3) + ' numbers → ' + d + '-D';
+      font(c, nw ? 10 : 11, true); c.fillText(sl, x0, y0 + gw + 34); c.fillStyle = C.red; c.fillText(tok, x0, y0 + gw + 50);
+    }
+    ['tk-T', 'tk-R'].forEach(function (id) { byId(id).addEventListener('input', update); });
+    ['tk-p', 'tk-t', 'tk-d'].forEach(function (id) { byId(id).addEventListener('change', update); });
+    reg(update);
+  })();
+
+  /* ---- Lab 3: rotary positions --------------------------------------------- */
+  (function rope() {
+    var el = byId('rope-cv'); if (!el) return;
+    var mode = 'both';
+    chips(byId('rope-mode'), [['both', 'both'], ['intended', 'intended'], ['code', 'as implemented']], mode, function (m) { mode = m; update(); });
+    function rot(x, p, D, code) {
+      var h = D / 2, out = new Array(D);
+      for (var j = 0; j < D; j += 2) {
+        var wa = code ? Math.pow(10000, -((j) % h) / h) : Math.pow(10000, -(j / 2) / h), wb = code ? Math.pow(10000, -((j + 1) % h) / h) : wa;
+        var a = p * wa, b = p * wb;
+        out[j] = x[j] * Math.cos(a) - x[j + 1] * Math.sin(a);
+        out[j + 1] = x[j + 1] * Math.cos(b) + x[j] * Math.sin(b);
+      }
+      return out;
+    }
+    function dot(a, b) { var s = 0; for (var i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
+    function update() {
+      var D = val('rp-D'), base = val('rp-b'), sd = val('rp-s'); setText('rp-D-o', D); setText('rp-b-o', base); setText('rp-s-o', sd);
+      var r = rng(sd * 7919), q = [], k = []; for (var i = 0; i < D; i++) { q.push(gauss(r)); k.push(gauss(r)); }
+      var offs = []; for (var o = 0; o <= 15; o++) offs.push(o);
+      function curve(code, p0) { return offs.map(function (o) { return dot(rot(q, p0, D, code), rot(k, p0 + o, D, code)); }); }
+      var ci0 = curve(false, 0), ci1 = curve(false, base), cc0 = curve(true, 0), cc1 = curve(true, base);
+      var gapI = Math.max.apply(null, ci0.map(function (v, i) { return Math.abs(v - ci1[i]); })), gapC = Math.max.apply(null, cc0.map(function (v, i) { return Math.abs(v - cc1[i]); }));
+      var nq = Math.sqrt(dot(q, q)), nC = Math.sqrt(dot(rot(q, 3, D, true), rot(q, 3, D, true))) / nq, nI = Math.sqrt(dot(rot(q, 3, D, false), rot(q, 3, D, false))) / nq;
+      setText('rp-gap', mode === 'intended' ? gapI.toFixed(3) : gapC.toFixed(3)); setText('rp-norm', (mode === 'intended' ? nI : nC).toFixed(3) + '×');
+      byId('rp-gap').parentNode.className = 'read' + ((mode === 'intended' ? gapI : gapC) > 1e-6 ? ' is-bad' : ' is-good');
+      setText('rp-status', 'Intended: the two curves coincide (gap ' + gapI.toExponential(1) + '), so the score depends only on the offset. As implemented: gap ' + gapC.toFixed(3) + ' and the norm changes by ' + nC.toFixed(3) + '×, so it is neither purely relative nor a rotation.');
+      var nw = shape(el, 460 / 900, 0.85), g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, L = nw ? 34 : 50, T = 20, PW = W - L - 12, PH = H - T - (nw ? 58 : 40);
+      var all = [].concat(mode !== 'code' ? ci0.concat(ci1) : [], mode !== 'intended' ? cc0.concat(cc1) : []), mx = Math.max.apply(null, all.map(Math.abs)) * 1.15 || 1;
+      function X(o) { return L + o / 15 * PW; } function Y(v) { return T + PH / 2 - v / mx * PH / 2; }
+      axes(c, C, L, T, PW, PH, nw ? 'key − query offset →' : 'offset between key and query positions →', 'q′ · k′');
+      c.strokeStyle = C.line; c.beginPath(); c.moveTo(L, Y(0)); c.lineTo(L + PW, Y(0)); c.stroke();
+      function line(arr, color, dash) { c.strokeStyle = color; c.lineWidth = 2.2; c.setLineDash(dash || []); c.beginPath(); arr.forEach(function (v, i) { if (i) c.lineTo(X(i), Y(v)); else c.moveTo(X(i), Y(v)); }); c.stroke(); c.setLineDash([]); }
+      if (mode !== 'code') { line(ci0, C.blue); line(ci1, C.blue, [6, 4]); }
+      if (mode !== 'intended') { line(cc0, C.red); line(cc1, C.red, [6, 4]); }
+      font(c, nw ? 9.5 : 10.5, true); c.textAlign = 'left'; var ly = H - 10;
+      c.fillStyle = C.blue; if (mode !== 'code') c.fillText((nw ? 'intended' : 'intended: solid from 0') + ', dashed from ' + base, L, nw && mode === 'both' ? ly - 16 : ly);
+      c.fillStyle = C.red; if (mode !== 'intended') c.fillText((nw ? 'implemented' : 'as implemented: solid from 0') + ', dashed from ' + base, nw ? L : L + PW / 2, ly);
+    }
+    bind(['rp-D', 'rp-b', 'rp-s'], update); reg(update);
+  })();
+
+  /* ---- Lab 4: mask samplers (ported from src/masks) ------------------------- */
+  (function masks() {
+    var el = byId('mask-cv'); if (!el) return;
+    var mode = 'short', sample = null, seed = 1;
+    chips(byId('mask-mode'), [['ijepa', 'I-JEPA (image)'], ['short', 'V-JEPA 2 short-range'], ['long', 'V-JEPA 2 long-range']], mode, function (m) { mode = m; run(); });
+    var Tg = 8, Hg = 16, Wg = 16;
+    function blockSize(r, scale, ar0, ar1) { var keep = Math.floor(Hg * Wg * scale), ar = ar0 + r() * (ar1 - ar0); return [Math.min(Hg, Math.round(Math.sqrt(keep * ar))), Math.min(Wg, Math.round(Math.sqrt(keep / ar)))]; }
+    function vjClip(r, hw, npred) {
+      var m = new Uint8Array(Hg * Wg);
+      for (var b = 0; b < npred; b++) { var top = Math.floor(r() * (Hg - hw[0] + 1)), left = Math.floor(r() * (Wg - hw[1] + 1)); for (var y = top; y < top + hw[0]; y++) for (var x = left; x < left + hw[1]; x++) m[y * Wg + x] = 1; }
+      return m; // 1 = masked, same for every time slice (temporal scale 1.0)
+    }
+    function ijClip(r) {
+      var tgt = new Uint8Array(Hg * Wg), boxes = [];
+      for (var b = 0; b < 4; b++) { var hw = blockSize(r, 0.15 + r() * 0.05, 0.75, 1.5), top = Math.floor(r() * (Hg - hw[0] + 1)), left = Math.floor(r() * (Wg - hw[1] + 1)); boxes.push([top, left, hw]); for (var y = top; y < top + hw[0]; y++) for (var x = left; x < left + hw[1]; x++) tgt[y * Wg + x] = 1; }
+      var cs = Math.round(Math.sqrt(Math.floor(Hg * Wg * (0.85 + r() * 0.15)))), ct = Math.floor(r() * (Hg - cs + 1)), cl = Math.floor(r() * (Wg - cs + 1)), ctx = new Uint8Array(Hg * Wg);
+      for (var yy = ct; yy < ct + cs; yy++) for (var xx = cl; xx < cl + cs; xx++) if (!tgt[yy * Wg + xx]) ctx[yy * Wg + xx] = 1;
+      return { tgt: tgt, ctx: ctx };
+    }
+    function stats(B, n) {
+      var r = rng(1000 + seed), mfrac = 0, enc = 0, pred = 0, tot = Tg * Hg * Wg;
+      for (var it = 0; it < n; it++) {
+        var hw = blockSize(r, mode === 'short' ? 0.15 : 0.7, 0.75, 1.5), npred = mode === 'short' ? 8 : 2, minE = tot, minP = tot, mf = 0;
+        for (var b = 0; b < B; b++) { var m = vjClip(r, hw, npred), cnt = 0; for (var i = 0; i < m.length; i++) cnt += m[i]; cnt *= Tg; if (tot - cnt === 0) { b--; continue; } mf += cnt / tot; minP = Math.min(minP, cnt); minE = Math.min(minE, tot - cnt); }
+        mfrac += mf / B; enc += minE / tot; pred += minP / tot;
+      }
+      return [mfrac / n, enc / n, pred / n];
+    }
+    function run() {
+      var B = val('mk-B'); setText('mk-B-o', B);
+      var r = rng(seed * 31 + (mode === 'long' ? 7 : 0));
+      if (mode === 'ijepa') {
+        sample = ijClip(r); var tg = 0, cx = 0; for (var i = 0; i < sample.tgt.length; i++) { tg += sample.tgt[i]; cx += sample.ctx[i]; }
+        setText('mk-m', Math.round(100 * tg / 256) + '%'); setText('mk-e', Math.round(100 * cx / 256) + '%'); setText('mk-p', Math.round(100 * tg / 256) + '%');
+        setText('mk-status', 'One image: 4 target blocks to predict (red) and the context block with the targets removed (blue). No truncation step in this sketch.');
+      } else {
+        var hw = blockSize(r, mode === 'short' ? 0.15 : 0.7, 0.75, 1.5), npred = mode === 'short' ? 8 : 2, clips = [];
+        for (var b = 0; b < B; b++) clips.push(vjClip(r, hw, npred));
+        var tot = Tg * Hg * Wg, minE = tot, minP = tot;
+        clips.forEach(function (m) { var c2 = 0; for (var i2 = 0; i2 < m.length; i2++) c2 += m[i2]; c2 *= Tg; minP = Math.min(minP, c2); minE = Math.min(minE, tot - c2); });
+        sample = { m: clips[0], minE: minE, minP: minP, hw: hw };
+        var s = stats(B, 200);
+        setText('mk-m', Math.round(100 * s[0]) + '%'); setText('mk-e', Math.round(100 * s[1]) + '%'); setText('mk-p', Math.round(100 * s[2]) + '%');
+        setText('mk-status', 'Block ' + hw[0] + ' × ' + hw[1] + ' tokens, ' + npred + ' per clip, every time slice. Averages over 200 batches of ' + B + ' clips: ' + Math.round(100 * s[0]) + '% masked; after truncation the encoder sees ' + Math.round(100 * s[1]) + '% and ' + Math.round(100 * s[2]) + '% is predicted.');
+      }
+      draw();
+    }
+    function draw() {
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h;
+      if (!sample) return;
+      if (mode === 'ijepa') {
+        var cs = Math.min((W - 40) / Wg, (H - 40) / Hg), ox = (W - cs * Wg) / 2, oy = 20;
+        for (var y = 0; y < Hg; y++) for (var x = 0; x < Wg; x++) { var i = y * Wg + x; c.fillStyle = sample.tgt[i] ? C.red : sample.ctx[i] ? C.blue : C.s2; c.globalAlpha = sample.tgt[i] || sample.ctx[i] ? 0.8 : 1; c.fillRect(ox + x * cs + 1, oy + y * cs + 1, cs - 2, cs - 2); c.globalAlpha = 1; }
+        return;
+      }
+      // eight time slices, showing the batch-minimum truncation in (t, h, w) order
+      var cols = 4, rows = 2, gap = 14, cs2 = Math.min((W - gap * (cols + 1)) / (cols * Wg), (H - 50 - gap * (rows + 1)) / (rows * Hg)), sw = cs2 * Wg;
+      var keepE = sample.minE, keepP = sample.minP, seenE = 0, seenP = 0;
+      for (var t = 0; t < Tg; t++) {
+        var gx = gap + (t % cols) * (sw + gap), gy = gap + Math.floor(t / cols) * (sw + gap + 14);
+        font(c, 10, true); c.fillStyle = C.ink3; c.textAlign = 'left'; c.fillText('t = ' + t, gx, gy + 9);
+        for (var yy = 0; yy < Hg; yy++) for (var xx = 0; xx < Wg; xx++) {
+          var mk = sample.m[yy * Wg + xx], color;
+          if (mk) { seenP++; color = seenP <= keepP ? C.red : C.line2; } else { seenE++; color = seenE <= keepE ? C.blue : C.line2; }
+          c.fillStyle = color; c.globalAlpha = color === C.line2 ? 0.6 : 0.8; c.fillRect(gx + xx * cs2, gy + 14 + yy * cs2, cs2 - 0.6, cs2 - 0.6); c.globalAlpha = 1;
+        }
+      }
+      font(c, 10.5, true); c.textAlign = 'left'; var ly = H - 8;
+      var lx = 14, nw = W < 520;
+      [[nw ? 'encoder sees' : 'seen by the encoder', C.blue], ['predicted', C.red], [nw ? 'dropped' : 'dropped by batch-minimum truncation', C.ink3]].forEach(function (it) { c.fillStyle = it[1]; c.fillText(it[0], lx, ly); lx += c.measureText(it[0]).width + 18; });
+    }
+    byId('mk-B').addEventListener('input', run); byId('mk-new').addEventListener('click', function () { seed++; run(); });
+    run(); reg(draw);
+  })();
+
+  /* ---- Lab 5: collapse in a linear JEPA ------------------------------------- */
+  (function collapse() {
+    var el = byId('col-cv'); if (!el) return;
+    var hist = [], running = false, lastLoss = null;
+    function svals(W) { // singular values of a 4 x 8 matrix via Jacobi on W W^T
+      var A = [], i, j, k;
+      for (i = 0; i < 4; i++) { A.push([]); for (j = 0; j < 4; j++) { var s = 0; for (k = 0; k < 8; k++) s += W[i][k] * W[j][k]; A[i].push(s); } }
+      for (var sweep = 0; sweep < 30; sweep++) for (var p = 0; p < 3; p++) for (var q = p + 1; q < 4; q++) {
+        if (Math.abs(A[p][q]) < 1e-12) continue;
+        var th = 0.5 * Math.atan2(2 * A[p][q], A[q][q] - A[p][p]), cth = Math.cos(th), sth = Math.sin(th);
+        for (k = 0; k < 4; k++) { var akp = A[k][p], akq = A[k][q]; A[k][p] = cth * akp - sth * akq; A[k][q] = sth * akp + cth * akq; }
+        for (k = 0; k < 4; k++) { var apk = A[p][k], aqk = A[q][k]; A[p][k] = cth * apk - sth * aqk; A[q][k] = sth * apk + cth * aqk; }
+      }
+      return [0, 1, 2, 3].map(function (d) { return Math.sqrt(Math.max(0, A[d][d])); }).sort(function (a, b) { return b - a; });
+    }
+    function train() {
+      var sg = byId('col-sg').checked, pred = byId('col-pr').checked, m = val('col-m'), wd = val('col-wd');
+      var r = rng(5), d = 8, k = 4, lr = 0.02, sdv = [2.0, 1.6, 1.3, 1.0, 0.8, 0.6, 0.45, 0.3], n = 128, i, j, a;
+      var W = [], P = [], Wt;
+      for (i = 0; i < k; i++) { W.push([]); P.push([]); for (j = 0; j < d; j++) W[i].push(0.3 * gauss(r)); for (j = 0; j < k; j++) P[i].push((i === j ? 1 : 0) + 0.05 * gauss(r)); }
+      Wt = W.map(function (row) { return row.slice(); });
+      hist = [{ s: 0, v: svals(W) }]; running = true; var step = 0;
+      var x1 = [], x2 = [], z1 = new Float64Array(k), pz = new Float64Array(k), t2 = new Float64Array(k), e = new Float64Array(k);
+      function chunk() {
+        for (var it = 0; it < 100 && step < 4000; it++, step++) {
+          var gW = W.map(function () { return new Float64Array(d); }), gP = P.map(function () { return new Float64Array(k); }), loss = 0;
+          var T = (sg && m > 0) ? Wt : W;
+          for (var s = 0; s < n; s++) {
+            for (j = 0; j < d; j++) { var xv = sdv[j] * gauss(r); x1[j] = xv + 0.5 * gauss(r); x2[j] = xv + 0.5 * gauss(r); }
+            for (i = 0; i < k; i++) { var acc = 0, acc2 = 0; for (j = 0; j < d; j++) { acc += W[i][j] * x1[j]; acc2 += T[i][j] * x2[j]; } z1[i] = acc; t2[i] = acc2; }
+            for (i = 0; i < k; i++) { var acc3 = 0; if (pred) { for (a = 0; a < k; a++) acc3 += P[i][a] * z1[a]; } else acc3 = z1[i]; pz[i] = acc3; e[i] = 2 * (pz[i] - t2[i]) / n; loss += (pz[i] - t2[i]) * (pz[i] - t2[i]) / n; }
+            for (a = 0; a < k; a++) { var back = 0; if (pred) { for (i = 0; i < k; i++) back += P[i][a] * e[i]; } else back = e[a]; for (j = 0; j < d; j++) gW[a][j] += back * x1[j]; }
+            if (!sg) for (i = 0; i < k; i++) for (j = 0; j < d; j++) gW[i][j] -= e[i] * x2[j];
+            if (pred) for (i = 0; i < k; i++) for (a = 0; a < k; a++) gP[i][a] += e[i] * z1[a];
+          }
+          for (i = 0; i < k; i++) { for (j = 0; j < d; j++) W[i][j] -= lr * (gW[i][j] + wd * W[i][j]); if (pred) for (a = 0; a < k; a++) P[i][a] -= lr * (gP[i][a] + wd * P[i][a]); }
+          if (sg && m > 0) for (i = 0; i < k; i++) for (j = 0; j < d; j++) Wt[i][j] = m * Wt[i][j] + (1 - m) * W[i][j];
+          lastLoss = loss;
+          if (step % 50 === 49) hist.push({ s: step + 1, v: svals(W) });
+        }
+        draw();
+        if (step < 4000 && running) requestAnimationFrame(chunk);
+        else {
+          running = false; var fin = hist[hist.length - 1].v, alive = fin.filter(function (v) { return v > 0.05; }).length;
+          setText('col-rank', alive + ' of 4'); setText('col-loss', lastLoss.toFixed(3));
+          byId('col-rank').parentNode.className = 'read' + (alive === 0 ? ' is-bad' : alive >= 3 ? ' is-good' : '');
+          setText('col-status', alive === 0 ? 'Collapsed: every direction has shrunk to zero and the loss is ' + lastLoss.toFixed(4) + '. The prediction task became trivial.' : alive < 3 ? 'Collapsing: only ' + alive + ' direction' + (alive === 1 ? '' : 's') + ' left after 4,000 steps.' : alive + ' directions alive; the loss stays near the noise level because the representation keeps carrying the signal.');
+        }
+      }
+      setText('col-status', 'Training…'); chunk();
+    }
+    function draw() {
+      var nw = shape(el, 460 / 900, 0.8), g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, L = nw ? 34 : 46, T = 20, PW = W - L - 16, PH = H - T - 46, colors = [C.red, C.blue, C.ochre, C.sage];
+      axes(c, C, L, T, PW, PH, '', 'singular values of W');
+      font(c, 10.5, true); c.fillStyle = C.ink3; c.textAlign = 'center'; c.fillText('training step', L + PW / 2, T + PH + 32);
+      var mx = 1.2; hist.forEach(function (h0) { h0.v.forEach(function (v) { mx = Math.max(mx, v * 1.1); }); });
+      function X(s) { return L + s / 4000 * PW; } function Y(v) { return T + PH - v / mx * PH; }
+      font(c, 10, true); c.fillStyle = C.ink3; c.textAlign = 'right'; [0, 1000, 2000, 3000, 4000].forEach(function (s) { c.fillText(String(s), X(s) + 4, T + PH + 14); });
+      for (var d = 0; d < 4; d++) { c.strokeStyle = colors[d]; c.lineWidth = 2; c.beginPath(); hist.forEach(function (h0, i) { if (i) c.lineTo(X(h0.s), Y(h0.v[d])); else c.moveTo(X(h0.s), Y(h0.v[d])); }); c.stroke(); }
+    }
+    function syncOut() { setText('col-m-o', val('col-m').toFixed(3)); setText('col-wd-o', val('col-wd').toFixed(3)); }
+    bind(['col-m', 'col-wd'], syncOut); syncOut();
+    byId('col-run').addEventListener('click', function () { if (!running) train(); });
+    $$('[data-col]').forEach(function (b) { b.addEventListener('click', function () { var v = b.getAttribute('data-col').split(','); byId('col-sg').checked = v[0] === '1'; byId('col-pr').checked = v[1] === '1'; byId('col-m').value = v[2]; syncOut(); if (!running) train(); }); });
+    reg(draw);
+    if ('IntersectionObserver' in window) { var once = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { once.disconnect(); if (!running && hist.length < 2) train(); } }); once.observe(el); }
+  })();
+
+  /* ---- Lab 6: one pretraining step ----------------------------------------- */
+  (function pipe() {
+    var host = byId('pipe-steps'), svg = byId('pipe-svg'), card = byId('pipe-card'); if (!host) return;
+    var S = [
+      ['clip', 'Clip', '(B, 3, 16, 256, 256)', 'A batch of 16-frame clips at 256 × 256, sampled with a frame step from VideoMix22M (video, plus ImageNet images repeated to 16 frames).', 'x ∈ ℝ<sup>3×16×256×256</sup>'],
+      ['tok', 'Tubelets', '(B, 2048, 1408)', 'A 3D convolution with kernel = stride = 2 × 16 × 16 turns each brick into a 1408-D token: 8 × 16 × 16 = 2,048 tokens. Nothing is masked yet.', 'N = (16/2)(256/16)² = 2048'],
+      ['mask', 'Masks', 'C: 511, M: 953', 'The sampler picks a short-range mask (8 blocks of 15%, full duration). After the batch-minimum truncation, each clip keeps 511 visible tokens (C) and 953 tokens to predict (M) at 24 clips per GPU; the rest are neither seen nor predicted.', 'C ∪ M ⊂ {1, …, 2048}'],
+      ['enc', 'Encoder', '(B, 511, 1408)', 'The online ViT-g (40 blocks, 22 heads, 3D-RoPE at each token\'s (t, h, w)) processes only the visible tokens. This is the network kept after pretraining.', 's<sub>C</sub> = E<sub>θ</sub>(x<sub>C</sub>)'],
+      ['pred', 'Predictor', '(B, 953, 1408)', 'Project 1408 → 384, append a learnable mask token at each of the 953 hidden positions (RoPE gives each its position), run 12 blocks over all 1,464 tokens, keep the hidden positions, project 384 → 1408.', 'ŝ<sub>M</sub> = P<sub>φ</sub>(Δ<sub>y</sub>, s<sub>C</sub>)'],
+      ['tgt', 'Target', '(B, 953, 1408)', 'The EMA teacher encodes the full, unmasked clip with no gradient; the outputs are LayerNormed and the 953 hidden positions selected.', 's<sub>M</sub> = sg(LN(E<sub>θ̄</sub>(x)))<sub>M</sub>'],
+      ['loss', 'L1 loss', 'scalar', 'Mean absolute difference over the 953 positions and 1408 channels, averaged with the long-range mask\'s loss.', 'L = mean |ŝ<sub>M</sub> − s<sub>M</sub>|'],
+      ['back', 'Backward', 'θ, φ, Δ<sub>y</sub>', 'Gradients flow into the encoder, the predictor and the mask token. The teacher receives none: AdamW, warmup to 5.25e-4, global batch 3,072.', '∂L/∂θ̄ = 0'],
+      ['ema', 'EMA update', 'θ̄', 'The teacher moves a small step toward the student: an average over roughly the last 1,333 steps.', 'θ̄ ← 0.99925·θ̄ + 0.00075·θ']
+    ];
+    var cur = 0, timer = null;
+    S.forEach(function (s, i) { var b = doc.createElement('button'); b.type = 'button'; b.innerHTML = (i + 1) + '. ' + s[1] + '<small>' + s[2] + '</small>'; b.addEventListener('click', function () { stop(); cur = i; show(); }); host.appendChild(b); });
+    var BOX = { clip: [10, 90, 90], tok: [115, 90, 95], mask: [225, 90, 85], enc: [325, 40, 95], pred: [435, 40, 105], tgt: [325, 150, 205], loss: [560, 95, 85], back: [660, 40, 100], ema: [660, 150, 100] };
+    function drawSvg() {
+      var C = col(), s = '';
+      function arrow(x1, y1, x2, y2) { s += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + C.ink3 + '" stroke-width="1.6" fill="none" marker-end="url(#pa)"/>'; }
+      s += '<defs><marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="' + C.ink3 + '"/></marker></defs>';
+      arrow(100, 112, 113, 112); arrow(210, 112, 223, 112); arrow(310, 100, 323, 66); arrow(420, 62, 433, 62); arrow(540, 70, 558, 105); arrow(530, 172, 558, 128); arrow(310, 125, 323, 165);
+      arrow(645, 100, 660, 70); arrow(710, 84, 710, 148);
+      S.forEach(function (st, i) {
+        var bx = BOX[st[0]], on = i === cur, w = bx[2], h = 44;
+        s += '<g><rect x="' + bx[0] + '" y="' + bx[1] + '" width="' + w + '" height="' + h + '" rx="9" fill="' + (on ? C.ink : C.surf) + '" stroke="' + (on ? C.ink : C.line2) + '" stroke-width="1.4"/>' +
+          '<text x="' + (bx[0] + w / 2) + '" y="' + (bx[1] + 18) + '" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="' + (on ? C.paper : C.ink) + '">' + st[1] + '</text>' +
+          '<text x="' + (bx[0] + w / 2) + '" y="' + (bx[1] + 34) + '" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="' + (on ? C.paper : C.ink3) + '">' + st[2].replace(/<[^>]+>/g, '') + '</text></g>';
+      });
+      s += '<text x="10" y="222" font-family="JetBrains Mono, monospace" font-size="10" fill="' + C.ink3 + '">top: student path (gradients) · bottom: teacher path (no gradients) · dashed loop: EMA</text>';
+      s += '<path d="M760 172 C 800 210, 360 215, 340 196" stroke="' + C.ink3 + '" stroke-dasharray="4 4" fill="none" stroke-width="1.2" marker-end="url(#pa)"/>';
+      svg.innerHTML = s;
+    }
+    function show() {
+      $$('button', host).forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === cur)); });
+      var s = S[cur]; card.innerHTML = '<h4>' + (cur + 1) + '. ' + s[1] + ' <span class="wm-mini">' + s[2] + '</span></h4><p style="margin:.2rem 0 .4rem">' + s[3] + '</p><div class="wm-shape">' + s[4] + '</div>';
+      drawSvg();
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; byId('pipe-play').textContent = 'Play all stages'; } }
+    byId('pipe-play').addEventListener('click', function () { if (timer) { stop(); return; } this.textContent = 'Pause'; timer = setInterval(function () { cur = (cur + 1) % S.length; show(); }, 2200); });
+    show(); reg(drawSvg);
+  })();
+
+  /* ---- Lab 7: architecture explorer ------------------------------------------ */
+  (function arch() {
+    var tabs = byId('arch-tabs'), host = byId('arch-svg'), card = byId('arch-card'); if (!tabs) return;
+    // blocks: [id, label, sub, x, y, w, kind(0 input,1 trained,2 frozen/EMA,3 loss), detail]
+    var M = {
+      ijepa: { name: 'I-JEPA', blocks: [
+        ['img', 'Image', '3 × 224 × 224', 20, 80, 110, 0, 'One image. ViT-H/14 at 224 px gives a 16 × 16 grid of patches.'],
+        ['ctx', 'Context block', '85 to 100% of patches', 160, 30, 140, 0, 'One large block of patches with the target blocks removed.'],
+        ['tgtb', 'Target blocks', '4 × (15 to 20%)', 160, 130, 140, 0, 'Four blocks, aspect 0.75 to 1.5. The model must predict their representations.'],
+        ['enc', 'Context encoder', 'ViT', 330, 30, 140, 1, 'A Vision Transformer applied only to the context patches.'],
+        ['pred', 'Predictor', 'narrow ViT + mask tokens', 500, 30, 160, 1, 'Takes the context tokens plus a mask token with the position of each target patch; outputs a representation per target patch.'],
+        ['tenc', 'Target encoder', 'EMA of the context encoder', 330, 130, 330, 2, 'Encodes the full image; no gradient. Momentum 0.996 rising to 1.0.'],
+        ['loss', 'L2 loss', 'over target patches', 690, 80, 120, 3, 'Average squared distance between predicted and target representations of the 4 blocks.']],
+        links: [['img', 'ctx'], ['img', 'tgtb'], ['ctx', 'enc'], ['enc', 'pred'], ['pred', 'loss'], ['tgtb', 'tenc'], ['tenc', 'loss']] },
+      vj2: { name: 'V-JEPA 2', blocks: [
+        ['clip', 'Clip', '3 × 16 × 256 × 256', 20, 80, 120, 0, 'Video from VideoMix22M; images repeated to 16 frames.'],
+        ['tub', 'Tubelet embed', 'Conv3d 2×16×16 → 1408', 165, 80, 140, 1, '2,048 tokens of 1408 dimensions; 3D-RoPE inside attention instead of a position table.'],
+        ['enc', 'Encoder ViT-g', '40 blocks, 1B, visible tokens', 330, 25, 150, 1, 'Width 1408, 22 heads, MLP 6144. Processes the context tokens only.'],
+        ['pred', 'Predictor', '12 blocks, width 384, 22M', 505, 25, 150, 1, 'Linear 1408→384, mask tokens at hidden positions, 12 blocks, linear 384→1408.'],
+        ['tenc', 'Target encoder', 'EMA, m = 0.99925, + LN', 330, 140, 325, 2, 'The same architecture averaged over training; encodes the full clip without gradient; LayerNorm on outputs.'],
+        ['loss', 'L1 loss', 'masked tokens', 690, 80, 110, 3, 'Mean absolute error over hidden tokens and channels, two masks averaged.']],
+        links: [['clip', 'tub'], ['tub', 'enc'], ['enc', 'pred'], ['pred', 'loss'], ['tub', 'tenc'], ['tenc', 'loss']] },
+      ac: { name: 'V-JEPA 2-AC', blocks: [
+        ['fr', 'Frames x_t', '256 × 256, ~1 s apart', 20, 20, 130, 0, 'Left exterior DROID camera; each frame duplicated into a 2-frame tubelet. Real spacing about 1 s (Part 08).'],
+        ['sa', 'State s_t, action a_t', '7-D each', 20, 150, 130, 0, 'End-effector pose and gripper; a_t = s_{t+1} ⊖ s_t.'],
+        ['enc', 'V-JEPA 2 ViT-g', 'frozen, EMA weights', 175, 20, 150, 2, 'Never updated. Each frame alone → 256 × 1408, LayerNormed.'],
+        ['emb', 'Embeddings', '1408→1024, 7→1024 ×2', 350, 85, 145, 1, 'Separate linear maps for patches, actions and states.'],
+        ['pred', 'Predictor', '24 blocks, 1024, block-causal', 520, 85, 160, 1, '300M parameters; tokens [a_t, s_t, 256 patches] per step; RoPE on patches, time-only for a and s.'],
+        ['out', 'ẑ_{t+1}', '256 × 1408, LN', 705, 85, 100, 1, 'Drop a and s tokens, LN, linear 1024→1408, LN.'],
+        ['loss', 'L1: teacher forcing + 2-step rollout', 'vs z_{t+1}', 520, 190, 285, 3, 'L = L_tf (T = 15) + L_roll (T = 2).']],
+        links: [['fr', 'enc'], ['enc', 'emb'], ['sa', 'emb'], ['emb', 'pred'], ['pred', 'out'], ['out', 'loss']] },
+      hj: { name: 'H-JEPA (DROID)', blocks: [
+        ['fr', 'Frame o_t', '256 × 256, 5 fps', 20, 20, 120, 0, 'One exterior view per window, no proprioception.'],
+        ['a', 'Action a_t', '7-D', 20, 150, 120, 0, 'End-effector delta pose and gripper.'],
+        ['e1', 'E(1): ViT-S/16', '[CLS] → z(1) ∈ ℝ³⁸⁴', 165, 20, 150, 1, 'Trained end to end from scratch; SIGReg 0.08 and IDM 100 on its outputs.'],
+        ['f1', 'F(1) predictor', 'causal, 384 × 12, AdaLN(a)', 340, 20, 165, 1, 'Context 7 states; teacher-forced next-latent prediction.'],
+        ['e2', 'E(2): MLP 768', 'every 3rd z(1)', 165, 140, 150, 1, 'Stride 3, window 1; SIGReg 0.16 and IDM 50.'],
+        ['a2', 'A(2): MLP 64 + LN', '3 × 7 → 8-D macro-action', 340, 190, 165, 1, 'Pools the three primitive commands a level-2 step spans; 0.005·SIGReg on it.'],
+        ['f2', 'F(2) predictor', 'causal, 384 × 12', 340, 120, 165, 1, 'Context 2 states; predicts the next level-2 latent.'],
+        ['loss', 'Σ levels: pred + λ SIGReg + γ IDM', 'no EMA, no stop-grad', 530, 75, 270, 3, 'Upper-level losses backpropagate into the encoders below.']],
+        links: [['fr', 'e1'], ['e1', 'f1'], ['a', 'f1'], ['e1', 'e2'], ['e2', 'f2'], ['a', 'a2'], ['a2', 'f2'], ['f1', 'loss'], ['f2', 'loss']] },
+      lewm: { name: 'LeWM', blocks: [
+        ['fr', 'Frame', 'pixels', 20, 80, 110, 0, 'Simulated environments, fixed camera.'],
+        ['enc', 'ViT-Tiny', '[CLS] → MLP + BN', 160, 80, 150, 1, 'About 15M parameters in total; trained from scratch.'],
+        ['pred', 'Causal predictor', '4 layers, 8 heads, 192, AdaLN(a)', 340, 80, 200, 1, 'Predicts the next global embedding from past embeddings and actions.'],
+        ['loss', 'pred + λ SIGReg', 'one weight to tune', 570, 80, 170, 3, 'The first JEPA trained stably end to end from pixels with only these two terms.']],
+        links: [['fr', 'enc'], ['enc', 'pred'], ['pred', 'loss']] }
+    };
+    var model = 'ac', sel = null;
+    chips(tabs, Object.keys(M).map(function (k) { return [k, M[k].name]; }), model, function (k) { model = k; sel = null; draw(); });
+    function draw() {
+      var C = col(), m = M[model], s = '<svg viewBox="0 0 820 250" role="group" aria-label="' + m.name + ' architecture"><defs><marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="' + C.ink3 + '"/></marker></defs>';
+      function bx(id) { return m.blocks.filter(function (b) { return b[0] === id; })[0]; }
+      m.links.forEach(function (l) { var a = bx(l[0]), b = bx(l[1]), ax = a[3] + a[5], ay = a[4] + 22, bxx = b[3], byy = b[4] + 22; if (bxx < ax) { ax = a[3] + a[5] / 2; ay = a[4] + 44; bxx = b[3] + b[5] / 2; byy = b[4]; } s += '<path d="M' + ax + ' ' + ay + ' C' + ((ax + bxx) / 2) + ' ' + ay + ' ' + ((ax + bxx) / 2) + ' ' + byy + ' ' + (bxx - 2) + ' ' + byy + '" fill="none" stroke="' + C.ink3 + '" stroke-width="1.4" marker-end="url(#aa)"/>'; });
+      var fills = [C.s2, C.surf, C.surf, C.surf], strokes = [C.line2, C.blue, C.ink3, C.red];
+      m.blocks.forEach(function (b) {
+        var on = sel === b[0];
+        s += '<g class="blk" tabindex="0" role="button" data-id="' + b[0] + '" aria-label="' + esc(b[1]) + '"><rect x="' + b[3] + '" y="' + b[4] + '" width="' + b[5] + '" height="44" rx="9" fill="' + (on ? alpha(strokes[b[6]].charAt(0) === '#' ? strokes[b[6]] : '#2d4c95', 0.16) : fills[b[6]]) + '" stroke="' + strokes[b[6]] + '" stroke-width="' + (on ? 2.4 : 1.4) + '"' + (b[6] === 2 ? ' stroke-dasharray="5 4"' : '') + '/>' +
+          '<text x="' + (b[3] + b[5] / 2) + '" y="' + (b[4] + 18) + '" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="' + C.ink + '">' + esc(b[1]) + '</text>' +
+          '<text x="' + (b[3] + b[5] / 2) + '" y="' + (b[4] + 33) + '" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="' + C.ink3 + '">' + esc(b[2]) + '</text></g>';
+      });
+      host.innerHTML = s + '</svg>';
+      $$('.blk', host).forEach(function (g) { function pick() { sel = g.getAttribute('data-id'); draw(); } g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } }); });
+      var b0 = sel ? bx(sel) : null;
+      card.innerHTML = b0 ? '<h4>' + esc(b0[1]) + ' <span class="wm-mini">' + esc(b0[2]) + '</span></h4><p style="margin:0">' + esc(b0[7]) + '</p>' : '<h4>' + m.name + '</h4><p style="margin:0">Click a block. Blue outline: trained. Dashed: frozen or averaged, never trained by the loss. Red: the loss.</p>';
+    }
+    reg(draw);
+  })();
+
+  /* ---- Lab 8: two poses to one action ------------------------------------------ */
+  (function pose() {
+    var el = byId('pose-cv'); if (!el) return;
+    function Rz(g) { var c = Math.cos(g), s = Math.sin(g); return [[c, -s, 0], [s, c, 0], [0, 0, 1]]; }
+    function Ry(b) { var c = Math.cos(b), s = Math.sin(b); return [[c, 0, s], [0, 1, 0], [-s, 0, c]]; }
+    function Rx(a) { var c = Math.cos(a), s = Math.sin(a); return [[1, 0, 0], [0, c, -s], [0, s, c]]; }
+    function mul(A, B) { var C2 = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]; for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) for (var k = 0; k < 3; k++) C2[i][j] += A[i][k] * B[k][j]; return C2; }
+    function tr(A) { return [[A[0][0], A[1][0], A[2][0]], [A[0][1], A[1][1], A[2][1]], [A[0][2], A[1][2], A[2][2]]]; }
+    function fromEuler(a, b, g) { return mul(Rz(g), mul(Ry(b), Rx(a))); } // scipy 'xyz' (extrinsic)
+    function toEuler(R) { var b = Math.asin(clamp(-R[2][0], -1, 1)); return [Math.atan2(R[2][1], R[2][2]), b, Math.atan2(R[1][0], R[0][0])]; }
+    var D = 180 / Math.PI;
+    function update() {
+      var x0 = val('ps-x0'), y0 = val('ps-y0'), r0 = val('ps-r0'), x1 = val('ps-x1'), y1 = val('ps-y1'), r1 = val('ps-r1'), pt = val('ps-pitch');
+      setText('ps-xy0-o', x0 + ', ' + y0); setText('ps-r0-o', r0); setText('ps-xy1-o', x1 + ', ' + y1); setText('ps-r1-o', r1); setText('ps-pitch-o', pt);
+      var R0 = fromEuler(0, pt / D, r0 / D), R1 = fromEuler(0, pt / D, r1 / D), dR = toEuler(mul(R1, tr(R0))), naive = r1 - r0;
+      byId('pose-out').textContent = 'Δxyz   = (' + (x1 - x0) + ', ' + (y1 - y0) + ', 0) cm\nΔeuler = (' + (dR[0] * D).toFixed(1) + '°, ' + (dR[1] * D).toFixed(1) + '°, ' + (dR[2] * D).toFixed(1) + '°)   from R₁R₀ᵀ\nΔgrip  = 0\nnaive yaw difference: ' + naive.toFixed(0) + '°';
+      var st = byId('pose-status');
+      if (Math.abs(naive - dR[2] * D) > 180) { st.className = 'status is-bad'; st.textContent = 'Subtracting angles gives ' + naive.toFixed(0) + '°, a full turn the wrong way. The matrix form gives ' + (dR[2] * D).toFixed(1) + '°.'; }
+      else { st.className = 'status'; st.textContent = 'No wrap-around here: both forms agree on the turn.'; }
+      shape(el, 460 / 900, 0.9);
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, s = Math.min(W, H) / 70;
+      function X(x) { return W / 2 + x * s; } function Y(y) { return H / 2 - y * s; }
+      c.strokeStyle = C.line; for (var k = -30; k <= 30; k += 10) { c.beginPath(); c.moveTo(X(k), Y(-32)); c.lineTo(X(k), Y(32)); c.stroke(); c.beginPath(); c.moveTo(X(-32), Y(k)); c.lineTo(X(32), Y(k)); c.stroke(); }
+      function grip(x, y, yaw, color, lab) {
+        var a = yaw / D, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+        c.strokeStyle = color; c.lineWidth = 3; c.beginPath(); c.moveTo(X(x - ux * 4), Y(y - uy * 4)); c.lineTo(X(x + ux * 5), Y(y + uy * 5)); c.stroke();
+        c.beginPath(); c.moveTo(X(x + ux * 5 + nx * 3), Y(y + uy * 5 + ny * 3)); c.lineTo(X(x + ux * 5 - nx * 3), Y(y + uy * 5 - ny * 3)); c.stroke();
+        c.beginPath(); c.moveTo(X(x + ux * 5 + nx * 3), Y(y + uy * 5 + ny * 3)); c.lineTo(X(x + ux * 9 + nx * 3), Y(y + uy * 9 + ny * 3)); c.moveTo(X(x + ux * 5 - nx * 3), Y(y + uy * 5 - ny * 3)); c.lineTo(X(x + ux * 9 - nx * 3), Y(y + uy * 9 - ny * 3)); c.stroke();
+        font(c, 11, true); c.fillStyle = color; c.textAlign = 'center'; c.fillText(lab, X(x), Y(y) + 22);
+      }
+      c.setLineDash([5, 4]); c.strokeStyle = C.ink3; c.lineWidth = 1.5; c.beginPath(); c.moveTo(X(x0), Y(y0)); c.lineTo(X(x1), Y(y1)); c.stroke(); c.setLineDash([]);
+      grip(x0, y0, r0, C.blue, 'frame k'); grip(x1, y1, r1, C.red, 'frame k + 1');
+      font(c, 10.5, true); c.fillStyle = C.ink3; c.textAlign = 'left'; c.fillText('top view, robot base frame, 10 cm grid', 10, H - 10);
+    }
+    bind(['ps-x0', 'ps-y0', 'ps-r0', 'ps-x1', 'ps-y1', 'ps-r1', 'ps-pitch'], update); reg(update);
+  })();
+})();
+</script>

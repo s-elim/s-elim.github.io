@@ -17,10 +17,11 @@ INCLUDES = os.path.join(BASE, '_includes')
 
 DIVES = [
     ('atlas-explainer.html', 'Atlas Teardown', 'atlas_teardown.html'),
-    ('vjepa-explainer.html', 'V-JEPA, V-JEPA 2-AC and H-JEPA Handbook', 'vjepa_teardown.html'),
+    ('vjepa-explainer.html', 'V-JEPA Teardown', 'vjepa_teardown.html'),
     ('cosmos3-explainer.html', 'Cosmos 3 Teardown', 'cosmos3_teardown.html'),
     ('piml-explainer.html', 'Physics Priors Study Guide', 'piml_study_guide.html'),
     ('ler-lecture.html', 'Language Will Eat Robotics', 'language_eats_robotics_lecture.html'),
+    ('wm-lecture.html', 'How a Latent World Model Works', 'vjepa_lecture.html'),
 ]
 
 COMMENT = re.compile(r"\{%-?\s*comment\s*-?%\}.*?\{%-?\s*endcomment\s*-?%\}\s*", re.S)

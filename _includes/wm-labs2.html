@@ -1,0 +1,578 @@
+{%- comment -%}
+  Labs 9 to 16 of the latent world model lecture: block-causal mask, rollout
+  error, a trainable toy world model with a CEM planner, the H-JEPA hierarchy
+  builder, SIGReg, slow-feature collapse, the cost-geometry maze and Frechet
+  fidelity. Uses window.WM.u from wm-core.html. Every toy is labelled as such
+  on the page; formulas are derived in the surrounding text.
+{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+  var WM = window.WM; if (!WM || !WM.u) return;
+  var U = WM.u, $$ = U.$$, byId = U.byId, setText = U.setText, clamp = U.clamp, rng = U.rng, gauss = U.gauss, col = U.col, alpha = U.alpha, cv = U.cv, font = U.font, reg = U.reg, bind = U.bind, val = U.val, chips = U.chips, wilson = U.wilson;
+  var doc = document, SUB = '₀₁₂₃₄₅₆₇₈₉';
+  function sub(n) { return String(n).split('').map(function (d) { return SUB.charAt(+d); }).join(''); }
+  function shape(el, wide, narrow) { var n = (el.clientWidth || el.width) < 520; el.dataset.aspect = String(n ? narrow : wide); return n; }
+  function frame(c, C, L, T, W, H) { c.strokeStyle = C.line; c.lineWidth = 1; c.strokeRect(L, T, W, H); }
+  function pointerXY(el, e) { var b = el.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; }
+
+  /* ---- Lab 9: block-causal attention mask ------------------------------------ */
+  (function blockCausal() {
+    var el = byId('bc-cv'); if (!el) return;
+    el.classList.add('wm-touch');
+    var hover = null, geom = null;
+    function tokens() { var T = val('bc-T'), P = val('bc-P'), out = []; for (var t = 0; t < T; t++) { out.push({ t: t, k: 'a' }); out.push({ t: t, k: 's' }); for (var p = 0; p < P; p++) out.push({ t: t, k: 'z', p: p }); } return out; }
+    function name(tk) { return tk.k === 'a' ? 'action a' + sub(tk.t) : tk.k === 's' ? 'state s' + sub(tk.t) : 'patch ' + (tk.p + 1) + ' of z' + sub(tk.t); }
+    function ok(full, i, j, q, k) { return full ? j <= i : k.t <= q.t; }
+    function draw() {
+      var full = byId('bc-full').checked, tk = tokens(), N = tk.length, T = val('bc-T');
+      setText('bc-T-o', T); setText('bc-P-o', val('bc-P'));
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, M = 48, S = Math.min(W, H) - M - 8, cs = S / N, allowed = 0;
+      geom = { M: M, cs: cs, N: N, tk: tk };
+      for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) {
+        var on = ok(full, i, j, tk[i], tk[j]), same = tk[i].t === tk[j].t;
+        if (on) allowed++;
+        c.fillStyle = on ? (same ? C.red : C.blue) : C.s2; c.globalAlpha = on ? (same ? 0.7 : 0.55) : 1;
+        if (hover && (hover[0] === i || hover[1] === j) && !(hover[0] === i && hover[1] === j)) c.globalAlpha = Math.min(1, c.globalAlpha + 0.25);
+        c.fillRect(M + j * cs + 0.5, M + i * cs + 0.5, Math.max(0.5, cs - 1), Math.max(0.5, cs - 1));
+      }
+      c.globalAlpha = 1;
+      if (hover) { c.strokeStyle = C.ink; c.lineWidth = 2; c.strokeRect(M + hover[1] * cs, M + hover[0] * cs, cs, cs); }
+      c.strokeStyle = C.ink3; c.lineWidth = 1;
+      var per = N / T;
+      for (var t = 0; t <= T; t++) { var x = M + t * per * cs; c.beginPath(); c.moveTo(x, M); c.lineTo(x, M + S); c.stroke(); c.beginPath(); c.moveTo(M, x); c.lineTo(M + S, x); c.stroke(); }
+      font(c, 10.5, true); c.fillStyle = C.ink3;
+      for (t = 0; t < T; t++) { c.textAlign = 'center'; c.fillText('t=' + t, M + (t + 0.5) * per * cs, M - 22); c.textAlign = 'right'; c.fillText('t=' + t, M - 6, M + (t + 0.5) * per * cs + 4); }
+      if (cs >= 11) { font(c, Math.min(10, cs * 0.7), true); c.textAlign = 'center'; tk.forEach(function (k, j2) { c.fillText(k.k, M + (j2 + 0.5) * cs, M - 6); }); }
+      font(c, 10, true); c.textAlign = 'left'; c.fillText('keys →', M, 12); c.save(); c.translate(12, M); c.rotate(Math.PI / 2); c.fillText('queries →', 0, 0); c.restore();
+      var frac = allowed / (N * N);
+      setText('bc-frac', Math.round(100 * frac) + '%'); setText('bc-formula', Math.round(100 * (T + 1) / (2 * T)) + '%');
+      if (!hover) setText('bc-status', full ? 'Plain causal: a patch cannot see the patches after it in its own frame, and the action token sees nothing of the frame it acts on. ' + N + ' tokens, ' + Math.round(100 * frac) + '% allowed.' : 'Block-causal: red cells are within one time step, blue cells look back to earlier steps, grey cells would look into the future. ' + N + ' tokens drawn, ' + Math.round(100 * frac) + '% allowed, against (T + 1)/2T = ' + Math.round(100 * (T + 1) / (2 * T)) + '%.');
+    }
+    function pick(e) {
+      if (!geom) return; var xy = pointerXY(el, e), j = Math.floor((xy[0] - geom.M) / geom.cs), i = Math.floor((xy[1] - geom.M) / geom.cs);
+      if (i < 0 || j < 0 || i >= geom.N || j >= geom.N) { hover = null; draw(); return; }
+      hover = [i, j]; draw();
+      var q = geom.tk[i], k = geom.tk[j], full = byId('bc-full').checked, on = ok(full, i, j, q, k);
+      var why = !on ? (k.t > q.t ? 'a later time step, so it would leak the future' : 'a later token in the same step, blocked only by plain causal masking') : (k.t === q.t ? 'the same time step' + (k.k === 'a' ? ': this is how the prediction depends on the action about to be applied' : '') : 'an earlier time step');
+      setText('bc-status', 'Query ' + name(q) + ' → key ' + name(k) + ': ' + (on ? 'allowed' : 'blocked') + ', ' + why + '.');
+    }
+    el.addEventListener('pointermove', pick); el.addEventListener('pointerdown', pick);
+    el.addEventListener('pointerleave', function () { hover = null; draw(); });
+    bind(['bc-T', 'bc-P'], function () { hover = null; draw(); }); byId('bc-full').addEventListener('change', function () { hover = null; draw(); });
+    reg(draw);
+  })();
+
+  /* ---- Lab 10: compounding rollout error -------------------------------------- */
+  (function rollout() {
+    var el = byId('roll-cv'); if (!el) return;
+    function e(k, d, r) { return Math.abs(r - 1) < 1e-9 ? k * d : d * (1 - Math.pow(r, k)) / (1 - r); }
+    function draw() {
+      var d = val('rl-d'), r = val('rl-r'), r2 = val('rl-r2'), K = 12;
+      setText('rl-d-o', d.toFixed(3)); setText('rl-r-o', r.toFixed(2)); setText('rl-r2-o', r2.toFixed(2));
+      setText('rl-e1', d.toFixed(3)); setText('rl-e8', e(8, d, r).toFixed(3)); setText('rl-e8b', e(8, d, r2).toFixed(3));
+      byId('rl-e8').parentNode.className = 'read' + (e(8, d, r) > 8 * d ? ' is-bad' : '');
+      var nw = shape(el, 0.62, 0.95), g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, L = nw ? 40 : 52, T = 24, PW = W - L - 14, PH = H - T - (nw ? 96 : 80);
+      var mx = Math.max(e(K, d, r), e(K, d, r2), d) * 1.12;
+      function X(k) { return L + k / K * PW; } function Y(v) { return T + PH - v / mx * PH; }
+      frame(c, C, L, T, PW, PH);
+      font(c, 10, true); c.fillStyle = C.ink3; c.textAlign = 'center';
+      for (var k = 0; k <= K; k += 2) c.fillText(String(k), X(k), T + PH + 15);
+      c.fillText(nw ? 'rollout horizon k' : 'rollout horizon k (steps fed back their own prediction)', L + PW / 2, T + PH + 30);
+      c.textAlign = 'right'; [0, 0.5, 1].forEach(function (f) { c.fillText((mx * f).toFixed(2), L - 6, Y(mx * f) + 4); });
+      [[1, 'deployed', 0], [2, nw ? 'released' : 'released planner', 1], [8, '8 steps', 0]].forEach(function (m) { c.strokeStyle = C.line2; c.setLineDash([3, 4]); c.beginPath(); c.moveTo(X(m[0]), T); c.lineTo(X(m[0]), T + PH); c.stroke(); c.setLineDash([]); if (!nw) { c.fillStyle = C.ink3; c.textAlign = 'left'; c.fillText(m[1], X(m[0]) + 4, T + 12 + 13 * m[2]); } });
+      c.strokeStyle = C.ink3; c.lineWidth = 1.5; c.setLineDash([6, 4]); c.beginPath(); c.moveTo(X(1), Y(d)); c.lineTo(X(K), Y(d)); c.stroke(); c.setLineDash([]);
+      function curve(rr, color) { c.strokeStyle = color; c.lineWidth = 2.4; c.beginPath(); for (var k2 = 0; k2 <= K; k2++) { var y = Y(e(k2, d, rr)); if (k2) c.lineTo(X(k2), y); else c.moveTo(X(k2), y); } c.stroke(); c.fillStyle = color; [1, 2, 8].forEach(function (k3) { c.beginPath(); c.arc(X(k3), Y(e(k3, d, rr)), 4, 0, 7); c.fill(); }); }
+      curve(r, C.red); curve(r2, C.blue);
+      font(c, nw ? 9.5 : 10.5, true); c.textAlign = 'left';
+      var leg = [['teacher forcing only, ρ = ' + r.toFixed(2), C.red, []], ['after the rollout term, ρ′ = ' + r2.toFixed(2), C.blue, []], [nw ? 'δ: what teacher forcing sees' : 'δ at every step: what teacher forcing measures', C.ink3, [5, 4]]], lx = L, ly = T + PH + 50;
+      leg.forEach(function (it) {
+        var wdt = 26 + c.measureText(it[0]).width;
+        if (lx > L && lx + wdt > L + PW) { lx = L; ly += 16; }
+        c.strokeStyle = it[1]; c.lineWidth = 2.2; c.setLineDash(it[2]); c.beginPath(); c.moveTo(lx, ly - 4); c.lineTo(lx + 18, ly - 4); c.stroke(); c.setLineDash([]);
+        c.fillStyle = it[1]; c.fillText(it[0], lx + 24, ly); lx += wdt + 16;
+      });
+    }
+    bind(['rl-d', 'rl-r', 'rl-r2'], draw); reg(draw);
+  })();
+
+  /* ---- Lab 11: a latent world model you can fit and plan with ------------------ */
+  (function world() {
+    var el = byId('wd-cv'), imgEl = byId('wd-img'), latEl = byId('wd-lat'); if (!el) return;
+    el.classList.add('wm-touch');
+    var G = 20, NP = G * G, D = 12, HID = 256, AMAX = 0.08, SIG = 0.08, NI = D + 2;
+    var XX = new Float64Array(NP), YY = new Float64Array(NP);
+    for (var iy = 0; iy < G; iy++) for (var ix = 0; ix < G; ix++) { XX[iy * G + ix] = (ix + 0.5) / G; YY[iy * G + ix] = (iy + 0.5) / G; }
+    function render(p, th, out) {
+      var cx = p[0] - 0.5, cy = p[1] - 0.5, ct = Math.cos(th), st = Math.sin(th), qx = 0.5 + ct * cx - st * cy, qy = 0.5 + st * cx + ct * cy, k = 1 / (2 * SIG * SIG);
+      out = out || new Float64Array(NP);
+      for (var i = 0; i < NP; i++) { var dx = XX[i] - qx, dy = YY[i] - qy; out[i] = Math.exp(-(dx * dx + dy * dy) * k); }
+      return out;
+    }
+    // frozen encoder: D smooth random fields, z = R . image (fixed seed, never trained)
+    var r0 = rng(20261012), R = new Float64Array(D * NP), FR = [0, 0.5, 1];
+    for (var d = 0; d < D; d++) for (var k = 0; k < 4; k++) {
+      var fx = FR[Math.floor(r0() * 3)], fy = FR[Math.floor(r0() * 3)], ph = r0() * 2 * Math.PI, amp = gauss(r0);
+      for (var i0 = 0; i0 < NP; i0++) R[d * NP + i0] += amp * Math.cos(Math.PI * (fx * XX[i0] + fy * YY[i0]) + ph);
+    }
+    var mass = render([0.5, 0.5], 0).reduce(function (a, b) { return a + b; }, 0);
+    for (var i1 = 0; i1 < R.length; i1++) R[i1] /= mass;
+    var imgBuf = new Float64Array(NP);
+    function enc(p, th) { render(p, th, imgBuf); var z = new Float64Array(D); for (var d2 = 0; d2 < D; d2++) { var s = 0, o = d2 * NP; for (var i = 0; i < NP; i++) s += R[o + i] * imgBuf[i]; z[d2] = s; } return z; }
+    var zmu = new Float64Array(D), zsd = new Float64Array(D);
+    (function stats() { var zs = []; for (var n = 0; n < 500; n++) zs.push(enc([r0(), r0()], 0)); for (var d3 = 0; d3 < D; d3++) { var m = 0, v = 0; zs.forEach(function (z) { m += z[d3]; }); m /= zs.length; zs.forEach(function (z) { v += (z[d3] - m) * (z[d3] - m); }); zmu[d3] = m; zsd[d3] = Math.sqrt(v / zs.length) + 1e-6; } })();
+    var Uw = new Float64Array(HID * NI), Ub = new Float64Array(HID), Wm = null;
+    for (var h0 = 0; h0 < HID; h0++) { for (var j0 = 0; j0 < NI; j0++) Uw[h0 * NI + j0] = gauss(r0); Ub[h0] = (r0() * 2 - 1) * Math.PI; }
+    var xin = new Float64Array(NI), hb = new Float64Array(HID);
+    function hidden(z, zo, a0, a1, out) {
+      for (var j = 0; j < D; j++) xin[j] = (z[zo + j] - zmu[j]) / zsd[j];
+      xin[D] = a0 / AMAX; xin[D + 1] = a1 / AMAX;
+      for (var h = 0; h < HID; h++) { var s = 0, b = h * NI; for (var j2 = 0; j2 < NI; j2++) s += Uw[b + j2] * xin[j2]; out[h] = Math.tanh(0.8 * s + Ub[h]); }
+    }
+    // predictor: z' = z + W . tanh(0.8 U [(z - mu)/sd; a/amax] + b); in place is safe
+    function step(z, zo, a0, a1) { hidden(z, zo, a0, a1, hb); for (var h = 0; h < HID; h++) { var v = hb[h], o = h * D; for (var d4 = 0; d4 < D; d4++) z[zo + d4] += v * Wm[o + d4]; } }
+    function collect(n, r) {
+      var Z = [], A = [], Y = [], p = [0.1 + 0.8 * r(), 0.1 + 0.8 * r()];
+      for (var i = 0; i < n; i++) {
+        var a = [(r() * 2 - 1) * AMAX, (r() * 2 - 1) * AMAX], p2 = [clamp(p[0] + a[0], 0.05, 0.95), clamp(p[1] + a[1], 0.05, 0.95)], z1 = enc(p, 0), z2 = enc(p2, 0), dz = new Float64Array(D);
+        for (var d5 = 0; d5 < D; d5++) dz[d5] = z2[d5] - z1[d5];
+        Z.push(z1); A.push(a); Y.push(dz); p = p2;
+        if (r() < 0.05) p = [0.1 + 0.8 * r(), 0.1 + 0.8 * r()];
+      }
+      return { Z: Z, A: A, Y: Y };
+    }
+    function cholSolve(M, B, n, m) { // M: n x n SPD (overwritten), B: n x m (overwritten with the solution)
+      for (var j = 0; j < n; j++) {
+        var s = M[j * n + j]; for (var k2 = 0; k2 < j; k2++) s -= M[j * n + k2] * M[j * n + k2];
+        var Ljj = Math.sqrt(Math.max(s, 1e-12)); M[j * n + j] = Ljj;
+        for (var i = j + 1; i < n; i++) { var t = M[i * n + j]; for (var k3 = 0; k3 < j; k3++) t -= M[i * n + k3] * M[j * n + k3]; M[i * n + j] = t / Ljj; }
+      }
+      for (var c2 = 0; c2 < m; c2++) {
+        for (var i2 = 0; i2 < n; i2++) { var t2 = B[i2 * m + c2]; for (var k4 = 0; k4 < i2; k4++) t2 -= M[i2 * n + k4] * B[k4 * m + c2]; B[i2 * m + c2] = t2 / M[i2 * n + i2]; }
+        for (var i3 = n - 1; i3 >= 0; i3--) { var t3 = B[i3 * m + c2]; for (var k5 = i3 + 1; k5 < n; k5++) t3 -= M[k5 * n + i3] * B[k5 * m + c2]; B[i3 * m + c2] = t3 / M[i3 * n + i3]; }
+      }
+      return B;
+    }
+    var S = { p: [0.22, 0.28], g: [0.76, 0.72], path: [], steps: 0, plan: null, fitted: false, busy: false, done: '', nFit: 0, err: null, copy: null };
+    S.path = [S.p.slice()];
+    var pr = rng(7);
+    function fit() {
+      var n = val('wd-n'), r = rng(1000 + n), data = collect(n, r), M = new Float64Array(HID * HID), B = new Float64Array(HID * D), hrow = new Float64Array(HID);
+      for (var t = 0; t < n; t++) {
+        hidden(data.Z[t], 0, data.A[t][0], data.A[t][1], hrow);
+        for (var a = 0; a < HID; a++) { var ha = hrow[a]; if (ha === 0) continue; var o = a * HID; for (var b = a; b < HID; b++) M[o + b] += ha * hrow[b]; for (var d6 = 0; d6 < D; d6++) B[a * D + d6] += ha * data.Y[t][d6]; }
+      }
+      for (var a2 = 0; a2 < HID; a2++) { M[a2 * HID + a2] += 1e-2; for (var b2 = 0; b2 < a2; b2++) M[a2 * HID + b2] = M[b2 * HID + a2]; }
+      Wm = cholSolve(M, B, HID, D);
+      var test = collect(400, rng(77)), e1 = 0, e0 = 0, zz = new Float64Array(D);
+      for (var t2 = 0; t2 < 400; t2++) { zz.set(test.Z[t2]); step(zz, 0, test.A[t2][0], test.A[t2][1]); for (var d7 = 0; d7 < D; d7++) { e1 += Math.abs(zz[d7] - test.Z[t2][d7] - test.Y[t2][d7]); e0 += Math.abs(test.Y[t2][d7]); } }
+      S.err = e1 / (400 * D); S.copy = e0 / (400 * D); S.fitted = true; S.nFit = n; pr = rng(7);
+      setText('wd-err', S.err.toFixed(3)); setText('wd-copy', S.copy.toFixed(3));
+      byId('wd-err').parentNode.className = 'read' + (S.err > 0.6 * S.copy ? ' is-bad' : ' is-good');
+    }
+    function cem(z, zg, r, Hh, Ss, Kk, It) {
+      var mu = new Float64Array(Hh * 2), sd = new Float64Array(Hh * 2).fill(AMAX), cand = new Float64Array(Ss * Hh * 2), E = new Float64Array(Ss), zc = new Float64Array(D), idx = [], i, h, d8;
+      for (i = 0; i < Ss; i++) idx.push(i);
+      for (var it = 0; it < It; it++) {
+        for (i = 0; i < Ss; i++) {
+          zc.set(z);
+          for (h = 0; h < Hh; h++) { var o = (i * Hh + h) * 2, a0 = clamp(mu[h * 2] + sd[h * 2] * gauss(r), -AMAX, AMAX), a1 = clamp(mu[h * 2 + 1] + sd[h * 2 + 1] * gauss(r), -AMAX, AMAX); cand[o] = a0; cand[o + 1] = a1; step(zc, 0, a0, a1); }
+          var e = 0; for (d8 = 0; d8 < D; d8++) e += Math.abs(zc[d8] - zg[d8]); E[i] = e / D;
+        }
+        idx.sort(function (a, b) { return E[a] - E[b]; });
+        var Ke = Math.min(Kk, Ss);
+        for (var q = 0; q < Hh * 2; q++) {
+          var m = 0, v = 0, e2; for (var k6 = 0; k6 < Ke; k6++) m += cand[idx[k6] * Hh * 2 + q]; m /= Ke;
+          for (k6 = 0; k6 < Ke; k6++) { e2 = cand[idx[k6] * Hh * 2 + q] - m; v += e2 * e2; }
+          mu[q] = 0.85 * m + 0.15 * mu[q]; sd[q] = 0.85 * Math.sqrt(v / Ke) + 0.15 * sd[q];
+        }
+      }
+      var zp = new Float64Array(D); zp.set(z); for (h = 0; h < Hh; h++) step(zp, 0, mu[h * 2], mu[h * 2 + 1]);
+      return { a: [mu[0], mu[1]], mu: mu, cand: cand, E: E, elite: idx.slice(0, Math.min(Kk, Ss)), H: Hh, S: Ss, zPred: zp };
+    }
+    function energy(z, zg) { var e = 0; for (var d9 = 0; d9 < D; d9++) e += Math.abs(z[d9] - zg[d9]); return e / D; }
+    function dist(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1]); }
+    function settings() { return [val('wd-H'), val('wd-S'), val('wd-K'), val('wd-I'), val('wd-th') * Math.PI / 180]; }
+    function mpcStep() {
+      var st = settings(), z = enc(S.p, st[4]), zg = enc(S.g, st[4]);
+      S.plan = cem(z, zg, pr, st[0], st[1], st[2], st[3]);
+      S.p = [clamp(S.p[0] + S.plan.a[0], 0.05, 0.95), clamp(S.p[1] + S.plan.a[1], 0.05, 0.95)]; S.path.push(S.p.slice()); S.steps++;
+      if (dist(S.p, S.g) < 0.05) S.done = 'reached in ' + S.steps;
+      else if (S.steps >= 40) S.done = 'not reached';
+    }
+    var timer = null;
+    function stopRun() { if (timer) { clearTimeout(timer); timer = null; } byId('wd-run').textContent = 'Run to goal'; S.busy = false; }
+    function ensureFit() { if (!S.fitted) fit(); }
+    function readouts() {
+      var th = val('wd-th') * Math.PI / 180, z = enc(S.p, th), zg = enc(S.g, th);
+      setText('wd-E', energy(z, zg).toFixed(3)); setText('wd-d', dist(S.p, S.g).toFixed(3)); setText('wd-res', S.done || (S.steps ? S.steps + ' steps' : '-'));
+      byId('wd-res').parentNode.className = 'read' + (/reached in/.test(S.done) ? ' is-good' : S.done ? ' is-bad' : '');
+    }
+    var land = { key: '', E: null, NL: 36 };
+    function landscape(th) {
+      var key = S.g[0].toFixed(4) + ',' + S.g[1].toFixed(4) + ',' + th;
+      if (land.key === key) return land.E;
+      var zg = enc(S.g, th), E = new Float64Array(land.NL * land.NL);
+      for (var j = 0; j < land.NL; j++) for (var i = 0; i < land.NL; i++) E[j * land.NL + i] = energy(enc([(i + 0.5) / land.NL, (j + 0.5) / land.NL], th), zg);
+      land.key = key; land.E = E; return E;
+    }
+    function drawArena() {
+      var g = cv(el), c = g.c, C = col(), W = g.w, s = W;
+      var Ls = landscape(val('wd-th') * Math.PI / 180), lo = Infinity, hi = -Infinity;
+      for (var q = 0; q < Ls.length; q++) { lo = Math.min(lo, Ls[q]); hi = Math.max(hi, Ls[q]); }
+      var m = /^#?([0-9a-f]{6})$/i.exec(C.ochre), rgb = m ? parseInt(m[1], 16) : 0xb07a1e, off = doc.createElement('canvas'); off.width = off.height = land.NL;
+      var oc = off.getContext('2d'), id = oc.createImageData(land.NL, land.NL);
+      for (q = 0; q < Ls.length; q++) { id.data[4 * q] = rgb >> 16; id.data[4 * q + 1] = (rgb >> 8) & 255; id.data[4 * q + 2] = rgb & 255; id.data[4 * q + 3] = Math.round(255 * 0.36 * Math.pow(1 - (Ls[q] - lo) / (hi - lo || 1), 2)); }
+      oc.putImageData(id, 0, 0); c.imageSmoothingEnabled = true; c.drawImage(off, 0, 0, s, s);
+      for (var k = 1; k < 10; k++) { c.strokeStyle = C.line; c.lineWidth = 1; c.beginPath(); c.moveTo(k * s / 10, 0); c.lineTo(k * s / 10, s); c.stroke(); c.beginPath(); c.moveTo(0, k * s / 10); c.lineTo(s, k * s / 10); c.stroke(); }
+      c.strokeStyle = C.line2; c.strokeRect(0.05 * s, 0.05 * s, 0.9 * s, 0.9 * s);
+      c.fillStyle = alpha(C.sage.charAt(0) === '#' ? C.sage : '#4f7a5a', 0.18); c.beginPath(); c.arc(S.g[0] * s, S.g[1] * s, 0.05 * s, 0, 7); c.fill();
+      c.strokeStyle = C.sage; c.lineWidth = 2; c.beginPath(); c.arc(S.g[0] * s, S.g[1] * s, 0.05 * s, 0, 7); c.stroke();
+      font(c, 12, true); c.fillStyle = C.sage; c.textAlign = 'center'; c.fillText('goal', S.g[0] * s, S.g[1] * s - 0.05 * s - 6);
+      var P = S.plan;
+      if (P && !S.done) {
+        var base = S.path.length > 1 ? S.path[S.path.length - 2] : S.p, isE = {};
+        P.elite.forEach(function (i) { isE[i] = 1; });
+        var stride = Math.max(1, Math.floor(P.S / 120));
+        for (var i = 0; i < P.S; i++) {
+          if (!isE[i] && i % stride) continue;
+          var x = base[0], y = base[1]; c.strokeStyle = isE[i] ? C.red : C.ink3; c.globalAlpha = isE[i] ? 0.75 : 0.22; c.lineWidth = isE[i] ? 1.6 : 1;
+          c.beginPath(); c.moveTo(x * s, y * s); for (var h = 0; h < P.H; h++) { x += P.cand[(i * P.H + h) * 2]; y += P.cand[(i * P.H + h) * 2 + 1]; c.lineTo(x * s, y * s); } c.stroke();
+        }
+        c.globalAlpha = 1;
+      }
+      if (S.path.length > 1) { c.strokeStyle = C.blue; c.lineWidth = 2.6; c.lineJoin = 'round'; c.beginPath(); S.path.forEach(function (p, i2) { if (i2) c.lineTo(p[0] * s, p[1] * s); else c.moveTo(p[0] * s, p[1] * s); }); c.stroke(); }
+      c.fillStyle = C.blue; c.beginPath(); c.arc(S.p[0] * s, S.p[1] * s, Math.max(5, s * 0.016), 0, 7); c.fill();
+      font(c, s < 420 ? 9.5 : 11, true); c.fillStyle = C.ink3; c.textAlign = 'left';
+      c.fillText(P && !S.done ? (s < 420 ? P.S + ' candidates, ' + P.elite.length + ' elites (red)' : 'last CEM iteration: ' + P.S + ' candidate action sequences, ' + P.elite.length + ' elites in red') : (s < 420 ? 'shading: energy; tap to move the goal' : 'shading: the planner\'s energy (darker is lower); click to move the goal'), 10, s - 12);
+      if (val('wd-th')) { c.textAlign = 'right'; c.fillStyle = C.red; c.fillText('camera rotated ' + val('wd-th') + '°', s - 10, 18); }
+    }
+    function drawImages() {
+      var g = cv(imgEl), c = g.c, C = col(), W = g.w, H = g.h, th = val('wd-th') * Math.PI / 180, sz = Math.min((W - 30) / 2, H - 34), cs = sz / G;
+      [[S.p, 'camera view'], [S.g, 'goal image']].forEach(function (it, n) {
+        var ox = 10 + n * (sz + 10), oy = 22, im = render(it[0], th);
+        c.fillStyle = C.s2; c.fillRect(ox, oy, sz, sz);
+        for (var i = 0; i < NP; i++) { if (im[i] < 0.02) continue; c.fillStyle = n ? C.sage : C.blue; c.globalAlpha = Math.min(1, im[i]); c.fillRect(ox + (i % G) * cs, oy + Math.floor(i / G) * cs, cs + 0.3, cs + 0.3); }
+        c.globalAlpha = 1; font(c, 10.5, true); c.fillStyle = C.ink3; c.textAlign = 'left'; c.fillText(it[1], ox, 14);
+      });
+    }
+    function drawLatents() {
+      var g = cv(latEl), c = g.c, C = col(), W = g.w, H = g.h, th = val('wd-th') * Math.PI / 180, z = enc(S.p, th), zg = enc(S.g, th), zp = S.plan && !S.done ? S.plan.zPred : null;
+      var L = 8, T = 22, PW = W - 16, PH = H - T - 22, mid = T + PH / 2, bw = PW / D, sc = PH / 2 / 2.6;
+      c.strokeStyle = C.line; c.beginPath(); c.moveTo(L, mid); c.lineTo(L + PW, mid); c.stroke();
+      [[z, C.blue, 0], [zp, C.red, 1], [zg, C.sage, 2]].forEach(function (it) {
+        if (!it[0]) return; c.fillStyle = it[1];
+        for (var d10 = 0; d10 < D; d10++) { var v = clamp((it[0][d10] - zmu[d10]) / zsd[d10], -2.6, 2.6), x = L + d10 * bw + bw * (0.12 + it[2] * 0.26); c.fillRect(x, Math.min(mid, mid - v * sc), bw * 0.24, Math.abs(v * sc)); }
+      });
+      font(c, 10.5, true); c.textAlign = 'left'; var lx = L;
+      [['z now', C.blue], ['ẑ after the plan', C.red], ['z goal', C.sage]].forEach(function (it) { c.fillStyle = it[1]; c.fillText(it[0], lx, 14); lx += c.measureText(it[0]).width + 14; });
+      c.fillStyle = C.ink3; c.fillText('12 latent dimensions, standardised', L, H - 6);
+    }
+    function drawAll() { drawArena(); drawImages(); drawLatents(); readouts(); }
+    function syncOut() { ['wd-n', 'wd-H', 'wd-S', 'wd-K', 'wd-I', 'wd-th'].forEach(function (id) { setText(id + '-o', byId(id).value); }); }
+    bind(['wd-n', 'wd-H', 'wd-S', 'wd-K', 'wd-I', 'wd-th'], function () { syncOut(); drawAll(); });
+    byId('wd-fit').addEventListener('click', function () {
+      if (S.busy) return; stopRun(); setText('wd-status', 'Collecting ' + val('wd-n') + ' random transitions and fitting…');
+      setTimeout(function () { fit(); S.path = [S.p.slice()]; S.steps = 0; S.done = ''; S.plan = null; drawAll(); setText('wd-status', 'Fitted on ' + S.nFit + ' transitions. Held-out one-step error ' + S.err.toFixed(3) + ' against ' + S.copy.toFixed(3) + ' for predicting no change, ' + Math.round(100 * S.err / S.copy) + '% of it. Now plan.'); }, 30);
+    });
+    byId('wd-step').addEventListener('click', function () {
+      if (S.busy) return; ensureFit(); if (S.done) { S.path = [S.p.slice()]; S.steps = 0; S.done = ''; }
+      mpcStep(); drawAll(); setText('wd-status', 'Step ' + S.steps + ': CEM scored ' + val('wd-S') * val('wd-I') + ' imagined rollouts of ' + val('wd-H') + ' step' + (val('wd-H') > 1 ? 's' : '') + ' and executed the first action of the best mean plan, (' + S.plan.a[0].toFixed(3) + ', ' + S.plan.a[1].toFixed(3) + ').');
+    });
+    byId('wd-run').addEventListener('click', function () {
+      if (timer) { stopRun(); return; } if (S.busy) return; ensureFit();
+      if (S.done) { S.path = [S.p.slice()]; S.steps = 0; S.done = ''; }
+      S.busy = true; this.textContent = 'Stop';
+      (function tick() { mpcStep(); drawAll(); if (S.done) { stopRun(); setText('wd-status', /reached in/.test(S.done) ? 'Reached the goal in ' + S.steps + ' MPC steps, replanning from a fresh observation each step.' : 'Did not reach the goal within 40 steps.'); return; } timer = setTimeout(tick, U.reduced ? 0 : 90); })();
+    });
+    byId('wd-bench').addEventListener('click', function () {
+      if (S.busy) return; stopRun(); ensureFit(); S.busy = true;
+      var st = settings(), r = rng(4242), ok = 0, ep = 0, steps = 0, n = 20, br = rng(99), p, g, z, zg, t = 0;
+      function startEp() { p = [0.1 + 0.8 * r(), 0.1 + 0.8 * r()]; g = [0.1 + 0.8 * r(), 0.1 + 0.8 * r()]; zg = enc(g, st[4]); t = 0; }
+      startEp();
+      (function chunk() {
+        var t0 = Date.now();
+        while (Date.now() - t0 < 40 && ep < n) {
+          if (dist(p, g) < 0.05) { ok++; steps += t; ep++; if (ep < n) startEp(); continue; }
+          if (t >= 40) { ep++; if (ep < n) startEp(); continue; }
+          z = enc(p, st[4]); var P = cem(z, zg, br, st[0], st[1], st[2], st[3]); p = [clamp(p[0] + P.a[0], 0.05, 0.95), clamp(p[1] + P.a[1], 0.05, 0.95)]; t++;
+        }
+        if (ep < n) { setText('wd-status', 'Testing: episode ' + (ep + 1) + ' of ' + n + '…'); setTimeout(chunk, 0); return; }
+        S.busy = false; var w = wilson(ok, n);
+        setText('wd-res', ok + '/' + n); byId('wd-res').parentNode.className = 'read' + (ok >= 16 ? ' is-good' : ok <= 8 ? ' is-bad' : '');
+        setText('wd-status', ok + ' of ' + n + ' random start and goal pairs reached (95% interval ' + Math.round(100 * w[0]) + ' to ' + Math.round(100 * w[1]) + '%)' + (ok ? ', ' + (steps / ok).toFixed(1) + ' steps on average' : '') + ', camera at ' + val('wd-th') + '°, H = ' + st[0] + ', S = ' + st[1] + ', K = ' + st[2] + ', ' + st[3] + ' iterations, predictor fitted on ' + S.nFit + ' transitions.');
+      })();
+    });
+    el.addEventListener('click', function (e) {
+      var xy = pointerXY(el, e), s = el.clientWidth; S.g = [clamp(xy[0] / s, 0.08, 0.92), clamp(xy[1] / s, 0.08, 0.92)];
+      if (!S.busy) { S.path = [S.p.slice()]; S.steps = 0; S.done = ''; S.plan = null; }
+      drawAll(); setText('wd-status', 'New goal image. Press One MPC step or Run to goal.');
+    });
+    syncOut(); reg(drawAll);
+    if ('IntersectionObserver' in window) { var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); if (!S.fitted) { fit(); drawAll(); setText('wd-status', 'Fitted on ' + S.nFit + ' random transitions (one-step error ' + S.err.toFixed(3) + ' against ' + S.copy.toFixed(3) + ' for predicting no change). Click the arena to set a goal, then plan.'); } } }); io.observe(el); }
+  })();
+
+  /* ---- Lab 12: hierarchy builder (H-JEPA App. C.1, Table 3) ------------------------ */
+  (function hier() {
+    var host = byId('hier-host'); if (!host) return;
+    var T3 = { 1: [4, 16], 2: [7, 31], 3: [13, 61], 4: [25, 121] };
+    function ctl(id, lab, mn, mx, v) { return '<div class="ctl"><label for="' + id + '">' + lab + ' <output id="' + id + '-o"></output></label><input type="range" id="' + id + '" min="' + mn + '" max="' + mx + '" step="1" value="' + v + '"></div>'; }
+    function rd(id, lab) { return '<div class="read"><b id="' + id + '">-</b><span>' + lab + '</span></div>'; }
+    host.innerHTML = '<div class="wm-ctls">' + ctl('hb-L', 'Levels', 1, 4, 3) + ctl('hb-s', 'Stride s', 2, 4, 2) + ctl('hb-w', 'Window w', 1, 3, 1) + ctl('hb-K', 'Subgoals matched K', 1, 3, 1) + '</div>' +
+      '<div class="wm-arch" id="hb-svg"></div><div class="reads" style="margin-top:.7rem">' + rd('hb-n1', 'level-1 frames per sample') + rd('hb-clip', 'min clip, env steps') + rd('hb-top', 'env steps per top-level step') + rd('hb-H', 'H<sub>ℓ</sub> to cover K subgoals') + '</div><p class="status" id="hb-note"></p>';
+    function up() {
+      var Lv = val('hb-L'), s = val('hb-s'), w = val('hb-w'), K = val('hb-K'), C = col(), l, t;
+      setText('hb-L-o', Lv); setText('hb-s-o', s); setText('hb-w-o', w); setText('hb-K-o', K);
+      var n = []; n[Lv] = 4; for (l = Lv; l > 1; l--) n[l - 1] = (n[l] - 1) * s + w;
+      var n1 = n[1], clip = 5 * (n1 - 1) + 1, starts = { 1: [] }, spans = { 1: 1 };
+      for (var i = 0; i < n1; i++) starts[1].push(i);
+      for (l = 2; l <= Lv; l++) { starts[l] = []; spans[l] = spans[l - 1] + (w - 1) * Math.pow(s, l - 2); for (t = 0; t < n[l]; t++) starts[l].push(starts[l - 1][t * s]); }
+      var W = 900, top = 26, rowH = 50, Hh = top + rowH * Lv + 24, left = 96, cw = (W - left - 16) / Math.max(n1, 1);
+      var sv = '<svg viewBox="0 0 ' + W + ' ' + Hh + '" role="img" aria-label="States of each level placed on level-1 time">';
+      for (l = Lv; l >= 1; l--) {
+        var y = top + (Lv - l) * rowH + 16, fill = l === 1 ? C.blue : C.red;
+        sv += '<text x="6" y="' + (y + 4) + '" font-family="JetBrains Mono, monospace" font-size="11.5" fill="' + C.ink2 + '">level ' + l + '</text><text x="6" y="' + (y + 19) + '" font-family="JetBrains Mono, monospace" font-size="10" fill="' + C.ink3 + '">' + n[l] + ' states</text>';
+        sv += '<line x1="' + left + '" x2="' + (W - 16) + '" y1="' + y + '" y2="' + y + '" stroke="' + C.line2 + '"/>';
+        starts[l].forEach(function (st, k) {
+          var cx = left + (st + 0.5) * cw, r = Math.max(2.5, Math.min(7, cw * 0.32));
+          if (spans[l] > 1) sv += '<rect x="' + (left + st * cw + 1) + '" y="' + (y - 7) + '" width="' + Math.max(2, spans[l] * cw - 2) + '" height="14" rx="5" fill="' + fill + '" opacity=".18"/>';
+          sv += '<circle cx="' + cx + '" cy="' + y + '" r="' + r + '" fill="' + fill + '" opacity="' + (l === 1 ? 0.8 : 0.85) + '"/>';
+          if (l > 1 && k < starts[l].length - 1) { var nx = left + (starts[l][k + 1] + 0.5) * cw; sv += '<path d="M' + (cx + r + 1) + ' ' + (y - 9) + ' Q' + ((cx + nx) / 2) + ' ' + (y - 22) + ' ' + (nx - r - 1) + ' ' + (y - 9) + '" fill="none" stroke="' + C.ink3 + '"/>'; }
+        });
+      }
+      sv += '<text x="' + left + '" y="' + (Hh - 4) + '" font-family="JetBrains Mono, monospace" font-size="10" fill="' + C.ink3 + '">level-1 frames 0 to ' + (n1 - 1) + ', 5 environment steps each; an arc is one upper-level transition (one macro-action)</text></svg>';
+      byId('hb-svg').innerHTML = sv;
+      setText('hb-n1', n1); setText('hb-clip', clip); setText('hb-top', Lv > 1 ? 5 * Math.pow(s, Lv - 1) : 5); setText('hb-H', Lv > 1 ? K * s + w - 1 : 'n/a');
+      var st2 = byId('hb-note');
+      if (s === 2 && w === 1) { var m = T3[Lv][0] === n1 && T3[Lv][1] === clip; st2.className = 'status' + (m ? '' : ' is-bad'); st2.textContent = (m ? 'Matches' : 'Does not match') + ' Table 3: ' + Lv + ' level' + (Lv > 1 ? 's' : '') + ' need ' + n1 + ' level-1 frames and clips of at least ' + clip + ' environment steps.'; }
+      else { st2.className = 'status'; st2.textContent = 'The paper uses s = 2 and w = 1. With s = ' + s + ' and w = ' + w + ', each sample needs clips of ' + clip + ' steps, so fewer windows fit inside short episodes.'; }
+    }
+    bind(['hb-L', 'hb-s', 'hb-w', 'hb-K'], up); reg(up);
+  })();
+
+  /* ---- Lab 13: SIGReg with the Epps-Pulley statistic ------------------------------ */
+  (function sigreg() {
+    var el = byId('sig-cv'); if (!el) return;
+    var dist = 'iso', seed = 1, Dm = 16, KN = 17, TS = [], last = null;
+    for (var j = 0; j < KN; j++) TS.push(3 * j / (KN - 1));
+    var WT = TS.map(function (t, i) { return (i === 0 || i === KN - 1 ? 0.5 : 1) * (3 / (KN - 1)) * Math.exp(-t * t / 2); }), PHI = TS.map(function (t) { return Math.exp(-t * t / 2); });
+    var FLOOR = 2 * TS.reduce(function (a, t, i) { return a + WT[i] * (1 - Math.exp(-t * t)); }, 0);
+    function tep(h, n) { var T = 0; for (var k = 0; k < KN; k++) { var re = 0, im = 0, t = TS[k]; for (var i = 0; i < n; i++) { re += Math.cos(t * h[i]); im += Math.sin(t * h[i]); } re = re / n - PHI[k]; im /= n; T += WT[k] * (re * re + im * im); } return 2 * n * T; }
+    // 99th percentile of the statistic on exactly Gaussian batches (n = 256, 400 batches)
+    var Q99 = (function () { var r = rng(9001), v = [], h = new Float64Array(256); for (var b = 0; b < 400; b++) { for (var i = 0; i < 256; i++) h[i] = gauss(r); v.push(tep(h, 256)); } v.sort(function (a, c) { return a - c; }); return v[395]; })();
+    el.dataset.aspect = '0.86';
+    chips(byId('sig-dist'), [['iso', 'isotropic'], ['aniso', 'anisotropic'], ['low', 'low-rank'], ['col', 'collapsed'], ['uni', 'uniform']], dist, function (k) { dist = k; compute(); });
+    function sample(n) {
+      var r = rng(seed * 101 + 3), ra = rng(555), Z = [], A = [], i, d;
+      for (i = 0; i < Dm; i++) A.push([gauss(ra) / Math.sqrt(3), gauss(ra) / Math.sqrt(3), gauss(ra) / Math.sqrt(3)]);
+      for (i = 0; i < n; i++) {
+        var z = new Float64Array(Dm);
+        if (dist === 'iso') for (d = 0; d < Dm; d++) z[d] = gauss(r);
+        else if (dist === 'aniso') for (d = 0; d < Dm; d++) z[d] = (0.25 + 1.5 * d / (Dm - 1)) * gauss(r);
+        else if (dist === 'low') { var g3 = [gauss(r), gauss(r), gauss(r)]; for (d = 0; d < Dm; d++) z[d] = A[d][0] * g3[0] + A[d][1] * g3[1] + A[d][2] * g3[2]; }
+        else if (dist === 'col') for (d = 0; d < Dm; d++) z[d] = 0.01 * gauss(r);
+        else for (d = 0; d < Dm; d++) z[d] = (r() * 2 - 1) * Math.sqrt(3);
+        Z.push(z);
+      }
+      return Z;
+    }
+    function compute() {
+      var n = val('sg-n'), M = val('sg-M'); setText('sg-n-o', n); setText('sg-M-o', M);
+      var Z = sample(n), ru = rng(seed * 7 + 11), stats = [], worst = { v: -1, h: null }, h = new Float64Array(n);
+      for (var m = 0; m < M; m++) {
+        var u = [], nu = 0, d; for (d = 0; d < Dm; d++) { u.push(gauss(ru)); nu += u[d] * u[d]; } nu = Math.sqrt(nu);
+        for (var i = 0; i < n; i++) { var s = 0; for (d = 0; d < Dm; d++) s += Z[i][d] * u[d]; h[i] = s / nu; }
+        var T = tep(h, n); stats.push(T);
+        if (T > worst.v) worst = { v: T, h: Array.prototype.slice.call(h) };
+      }
+      var mean = stats.reduce(function (a, b) { return a + b; }, 0) / M, over = stats.filter(function (v) { return v > Q99; }).length;
+      last = { stats: stats.slice().sort(function (a, b) { return b - a; }), worst: worst, mean: mean, n: n, over: over };
+      setText('sg-val', mean < 10 ? mean.toFixed(2) : mean.toFixed(0)); setText('sg-floor', FLOOR.toFixed(2));
+      byId('sg-val').parentNode.className = 'read' + (mean > 2 * FLOOR ? ' is-bad' : ' is-good');
+      var msg = {
+        iso: 'Every projection is standard normal, so the statistic sits at the floor: ' + mean.toFixed(2) + ' against ' + FLOOR.toFixed(2) + ', at any n.',
+        aniso: 'Axis scales run from 0.25 to 1.75. Directions that weight the wide axes see a Gaussian that is too broad, the others one that is too narrow: ' + (mean / FLOOR).toFixed(1) + '× the floor.',
+        low: 'Only 3 of 16 dimensions carry variance, mixed into all 16. Each random direction sees a Gaussian of a different width: ' + (mean / FLOOR).toFixed(1) + '× the floor, and the gradient pushes the missing directions open.',
+        col: 'Every embedding is the same point. Each projection is a spike and the statistic is proportional to n: ' + mean.toFixed(0) + ' at n = ' + n + '. Double n and it doubles.',
+        uni: 'Uniform coordinates, variance 1. A random dense direction sums 16 independent coordinates, so each projection already looks Gaussian (central limit theorem) and the statistic is ' + (mean / FLOOR).toFixed(2) + '× the floor. Only directions close to an axis see the flat shape, so a few random directions miss what the full test would find.'
+      };
+      setText('sg-status', msg[dist] + ' ' + over + ' of ' + M + ' directions exceed the level that 99% of Gaussian batches stay under (' + Q99.toFixed(1) + ').');
+      draw();
+    }
+    function draw() {
+      if (!last) return;
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, L = 50, T = 24, PW = W - L - 16, PH = H * 0.52 - T - 30;
+      var lo = Math.log10(0.1), hi = Math.log10(Math.max(10, last.stats[0] * 1.5));
+      function Y(v) { return T + PH - (Math.log10(Math.max(v, 0.1)) - lo) / (hi - lo) * PH; }
+      frame(c, C, L, T, PW, PH);
+      font(c, 10, true); c.fillStyle = C.ink3; c.textAlign = 'right';
+      for (var e = -1; e <= hi; e++) { c.fillText(String(Math.pow(10, e)), L - 6, Y(Math.pow(10, e)) + 4); c.strokeStyle = C.line; c.beginPath(); c.moveTo(L, Y(Math.pow(10, e))); c.lineTo(L + PW, Y(Math.pow(10, e))); c.stroke(); }
+      var bw = PW / last.stats.length;
+      last.stats.forEach(function (v, i) { c.fillStyle = v > Q99 ? C.red : C.blue; c.globalAlpha = 0.75; c.fillRect(L + i * bw + 0.5, Y(v), Math.max(1, bw - 1), T + PH - Y(v)); });
+      c.globalAlpha = 1; c.lineWidth = 1.5;
+      [[FLOOR, 'Gaussian floor (mean)', [6, 4]], [Q99, '99% of Gaussian batches', [2, 3]]].forEach(function (ln) { c.strokeStyle = C.ink; c.setLineDash(ln[2]); c.beginPath(); c.moveTo(L, Y(ln[0])); c.lineTo(L + PW, Y(ln[0])); c.stroke(); c.setLineDash([]); c.textAlign = 'right'; c.fillStyle = C.ink2; c.fillText(ln[1], L + PW - 6, Y(ln[0]) - 5); });
+      c.textAlign = 'left'; c.fillStyle = C.ink3; c.fillText('T_EP per direction, sorted (log scale)', L, T - 8);
+      // histogram of the worst projection against N(0, 1)
+      var ox = L, oy = T + PH + 44, ow = PW, oh = H - oy - 14, B = 40, cnt = new Array(B).fill(0);
+      last.worst.h.forEach(function (x) { var b = Math.floor((x + 4) / 8 * B); if (b >= 0 && b < B) cnt[b]++; });
+      var dens = cnt.map(function (k) { return k / (last.n * 8 / B); }), top = Math.max(0.5, Math.min(3, Math.max.apply(null, dens)));
+      frame(c, C, ox, oy, ow, oh);
+      dens.forEach(function (v, b) { var hh = Math.min(v, top) / top * oh; c.fillStyle = C.ochre; c.globalAlpha = 0.7; c.fillRect(ox + b * ow / B + 0.5, oy + oh - hh, ow / B - 1, hh); });
+      c.globalAlpha = 1; c.strokeStyle = C.ink; c.lineWidth = 1.8; c.beginPath();
+      for (var k = 0; k <= 80; k++) { var x = -4 + 8 * k / 80, y = Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI), px = ox + (x + 4) / 8 * ow, py = oy + oh - y / top * oh; if (k) c.lineTo(px, py); else c.moveTo(px, py); }
+      c.stroke(); c.fillStyle = C.ink3; c.textAlign = 'left'; c.fillText('worst direction vs N(0, 1)', ox, oy - 8);
+    }
+    bind(['sg-n', 'sg-M'], compute); byId('sg-new').addEventListener('click', function () { seed++; compute(); });
+    compute(); reg(draw);
+  })();
+
+  /* ---- Lab 14: slow-feature collapse in a one-feature world ------------------------ */
+  (function slow() {
+    var el = byId('slow-cv'); if (!el) return;
+    function losses(x, se, sn) { var d = 2 * sn * sn; return [x * se * se + d, 1 - x / (x * (1 + se * se) + d)]; }
+    function draw() {
+      var se = val('sl-e'), sn = val('sl-n'), gm = val('sl-g');
+      setText('sl-e-o', se.toFixed(2)); setText('sl-n-o', sn.toFixed(2)); setText('sl-g-o', gm.toFixed(2));
+      var d = 2 * sn * sn, xs = gm > 0 ? (Math.sqrt(gm * d / (se * se)) - d) / (1 + se * se) : 0;
+      xs = clamp(xs, 0, 1);
+      // compare the interior stationary point with both ends of the interval
+      function tot(x) { var l = losses(x, se, sn); return l[0] + gm * l[1]; }
+      var best = [0, 1, xs].reduce(function (a, b) { return tot(b) < tot(a) - 1e-12 ? b : a; }, 0), phi = Math.asin(Math.sqrt(best)) * 180 / Math.PI;
+      setText('sl-opt', phi.toFixed(0) + '°'); setText('sl-share', Math.round(100 * best) + '%');
+      byId('sl-share').parentNode.className = 'read' + (best < 0.05 ? ' is-bad' : best > 0.5 ? ' is-good' : '');
+      setText('sl-status', best < 1e-6 ? 'The optimum is φ = 0: the encoder reads only the background. Prediction is perfect up to sensor noise, and the agent is invisible. This is slow-feature collapse.' : 'Inverse dynamics pulls the optimum to φ = ' + phi.toFixed(0) + '°, putting ' + Math.round(100 * best) + '% of the latent variance on the agent. Prediction now pays ' + (best * se * se).toFixed(3) + ' for the agent\'s innovation, and the inverse-dynamics head can recover the action.');
+      var nw = shape(el, 460 / 900, 0.85), g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, L = nw ? 24 : 50, T = 24, PW = W - L - 16, PH = H - T - 50, N = 180, i;
+      var lp = [], li = [], lt = [];
+      for (i = 0; i <= N; i++) { var ph = i / N * Math.PI / 2, x = Math.sin(ph) * Math.sin(ph), l = losses(x, se, sn); lp.push(l[0]); li.push(l[1]); lt.push(l[0] + gm * l[1]); }
+      var ymax = Math.max(1.05, Math.max.apply(null, lp) * 1.05), tmin = Math.min.apply(null, lt), tmax = Math.max.apply(null, lt);
+      function X(k) { return L + k / N * PW; } function Y(v) { return T + PH - v / ymax * PH; }
+      frame(c, C, L, T, PW, PH);
+      font(c, 10, true); c.fillStyle = C.ink3; c.textAlign = 'center';
+      [0, 30, 60, 90].forEach(function (a) { c.fillText(a + '°', X(a / 90 * N), T + PH + 15); });
+      c.fillText(nw ? 'φ: 0° background, 90° agent' : 'φ: 0° reads only the background, 90° only the agent', L + PW / 2, H - 10);
+      function line(arr, color, dash, norm) { c.strokeStyle = color; c.lineWidth = 2.3; c.setLineDash(dash || []); c.beginPath(); arr.forEach(function (v, k) { var y = norm ? T + PH - (tmax - tmin < 1e-9 ? 0.5 : (v - tmin) / (tmax - tmin)) * PH * 0.92 - PH * 0.04 : Y(v); if (k) c.lineTo(X(k), y); else c.moveTo(X(k), y); }); c.stroke(); c.setLineDash([]); }
+      line(lp, C.blue); line(li, C.ochre); if (gm > 0) line(lt, C.red, [7, 4], true);
+      var bk = Math.round(Math.asin(Math.sqrt(best)) / (Math.PI / 2) * N);
+      c.fillStyle = C.red; c.beginPath(); c.arc(X(bk), gm > 0 ? T + PH - (tmax - tmin < 1e-9 ? 0.5 : (lt[bk] - tmin) / (tmax - tmin)) * PH * 0.92 - PH * 0.04 : Y(lp[bk]), 6, 0, 7); c.fill();
+      font(c, nw ? 9.5 : 10.5, true); c.textAlign = 'left'; var lx = L + 8;
+      [['L_pred', C.blue], ['L_idm', C.ochre], [gm > 0 ? (nw ? 'total, rescaled' : 'L_pred + γ·L_idm (rescaled), optimum marked') : (nw ? 'optimum' : 'γ = 0: optimum of L_pred marked'), C.red]].forEach(function (it) { c.fillStyle = it[1]; c.fillText(it[0], lx, T - 8); lx += c.measureText(it[0]).width + 14; });
+    }
+    bind(['sl-e', 'sl-n', 'sl-g'], draw); reg(draw);
+  })();
+
+  /* ---- Lab 15: cost geometry and subgoals on a maze --------------------------------- */
+  (function maze() {
+    var host = byId('maze-host'); if (!host) return;
+    var MAP = ['###############', '#.......#.....#', '#.#####.#.###.#', '#.#...#.#...#.#', '#.#.#.#.###.#.#', '#...#.#.....#.#', '#####.#######.#', '#.....#.......#', '#.#####.#####.#', '#.............#', '###############'];
+    var R = MAP.length, Cn = MAP[0].length, goal = [3, 3], starts = [[1, 13], [9, 13], [7, 1], [5, 9], [1, 9], [9, 7]], sk = 0, start = starts[0], mode = 'geo', path = [], subs = [], result = '', moves = 0, falls = 0;
+    host.innerHTML = '<div class="wm-maze"><canvas id="mz-cv" width="750" height="550" aria-label="Maze with a cost map, a start, a goal and the planner\'s path"></canvas><div>' +
+      '<div class="chips" id="mz-modes" role="group" aria-label="Cost"></div><div class="btns" style="margin:.6rem 0"><button type="button" class="btn btn--sm" id="mz-new">New start</button></div>' +
+      '<div class="reads"><div class="read"><b id="mz-moves">-</b><span>moves</span></div><div class="read"><b id="mz-fall">-</b><span>moves that lowered the cost</span></div></div>' +
+      '<p class="status" id="mz-res" aria-live="polite"></p><p class="wm-mini" id="mz-why" style="font-size:.8rem;line-height:1.5"></p></div></div>';
+    function free(r, c) { return r >= 0 && c >= 0 && r < R && c < Cn && MAP[r].charAt(c) !== '#'; }
+    var geo = (function () { var d = MAP.map(function (row) { return row.split('').map(function () { return Infinity; }); }), q = [goal]; d[goal[0]][goal[1]] = 0; while (q.length) { var p = q.shift(); [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (m) { var r = p[0] + m[0], c = p[1] + m[1]; if (free(r, c) && d[r][c] === Infinity) { d[r][c] = d[p[0]][p[1]] + 1; q.push([r, c]); } }); } return d; })();
+    function eu(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1]); }
+    function cost(m, p, sg) { if (m === 'sat') return Math.min(eu(p, goal), 2.5); if (m === 'euc') return eu(p, goal); if (m === 'geo') return geo[p[0]][p[1]]; return eu(p, sg); }
+    function geoPath(from) { var p = from, out = [from]; while (geo[p[0]][p[1]] > 0) { var best = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (m) { var q = [p[0] + m[0], p[1] + m[1]]; if (free(q[0], q[1]) && geo[q[0]][q[1]] < geo[p[0]][p[1]] && !best) best = q; }); p = best; out.push(p); } return out; }
+    var WHY = {
+      sat: 'A distance that stops changing a few cells from the goal: the planner gets no signal until it is close, and wanders. Level-1 latent distances look like this far from the goal in H-JEPA\'s Fig. 7.',
+      euc: 'Straight-line distance ignores walls, so greedy descent walks into a dead end that is closer as the crow flies.',
+      geo: 'A graded distance that rises along the corridors: greedy descent reaches the goal. H-JEPA\'s upper-level distances have this shape on AntMaze.',
+      hier: 'The upper level proposes a subgoal every three cells along its route (purple); the lower level tracks each one with the same wall-blind straight-line cost that failed on its own. Each subproblem is short enough to be easy: temporal decomposition.'
+    };
+    function run() {
+      var rnd = (function (s) { return function () { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; }; })(7);
+      var p = start, budget = 140, si = 0; moves = 0; falls = 0; path = [p]; subs = [];
+      if (mode === 'hier') { var gp = geoPath(start); for (var i = 3; i < gp.length; i += 3) subs.push(gp[i]); subs.push(goal); }
+      while (budget-- > 0 && !(p[0] === goal[0] && p[1] === goal[1])) {
+        var sg = subs[si] || goal, here = cost(mode, p, sg), best = null, bestC = here;
+        var nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(function (m) { return [p[0] + m[0], p[1] + m[1]]; }).filter(function (q) { return free(q[0], q[1]); });
+        nb.forEach(function (q) { var cq = cost(mode, q, sg); if (cq < bestC - 1e-9) { bestC = cq; best = q; } });
+        if (!best) { if (mode === 'sat' && here >= 2.5 - 1e-9) best = nb[Math.floor(rnd() * nb.length)]; else break; } else falls++;
+        moves++; p = best; path.push(p);
+        if (mode === 'hier' && p[0] === sg[0] && p[1] === sg[1] && si < subs.length - 1) si++;
+      }
+      var ok = p[0] === goal[0] && p[1] === goal[1];
+      result = ok ? 'Reached the goal in ' + moves + ' moves.' : budget < 0 ? 'Out of budget after 140 moves.' : 'Stuck after ' + moves + ' moves: no neighbour lowers the cost.';
+      var st = byId('mz-res'); st.className = 'status' + (ok ? '' : ' is-bad');
+      draw();
+    }
+    function draw() {
+      var el = byId('mz-cv'), g = cv(el), c = g.c, C = col(), cs = g.w / Cn, maxc = 0, r, k;
+      for (r = 0; r < R; r++) for (k = 0; k < Cn; k++) if (free(r, k)) maxc = Math.max(maxc, cost(mode === 'hier' ? 'geo' : mode, [r, k], goal));
+      for (r = 0; r < R; r++) for (k = 0; k < Cn; k++) {
+        if (!free(r, k)) { c.fillStyle = C.ink; c.globalAlpha = 0.82; c.fillRect(k * cs, r * cs, cs, cs); c.globalAlpha = 1; continue; }
+        var v = cost(mode === 'hier' ? 'geo' : mode, [r, k], goal) / (maxc || 1);
+        c.fillStyle = C.blue; c.globalAlpha = 0.06 + 0.5 * (1 - v); c.fillRect(k * cs + 1, r * cs + 1, cs - 2, cs - 2); c.globalAlpha = 1;
+      }
+      subs.forEach(function (sg) { c.fillStyle = C.plum; c.beginPath(); c.arc((sg[1] + 0.5) * cs, (sg[0] + 0.5) * cs, cs * 0.2, 0, 7); c.fill(); });
+      if (path.length > 1) { c.strokeStyle = C.red; c.lineWidth = Math.max(2, cs * 0.12); c.lineJoin = 'round'; c.beginPath(); path.forEach(function (p, i) { var X = (p[1] + 0.5) * cs, Y = (p[0] + 0.5) * cs; if (i) c.lineTo(X, Y); else c.moveTo(X, Y); }); c.stroke(); }
+      c.fillStyle = C.sage; c.beginPath(); for (var i2 = 0; i2 < 10; i2++) { var a = -Math.PI / 2 + i2 * Math.PI / 5, rr = i2 % 2 ? cs * 0.16 : cs * 0.38, X2 = (goal[1] + 0.5) * cs + rr * Math.cos(a), Y2 = (goal[0] + 0.5) * cs + rr * Math.sin(a); if (i2) c.lineTo(X2, Y2); else c.moveTo(X2, Y2); } c.closePath(); c.fill();
+      c.fillStyle = C.blue; c.beginPath(); c.arc((start[1] + 0.5) * cs, (start[0] + 0.5) * cs, cs * 0.28, 0, 7); c.fill();
+      setText('mz-moves', moves); setText('mz-fall', moves ? Math.round(100 * falls / moves) + '%' : '-'); setText('mz-res', result); setText('mz-why', WHY[mode]);
+    }
+    chips(byId('mz-modes'), [['sat', 'level-1-like'], ['euc', 'straight line'], ['geo', 'upper-level-like'], ['hier', 'subgoals + local cost']], mode, function (m) { mode = m; run(); });
+    byId('mz-new').addEventListener('click', function () { sk = (sk + 1) % starts.length; start = starts[sk]; run(); });
+    run(); reg(draw);
+  })();
+
+  /* ---- Lab 16: Frechet fidelity of a planned path (H-JEPA Eq. 7) --------------------- */
+  (function frechet() {
+    var el = byId('fr-cv'); if (!el) return;
+    el.dataset.aspect = '0.8';
+    var WP = [[0, 0], [0.25, -0.6], [0.35, 0.1], [0.8, 0.1], [0.85, -0.15]], NS = 80, pre = 'mid';
+    function resample(pts, n) {
+      var seg = [], tot = 0, i; for (i = 1; i < pts.length; i++) { var l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(l); tot += l; }
+      var out = []; for (var k = 0; k < n; k++) { var s = tot * k / (n - 1), j = 0; while (j < seg.length - 1 && s > seg[j]) { s -= seg[j]; j++; } var f = seg[j] ? Math.min(1, s / seg[j]) : 0; out.push([pts[j][0] + f * (pts[j + 1][0] - pts[j][0]), pts[j][1] + f * (pts[j + 1][1] - pts[j][1])]); }
+      return out;
+    }
+    var EXP = resample(WP, NS), END = EXP[NS - 1];
+    function planned(f, s, w) {
+      var out = [];
+      for (var k = 0; k < NS; k++) {
+        var u = s * k / (NS - 1), idx = u * (NS - 1), i0 = Math.floor(idx), i1 = Math.min(NS - 1, i0 + 1), t = idx - i0, e = [EXP[i0][0] + t * (EXP[i1][0] - EXP[i0][0]), EXP[i0][1] + t * (EXP[i1][1] - EXP[i0][1])];
+        out.push([f * e[0] + (1 - f) * u * END[0] + w * Math.sin(2 * Math.PI * 4.3 * u), f * e[1] + (1 - f) * u * END[1] + w * (Math.cos(2 * Math.PI * 3.1 * u + 1) - Math.cos(1))]);
+      }
+      return out;
+    }
+    function dF(P, Q) {
+      var n = P.length, m = Q.length, ca = new Float64Array(n * m), i, j;
+      function d(a, b) { return Math.hypot(P[a][0] - Q[b][0], P[a][1] - Q[b][1]); }
+      for (i = 0; i < n; i++) for (j = 0; j < m; j++) {
+        var v = d(i, j);
+        ca[i * m + j] = i === 0 && j === 0 ? v : i === 0 ? Math.max(ca[j - 1], v) : j === 0 ? Math.max(ca[(i - 1) * m], v) : Math.max(Math.min(ca[(i - 1) * m + j], ca[i * m + j - 1], ca[(i - 1) * m + j - 1]), v);
+      }
+      // backtrack one optimal coupling and its bottleneck pair
+      var pairs = [[n - 1, m - 1]]; i = n - 1; j = m - 1;
+      while (i > 0 || j > 0) { if (i === 0) j--; else if (j === 0) i--; else { var a = ca[(i - 1) * m + j - 1], b = ca[(i - 1) * m + j], c2 = ca[i * m + j - 1]; if (a <= b && a <= c2) { i--; j--; } else if (b <= c2) i--; else j--; } pairs.push([i, j]); }
+      var bn = pairs.reduce(function (acc, p) { return d(p[0], p[1]) > d(acc[0], acc[1]) ? p : acc; }, pairs[0]);
+      return { v: ca[n * m - 1], pairs: pairs, bn: bn };
+    }
+    var D0 = dF([[0, 0]], EXP).v;
+    var PRE = { exp: [1, 1, 0], straight: [0, 1, 0], half: [1, 0.5, 0], still: [1, 0, 0], wob: [1, 1, 0.06], mid: [0.5, 1, 0] };
+    chips(byId('fr-pre'), [['exp', 'expert path'], ['straight', 'straight to the goal'], ['half', 'stops halfway'], ['still', 'stands still'], ['wob', 'wobbly expert']], '', function (k) { var p = PRE[k]; byId('fr-f').value = p[0]; byId('fr-s').value = p[1]; byId('fr-n').value = p[2]; draw(); });
+    function draw() {
+      var f = val('fr-f'), s = val('fr-s'), w = val('fr-n');
+      setText('fr-f-o', Math.round(100 * f) + '%'); setText('fr-s-o', Math.round(100 * s) + '%'); setText('fr-n-o', w.toFixed(3));
+      var P = planned(f, s, w), r = dF(P, EXP), fid = (D0 - r.v) / D0, pe = P[NS - 1], net = Math.hypot(pe[0] - END[0], pe[1] - END[1]) / Math.hypot(END[0], END[1]);
+      setText('fr-fid', Math.round(100 * fid) + '%'); setText('fr-net', Math.round(100 * net) + '%');
+      byId('fr-fid').parentNode.className = 'read' + (fid > 0.8 ? ' is-good' : fid < 0.4 ? ' is-bad' : ''); byId('fr-net').parentNode.className = 'read' + (net < 0.05 ? ' is-good' : net > 0.4 ? ' is-bad' : '');
+      var st = byId('fr-status');
+      st.textContent = net < 0.05 && fid < 0.6 ? 'Net displacement says perfect (' + Math.round(100 * net) + '% error); Fréchet fidelity says ' + Math.round(100 * fid) + '%, because the plan never goes down to the object.' : s < 0.02 ? 'Standing still scores 0 by construction: it is the reference in the numerator and the denominator.' : 'Fidelity ' + Math.round(100 * fid) + '%: the worst-matched pair in the best coupling is ' + r.v.toFixed(2) + ' apart, against ' + D0.toFixed(2) + ' for standing still.';
+      st.className = 'status' + (net < 0.05 && fid < 0.6 ? ' is-bad' : '');
+      var g = cv(el), c = g.c, C = col(), W = g.w, H = g.h, x0 = -0.15, x1 = 1.05, y0 = -0.8, y1 = 0.32, sc = Math.min((W - 40) / (x1 - x0), (H - 50) / (y1 - y0)), ox = (W - sc * (x1 - x0)) / 2, oy = 20;
+      function X(x) { return ox + (x - x0) * sc; } function Y(y) { return oy + (y1 - y) * sc; }
+      c.strokeStyle = C.ink3; c.lineWidth = 3; c.beginPath(); c.moveTo(X(-0.1), Y(-0.66)); c.lineTo(X(0.55), Y(-0.66)); c.stroke(); c.beginPath(); c.moveTo(X(0.7), Y(-0.21)); c.lineTo(X(1.02), Y(-0.21)); c.stroke();
+      c.fillStyle = C.ochre; c.fillRect(X(0.21), Y(-0.6), 0.08 * sc, 0.06 * sc);
+      font(c, 10.5, true); c.fillStyle = C.ink3; c.textAlign = 'center'; c.fillText('table, object', X(0.22), Y(-0.66) + 16); c.fillText('shelf, target', X(0.86), Y(-0.21) + 16);
+      c.strokeStyle = C.line2; c.lineWidth = 1; r.pairs.forEach(function (p, i) { if (i % 6) return; c.beginPath(); c.moveTo(X(P[p[0]][0]), Y(P[p[0]][1])); c.lineTo(X(EXP[p[1]][0]), Y(EXP[p[1]][1])); c.stroke(); });
+      c.strokeStyle = C.ink3; c.lineWidth = 5; c.globalAlpha = 0.45; c.lineJoin = 'round'; c.beginPath(); EXP.forEach(function (p, i) { if (i) c.lineTo(X(p[0]), Y(p[1])); else c.moveTo(X(p[0]), Y(p[1])); }); c.stroke(); c.globalAlpha = 1;
+      c.strokeStyle = C.red; c.lineWidth = 2.6; c.beginPath(); P.forEach(function (p, i) { if (i) c.lineTo(X(p[0]), Y(p[1])); else c.moveTo(X(p[0]), Y(p[1])); }); c.stroke();
+      c.strokeStyle = C.red; c.setLineDash([4, 3]); c.lineWidth = 1.6; c.beginPath(); c.moveTo(X(P[r.bn[0]][0]), Y(P[r.bn[0]][1])); c.lineTo(X(EXP[r.bn[1]][0]), Y(EXP[r.bn[1]][1])); c.stroke(); c.setLineDash([]);
+      c.fillStyle = C.blue; c.beginPath(); c.arc(X(0), Y(0), 6, 0, 7); c.fill();
+      font(c, 10.5, true); c.textAlign = 'left'; c.fillStyle = C.ink3; c.fillText(W < 520 ? 'grey: expert · red: plan · dashed: d_F pair' : 'expert path (grey), planned path (red), dashed: the pair that sets d_F', 12, H - 10); c.fillStyle = C.blue; c.fillText('start = the "stand still" path', X(0) - 6, Y(0.2));
+    }
+    bind(['fr-f', 'fr-s', 'fr-n'], draw); reg(draw);
+  })();
+})();
+</script>

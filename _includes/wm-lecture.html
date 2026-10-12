@@ -1,0 +1,101 @@
+{%- comment -%}
+  "How a latent world model works" - an interactive lecture on V-JEPA, V-JEPA 2,
+  V-JEPA 2-AC and H-JEPA, at /notes/v-jepa/ (rev. 2026-10-12). Same lecture
+  design as /notes/language-eats-robotics/. The previous teardown with its 3D
+  tour lives at /notes/v-jepa/teardown/ (vjepa-explainer.html).
+
+  Sources, read in full and checked on 12 Oct 2026: V-JEPA 2 (arXiv 2506.09985v1)
+  and facebookresearch/vjepa2 @ 204698b; H-JEPA (arXiv 2610.06805v1) and
+  github.com/kevinghst/H-JEPA; I-JEPA (2301.08243), V-JEPA (2404.08471), HWM
+  (2604.03208), LeWM (2603.19312), LeJEPA (2511.08544); two DROID raw episodes.
+
+  Evidence grades: g--m Paper, g--d Code (read or measured), g--t Derived (my
+  calculation or inference), g--w Toy (an interactive illustration, not the
+  paper's model), g--r Open (a proposal or speculation).
+  Depth: data-depth="2" shows from Lecture up, "3" only in Seminar.
+{%- endcomment -%}
+{% include wm-style.html %}
+
+<header class="lr-top" id="lr-top">
+  <a class="lr-top__back" href="/research-ideas/" aria-label="Back to Research resources"><span aria-hidden="true">&larr;</span><span class="txt"> Research resources</span></a>
+  <span class="lr-top__title">How a latent world model works</span>
+  <span class="lr-top__sp"></span>
+  <div class="seg" role="group" aria-label="Depth">
+    <button type="button" data-depth-set="1" aria-pressed="false" title="Ideas and labs only">Overview</button>
+    <button type="button" data-depth-set="2" aria-pressed="true" title="The full lecture">Lecture</button>
+    <button type="button" data-depth-set="3" aria-pressed="false" title="Adds derivations, code details and audit notes">Seminar</button>
+  </div>
+  <button type="button" class="icon-btn" id="lr-theme" aria-label="Switch light or dark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <span class="lr-progress" id="lr-progress"></span>
+</header>
+
+<div id="wm">
+
+<section class="hero" id="top" aria-labelledby="wm-title">
+  <div>
+    <div class="hero__kicker">Interactive lecture &middot; latent world models &middot; 12 Oct 2026</div>
+    <h1 id="wm-title">How a latent world model works, <em>from pixels to plans.</em></h1>
+    <p class="hero__lede">
+      V-JEPA 2 learns to see by predicting hidden video in a feature space it invents. V-JEPA 2-AC turns that encoder into a
+      world model a robot can plan with. H-JEPA stacks such models at several timescales. This lecture takes each one apart,
+      from the input tensor to the output action, with the mathematics, the code that implements it, and sixteen labs in which
+      you train, break and plan with small versions of the same machinery.
+    </p>
+    <div class="hero__meta">
+      <div><b>Papers</b>V-JEPA 2 (2025), H-JEPA (Oct 2026), and their family</div>
+      <div><b>Code</b>facebookresearch/vjepa2, kevinghst/H-JEPA</div>
+      <div><b>Format</b>16 parts, 16 labs, 90 min</div>
+    </div>
+    <div class="hero__cta">
+      <a class="btn btn--ink" href="#wm-what">Start the lecture <span aria-hidden="true">&darr;</span></a>
+      <a class="btn" href="#lab-world">Train and plan with a world model</a>
+      <a class="btn" href="/notes/v-jepa/teardown/">The 3D teardown</a>
+    </div>
+    <blockquote class="hero__quote">
+      A world model answers one question: if I do this, what happens next? A latent world model answers it in a space it
+      learned, not in pixels.
+      <cite>The idea this lecture unpacks</cite>
+    </blockquote>
+  </div>
+  <figure class="hero__fig hero__fig--wm" aria-label="Animation: candidate action sequences fan out in a learned space and the planner narrows them toward the goal">
+    <canvas id="hero-cv" width="1000" height="800"></canvas>
+    <figcaption class="hero__cap"><span>Imagined futures, scored against a goal</span><span>CEM, live</span></figcaption>
+  </figure>
+</section>
+
+<div class="shell">
+  <nav class="rail" aria-label="Syllabus">
+    <p class="rail__h">Syllabus</p>
+    <ol id="rail-list">
+      <li><a href="#wm-what"><span>01</span>What a world model is</a></li>
+      <li><a href="#wm-family"><span>02</span>The family</a></li>
+      <li><a href="#wm-tokens"><span>03</span>Pixels to tokens</a></li>
+      <li><a href="#wm-attn"><span>04</span>Attention and RoPE</a></li>
+      <li><a href="#wm-objective"><span>05</span>The JEPA objective</a></li>
+      <li><a href="#wm-collapse"><span>06</span>Why it does not collapse</a></li>
+      <li><a href="#wm-vjepa2"><span>07</span>V-JEPA 2, end to end</a></li>
+      <li><a href="#wm-acdata"><span>08</span>2-AC: frames, states, actions</a></li>
+      <li><a href="#wm-acpred"><span>09</span>2-AC: predictor, training</a></li>
+      <li><a href="#wm-plan"><span>10</span>Planning: energy, CEM</a></li>
+      <li><a href="#wm-evidence"><span>11</span>What 2-AC achieved</a></li>
+      <li><a href="#wm-hjepa"><span>12</span>H-JEPA: the hierarchy</a></li>
+      <li><a href="#wm-sigreg"><span>13</span>SIGReg and collapse</a></li>
+      <li><a href="#wm-hplan"><span>14</span>Planning top-down</a></li>
+      <li><a href="#wm-eval"><span>15</span>Evaluating world models</a></li>
+      <li><a href="#wm-next"><span>16</span>Directions and sources</a></li>
+    </ol>
+    <p class="rail__foot" id="rail-foot">Depth: Lecture</p>
+  </nav>
+
+  <main class="main" id="wm-main">
+{% include wm-part-1.html %}
+{% include wm-part-2.html %}
+{% include wm-part-3.html %}
+  </main>
+</div>
+</div>
+{% include wm-core.html %}
+{% include wm-labs.html %}
+{% include wm-labs2.html %}

@@ -235,20 +235,22 @@ dives:
         url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/
     idea: video-for-policy-wam
   - id: v-jepa-latent-world-models
-    title: V-JEPA, V-JEPA 2-AC and H-JEPA
-    subtitle: From masked video prediction in feature space to an action-conditioned predictor on a real Franka
-      arm and a hierarchy of latent world models that plans top-down
-    kicker: 'Latent world models · rev. 12 Oct 2026'
-    read: 70 min
-    cta: Open the handbook
+    title: 'How a Latent World Model Works: V-JEPA 2, V-JEPA 2-AC and H-JEPA'
+    subtitle: An interactive lecture from the input tensor to the output action, with the mathematics, the released
+      code and sixteen labs that train, break and plan with small world models in the page
+    kicker: 'Latent world models · lecture, 12 Oct 2026'
+    read: 90 min
+    cta: Open the lecture
     summary: >-
       V-JEPA 2 learns a video encoder by predicting masked tubes of video in a feature space it invents; V-JEPA 2-AC
       freezes that encoder, trains a 300M block-causal predictor on 23k DROID trajectories and plans with the
       cross-entropy method on Franka arms in two unseen labs; H-JEPA (arXiv 2610.06805, Oct 2026) stacks
-      action-conditioned JEPAs at several timescales, each in its own latent space, and plans top-down. This handbook
-      traces the family from I-JEPA, checks every number against the papers and the released code, measures what the
-      DROID loader actually feeds V-JEPA 2-AC, audits the robot evidence with intervals, and adds a hierarchy builder,
-      a cost-geometry toy, a sixteen-step 3D tour and research directions for dexterous manipulation.
+      action-conditioned JEPAs at several timescales, each in its own latent space, and plans top-down. The lecture
+      takes each model apart in sixteen parts: tokenization and 3D-RoPE, the masking and EMA recipe and why it does not
+      collapse, the block-causal predictor, the CEM planner, SIGReg, slow-feature collapse, hierarchical planning and
+      how to evaluate a world model. Sixteen labs run in the page, among them a 12-D latent world model you fit and plan
+      with, a linear JEPA trained live, the attention mask, the released mask sampler and the Fréchet fidelity metric.
+      The earlier teardown, with its 3D tour and evidence audit, stays at /notes/v-jepa/teardown/.
     verdict: >-
       The representation claims are well supported where the protocol is shared: a 20-point frozen-probe lead on SSv2
       over the best image encoder. V-JEPA 2-AC's planning claims are real and thin: 10 trials per cell, a camera tuned
@@ -269,6 +271,10 @@ dives:
       - >-
         Running the released sampler: V-JEPA 2's masks hide 62% and 81% of tokens per clip and the encoder sees 25% and
         6%, not the "about 90%" usually quoted; every deployed V-JEPA 2-AC plan uses horizon 1 and 16 s per action.
+      - >-
+        In the lecture's toy latent world model, CEM with the released planner's momentum reaches 20 of 20 random goals
+        with the camera as trained, 16 of 20 at 60° of rotation and 2 of 20 at 90°: a fitted predictor and a frozen
+        encoder plan well only inside the viewpoint they were fitted on.
     page: /notes/v-jepa/
     tags:
       - JEPA
@@ -285,6 +291,8 @@ dives:
       url: https://arxiv.org/abs/2610.06805
       date: 11 Jun 2025 and 5 Oct 2026
     links:
+      - label: 'The earlier teardown: 3D tour, story mode, evidence audit'
+        url: /notes/v-jepa/teardown/
       - label: 'Code: facebookresearch/vjepa2'
         url: https://github.com/facebookresearch/vjepa2
       - label: 'Code: kevinghst/H-JEPA'

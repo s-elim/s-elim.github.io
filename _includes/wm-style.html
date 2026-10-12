@@ -1,0 +1,70 @@
+{%- comment -%}
+  Styles for the latent world model lecture at /notes/v-jepa/. It reuses the
+  lecture design of /notes/language-eats-robotics/ (ler-style.html) unchanged
+  and adds only the pieces its labs need. No Liquid beyond this comment and
+  the include.
+{%- endcomment -%}
+{% include ler-style.html %}
+<style>
+#wm canvas { display: block; width: 100%; max-width: 100%; border-radius: 10px; background: var(--plot); }
+#wm svg { max-width: 100%; }
+.wm-k { font: 500 .7rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.wm-grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .8rem; }
+@media (max-width: 760px) { .wm-grid2 { grid-template-columns: minmax(0, 1fr); } }
+.wm-pipe { display: flex; flex-wrap: wrap; gap: .35rem; margin: .2rem 0 .8rem; }
+.wm-pipe button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 9px; padding: .4rem .6rem; font: 500 .74rem var(--mono); color: var(--ink-2); cursor: pointer; text-align: left; }
+.wm-pipe button small { display: block; font-size: .62rem; color: var(--ink-3); margin-top: .1rem; }
+.wm-pipe button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.wm-pipe button[aria-pressed="true"] small { color: color-mix(in srgb, var(--paper) 70%, transparent); }
+.wm-shape { font: 500 .8rem var(--mono); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: .5rem .7rem; overflow-x: auto; white-space: pre; margin: .5rem 0; color: var(--ink); }
+.wm-code { font: 400 .76rem/1.6 var(--mono); background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: .8rem 1rem; overflow-x: auto; white-space: pre; margin: 1rem 0; color: var(--ink-2); }
+.wm-code b { color: var(--red); font-weight: 600; }
+.wm-code i { color: var(--ink-3); font-style: normal; }
+.wm-arch svg { width: 100%; height: auto; display: block; }
+.wm-arch svg .blk { cursor: pointer; }
+.wm-arch svg .blk:focus-visible { outline: none; }
+.wm-arch svg .blk:hover rect, .wm-arch svg .blk:focus-visible rect { stroke-width: 2.6; }
+.wm-card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: .8rem .95rem; font-size: .9rem; margin-top: .7rem; }
+.wm-card h4 { margin: 0 0 .3rem; }
+.wm-card dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem .8rem; margin: .4rem 0 0; }
+.wm-card dt { font: 500 .7rem var(--mono); color: var(--ink-3); }
+.wm-card dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .wm-card dl { grid-template-columns: minmax(0, 1fr); } }
+.wm-bars { display: grid; gap: .3rem; }
+.wm-bar { display: grid; grid-template-columns: minmax(6rem, 10rem) minmax(0, 1fr) 6rem; gap: .5rem; align-items: center; font-size: .82rem; }
+.wm-bar .t { position: relative; height: 13px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--line); }
+.wm-bar .f { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: color-mix(in srgb, var(--blue) 55%, transparent); }
+.wm-bar .f.hot { background: var(--red); opacity: .85; }
+.wm-bar .f.ref { background: color-mix(in srgb, var(--ink-3) 45%, transparent); }
+.wm-bar .e { position: absolute; top: 3px; bottom: 3px; border-left: 1.5px solid var(--ink); border-right: 1.5px solid var(--ink); }
+.wm-bar b { font: 600 .74rem var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .wm-bar { grid-template-columns: minmax(0, 1fr) 5.4rem; } .wm-bar .t { grid-column: 1 / -1; grid-row: 2; } }
+.wm-ci { display: block; position: relative; height: 8px; width: 110px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--line); margin-top: .25rem; }
+.wm-ci i { position: absolute; top: 1px; bottom: 1px; border-radius: 3px; background: color-mix(in srgb, var(--blue) 45%, transparent); }
+.wm-ci b { position: absolute; top: -2px; width: 2px; height: 10px; background: var(--ink); }
+.wm-mini { font: 400 .66rem var(--mono); color: var(--ink-3); }
+.wm-flag { display: inline-block; padding: .05rem .45rem; border-radius: 4px; font: 600 .64rem var(--mono); letter-spacing: .04em; color: var(--red); background: var(--red-soft); white-space: nowrap; }
+.wm-flag.ok { color: var(--sage); background: var(--sage-soft); }
+.wm-lin svg { width: 100%; height: auto; display: block; }
+.wm-lin svg .node { cursor: pointer; }
+.wm-lin svg .node:focus-visible { outline: none; }
+.wm-lin svg .node:hover rect, .wm-lin svg .node:focus-visible rect { stroke-width: 2.6; }
+.wm-acc { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin-bottom: .45rem; }
+.wm-acc > button { display: flex; align-items: center; gap: .6rem; width: 100%; padding: .65rem .85rem; border: 0; background: none; text-align: left; cursor: pointer; font: 600 .95rem var(--display); color: var(--ink); }
+.wm-acc > button .n { font: 600 .7rem var(--mono); color: var(--red); }
+.wm-acc > button .chev { margin-left: auto; color: var(--ink-3); transition: transform .18s; }
+.wm-acc > button[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.wm-acc > div { padding: 0 .9rem .85rem 2.2rem; font-size: .92rem; color: var(--ink-2); }
+.wm-dirs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .8rem; margin: 1.2rem 0; }
+@media (min-width: 1240px) { .wm-dirs { margin-right: -300px; grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.wm-dir { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: .95rem 1rem; font-size: .88rem; color: var(--ink-2); }
+.wm-dir h4 { margin: .15rem 0 .45rem; font: 600 1.02rem/1.3 var(--display); color: var(--ink); }
+.wm-dir p { margin: 0 0 .45rem; }
+.wm-dir .cost { font: 500 .7rem var(--mono); color: var(--ink-3); border-top: 1px dashed var(--line-strong); padding-top: .4rem; }
+table.tbl.tp td { font-family: var(--sans); white-space: normal; text-align: left; }
+.hero__fig--wm canvas { aspect-ratio: 5 / 4; }
+.wm-ctls { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .4rem 1rem; margin-bottom: .6rem; }
+.wm-maze { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+@media (max-width: 760px) { .wm-maze { grid-template-columns: minmax(0, 1fr); } }
+#wm canvas.wm-touch { touch-action: manipulation; cursor: crosshair; }
+</style>

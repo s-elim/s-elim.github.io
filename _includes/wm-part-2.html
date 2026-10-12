@@ -1,0 +1,321 @@
+<!-- 07 ===================================================================== -->
+<section class="part" id="wm-vjepa2">
+  <div class="part__num">Part 07</div>
+  <h2>V-JEPA 2, one training step from input to output</h2>
+  <p class="claim">One step takes a batch of 16-frame clips, hides most of each, and updates three networks: the encoder, the
+    predictor and the mask token. The teacher is updated by averaging, not by gradients.
+    <small>Pretraining <span class="g g--m">Paper §2</span> <span class="g g--d">app/vjepa/train.py</span></small></p>
+
+  <div class="lab lab--wide" id="lab-pipe">
+    <div class="lab__head"><span class="lab__tag">Lab 6</span><h3>Follow one clip through the network</h3>
+      <p>Step through the stages. Each shows the tensor shape at that point, what happens to it, and the equation or line of
+        code responsible. Counts are for ViT-g, a 16-frame 256 px clip and the short-range mask at 24 clips per GPU.</p></div>
+    <div style="padding:1rem 1.15rem 0">
+      <div class="wm-pipe" id="pipe-steps" role="group" aria-label="Stages"></div>
+      <svg id="pipe-svg" viewBox="0 0 900 230" role="img" aria-label="Data flow of one pretraining step"></svg>
+    </div>
+    <div style="padding:0 1.15rem 1rem"><div class="wm-card" id="pipe-card" aria-live="polite"></div></div>
+    <div class="lab__foot">
+      <div><h4>Where the numbers come from</h4>Shapes from the paper's Tables 9 and 12; LayerNorm on targets, the per-mask
+        average and the context and target counts (511 and 953 at 24 clips per GPU) from the released training loop and
+        sampler. <span class="g g--m">Paper</span> <span class="g g--d">Code, measured</span></div>
+      <div><h4>Play it</h4><div class="btns"><button type="button" class="btn btn--sm" id="pipe-play">Play all stages</button></div></div>
+    </div>
+  </div>
+
+  <h3>Every architecture in the family, block by block</h3>
+  <p>The same parts recombine across the family: an encoder, a predictor, a target, and a distance. Pick a model and click any
+    block for its shape, its size and what it computes.</p>
+  <div class="lab lab--wide" id="lab-arch">
+    <div class="lab__head"><span class="lab__tag">Lab 7</span><h3>Architecture explorer</h3>
+      <p>Diagrams drawn from each paper's own description and, where public, its code. Arrows carry tensors; the dashed box is
+        what is not trained in that model.</p></div>
+    <div style="padding:1rem 1.15rem">
+      <div class="chips" id="arch-tabs" role="tablist" aria-label="Model"></div>
+      <div class="wm-arch" id="arch-svg"></div>
+      <div class="wm-card" id="arch-card" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <h3>The recipe that made it scale</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Ingredient</th><th>Change</th><th class="num">Average of 6 frozen tasks</th><th class="num">Gain</th></tr></thead>
+      <tbody>
+        <tr><td>V-JEPA baseline</td><td style="white-space:normal">ViT-L/16, VideoMix2M, 90k iterations</td><td class="num">84.2</td><td class="num"></td></tr>
+        <tr><td>Data</td><td style="white-space:normal">2M → 22M videos (VideoMix22M)</td><td class="num">85.2</td><td class="num">+1.0</td></tr>
+        <tr><td>Model</td><td style="white-space:normal">300M → 1B parameters (ViT-g)</td><td class="num">86.7</td><td class="num">+1.5</td></tr>
+        <tr><td>Training length</td><td style="white-space:normal">90k → 252k iterations, warmup-constant-decay</td><td class="num">87.5</td><td class="num">+0.8</td></tr>
+        <tr class="hl"><td>Resolution</td><td style="white-space:normal">256 → 384 px, 16 → 64 frames</td><td class="num">88.2</td><td class="num">+0.7</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="wm-mini" style="margin-top:-.6rem">Paper Fig. 3; each ingredient on top of the previous, one seed each, so the order matters. Progressive resolution (16 frames at 256 px, then a 12k-step cooldown at 64 frames and 384 px) cuts GPU time 8.4× against training at full resolution throughout, which the paper puts at about 60 GPU-years.</p>
+
+  <h3>Using the frozen encoder</h3>
+  <p>After pretraining the encoder is frozen. To measure what it knows, a small <b>attentive probe</b> is trained on top: four
+    transformer blocks whose last one replaces self-attention with cross-attention from a learnable query token q to all the
+    encoder's tokens, then a linear classifier: ŷ = W · softmax(qK<sup>⊤</sup>/√d) V. Only the probe learns. Under one shared
+    protocol, V-JEPA 2 ViT-g reaches 75.3 on Something-Something v2 at 256 px (77.3 at 384 px) against 49.9 to 55.4 for the
+    best image encoders, because SSv2 is about motion, which a single image cannot show. <span class="g g--m">Paper §5, Table 4</span></p>
+  <p data-depth="3">Two figures need care. PerceptionTest 84.0 is accuracy after supervised fine-tuning, while the other rows of
+    its table are zero-shot. And on Epic-Kitchens anticipation (39.7 recall@5), a probe on encoder features alone reaches 39.1;
+    the predictor adds 0.6. <span class="g g--m">Paper Table 8, App. D.2</span></p>
+</section>
+
+<!-- 08 ===================================================================== -->
+<section class="part" id="wm-acdata">
+  <div class="part__num">Part 08</div>
+  <h2>V-JEPA 2-AC: frames, states and actions</h2>
+  <p class="claim">The world model learns from other people's robot logs with no rewards and no task labels: a frame, the
+    gripper's pose in that frame, and nothing else. An action is simply how the pose changed between two frames.
+    <small>Post-training data <span class="g g--m">Paper §3.1</span></small></p>
+  <p>The data is 23k trajectories from DROID, a Franka Panda arm with a two-finger gripper teleoperated in many labs,
+    successes and failures alike, seen from the left exterior camera at 256 × 256. Each frame carries a 7-D end-effector state
+    s = (x, y, z, three Euler angles, gripper opening) in the robot's base frame. The action between two frames is</p>
+  <div class="eq">
+    <math display="block"><msub><mi>a</mi><mi>k</mi></msub><mo>=</mo><msub><mi>s</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>⊖</mo><msub><mi>s</mi><mi>k</mi></msub><mo>=</mo><mo>(</mo><mspace width="0.2em"/><msub><mi>p</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>p</mi><mi>k</mi></msub><mo>,</mo><mspace width="0.4em"/><mi>euler</mi><mo stretchy="false">(</mo><msub><mi>R</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><msubsup><mi>R</mi><mi>k</mi><mo>⊤</mo></msubsup><mo stretchy="false">)</mo><mo>,</mo><mspace width="0.4em"/><msub><mi>g</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>g</mi><mi>k</mi></msub><mspace width="0.2em"/><mo>)</mo></math>
+    <span class="eq__cap">Position difference, the rotation that takes one orientation to the next (as extrinsic xyz Euler angles), gripper difference. From droid.py, poses_to_diffs.</span>
+  </div>
+
+  <div class="lab lab--wide" id="lab-pose">
+    <div class="lab__head"><span class="lab__tag">Lab 8</span><h3>From two gripper poses to one action</h3>
+      <p>Set the gripper's pose in two consecutive frames. The page computes the 7-D action exactly as the loader does, and
+        shows why the rotation part is computed from rotation matrices rather than by subtracting angles.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="pose-cv" width="900" height="460" aria-label="Two gripper poses from above"></canvas></div>
+      <div class="lab__side">
+        <div class="wm-k">Frame k</div>
+        <div class="ctl"><label for="ps-x0">x, y (cm) <output id="ps-xy0-o"></output></label><input type="range" id="ps-x0" min="-30" max="30" step="1" value="-10"><input type="range" id="ps-y0" min="-30" max="30" step="1" value="0"></div>
+        <div class="ctl"><label for="ps-r0">yaw (°) <output id="ps-r0-o"></output></label><input type="range" id="ps-r0" min="-180" max="180" step="1" value="170"></div>
+        <div class="wm-k">Frame k + 1</div>
+        <div class="ctl"><label for="ps-x1">x, y (cm) <output id="ps-xy1-o"></output></label><input type="range" id="ps-x1" min="-30" max="30" step="1" value="2"><input type="range" id="ps-y1" min="-30" max="30" step="1" value="5"></div>
+        <div class="ctl"><label for="ps-r1">yaw (°) <output id="ps-r1-o"></output></label><input type="range" id="ps-r1" min="-180" max="180" step="1" value="-175"></div>
+        <div class="ctl"><label for="ps-pitch">pitch of both (°) <output id="ps-pitch-o"></output></label><input type="range" id="ps-pitch" min="-60" max="60" step="1" value="20"></div>
+        <div class="wm-shape" id="pose-out"></div>
+        <p class="status" id="pose-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Yaw 170° to −175°: the true turn is 15°, but subtracting angles says −345°. The matrix form gives 15°.</li><li>Drag the second position: the translation part is a plain difference, in the robot base frame.</li></ul></div>
+      <div><h4>Detail</h4>Euler angles follow scipy's lowercase "xyz" (extrinsic) convention used by the loader: R = R<sub>z</sub>(γ)R<sub>y</sub>(β)R<sub>x</sub>(α). Roll is fixed at zero here to keep the picture readable. <span class="g g--d">droid.py</span></div>
+    </div>
+  </div>
+
+  <h3>What a "frame" is: the file clock and the wall clock</h3>
+  <p>The paper samples DROID "at 4 frames per second". The loader gets that rate by asking the video file for its frame rate
+    and taking every ⌈rate/4⌉-th frame. DROID's files do not report their capture rate: each holds one frame per 15 Hz control
+    step but is timestamped as if recorded at 60 fps. So the loader takes every fifteenth frame, and consecutive training frames
+    are about one second apart in real time. <span class="g g--d">Code, measured</span></p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Episode, left camera</th><th class="num">Video frames</th><th class="num">File says</th><th class="num">Robot steps</th><th class="num">Camera timestamps span</th><th class="num">File rate</th></tr></thead>
+      <tbody>
+        <tr><td>AUTOLab, 2023-07-07</td><td class="num">220</td><td class="num">3.67 s</td><td class="num">221</td><td class="num">15.6 s</td><td class="num">60 fps</td></tr>
+        <tr><td>RAIL, 2023-04-05</td><td class="num">251</td><td class="num">4.18 s</td><td class="num">252</td><td class="num">17.8 s</td><td class="num">60 fps</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel"><div id="wm-clock"></div></div>
+  <p data-depth="2">Consequences: one step of the world model is about a second of teleoperated motion, which fits the
+    repository's 12.9 cm example step and the planner's 13 cm limit per step. The paper's "videos typically 3–4 seconds long" is
+    their file duration; real episodes run about four times longer, so "under 62 hours" is most likely file time as well. H-JEPA
+    reports the same 60 fps tagging and evaluates the public V-JEPA 2-AC checkpoint "at its native 1 fps".
+    <span class="g g--t">Derived</span> <span class="g g--m">H-JEPA App. J.1</span></p>
+</section>
+
+<!-- 09 ===================================================================== -->
+<section class="part" id="wm-acpred">
+  <div class="part__num">Part 09</div>
+  <h2>V-JEPA 2-AC: the predictor and how it is trained</h2>
+  <p class="claim">The encoder stays frozen. All the learning of dynamics happens in a 300M-parameter predictor that reads the
+    past frames, states and actions, and outputs the next frame's feature map.
+    <small>The action-conditioned predictor <span class="g g--m">Paper §3.1</span> <span class="g g--d">ac_predictor.py</span></small></p>
+  <p>Each frame is encoded on its own (duplicated into a 2-frame tubelet) into 256 tokens of 1408 dimensions, and
+    LayerNormed: z<sub>t</sub> ∈ ℝ<sup>256×1408</sup>. The predictor projects patches to width 1024, embeds the 7-D action and
+    7-D state with two separate linear maps, and lays each time step out as a block of 258 tokens: [a<sub>t</sub>, s<sub>t</sub>,
+    256 patches]. Twenty-four transformer blocks (width 1024, 16 heads) run with a <b>block-causal</b> mask, the two conditioning
+    tokens are dropped, and the patch outputs of block t are read as the prediction of frame t + 1.</p>
+  <div class="wm-code">z        (B, T·256, 1408) → linear → (B, T, 256, 1024)
+a, s     (B, T, 7) → two linears → (B, T, 1, 1024) each
+<b>interleave</b> [a<sub>t</sub>, s<sub>t</sub>, z<sub>t</sub>] per step → (B, T·258, 1024)          <i># T = 16 → 4,128 tokens</i>
+<b>24 blocks</b>  width 1024, 16 heads, block-causal mask; patches use 3D-RoPE, a and s only the time axis
+drop a, s tokens → (B, T·256, 1024) → LN → linear → (B, T·256, 1408) → LN    <i># ẑ<sub>t+1</sub> for every t at once</i></div>
+
+  <div class="lab lab--wide" id="lab-bc">
+    <div class="lab__head"><span class="lab__tag">Lab 9</span><h3>Build the block-causal attention mask</h3>
+      <p>Rows are queries, columns are keys. A token may attend to every token in its own time step, including the action of
+        that step, and to all earlier steps; never to later ones. Patches are drawn as a few cells per step to keep the grid
+        readable.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="bc-cv" width="700" height="700" aria-label="Attention mask grid"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="bc-T">Time steps T <output id="bc-T-o"></output></label><input type="range" id="bc-T" min="1" max="10" step="1" value="4"></div>
+        <div class="ctl"><label for="bc-P">Patch tokens drawn per step <output id="bc-P-o"></output></label><input type="range" id="bc-P" min="1" max="6" step="1" value="3"></div>
+        <label class="chk"><input type="checkbox" id="bc-full"> Compare: plain causal (token by token)</label>
+        <div class="reads">
+          <div class="read"><b id="bc-frac">-</b><span>entries allowed</span></div>
+          <div class="read"><b id="bc-formula">-</b><span>(T + 1) / 2T</span></div>
+        </div>
+        <p class="status" id="bc-status">Hover or tap a cell.</p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Why block-causal</h4>Inside one step, the patches see the action that is about to be applied, so the prediction
+        of frame t + 1 can depend on a<sub>t</sub>. Across steps, nothing sees the future, so one forward pass yields all T next-frame
+        predictions without leakage. <span class="g g--d">build_action_block_causal_attention_mask</span></div>
+      <div><h4>At the paper's size</h4>T = 16 gives 4,128 tokens and (4,128)² ≈ 17M mask entries, 53% of them allowed.
+        <span class="g g--t">Derived</span></div>
+    </div>
+  </div>
+
+  <h3>Two losses: teacher forcing and a short rollout</h3>
+  <div class="eq">
+    <math display="block"><msub><mi>L</mi><mtext>tf</mtext></msub><mo>=</mo><mfrac><mn>1</mn><mi>T</mi></mfrac><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mrow><mo>‖</mo><msub><mi>P</mi><mi>φ</mi></msub><mo stretchy="false">(</mo><msub><mrow><mo stretchy="false">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>,</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>z</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><mrow><mi>t</mi><mo>≤</mo><mi>k</mi></mrow></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>z</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>‖</mo></mrow><mn>1</mn></msub><mo>,</mo><mspace width="1em"/><msub><mi>L</mi><mtext>roll</mtext></msub><mo>=</mo><msub><mrow><mo>‖</mo><msub><mi>P</mi><mi>φ</mi></msub><mo stretchy="false">(</mo><msub><mi>a</mi><mrow><mn>1</mn><mo>:</mo><mi>T</mi></mrow></msub><mo>;</mo><msub><mi>s</mi><mn>1</mn></msub><mo>,</mo><msub><mi>z</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>z</mi><mrow><mi>T</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>‖</mo></mrow><mn>1</mn></msub><mo>,</mo><mspace width="1em"/><mi>L</mi><mo>=</mo><msub><mi>L</mi><mtext>tf</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>roll</mtext></msub></math>
+    <span class="eq__cap">Teacher forcing over T = 15 steps from true latents; the rollout term feeds the model its own prediction for T = 2 steps (Eqs. 2 to 4). The released code averages the per-element absolute error over [ẑ<sub>1</sub>, ẑ<sub>2</sub>].</span>
+  </div>
+  <p>Teacher forcing only ever shows the predictor true past states. A planner, however, feeds it its own predictions. The
+    rollout term exposes the predictor once to its own one-step error. The lab shows why that matters and why the deployed
+    planner never asks for more than one step.</p>
+
+  <div class="lab lab--wide" id="lab-roll">
+    <div class="lab__head"><span class="lab__tag">Lab 10</span><h3>How one-step error compounds</h3>
+      <p>Model the rollout error as e<sub>k+1</sub> = ρ·e<sub>k</sub> + δ: each step adds a fresh error δ, and the model maps
+        the previous error forward with gain ρ, its sensitivity to its own input off the data. Teacher forcing sees only δ.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="roll-cv" width="900" height="460" aria-label="Rollout error against horizon"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="rl-d">One-step error δ <output id="rl-d-o"></output></label><input type="range" id="rl-d" min="0.01" max="0.2" step="0.005" value="0.05"></div>
+        <div class="ctl"><label for="rl-r">Error gain ρ <output id="rl-r-o"></output></label><input type="range" id="rl-r" min="0.5" max="1.3" step="0.01" value="1.08"></div>
+        <div class="ctl"><label for="rl-r2">Gain after rollout training ρ′ <output id="rl-r2-o"></output></label><input type="range" id="rl-r2" min="0.5" max="1.3" step="0.01" value="0.95"></div>
+        <div class="reads">
+          <div class="read"><b id="rl-e1">-</b><span>error at 1 step</span></div>
+          <div class="read"><b id="rl-e8">-</b><span>at 8 steps</span></div>
+          <div class="read"><b id="rl-e8b">-</b><span>at 8, with ρ′</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Read the curve</h4>e<sub>k</sub> = δ(1 − ρ<sup>k</sup>)/(1 − ρ). With ρ &gt; 1 errors grow geometrically, so a
+        model fine at one step can be useless at eight. The rollout term penalises e<sub>2</sub> = δ(1 + ρ), which only a
+        lower ρ can reduce. The markers show the deployed horizon (1), the released planner's (2) and V-JEPA 2.1's longer test
+        (8). <span class="g g--t">Derived</span></div>
+      <div><h4>What it does not show</h4>The paper reports no open-loop error curve, so δ and ρ for the real model are unknown;
+        the sliders are for intuition. <span class="g g--w">Toy</span></div>
+    </div>
+  </div>
+  <p data-depth="2"><b>Training settings.</b> AdamW, batch 256 clips, weight decay 0.04; learning rate warmed from 7.5e-5 to
+    4.25e-4 over 4,500 iterations, held for 85,500, decayed to 0 over 4,500. The released DROID config trains on 8-frame clips
+    (7 teacher-forced steps) rather than 16, on 4 nodes of 8 GPUs. Estimated cost of the full run: on the order of 1,000
+    A100-hours, less with cached encoder features. <span class="g g--m">App. B.1</span> <span class="g g--d">droid-256px-8f.yaml</span> <span class="g g--t">Derived</span></p>
+</section>
+
+<!-- 10 ===================================================================== -->
+<section class="part" id="wm-plan">
+  <div class="part__num">Part 10</div>
+  <h2>Planning: energy, the cross-entropy method, model-predictive control</h2>
+  <p class="claim">To act, encode the current frame and a goal image, imagine the outcome of many candidate actions with the
+    predictor, keep the ones whose imagined future is closest to the goal, refit, repeat. Execute the best first action, look
+    again, and plan again.
+    <small>Planning with V-JEPA 2-AC <span class="g g--m">Paper §3.2</span></small></p>
+  <div class="eq">
+    <math display="block"><mi>E</mi><mo stretchy="false">(</mo><msub><mover><mi>a</mi><mo>^</mo></mover><mrow><mn>1</mn><mo>:</mo><mi>H</mi></mrow></msub><mo stretchy="false">)</mo><mo>=</mo><msub><mrow><mo>‖</mo><mi>P</mi><mo stretchy="false">(</mo><msub><mover><mi>a</mi><mo>^</mo></mover><mrow><mn>1</mn><mo>:</mo><mi>H</mi></mrow></msub><mo>;</mo><msub><mi>s</mi><mi>k</mi></msub><mo>,</mo><msub><mi>z</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>z</mi><mi>g</mi></msub><mo>‖</mo></mrow><mn>1</mn></msub><mo>,</mo><mspace width="1em"/><msubsup><mi>a</mi><mrow><mn>1</mn><mo>:</mo><mi>H</mi></mrow><mo>⋆</mo></msubsup><mo>=</mo><munder><mi>argmin</mi><msub><mover><mi>a</mi><mo>^</mo></mover><mrow><mn>1</mn><mo>:</mo><mi>H</mi></mrow></msub></munder><mi>E</mi><mo>,</mo><mspace width="1em"/><mtext>execute </mtext><msubsup><mi>a</mi><mn>1</mn><mo>⋆</mo></msubsup><mtext>, observe, repeat</mtext></math>
+    <span class="eq__cap">The energy is the mean absolute difference between the predicted feature map H steps ahead and the goal's, over 256 × 1408 numbers. It is a terminal cost, not summed along the way.</span>
+  </div>
+  <p><b>The cross-entropy method (CEM)</b> searches that energy without gradients. Keep a Gaussian over action sequences,
+    initialised at zero mean. Each iteration: draw S candidate sequences, roll each through the predictor, keep the K with the
+    lowest energy (the elites), and refit the mean and spread to them. After the last iteration, return the mean. Deployed
+    settings: S = 800, K = 10, 10 iterations, horizon H = 1, each translation axis clipped to ±7.5 cm. The released planner
+    smooths the refit with momentum, μ ← 0.85·μ<sub>elite</sub> + 0.15·μ (likewise σ), and samples 400 over a horizon of 2.
+    <span class="g g--m">Paper App. B.2</span> <span class="g g--d">mpc_utils.py, world_model_wrapper.py</span></p>
+
+  <div class="lab lab--wide" id="lab-world">
+    <div class="lab__head"><span class="lab__tag">Lab 11</span><h3>Build a latent world model, then plan with it</h3>
+      <p>A dot in a square arena, seen as a 20 × 20 image. A frozen encoder maps each image to a 12-D latent, standing in for
+        the frozen V-JEPA 2 encoder. Collect random interaction, fit an action-conditioned predictor on it, then click anywhere to
+        set a goal image and watch CEM plan in latent space, one step at a time.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage">
+        <canvas id="wd-cv" width="760" height="760" aria-label="Arena with the agent, goal, executed path and imagined candidates"></canvas>
+        <div class="wm-grid2" style="margin-top:.7rem">
+          <canvas id="wd-img" width="420" height="220" aria-label="Current and goal observations in pixels"></canvas>
+          <canvas id="wd-lat" width="420" height="220" aria-label="Current, predicted and goal latents"></canvas>
+        </div>
+      </div>
+      <div class="lab__side">
+        <div class="wm-k">1 · Data and predictor</div>
+        <div class="ctl"><label for="wd-n">Random transitions collected <output id="wd-n-o"></output></label><input type="range" id="wd-n" min="100" max="3000" step="100" value="2000"></div>
+        <div class="btns"><button type="button" class="btn btn--sm" id="wd-fit">Collect and fit</button></div>
+        <div class="reads">
+          <div class="read"><b id="wd-err">-</b><span>one-step error</span></div>
+          <div class="read"><b id="wd-copy">-</b><span>copy-last error</span></div>
+        </div>
+        <div class="wm-k">2 · Planner</div>
+        <div class="ctl"><label for="wd-H">Horizon H <output id="wd-H-o"></output></label><input type="range" id="wd-H" min="1" max="5" step="1" value="3"></div>
+        <div class="ctl"><label for="wd-S">Samples S <output id="wd-S-o"></output></label><input type="range" id="wd-S" min="20" max="400" step="10" value="150"></div>
+        <div class="ctl"><label for="wd-K">Elites K <output id="wd-K-o"></output></label><input type="range" id="wd-K" min="2" max="40" step="1" value="12"></div>
+        <div class="ctl"><label for="wd-I">CEM iterations <output id="wd-I-o"></output></label><input type="range" id="wd-I" min="1" max="10" step="1" value="4"></div>
+        <div class="ctl"><label for="wd-th">Camera rotated at deployment (°) <output id="wd-th-o"></output></label><input type="range" id="wd-th" min="0" max="150" step="5" value="0"></div>
+        <div class="btns"><button type="button" class="btn btn--sm" id="wd-step">One MPC step</button><button type="button" class="btn btn--sm" id="wd-run">Run to goal</button><button type="button" class="btn btn--sm" id="wd-bench">Test 20 episodes</button></div>
+        <div class="reads">
+          <div class="read"><b id="wd-E">-</b><span>energy now</span></div>
+          <div class="read"><b id="wd-d">-</b><span>true distance</span></div>
+          <div class="read"><b id="wd-res">-</b><span>result</span></div>
+        </div>
+        <p class="status" id="wd-status">Click the arena to set a goal.</p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>What is inside</h4><ul><li>Encoder: 12 fixed smooth random fields; z = R·image. Never trained on actions, like V-JEPA 2's encoder.</li><li>Predictor: z′ = z + W·tanh(U[z; a] + b), a 256-unit random hidden layer whose readout W is fitted by ridge regression on the collected transitions.</li><li>Planner: CEM on the L1 energy between the predicted latent H steps ahead and the goal latent, with the released code's momentum; MPC executes the first action.</li></ul></div>
+      <div><h4>Try</h4><ul><li>Fit with 100 transitions, then 2,000: watch the one-step error and the success rate.</li><li>Rotate the camera at deployment. Up to about 60° the planner still arrives along a curved path; past 90° it fails. V-JEPA 2-AC shows the same kind of camera sensitivity (Part 11).</li><li>Run to goal from the default start and watch the shading: the planner follows the energy, the L1 distance in the encoder's space, not the distance in the arena. The straight line crosses a ridge of high energy, so the path bends around it.</li><li>Set K = S: CEM degenerates to averaging random actions.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>The full loop of a latent world model, pixels to plan, small enough to
+        run in your browser. It is not V-JEPA 2-AC: the encoder is not learned, the world has no contact, and the predictor is
+        fitted, not trained by gradient descent. <span class="g g--w">Toy</span></div>
+    </div>
+  </div>
+  <div class="wm-code"><i># V-JEPA 2-AC deployment, as pseudocode (§3.2, App. B.2)</i>
+z<sub>g</sub> = LN(E(goal image))
+<b>loop</b>:
+    z<sub>k</sub>, s<sub>k</sub> = LN(E(current frame)), proprioception
+    μ, σ = 0, 1 for each action coordinate over the horizon
+    <b>repeat</b> 10 times:
+        A = 800 samples ~ N(μ, σ²), each translation axis clipped to ±0.075
+        energy<sub>i</sub> = mean |P(A<sub>i</sub>; s<sub>k</sub>, z<sub>k</sub>) − z<sub>g</sub>|          <i># 256 × 1408 numbers</i>
+        μ, σ = mean and std of the 10 lowest-energy samples
+    execute μ, wait for the arm to finish, observe           <i># pick-and-place: sub-goal 1 for 4 steps, 2 for 10, goal for 4</i></div>
+  <p data-depth="2"><b>Why it takes 16 seconds.</b> One energy evaluation at horizon 1 is one forward pass of a 300M predictor
+    over 258 tokens, about 2 · 3×10⁸ · 258 ≈ 1.5×10¹¹ operations. 800 samples × 10 iterations makes 1.2×10¹⁵ per action, about
+    15 s on an RTX 4090 at half its dense peak, close to the reported 16 s. The Cosmos baseline needs 4 minutes per action for a
+    tenth of the samples. <span class="g g--t">Derived</span> <span class="g g--m">Table 3</span></p>
+</section>
+
+<!-- 11 ===================================================================== -->
+<section class="part" id="wm-evidence">
+  <div class="part__num">Part 11</div>
+  <h2>What V-JEPA 2-AC achieved, and where it stops</h2>
+  <p class="claim">Zero-shot pick-and-place on Franka arms in two labs absent from DROID, with the same weights and code. Each
+    cell is 10 trials, the multi-stage task needs sub-goal images from a person, and the camera was placed by hand.
+    <small>Paper Tables 2 and 3, §4 <span class="g g--m">Paper</span></small></p>
+  <div class="panel">
+    <div class="tbl-wrap" id="wm-ci" style="margin:0;border:0"></div>
+    <p class="wm-mini" style="margin:.6rem 0 0">Both labs pooled, n = 20 per task for V-JEPA 2-AC and Octo; Cosmos ran in Lab 2 only (n = 10). Intervals: 95% Wilson, computed here. <span class="g g--t">Derived</span></p>
+  </div>
+  <h3>From a single goal image</h3>
+  <p>HWM (arXiv 2604.03208) ran the test the paper does not: one goal image, a Franka in one lab, 10 start-goal pairs per object
+    × 5 trials. Its flat baseline is the V-JEPA 2-AC architecture retrained on the same data as HWM's low level; the hierarchy
+    adds a long-horizon predictor in the same latent space. <span class="g g--m">HWM Table 1</span></p>
+  <div class="panel"><div class="tbl-wrap" id="wm-hwm" style="margin:0;border:0"></div>
+    <p class="wm-mini" style="margin:.6rem 0 0">Drawer rates (7 tasks × 5 trials) are not multiples of 1/35, so no counts or intervals can be recovered for them. π0-FAST-DROID and π0.5-DROID are policies fine-tuned on DROID.</p></div>
+  <h3>Three limits the evidence shows</h3>
+  <ul class="dots">
+    <li><b>The camera defines the action frame.</b> For camera positions from about 35° to 85°, the action the model infers for
+      201 random moves is a rotated copy of the executed one, with the rotation error growing almost linearly in the camera
+      angle, about 1.6 cm mean error on 5 cm moves. Lab 11's camera slider reproduces the mechanism. <span class="g g--m">App. B.4</span></li>
+    <li><b>Greedy energy, short horizon.</b> Horizon 1 with a terminal energy cannot plan a task that must first move away
+      from the goal image; that is why pick-and-place needs sub-goals, and why the flat planner scores 0 of 50 in HWM's test.
+      <span class="g g--t">Derived</span></li>
+    <li><b>Small things are a small share of the energy.</b> The energy averages 256 × 1408 numbers equally. A cup covers a
+      handful of the 256 patches, so a near-miss grasp differs from the goal in about 1.6% of the terms, while the whole energy
+      landscape in the paper's Fig. 9 spans only about 10% of its level. <span class="g g--t">Derived</span></li>
+  </ul>
+</section>
