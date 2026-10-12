@@ -1,0 +1,239 @@
+<!-- 11 ===================================================================== -->
+<section class="part" id="distill">
+  <div class="part__num">Part 11</div>
+  <h2>Solve it big, then distill</h2>
+  <p class="claim">Solve general intelligence with a large model, then distill it. Distilling a capable large model beats
+    fine-tuning a small one directly.
+    <small>Talk <span class="g g--t">Talk</span></small></p>
+  <p>The best public evidence comes from language, not robots. DeepSeek-R1 (arXiv 2501.12948) trained the same Qwen-32B
+    base two ways: large-scale RL directly, and distillation from the full R1 model. Distillation won on every benchmark in
+    Table 6. <span class="g g--m">Measured</span></p>
+  <div class="panel"><div class="bars" id="r1-bars"></div>
+    <p style="margin:.7rem 0 0;font-size:.82rem;color:var(--ink-3)" class="mono">Pass@1 (%). Red: distilled from R1. Grey: RL on the small model.</p></div>
+  <p>The paper's own caveat matches the talk's order of operations: going beyond this may still need stronger base models
+    and larger-scale RL, so you solve it big first and distill second. Robotics has no controlled equivalent of Table 6.
+    <span class="g g--r">Reviewer</span></p>
+  <p>The next concrete step the talk named is a GPT-7-nano class model on better chips, and the reason is speed (Part 09).
+    That raises the real question: which abilities go to the edge? <span class="g g--t">Talk</span> The write-up proposes
+    a split by control rate. Move the abilities yourself and see which placements break the loop.</p>
+  <div class="panel">
+    <div class="alloc" id="alloc">
+      <div class="alloc__col" data-col="edge"><h4>On the robot, at control rate</h4></div>
+      <div class="alloc__col" data-col="cloud"><h4>In the cloud, offline or slow</h4></div>
+    </div>
+    <div class="btns" style="margin-top:.8rem">
+      <button type="button" class="btn btn--sm" id="alloc-w">Show the write-up's split</button>
+      <button type="button" class="btn btn--sm" id="alloc-all">Everything in the cloud</button>
+    </div>
+    <p class="status" id="alloc-status" style="margin-top:.7rem"></p>
+  </div>
+</section>
+
+<!-- 12 ===================================================================== -->
+<section class="part" id="scale">
+  <div class="part__num">Part 12</div>
+  <h2>More structure, less scalability</h2>
+  <p class="claim">The more structure a method has, the less it scales. Structure added for today's compute becomes
+    tomorrow's ceiling.
+    <small>Talk, closing slide <span class="g g--t">Talk</span></small></p>
+  <p>The slide's plot carries no data. It restates two older positions: Hyung Won Chung's argument (Stanford CS25, 2024)
+    that the right amount of inductive bias depends on the compute available, and Rich Sutton's bitter lesson.</p>
+  <div class="pull"><q>The biggest lesson that can be read from 70 years of AI research is that general methods that
+    leverage computation are ultimately the most effective, and by a large margin.</q>
+    <cite>Rich Sutton, The Bitter Lesson, 2019</cite></div>
+
+  <div class="lab lab--wide" id="lab-scale">
+    <div class="lab__head"><span class="lab__tag">Lab F</span><h3>When does structure stop paying?</h3>
+      <p>Two methods. Structure raises early performance and lowers the ceiling. Move the structure of each and the
+        compute you have today, and find the crossover.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="sc-cv" width="900" height="520" aria-label="Performance against log compute for two methods"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="sc-a">Structure, method A <output id="sc-a-o"></output></label><input type="range" id="sc-a" min="0" max="1" step="0.01" value="0.75"></div>
+        <div class="ctl"><label for="sc-b">Structure, method B <output id="sc-b-o"></output></label><input type="range" id="sc-b" min="0" max="1" step="0.01" value="0.15"></div>
+        <div class="ctl"><label for="sc-c">Compute today (log10 FLOPs) <output id="sc-c-o"></output></label><input type="range" id="sc-c" min="18" max="28" step="0.1" value="21"></div>
+        <div class="reads">
+          <div class="read"><b id="sc-x">-</b><span>crossover</span></div>
+          <div class="read"><b id="sc-win">-</b><span>wins today</span></div>
+          <div class="read"><b id="sc-gap">-</b><span>ceiling gap</span></div>
+        </div>
+        <p class="status" id="sc-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Give A more structure: it wins earlier and the crossover moves left, but its ceiling drops.</li><li>Slide today's compute past the crossover and the verdict flips.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>The shape of the argument, as on the slide. The curves are a
+        two-parameter sketch with invented constants; whether real robot methods follow them is exactly what Part 13 asks
+        to be measured. <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+  <p>The talk's synthesis: brute-force token projection in the style of ViT, plus agentic loops, plus distillation,
+    outperform heavily engineered inductive biases once compute and verification exist. On this reading language does not
+    replace physics or hardware. It eats the engineering layers that stood between language-scale intelligence and
+    physical competence, slowly at first and then suddenly. <span class="g g--t">Talk</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>Today's best numbers come from systems that add structure back: IK solvers under RoboICL, whole-body controllers
+      under Astra, &pi;0.5 under the hybrid. The trend to track is whether the hybrids' margin over end-to-end models
+      shrinks as base-model compute grows.</p>
+  </aside>
+</section>
+
+<!-- 13 ===================================================================== -->
+<section class="part" id="weak">
+  <div class="part__num">Part 13</div>
+  <h2>Where the thesis is weakest</h2>
+  <p class="lead">Every hot take has a measurable version, and none is settled. The table pairs each with the strongest
+    counter-evidence available today and the experiment that would settle it. The first two columns follow the write-up's
+    own audit; the reviewer notes below them are mine.</p>
+  <div class="tbl-wrap"><table class="tbl" id="weak-tbl">
+    <thead><tr><th>#</th><th>Take</th><th>Strongest counter-evidence</th><th>Test that would settle it</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+
+  <h3>What I would add as a reviewer</h3>
+  <ol class="nums">
+    <li><b>One model carries the case.</b> Nearly every robot result is GPT-6 Astra within five weeks of release, as preprints,
+      leaderboard entries and demos. GPT-5.5 at 0.88% on RoboDojo shows that "language models" is the wrong unit of
+      analysis. <span class="g g--r">Reviewer</span></li>
+    <li><b>The metrics do not line up.</b> RoboICL reports progress scores, RoboDojo success rates and Scores, ENPIRE
+      pass@8, the Galbot report reweighted baselines on tasks chosen for low baseline success, and DeepSeek-Flash ran 10
+      episodes per task against 50 for the others. A sentence that compares two of these numbers needs a protocol flag.
+      <span class="g g--r">Reviewer</span></li>
+    <li><b>Safety is not a column.</b> The only real-robot benchmark attempt with Astra was halted after unsafe actions
+      damaged hardware. None of the twelve takes is stated with a safety metric, yet interventions per hour is the number a
+      deployment needs first. <span class="g g--r">Reviewer</span></li>
+    <li><b>Demo lists are survivor lists.</b> Collections of community demos record what worked. Without the attempts that
+      failed, a demo shows possibility, not rate. <span class="g g--r">Reviewer</span></li>
+  </ol>
+
+  <h3>Experiments, ranked by what they buy per unit of effort</h3>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Experiment</th><th>Settles</th><th>Cost</th><th>Why first</th></tr></thead>
+    <tbody>
+      <tr><td>Report pass@1, recovery rate, verifier false-pass and time per success beside every loop result</td><td>1, 7</td><td>Days; reuse existing rollouts plus a human audit of a sample</td><td>Changes how every later number is read</td></tr>
+      <tr><td>Hold the model fixed and vary only the control language and context format</td><td>2, 3</td><td>About a week of API budget on a sim benchmark</td><td>Separates format from content, which RoboDojo and RoboICL confound</td></tr>
+      <tr><td>Attribute each sim-to-real failure to contact, perception or task coverage</td><td>5, 6</td><td>Weeks; needs a labelled failure set</td><td>Tests whether contact really is the last gap</td></tr>
+      <tr><td>Success under a fixed control-rate budget, with and without reasoning tokens</td><td>9</td><td>Days in sim</td><td>Cheap and directly falsifiable</td></tr>
+      <tr><td>Distill an Astra-class policy into an edge model against fine-tuning the same small model on equal robot data</td><td>11</td><td>Months; the robotics version of R1's Table 6</td><td>The highest-value result, and the most expensive</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 14 ===================================================================== -->
+<section class="part" id="mine">
+  <div class="part__num">Part 14</div>
+  <h2>What this changes for my research</h2>
+  <p class="lead">My work sits on three of the talk's fault lines: world models, agentic policies and the representation a
+    manipulation policy needs. Here is where the argument moves my plans and where I think it is wrong.</p>
+  <h4>World models: a fitted simulator is one</h4>
+  <p>The talk's real2sim objective is the training loss of an action-conditioned world model, with a physics engine as
+    the function class. For the latent world models I build for mobile robots and for latent lookahead in manipulation,
+    the useful import is the evaluation: score rollouts over a horizon and score contact events separately, and keep
+    dynamics fidelity, controllability and downstream planning utility as three axes. RoboJEPA's claim that imagination
+    error predicts planning success is a hypothesis I can test on my own models before trusting it.
+    <span class="g g--r">Reviewer</span></p>
+  <h4>Agentic policies: keep a grounded low level, and report recovery honestly</h4>
+  <p>The hybrid results (48% against 26% on bimanual tasks) support what AFFORD-X and the AGI latent-lookahead work already
+    assume: a reasoning model selects and verifies, and a grounded layer handles metric precision. RoboICL's grammar of
+    observation, action, receipt and observation is a concrete template for an agent's memory of its own attempts. And
+    Lab A is a warning for my own loop numbers: a loop that retries must be reported at pass@1 as well.
+    <span class="g g--r">Reviewer</span></p>
+  <h4>Representation: the outcome decides what is noise</h4>
+  <p>"Exact kinematics are redundant" is the bet behind learning manipulation-sufficient representations through outcome
+    bottlenecks, put in other words: keep what changes the outcome and drop the rest. The insertion counter-case in Part 07
+    is the test such a representation has to pass. <span class="g g--r">Reviewer</span></p>
+  <div class="idea">
+    <div class="idea__mark" aria-hidden="true">!</div>
+    <div>
+      <h4>The idea it raises: agentic loops reported at pass@1, recovery and verifier false-pass</h4>
+      <p>Every agentic manipulation result with retries, mine included, should carry four numbers: first-try success,
+        success within k retries, the recovery rate after a failure, and the share of verifier-passed rollouts a human marks
+        as failures. Cheap to collect from rollouts that already exist, and it pre-empts the first question a reviewer will
+        ask about a 99%.</p>
+      <a href="/research-ideas/#idea-agentic-loop-reliability">See it on the research ideas board &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- 15 ===================================================================== -->
+<section class="part" id="verdict">
+  <div class="part__num">Part 15</div>
+  <h2>Your verdict</h2>
+  <p class="lead">Your credences from Part 02, your answers to the talk's three open questions, and eight questions to
+    check the lecture landed. Everything stays in this browser.</p>
+  <h3>Your credences</h3>
+  <div class="panel"><div class="bars" id="cred-bars"></div>
+    <p class="status" id="cred-sum" style="margin-top:.8rem"></p></div>
+
+  <h3>The three questions the talk left open</h3>
+  <div class="panel" id="stances"></div>
+
+  <h3>Check yourself</h3>
+  <div id="quiz"></div>
+  <p class="status" id="quiz-score">0 of 8 answered</p>
+  <div class="btns" style="margin-top:.8rem">
+    <button type="button" class="btn btn--sm" id="copy-verdict">Copy my verdict as text</button>
+    <span class="mono" id="copy-note" style="font-size:.74rem;color:var(--ink-3)"></span>
+  </div>
+</section>
+
+<!-- 16 ===================================================================== -->
+<section class="part" id="refs">
+  <div class="part__num">Part 16</div>
+  <h2>Sources and glossary</h2>
+  <h3>Glossary</h3>
+  <p style="font-size:.88rem;color:var(--ink-3)">Click a term for the example from this lecture.</p>
+  <div class="gloss" id="gloss"></div>
+
+  <h3>Sources</h3>
+  <div class="refs">
+    <h4>The talk and the write-up</h4>
+    <ul>
+      <li><a href="https://www.linkedin.com/pulse/331-language-eat-robotics-slowly-suddenly-saturday-reading-yn8ce" target="_blank" rel="noopener">Junfan Zhu, Language Will Eat Robotics, Slowly, Then Suddenly (Saturday Robotics #33.1)</a>, 11 Oct 2026</li>
+      <li><a href="https://luma.com/y9omqzz0" target="_blank" rel="noopener">Saturday Robotics &amp; World Model Reading Club #33</a></li>
+    </ul>
+    <h4>Agents and harnesses</h4>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2606.19980" target="_blank" rel="noopener">ENPIRE: Agentic Robot Policy Self-Improvement in the Real World</a>, CoRL 2026 (<a href="https://research.nvidia.com/labs/gear/enpire/" target="_blank" rel="noopener">project</a>)</li>
+      <li><a href="https://arxiv.org/abs/2609.24487" target="_blank" rel="noopener">AgentSTAR: Agentic Shape Tracking and Reconstruction from Monocular Videos</a> (<a href="https://agenticstar.github.io/" target="_blank" rel="noopener">project</a>)</li>
+    </ul>
+    <h4>GPT-6 Astra on robots</h4>
+    <ul>
+      <li><a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI, GPT-6 Astra</a></li>
+      <li><a href="https://arxiv.org/abs/2609.24170" target="_blank" rel="noopener">An Unexpected Robot Policy: Early Evaluations of GPT-6 Astra on RoboDojo and Beyond</a></li>
+      <li><a href="https://arxiv.org/abs/2609.34261" target="_blank" rel="noopener">RoboICL: Embodied In-Context Learning with GPT-6 Astra</a></li>
+      <li><a href="https://arxiv.org/abs/2609.29861" target="_blank" rel="noopener">GPT-6-Astra Lights Up Embodied Navigation (zero-shot VLN-CE)</a></li>
+      <li><a href="https://damodev.csdn.net/6aad07db5c13c42b539d1f3e.html" target="_blank" rel="noopener">GPT 6 Astra as an Embodied Policy (Galbot report, CSDN summary)</a></li>
+      <li><a href="https://openai.robocurve.org/gpt-6-astra/" target="_blank" rel="noopener">RoboCurve: GPT-6 Astra on bimanual YAM arms</a></li>
+      <li><a href="https://github.com/zjwzcx/Awesome-Astra-Embodied-AI" target="_blank" rel="noopener">Awesome-Astra-Embodied-AI</a> (community demos)</li>
+    </ul>
+    <h4>Sim-to-real, world models, architecture</h4>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2511.15200" target="_blank" rel="noopener">VIRAL: Visual Sim-to-Real at Scale for Humanoid Loco-Manipulation</a></li>
+      <li><a href="https://arxiv.org/abs/2610.10515" target="_blank" rel="noopener">RoboJEPA: Scaling Robotic Latent World Models</a></li>
+      <li><a href="https://arxiv.org/abs/2603.15031" target="_blank" rel="noopener">Attention Residuals</a> (Kimi Team)</li>
+      <li><a href="https://www.figure.ai/news/helix" target="_blank" rel="noopener">Helix</a> (Figure)</li>
+      <li><a href="https://www.pi.website/blog/pi05" target="_blank" rel="noopener">&pi;0.5</a> and <a href="https://www.pi.website/research/fast" target="_blank" rel="noopener">FAST</a> (Physical Intelligence)</li>
+      <li><a href="https://arxiv.org/abs/1711.00937" target="_blank" rel="noopener">VQ-VAE</a>, <a href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noopener">ViT</a>, <a href="https://arxiv.org/abs/2403.03181" target="_blank" rel="noopener">VQ-BeT</a></li>
+    </ul>
+    <h4>Hardware tooling</h4>
+    <ul>
+      <li><a href="https://build123d.readthedocs.io/en/latest/joints.html" target="_blank" rel="noopener">build123d joints</a></li>
+      <li><a href="https://onshape-public.github.io/docs/auth/limits/" target="_blank" rel="noopener">Onshape API limits</a></li>
+      <li><a href="https://www.onshape.com/en/blog/featurescript-mcp-server-enables-text-code-cad" target="_blank" rel="noopener">Onshape FeatureScript MCP server</a></li>
+    </ul>
+    <h4>Scaling and distillation</h4>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-R1</a>, Table 6</li>
+      <li><a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html" target="_blank" rel="noopener">Rich Sutton, The Bitter Lesson</a></li>
+      <li><a href="https://www.recall.it/summary/large-language-models/stanford-cs25-v4-i-hyung-won-chung-of-openai" target="_blank" rel="noopener">Hyung Won Chung, Stanford CS25 V4 (summary)</a></li>
+    </ul>
+  </div>
+  <p class="endnote">
+    Built by Md Selim Sarowar on 12 Oct 2026 from Junfan Zhu's write-up of Tonghe Zhang's talk at Saturday Robotics #33.
+    The prose, figures and labs are my own; the talk's claims are paraphrased and attributed. The numbers graded Measured
+    were checked against the cited arXiv papers that day (RoboDojo Table 5 and the 340-pair ICL table, RoboICL, VIRAL,
+    ENPIRE, RoboJEPA, AgentSTAR, Attention Residuals, the VLN-CE report, Onshape's limits page). Numbers graded Write-up
+    come from the article and were not re-checked. Labs are illustrations with stated assumptions, not reproductions.
+  </p>
+</section>

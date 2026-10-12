@@ -1,0 +1,104 @@
+{%- comment -%}
+  "Language will eat robotics" - an interactive lecture.
+
+  _pages/language-eats-robotics.html wraps this in a standalone document at
+  /notes/language-eats-robotics/; scripts/build_dive_artifacts.py can inline the
+  same body as one file. No Liquid beyond this comment and the includes, no
+  <title>, no external script: every lab is plain JavaScript on canvas.
+
+  Source: Junfan Zhu's write-up "Language Will Eat Robotics, Slowly, Then
+  Suddenly" (Saturday Robotics Reading Club #33.1, 11 Oct 2026) of a talk by
+  Tonghe Zhang (CMU Robotics Institute). Read in full on 12 Oct 2026, with the
+  load-bearing numbers checked against the cited arXiv papers the same day.
+  The prose, figures and labs are my own; nothing is copied from the article.
+
+  Evidence grades used on the page:
+    g--m  Measured   a benchmark or real-robot number in a paper
+    g--d  Demo       a community demo or report, not a controlled study
+    g--t  Talk       claimed in the talk or its discussion
+    g--w  Write-up   the article's own reading or proposal
+    g--r  Reviewer   my reading, inference or recommendation
+  Depth levels: data-depth="2" shows from Lecture up, "3" only in Seminar.
+{%- endcomment -%}
+{% include ler-style.html %}
+
+<header class="lr-top" id="lr-top">
+  <a class="lr-top__back" href="/research-ideas/" aria-label="Back to Research resources"><span aria-hidden="true">&larr;</span><span class="txt"> Research resources</span></a>
+  <span class="lr-top__title">Language will eat robotics</span>
+  <span class="lr-top__sp"></span>
+  <div class="seg" role="group" aria-label="Depth">
+    <button type="button" data-depth-set="1" aria-pressed="false" title="Claims and labs only">Overview</button>
+    <button type="button" data-depth-set="2" aria-pressed="true" title="The full lecture">Lecture</button>
+    <button type="button" data-depth-set="3" aria-pressed="false" title="Adds derivations, protocol detail and critique">Seminar</button>
+  </div>
+  <button type="button" class="icon-btn" id="lr-theme" aria-label="Switch light or dark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <span class="lr-progress" id="lr-progress"></span>
+</header>
+
+<div id="ler">
+
+<section class="hero" id="top" aria-labelledby="ler-title">
+  <div>
+    <div class="hero__kicker">Interactive lecture &middot; agentic robotics &middot; 12 Oct 2026</div>
+    <h1 id="ler-title">Language will eat robotics, <em>slowly, then suddenly.</em></h1>
+    <p class="hero__lede">
+      Tonghe Zhang's talk at Saturday Robotics #33 argues that once a frontier language model is capable enough,
+      the old bottlenecks of robot learning turn into loops a coding agent can close. This lecture rebuilds the
+      argument piece by piece, checks each number against the paper it came from, and gives you six labs to test
+      the mechanisms yourself.
+    </p>
+    <div class="hero__meta">
+      <div><b>Speaker</b>Tonghe Zhang, CMU Robotics Institute</div>
+      <div><b>Write-up</b>Junfan Zhu, Saturday Robotics, 11 Oct 2026</div>
+      <div><b>Format</b>16 parts, 6 labs, 45 min</div>
+    </div>
+    <div class="hero__cta">
+      <a class="btn btn--ink" href="#argument">Start the lecture <span aria-hidden="true">&darr;</span></a>
+      <a class="btn" href="#takes">The twelve hot takes</a>
+      <a class="btn" href="#lab-fit">Jump to a lab</a>
+    </div>
+    <blockquote class="hero__quote">
+      The limits of my language mean the limits of my world.
+      <cite>Wittgenstein, Tractatus 5.6, the talk's opening slide</cite>
+    </blockquote>
+  </div>
+  <figure class="hero__fig" aria-label="Sketch: a more structured method leads at low compute and plateaus; a less structured one starts lower and keeps rising">
+    <canvas id="hero-cv" width="1000" height="800"></canvas>
+    <figcaption class="hero__cap"><span>More structure leads early, then stalls</span><span>log compute &rarr;</span></figcaption>
+  </figure>
+</section>
+
+<div class="shell">
+  <nav class="rail" aria-label="Syllabus">
+    <p class="rail__h">Syllabus</p>
+    <ol id="rail-list">
+      <li><a href="#argument"><span>01</span>The argument</a></li>
+      <li><a href="#takes"><span>02</span>Twelve hot takes</a></li>
+      <li><a href="#astra"><span>03</span>What Astra showed</a></li>
+      <li><a href="#reward"><span>04</span>Dexterity as reward</a></li>
+      <li><a href="#real2sim"><span>05</span>Fitting the simulator</a></li>
+      <li><a href="#hardware"><span>06</span>Hardware as code</a></li>
+      <li><a href="#tokens"><span>07</span>Noise and tokens</a></li>
+      <li><a href="#control-language"><span>08</span>A language for control</a></li>
+      <li><a href="#fast-loop"><span>09</span>Control without CoT</a></li>
+      <li><a href="#e2e"><span>10</span>One system or two</a></li>
+      <li><a href="#distill"><span>11</span>Big, then distill</a></li>
+      <li><a href="#scale"><span>12</span>Structure vs scale</a></li>
+      <li><a href="#weak"><span>13</span>Where it is weakest</a></li>
+      <li><a href="#mine"><span>14</span>For my research</a></li>
+      <li><a href="#verdict"><span>15</span>Your verdict</a></li>
+      <li><a href="#refs"><span>16</span>Sources</a></li>
+    </ol>
+    <p class="rail__foot" id="rail-foot">Depth: Lecture</p>
+  </nav>
+
+  <main class="main" id="ler-main">
+{% include ler-part-a.html %}
+{% include ler-part-b.html %}
+{% include ler-part-c.html %}
+  </main>
+</div>
+</div>
+{% include ler-script.html %}

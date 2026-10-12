@@ -1,0 +1,30 @@
+---
+# A standalone lecture with its own design: opt out of the site-wide
+# `layout: single` default so the portfolio chrome does not wrap it.
+layout: null
+permalink: /notes/language-eats-robotics/
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Language Will Eat Robotics · Md Selim Sarowar</title>
+  <meta name="description" content="An interactive lecture on Tonghe Zhang's Saturday Robotics #33 talk: twelve hot takes on how frontier language models turn robotics bottlenecks into agent loops, checked against the papers, with six labs on pass@k, simulator fitting, hardware as code, action tokens, control-rate budgets and structure versus scale.">
+  <link rel="canonical" href="{{ '/notes/language-eats-robotics/' | absolute_url }}">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Language Will Eat Robotics, Slowly, Then Suddenly">
+  <meta property="og:description" content="Twelve hot takes on language models eating the engineering layers of robotics, graded by evidence, with six labs that run in the page.">
+  <meta property="og:url" content="{{ '/notes/language-eats-robotics/' | absolute_url }}">
+  <link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}">
+  <script>
+    try {
+      var t = localStorage.getItem("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+</head>
+<body data-depth="2">
+  {% include ler-lecture.html %}
+</body>
+</html>

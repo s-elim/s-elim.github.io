@@ -220,6 +220,80 @@ themes:
     color: '#ef4444'
     blurb: Where the data comes from and whether the metric measures anything.
 ideas:
+  - id: agentic-loop-reliability
+    title: Report agentic manipulation loops at pass@1, recovery and verifier false-pass
+    theme: agentic
+    also:
+      - data-benchmarks
+      - vla
+    status: spark
+    priority: 4
+    added: '2026-10-12'
+    effort: low
+    risk: low
+    venue: The evaluation section of my agentic-policy papers; a workshop note if the pass@1 to pass@k gap is large
+    summary: >-
+      Every agentic manipulation result that retries should carry four numbers beside its headline: first-try success,
+      success within k retries, the recovery rate after a failure, and the share of verifier-passed rollouts a human marks
+      as failures, with time per success.
+    why: >-
+      ENPIRE's 99% is pass@8 with in-context retries inside one rollout, and first-try reliability is not reported. With
+      three subtasks at 60% first-try success and full recovery, pass@8 is 99.8% while pass@1 is 21.6%; if one failure in
+      ten is unrecoverable, pass@8 falls to about 82%. A verifier that passes 10% of failures inflates the reported number
+      further. Reviewers will ask for this split on any loop result, and the data to answer it usually sits in the rollout
+      logs already.
+    angle: >-
+      Re-score existing loop rollouts: log the attempt index of each subtask success, whether a failed attempt left a
+      retryable state, and wall time; sample 50 verifier-passed rollouts per task family for a blind human audit. Report
+      pass@1 and pass@k for k = 1, 2, 4 and 8, the recovery rate, the false-pass rate with a Wilson interval and time per
+      success, over three seeds. The objection I expect is that pass@k is the deployment metric; the answer is to report
+      both, since recovery and first-try reliability are different capabilities with different costs. Cost: a few days of
+      relabelling plus a few hours of human audit.
+    facts:
+      - label: ENPIRE headline
+        value: 99% success on pin-box organizing, zip-tie fastening and tool use (arXiv 2606.19980, CoRL 2026); the write-up reads it as pass@8 with up to 8 in-context retries per subtask
+      - label: Demonstrations in context
+        value: Naive one-shot demonstrations lowered Astra from 22.9% to 17.9% (image plus end-effector) and 12.9% (text) on 340 matched RoboDojo pairs (arXiv 2609.24170, Table 3)
+      - label: Real-robot safety
+        value: RoboDojo-Real testing with Astra was halted after repeated unsafe actions, some of which damaged hardware (arXiv 2609.24170, Section 5)
+    questions:
+      - How large is the gap between pass@1 and pass@k in my own agentic loop, per task family?
+      - What share of verifier-passed rollouts would a human mark as failures, and does it differ between contact-rich and pick-and-place tasks?
+      - Does recovery rate predict real-robot reliability better than pass@1 does?
+    next:
+      - Add attempt index, a retryable-state flag and wall time to the loop's rollout log.
+      - Re-score the latest loop evaluation at k = 1, 2, 4 and 8 with three seeds.
+      - Draft a 50-rollout blind audit sheet for verifier false-pass.
+    source:
+      kind: linkedin
+      author: Junfan Zhu, writing up a talk by Tonghe Zhang
+      label: 'Language Will Eat Robotics, Slowly, Then Suddenly (Saturday Robotics #33.1), read through my interactive lecture'
+      url: https://s-elim.github.io/notes/language-eats-robotics/
+      captured: '2026-10-12'
+    links:
+      - label: Interactive lecture
+        url: https://s-elim.github.io/notes/language-eats-robotics/
+      - label: The write-up on LinkedIn
+        url: https://www.linkedin.com/pulse/331-language-eat-robotics-slowly-suddenly-saturday-reading-yn8ce
+      - label: ENPIRE (arXiv 2606.19980)
+        url: https://arxiv.org/abs/2606.19980
+      - label: RoboDojo early evaluation of GPT-6 Astra (arXiv 2609.24170)
+        url: https://arxiv.org/abs/2609.24170
+    connects:
+      - 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
+      - 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
+    related:
+      - generative-fidelity-vs-policy
+    tags:
+      - agentic robotics
+      - evaluation
+      - pass@k
+      - verification
+      - reward synthesis
+      - reliability
+    note: >-
+      The 99% comes from the ENPIRE abstract and its pass@8 reading from the write-up; the worked numbers are my own model
+      from Lab A of the lecture, not ENPIRE's per-attempt rates.
   - id: structured-ego-dynamics-wm
     title: Model-structured ego-dynamics inside a latent world model
     theme: world-models

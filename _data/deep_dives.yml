@@ -25,6 +25,59 @@
 # ==========================================================================
 
 dives:
+  - id: language-eats-robotics
+    title: Language Will Eat Robotics
+    subtitle: "Tonghe Zhang's Saturday Robotics #33 talk, rebuilt as an interactive lecture on how frontier
+      language models turn robotics bottlenecks into agent loops"
+    kicker: 'Agentic robotics · 12 Oct 2026'
+    read: 45 min
+    cta: Open the lecture
+    summary: >-
+      The talk argues that once a frontier model is capable enough, dexterity becomes a reward problem, noisy data a
+      representation problem, sim-to-real an optimization an agent can run, and low-level control a question of output
+      format. This lecture walks the twelve hot takes with an evidence grade on each, the full 43-row RoboDojo board, the
+      ENPIRE loop, VIRAL's four sim-to-real gaps and RoboICL's context grammar, and adds six labs that run in the page:
+      reading pass@k, fitting a simulator, hardware as code, action tokenization, control-rate budgets and structure
+      against scale.
+    verdict: >-
+      The evidence supports a narrower claim than the slogan. One model, GPT-6 Astra, inherits semantic generalization,
+      navigation and in-context learning without robot data (81.3% zero-shot on R2R-CE-100; real-robot progress from
+      14.45 to 78.89 with three demonstrations), and an agent loop can push dexterous tasks to 99% at pass@8. It does not
+      yet support precision (4.00% on RoboDojo precision tasks), first-try reliability, safe real-robot control
+      (RoboDojo-Real was halted after unsafe actions) or the end-to-end claim, since the best bimanual number comes from a
+      hybrid (48% against 26%).
+    highlights:
+      - >-
+        Astra leads RoboDojo at 22.48% average success and 31.00% on open tasks, yet scores 4.00% on precision, where the
+        best public policy reaches 20.42%; GPT-5.5 manages 0.88% through the same interface.
+      - >-
+        Format beats content in context: naive one-shot demonstrations cut Astra's success from 22.9% to 17.9% and
+        12.9%, while RoboICL's observation, action, receipt, observation grammar adds 20 to 27 progress points.
+      - >-
+        ENPIRE's 99% is pass@8 with in-context retries; three 60% subtasks with full recovery give 99.8% at k = 8 and
+        21.6% on the first try.
+      - >-
+        Fitting a simulator over a multi-step horizon identifies parameters that one-step fitting cannot, and the error
+        that remains concentrates at contact, the gap the talk calls the last one.
+    page: /notes/language-eats-robotics/
+    tags: [agentic robotics, GPT-6 Astra, ENPIRE, real2sim, world models, action tokenization, VLA, evaluation]
+    source:
+      label: 'Junfan Zhu, Language Will Eat Robotics, Slowly, Then Suddenly (Saturday Robotics Reading Club #33.1), on a talk by Tonghe Zhang'
+      url: https://www.linkedin.com/pulse/331-language-eat-robotics-slowly-suddenly-saturday-reading-yn8ce
+      date: 11 Oct 2026
+    links:
+      - label: ENPIRE (arXiv 2606.19980)
+        url: https://arxiv.org/abs/2606.19980
+      - label: RoboDojo early evaluation of GPT-6 Astra (arXiv 2609.24170)
+        url: https://arxiv.org/abs/2609.24170
+      - label: RoboICL (arXiv 2609.34261)
+        url: https://arxiv.org/abs/2609.34261
+      - label: VIRAL (arXiv 2511.15200)
+        url: https://arxiv.org/abs/2511.15200
+      - label: RoboJEPA (arXiv 2610.10515)
+        url: https://arxiv.org/abs/2610.10515
+    idea: agentic-loop-reliability
+
   - id: mujoco-course
     title: MuJoCo, from Zero to Research
     subtitle: An interactive course that runs MuJoCo 3.14.0 in the browser, from a falling ball to

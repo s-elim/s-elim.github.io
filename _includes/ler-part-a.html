@@ -1,0 +1,339 @@
+<!-- 01 ===================================================================== -->
+<section class="part" id="argument">
+  <div class="part__num">Part 01</div>
+  <h2>The argument on one slide</h2>
+  <p class="claim">Once general capability in the base model outgrows the robotics-specific stack, four classic
+    bottlenecks stop being research problems and become loops a coding agent can close.
+    <small>Tonghe Zhang, Saturday Robotics #33 <span class="g g--t">Talk</span></small></p>
+
+  <p class="lead">
+    The talk's word for this is that frontier models "overflow absolute intelligence". The write-up reads it as general
+    capability spilling over into robotics, and names GPT-6 Astra as the first model where that has started. Strip the
+    slogan away and the talk makes four reductions and two meta-claims. Click a bottleneck to see what it used to cost and
+    what the talk says replaces it.
+  </p>
+
+  <div class="cards4" id="bn-cards" role="group" aria-label="The four bottlenecks">
+    <button type="button" class="flip" data-bn="0"><small>Bottleneck 1</small><b>Dexterity</b><span>becomes a reward problem</span></button>
+    <button type="button" class="flip" data-bn="1"><small>Bottleneck 2</small><b>Noisy demonstrations</b><span>become a representation problem</span></button>
+    <button type="button" class="flip" data-bn="2"><small>Bottleneck 3</small><b>Sim-to-real</b><span>becomes agentic optimization</span></button>
+    <button type="button" class="flip" data-bn="3"><small>Bottleneck 4</small><b>Low-level control</b><span>is forced out by the output format</span></button>
+  </div>
+  <div class="detail" id="bn-detail" aria-live="polite"></div>
+
+  <h3>Two meta-claims frame the rest</h3>
+  <ol class="nums">
+    <li><b>End-to-end wins wherever it is feasible.</b> A System 1 and System 2 split is a stage on the way, not the
+      destination. <span class="g g--t">Talk</span></li>
+    <li><b>Structure is a temporary scaffold.</b> Every hand-designed interface buys performance at today's compute and
+      costs scalability later. <span class="g g--t">Talk</span></li>
+  </ol>
+
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>Almost every robot number behind this talk comes from one model, GPT-6 Astra, measured within five weeks of its
+      launch. GPT-5.5 scores 0.88% on the same benchmark through the same interface. Read the thesis as a claim about
+      where one model family is heading, not about language models as a class.</p>
+  </aside>
+
+  <h3>How to read this lecture</h3>
+  <p>Every claim carries a grade, because the evidence behind the twelve hot takes ranges from controlled benchmarks to a
+    sentence said in discussion.</p>
+  <div class="legend">
+    <div><span class="g g--m">Measured</span><br>A benchmark or real-robot number in a paper I checked.</div>
+    <div><span class="g g--d">Demo</span><br>A community demo or report. Real, but not a controlled study.</div>
+    <div><span class="g g--t">Talk</span><br>Claimed in the talk or the discussion after it.</div>
+    <div><span class="g g--w">Write-up</span><br>The article's own reading, proposal or detail I could not re-check.</div>
+    <div><span class="g g--r">Reviewer</span><br>My reading, inference or recommendation.</div>
+  </div>
+  <p>The switch at the top sets the depth. <b>Overview</b> keeps the claims and the labs. <b>Lecture</b> adds the
+    explanations. <b>Seminar</b> adds protocol detail, derivations and the critique a reviewer would raise.</p>
+  <p class="depth-note">Seminar mode shows extra protocol notes in most parts.</p>
+
+  <div data-depth="3" class="panel">
+    <h4>Three words that change the numbers</h4>
+    <ul class="dots">
+      <li><b>Zero-shot</b> means zero weight updates, not zero context. RoboICL's no-demonstration setting still feeds task
+        text, history and execution feedback into the prompt. <span class="g g--m">Measured</span></li>
+      <li><b>Progress score</b> (RoboICL, the RoboDojo Score) gives partial credit per stage; <b>success rate</b> does not.
+        RoboDojo reports both: Astra's 28.97 Score is 22.48% success. Never compare one with the other.
+        <span class="g g--m">Measured</span></li>
+      <li><b>pass@k</b> in ENPIRE allows up to k in-context retries per subtask inside one rollout. It measures recovery,
+        not first-try reliability. Part 04 has a lab for it. <span class="g g--w">Write-up</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 ===================================================================== -->
+<section class="part" id="takes">
+  <div class="part__num">Part 02</div>
+  <h2>Twelve hot takes, and how much to believe each</h2>
+  <p class="lead">The talk and the discussion after it produced twelve claims. Each card gives the claim in my words,
+    the grade of its best evidence, and a slider for your own credence that it holds by 2030. Open a card for the
+    strongest counter-evidence and the experiment that would settle it. Your answers stay in this browser and come back
+    in Part 15.</p>
+  <div class="btns">
+    <button type="button" class="btn btn--sm" id="takes-reset">Reset my credences</button>
+    <button type="button" class="btn btn--sm" id="takes-open">Open all cards</button>
+  </div>
+  <div class="takes" id="takes-grid"></div>
+</section>
+
+<!-- 03 ===================================================================== -->
+<section class="part" id="astra">
+  <div class="part__num">Part 03</div>
+  <h2>What GPT-6 Astra actually showed</h2>
+  <p class="claim">Astra ranks first of 43 entries on RoboDojo and is still far from reliable: 22.48% average success,
+    4.00% on precision tasks.
+    <small>Zhang et al., arXiv 2609.24170, leaderboard snapshot of 10 Sep 2026 <span class="g g--m">Measured</span></small></p>
+
+  <p>OpenAI released GPT-6 Astra in September 2026. The launch page claims no robot control at all: it shows CAD tool use
+    (95.9% geometric overlap on BenchCAD with tools), a Blender house turned into a walkable Unreal Engine 5 scene, and a
+    schematic routed into a manufacturable PCB. <span class="g g--w">Write-up</span> The robot evidence came from other
+    groups within weeks, and the most careful of it is the RoboDojo early evaluation: three language models run as the
+    policy on all 42 tasks, with Astra and GPT-5.5 at the official 50 episodes per task (2,100 trials each).</p>
+
+  <div class="lab lab--wide" id="lab-board">
+    <div class="lab__head"><span class="lab__tag">Explorer</span><h3>The RoboDojo board, all 43 rows</h3>
+      <p>Success rate per category. Pick a category to re-sort. Language models are drawn in red; &pi;0.5 in blue.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage">
+        <div class="chips" id="rd-cats" role="group" aria-label="Category"></div>
+        <canvas id="rd-cv" width="900" height="560" aria-label="Bar chart of RoboDojo success rates"></canvas>
+      </div>
+      <div class="lab__side">
+        <div class="reads">
+          <div class="read"><b id="rd-astra">22.48</b><span>Astra, % success</span></div>
+          <div class="read"><b id="rd-best">19.34</b><span id="rd-best-l">best policy</span></div>
+          <div class="read"><b id="rd-rank">1</b><span>Astra rank</span></div>
+        </div>
+        <canvas id="rd-prof" width="520" height="330" aria-label="Astra against the best public policy per category"></canvas>
+        <p class="status" id="rd-note">Astra leads on Generalization, Open and the average, is second on Memory, and trails
+          the top policies on Precision and Long-horizon.</p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>What it shows</h4>A sharply polarized profile. Astra wins where the task is semantic (Open: 31.00% against
+        4.42% for the best public policy) and loses where it is metric (Precision: 4.00% against 20.42%).</div>
+      <div><h4>Protocol notes</h4>Astra and GPT-5.5: 50 episodes per task. DeepSeek-Flash: 10 per task, so its row is
+        noisier. All three LLMs share the same action interface and post-processing.</div>
+    </div>
+  </div>
+
+  <h3>In-context learning is not automatic</h3>
+  <p>The same paper tested one-shot demonstrations on 340 matched task-layout pairs, the demonstration coming from a
+    different layout of the same task. Both kinds of demonstration made Astra worse. <span class="g g--m">Measured</span></p>
+  <div class="panel">
+    <div class="bars" id="icl-bars"></div>
+    <p class="mono" style="margin:.7rem 0 0;font-size:.74rem;color:var(--ink-3)">78/340, 61/340 and 44/340 successes.
+      On the 19 tasks where zero-shot succeeded at least once: 41.1%, 31.1%, 23.2%.</p>
+  </div>
+  <p>RoboICL, from a different group, gets the opposite result by changing the format of the context rather than its
+    content: +20 to +27 progress points over official zero-shot Astra in every category of 30 RoboDojo tasks, and on three real-robot
+    tasks a rise from 14.45 to 63.33 to 78.89 mean progress with zero, one and three demonstrations, all without weight
+    updates. <span class="g g--m">Measured</span> Part 08 takes that format apart.</p>
+
+  <h3>Where it wins, and where it breaks</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Result</th><th class="num">Number</th><th>Protocol</th><th>Grade</th></tr></thead>
+      <tbody>
+        <tr><td>Zero-shot vision-and-language navigation, R2R-CE-100, highest reasoning mode</td><td class="num">81.3%</td><td>100 episodes, monocular RGB, Codex harness; +15.3 over best zero-shot, +9.2 over best trained</td><td><span class="g g--m">Measured</span></td></tr>
+        <tr><td>Bimanual RoboDojo tasks, &pi;0.5 + Astra hybrid vs Astra alone</td><td class="num">48% vs 26%</td><td>&pi;0.5 public reference 15.67%</td><td><span class="g g--w">Write-up</span></td></tr>
+        <tr><td>Single-arm RoboLab tasks, Astra alone vs hybrid</td><td class="num">98% vs 92%</td><td>Simpler tasks; reported in the write-up</td><td><span class="g g--w">Write-up</span></td></tr>
+        <tr><td>Galbot hybrid: share of control steps Astra rewrote</td><td class="num">14.4%</td><td>10 tasks &times; 5 trials, chosen for low baseline success; baselines reweighted, not rerun</td><td><span class="g g--d">Demo</span></td></tr>
+        <tr><td>RoboDojo-Real protocol</td><td class="num">halted</td><td>Repeated physically unreasonable or unsafe actions; some damaged hardware, nobody hurt</td><td><span class="g g--m">Measured</span></td></tr>
+        <tr><td>Unitree Go1, 50 Hz joint control</td><td class="num">250 calls &asymp; 5 s</td><td>Simulator paused between calls</td><td><span class="g g--d">Demo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p data-depth="2">Community demos collected in Awesome-Astra-Embodied-AI add the colour: a replayable MuJoCo and Blender
+    simulator built from multi-view robot data and one prompt, simulated hands on a Rubik's Cube, joint-to-end-effector
+    control learned in about 30 minutes, and Astra planning for FluxVLA, SONIC on a Unitree G1 and whole-body controllers.
+    <span class="g g--d">Demo</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>The RoboDojo authors write that their result "does not generalize to LLMs as a class". GPT-5.5 at 0.88% under the
+      identical interface is the control that proves it: the action conversion is not doing the work.</p>
+  </aside>
+  <p class="claim" style="font-size:1.12rem">The measurements support Astra as a policy for semantics and generalization.
+    They do not yet support it for precision, contact or speed. <small>My summary of Part 03 <span class="g g--r">Reviewer</span></small></p>
+</section>
+
+<!-- 04 ===================================================================== -->
+<section class="part" id="reward">
+  <div class="part__num">Part 04</div>
+  <h2>Dexterity is a reward problem</h2>
+  <p class="claim">The difficulty runs Reasoning &gt;&gt; Dexterity &gt;&gt; Speed. Language models already hold the
+    hardest one, and a coding agent makes a good reward model for the second.
+    <small>Talk <span class="g g--t">Talk</span></small></p>
+  <p>If a reliable reward exists, dexterity stops being the fundamental obstacle: reinforcement learning, search or plain
+    retrying can climb toward it. The new step is who writes the reward. A coding agent can turn demonstrations, sensor
+    streams or camera views into a binary or scalar verifier, which is what ENPIRE does.</p>
+
+  <h3>ENPIRE: the loop, concretely</h3>
+  <p>ENPIRE (Xiao, Xie, Zhang et al., arXiv 2606.19980, CoRL 2026) is the speaker's own framework, from NVIDIA, CMU and UC
+    Berkeley. Its name spells the loop. Click a stage, or let it run.</p>
+  <div class="loop panel">
+    <svg id="loop-svg" viewBox="0 0 300 300" role="group" aria-label="The ENPIRE loop"></svg>
+    <div>
+      <div class="btns" style="margin-bottom:.6rem"><button type="button" class="btn btn--sm" id="loop-play">Play the loop</button></div>
+      <div id="loop-detail" aria-live="polite"></div>
+    </div>
+  </div>
+  <p>The agents are off the shelf: Codex with GPT-5.5, Claude Code with Opus 4.7, Kimi Code with Kimi K2.6. Tasks include
+    organizing a pin box, fastening and cutting zip ties, pin and GPU insertion, Push-T and tool use. For zip-tie
+    insertion the agents wrote the reward themselves, from object detectors and segmentation models on two cameras.
+    <span class="g g--w">Write-up</span> The paper reports a 99% success rate on these tasks, and faster progress when a
+    team of agents shares a robot fleet. <span class="g g--m">Measured</span></p>
+
+  <div class="lab lab--wide" id="lab-pass">
+    <div class="lab__head"><span class="lab__tag">Lab A</span><h3>Read a 99% correctly</h3>
+      <p>A long task has n subtasks. Each attempt succeeds with probability p. A failure leaves a retryable state with
+        probability r, and the verifier wrongly passes a failure with probability f. Retries stop at k.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="pk-cv" width="900" height="520" aria-label="Task success against the retry budget k"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="pk-p">First-try success p <output id="pk-p-o"></output></label><input type="range" id="pk-p" min="0.05" max="0.99" step="0.01" value="0.6"></div>
+        <div class="ctl"><label for="pk-r">Recovery r <output id="pk-r-o"></output></label><input type="range" id="pk-r" min="0" max="1" step="0.01" value="1"></div>
+        <div class="ctl"><label for="pk-k">Retry budget k <output id="pk-k-o"></output></label><input type="range" id="pk-k" min="1" max="16" step="1" value="8"></div>
+        <div class="ctl"><label for="pk-n">Subtasks n <output id="pk-n-o"></output></label><input type="range" id="pk-n" min="1" max="8" step="1" value="3"></div>
+        <div class="ctl"><label for="pk-f">Verifier false-pass f <output id="pk-f-o"></output></label><input type="range" id="pk-f" min="0" max="0.3" step="0.01" value="0"></div>
+        <div class="btns">
+          <button type="button" class="btn btn--sm" data-pk="0.6,1,8,3,0">A 99% at k = 8</button>
+          <button type="button" class="btn btn--sm" data-pk="0.6,0,8,3,0">No recovery</button>
+          <button type="button" class="btn btn--sm" data-pk="0.6,0.9,8,3,0">Some dead ends</button>
+          <button type="button" class="btn btn--sm" data-pk="0.6,1,8,3,0.1">Leaky verifier</button>
+        </div>
+        <div class="reads">
+          <div class="read"><b id="pk-1">-</b><span>first try</span></div>
+          <div class="read"><b id="pk-true">-</b><span>true pass@k</span></div>
+          <div class="read"><b id="pk-rep">-</b><span>reported</span></div>
+          <div class="read"><b id="pk-att">-</b><span>attempts per task</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Press "A 99% at k = 8": three subtasks at 60% each, every failure recoverable, reach 99.8% with retries and 21.6% on the first try.</li><li>Press "Some dead ends": one failure in ten leaves an unrecoverable state, and 99.8% falls to about 82%.</li><li>Set r to 0. The retries buy nothing: a policy that cannot recover stays at pass@1.</li><li>Add a 10% false-pass rate and watch reported success pull away from true success.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>pass@k with in-context retries measures recovery, which is what a
+        deployed robot needs, but it says nothing about first-try reliability or time per success. The model here is
+        mine; ENPIRE's own per-attempt rates are not reported in this form. <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+
+  <h3>Verification is the currency</h3>
+  <p>The discussion's larger bet: break a hard-to-verify task into semi-verifiable pieces, then brute-force the
+    self-improvement loop. ENPIRE scores each subtask of a long rollout for exactly this reason. Add sandboxes, tens of
+    thousands of Mac minis for software or a borrowed fleet of 1,000 robots for hardware, and with efficient sampling plus
+    clear verification every robot problem becomes recursive self-improvement. <span class="g g--t">Talk</span></p>
+  <p data-depth="2">Why reinforcement learning and not imitation? Because a model sampling a trajectory cannot know in
+    advance that this way of doing it will work. Only an outcome check tells it, and RL is the machinery that learns from
+    the check. Contact-rich loops may still refuse to close on their own and need a carefully designed reward.
+    <span class="g g--t">Talk</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>Verifiers can be gamed, which is the reward-hacking problem VIRAL warned about in other words. The number I want
+      next to any loop result is the share of verifier-passed rollouts that a human judges as failures.</p>
+  </aside>
+</section>
+
+<!-- 05 ===================================================================== -->
+<section class="part" id="real2sim">
+  <div class="part__num">Part 05</div>
+  <h2>Sim-to-real becomes curve fitting</h2>
+  <p class="claim">Spend tokens to buy diversity. Bring real scenes and motions into the simulator, fit its parameters
+    until it matches them, and the fitted simulator is an action-conditioned world model.
+    <small>Talk, slide "Automatic real2sim2real" <span class="g g--t">Talk</span></small></p>
+
+  <h3>Before agents: VIRAL's four coverage gaps</h3>
+  <p>VIRAL (He et al., arXiv 2511.15200) is a sim-to-real success. A privileged RL teacher trains on 16 GPUs, a vision
+    student distills from it on 64 GPUs with tiled rendering in Isaac Lab, and the student runs zero-shot on a Unitree G1,
+    succeeding in 54 of 59 consecutive real trials. <span class="g g--m">Measured</span> Its own limitations section still
+    concludes that scaling the recipe to general loco-manipulation "is likely out of reach for the near future", and names
+    four gaps. Click each.</p>
+  <div class="cards4" id="gap-cards" role="group" aria-label="VIRAL's four gaps">
+    <button type="button" class="flip" data-gap="0"><small>Gap 1</small><b>Physics coverage</b><span>every material needs tuning</span></button>
+    <button type="button" class="flip" data-gap="1"><small>Gap 2</small><b>Task coverage</b><span>scenes people must author</span></button>
+    <button type="button" class="flip" data-gap="2"><small>Gap 3</small><b>Reward coverage</b><span>dense vs sparse, per task</span></button>
+    <button type="button" class="flip" data-gap="3"><small>Gap 4</small><b>Hardware coverage</b><span>hands nobody has modelled</span></button>
+  </div>
+  <div class="detail" id="gap-detail" aria-live="polite"></div>
+  <p>The write-up's reading: most of each gap is labor (tuning materials, authoring scenes, shaping rewards, identifying
+    hardware), and labor is what coding agents automate. Unknown unknowns are the exception, since no authoring finds them
+    before deployment. Seven of VIRAL's fourteen authors are also on ENPIRE, which reads as the same group answering its own
+    limitations section. <span class="g g--w">Write-up</span></p>
+
+  <h3>After agents: the simulator is a model you fit</h3>
+  <p>Collect real trajectories, roll the simulator forward from the same starting states under the same actions, and
+    adjust its parameters until the rollouts match:</p>
+  <div class="eq">
+    <math display="block"><msup><mi>&theta;</mi><mo>&lowast;</mo></msup><mo>=</mo><munder><mrow><mi>arg</mi><mo>&#x2061;</mo><mi>min</mi></mrow><mi>&theta;</mi></munder><mspace width="0.2em"/><munder><mo>&sum;</mo><mrow><mi>&tau;</mi><mo>&isin;</mo><msub><mi mathvariant="script">D</mi><mtext>real</mtext></msub></mrow></munder><munderover><mo>&sum;</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>H</mi></munderover><msup><mrow><mo>&#x2016;</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mi>k</mi></mrow></msub><mo>&minus;</mo><msub><mover><mi>s</mi><mo>^</mo></mover><mrow><mi>t</mi><mo>+</mo><mi>k</mi></mrow></msub><mo stretchy="false">(</mo><mi>&theta;</mi><mo stretchy="false">)</mo><mo>&#x2016;</mo></mrow><mn>2</mn></msup></math>
+    <math display="block"><msub><mover><mi>s</mi><mo>^</mo></mover><mrow><mi>t</mi><mo>+</mo><mi>k</mi></mrow></msub><mo>=</mo><msub><mi>f</mi><mi>&theta;</mi></msub><mo stretchy="false">(</mo><msub><mover><mi>s</mi><mo>^</mo></mover><mrow><mi>t</mi><mo>+</mo><mi>k</mi><mo>&minus;</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>a</mi><mrow><mi>t</mi><mo>+</mo><mi>k</mi><mo>&minus;</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo><mo>,</mo><mspace width="1em"/><msub><mover><mi>s</mi><mo>^</mo></mover><mi>t</mi></msub><mo>=</mo><msub><mi>s</mi><mi>t</mi></msub></math>
+    <span class="eq__cap">f&theta; is the simulator with its masses, friction, damping, stiffness, contact and rendering parameters; H is the rollout horizon.</span>
+  </div>
+  <p>Two details carry the idea. The rollout horizon H matters: scoring one step at a time hides drift, because a one-step
+    error is smaller than sensor noise. And a simulator that predicts the next state from the current state and action is,
+    by definition, an action-conditioned world model. With a differentiable simulator this is gradient descent; without one
+    the same objective runs under black-box search. <span class="g g--w">Write-up</span></p>
+
+  <div class="lab lab--wide" id="lab-fit">
+    <div class="lab__head"><span class="lab__tag">Lab B</span><h3>Fit a simulator to a real push</h3>
+      <p>A block is pushed along a track into a wall, three times with different pushes. The "real" data come from hidden
+        parameters plus 1.5 mm sensor noise. Fit the simulator's mass, friction and contact offset to it.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage">
+        <canvas id="fit-cv" width="900" height="420" aria-label="Real and simulated block positions over time"></canvas>
+        <canvas id="fit-land" width="900" height="300" style="margin-top:.7rem" aria-label="Loss landscape over friction and contact offset"></canvas>
+      </div>
+      <div class="lab__side">
+        <div class="ctl"><label for="fit-m">Mass m (kg) <output id="fit-m-o"></output></label><input type="range" id="fit-m" min="0.5" max="2.5" step="0.01" value="1.8"></div>
+        <div class="ctl"><label for="fit-mu">Friction &mu; <output id="fit-mu-o"></output></label><input type="range" id="fit-mu" min="0.05" max="0.6" step="0.005" value="0.12"></div>
+        <div class="ctl"><label for="fit-d">Contact offset &delta; (mm) <output id="fit-d-o"></output></label><input type="range" id="fit-d" min="-30" max="30" step="0.5" value="-10"></div>
+        <div class="ctl"><label for="fit-h">Loss horizon H (steps of 5 ms) <output id="fit-h-o"></output></label><input type="range" id="fit-h" min="1" max="80" step="1" value="1"></div>
+        <label class="chk"><input type="checkbox" id="fit-c" checked> Simulator has a contact-offset parameter</label>
+        <div class="btns">
+          <button type="button" class="btn btn--sm" id="fit-go">Fit by gradient descent</button>
+          <button type="button" class="btn btn--sm" id="fit-reset">Reset</button>
+          <button type="button" class="btn btn--sm" id="fit-reveal">Reveal truth</button>
+        </div>
+        <div class="reads">
+          <div class="read"><b id="fit-l1">-</b><span>1-step loss</span></div>
+          <div class="read"><b id="fit-lh">-</b><span>H-step loss</span></div>
+          <div class="read"><b id="fit-ct">-</b><span>contact time error</span></div>
+        </div>
+        <p class="status" id="fit-status">Start with H = 1 and press Fit. Then set H to 60 and fit again.</p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Fit at H = 1: the landscape below is nearly flat, and the fit stops anywhere.</li><li>Fit at H = 60: the bowl appears and the parameters land near the truth.</li><li>Untick the contact parameter and fit again: free motion matches, contact timing does not, and the residual spikes at the wall.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>Why multi-step fitting identifies parameters that one-step fitting
+        cannot, and why the error that remains concentrates at contact. It is a 1D toy with one hidden contact parameter;
+        real contact involves geometry, friction cones and compliance that no single offset captures.
+        <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+
+  <h3>A fitted simulator is also an evaluator</h3>
+  <p>RoboJEPA (Zholus et al., Meta FAIR, arXiv 2610.10515) supplies the strongest evidence that a learned simulator can
+    stand in for real evaluation. Its imagination error, the error of latent rollouts, follows a second-order power law in
+    compute; downstream planning success improves predictably with compute; and imagination error correlates strongly
+    with real planning success, which the authors propose as a proxy for real-robot evaluation. At 8B parameters it is the
+    largest JEPA predictor trained so far. <span class="g g--m">Measured</span></p>
+  <p data-depth="2">The write-up adds the detail: a frozen V-JEPA 2.1-G encoder, 23 public datasets spanning 12 platforms
+    and 26 action spaces, about 15,022 video hours (6,692 with actions), planning by the cross-entropy method toward a goal
+    image, and object-interaction tasks solved only by models trained beyond 10<sup>22</sup> FLOPs.
+    <span class="g g--w">Write-up</span></p>
+
+  <h3>From craft to agents, and the one gap left</h3>
+  <p>The discussion claims system identification is already solvable by agents: the agent walks a human, or another
+    robot, through the identification protocol and fits the parameters. VIRAL calibrated its cameras and identified its
+    hand by hand. <span class="g g--t">Talk</span> The closest public demo goes partway: Astra ran calibration and system
+    identification from recorded multi-view robot data and produced a replayable MuJoCo and Blender simulator.
+    <span class="g g--d">Demo</span></p>
+  <p>The hard part is no longer fitting but the reward that makes an agent pull real data in. The discussion's answer is
+    that offline rewards plus any form of verification are enough to run RL. What remains is contact: tactile models train
+    well, but the instant of contact is still simulated poorly and its error drifts. Solve contact verification, the claim
+    goes, and real2sim is solved. <span class="g g--t">Talk</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>VIRAL itself notes that a few days of teleoperation can beat months of sim-to-real engineering, because
+      demonstrations carry the reward implicitly. That is the cost line agentic real2sim has to beat, and nobody has
+      plotted it yet.</p>
+  </aside>
+</section>

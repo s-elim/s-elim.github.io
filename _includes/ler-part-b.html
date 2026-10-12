@@ -1,0 +1,300 @@
+<!-- 06 ===================================================================== -->
+<section class="part" id="hardware">
+  <div class="part__num">Part 06</div>
+  <h2>Hardware is source code</h2>
+  <p class="claim">A YAML spec goes in, a parametric and version-controlled robot comes out, and the CAD program is
+    demoted to a viewer.
+    <small>Talk, Implication 1 <span class="g g--t">Talk</span></small></p>
+  <p>The pipeline from the talk has six steps:</p>
+  <ol class="nums">
+    <li><b>Spec.</b> A YAML file holds dimensions, masses, actuators and joint limits.</li>
+    <li><b>Program.</b> The agent writes Python, typically with the open-source parametric library build123d, that builds every part in memory.</li>
+    <li><b>Export.</b> Each part is written out as a STEP file.</li>
+    <li><b>Assemble.</b> The program joins the parts, sets joint types, limits and values, and assigns materials and densities. build123d ships rigid, revolute, linear, cylindrical and ball joints, with limits as <code>angular_range</code> and <code>linear_range</code>.</li>
+    <li><b>Inspect.</b> The agent checks the result; Fusion 360 or similar is opened only to look.</li>
+    <li><b>Extend.</b> The same agent attaches simulation, system identification and control.</li>
+  </ol>
+  <p>The payoff is hardware that behaves like software: it can be regenerated, branched, diffed, reviewed and optimized
+    in the same loop as its controller. The lab below runs that loop on a toy planar arm.</p>
+
+  <div class="lab lab--wide" id="lab-spec">
+    <div class="lab__head"><span class="lab__tag">Lab C</span><h3>From spec to robot, and back</h3>
+      <p>Edit the spec. The page regenerates the YAML, the build123d-style program and the arm, and runs the checks an
+        agent would run before sending parts to fabrication.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage">
+        <canvas id="spec-cv" width="900" height="520" aria-label="The planar arm drawn from the spec"></canvas>
+        <div class="chips" role="tablist" aria-label="Generated files" style="margin-top:.7rem">
+          <button type="button" class="chip" data-spec-tab="yaml" aria-pressed="true">robot.yaml</button>
+          <button type="button" class="chip" data-spec-tab="py" aria-pressed="false">build_arm.py</button>
+          <button type="button" class="chip" data-spec-tab="diff" aria-pressed="false">git diff</button>
+        </div>
+        <pre id="spec-code" class="status" style="white-space:pre;overflow:auto;max-height:300px;margin:0"></pre>
+      </div>
+      <div class="lab__side">
+        <div class="ctl"><label for="sp-l1">Upper arm (mm) <output id="sp-l1-o"></output></label><input type="range" id="sp-l1" min="120" max="450" step="5" value="300"></div>
+        <div class="ctl"><label for="sp-l2">Forearm (mm) <output id="sp-l2-o"></output></label><input type="range" id="sp-l2" min="100" max="400" step="5" value="250"></div>
+        <div class="ctl"><label for="sp-l3">Wrist link (mm) <output id="sp-l3-o"></output></label><input type="range" id="sp-l3" min="40" max="200" step="5" value="100"></div>
+        <div class="ctl"><label for="sp-w">Link width (mm) <output id="sp-w-o"></output></label><input type="range" id="sp-w" min="20" max="70" step="1" value="40"></div>
+        <div class="ctl"><label for="sp-mat">Material</label>
+          <select id="sp-mat"><option value="2700">Aluminium 6061, 2700 kg/m&sup3;</option><option value="1240">PLA, 1240 kg/m&sup3;</option><option value="7850">Steel, 7850 kg/m&sup3;</option><option value="1600">CFRP, 1600 kg/m&sup3;</option></select></div>
+        <div class="ctl"><label for="sp-q1">Shoulder (&deg;) <output id="sp-q1-o"></output></label><input type="range" id="sp-q1" min="-120" max="120" step="1" value="30"></div>
+        <div class="ctl"><label for="sp-q2">Elbow (&deg;) <output id="sp-q2-o"></output></label><input type="range" id="sp-q2" min="-150" max="150" step="1" value="-45"></div>
+        <div class="ctl"><label for="sp-tau">Shoulder actuator limit (N&middot;m) <output id="sp-tau-o"></output></label><input type="range" id="sp-tau" min="2" max="40" step="0.5" value="12"></div>
+        <div class="ctl"><label for="sp-pay">Payload (kg) <output id="sp-pay-o"></output></label><input type="range" id="sp-pay" min="0" max="3" step="0.1" value="0.5"></div>
+        <ul id="spec-checks" style="font-size:.84rem;margin:0;padding:0;list-style:none;display:grid;gap:.3rem"></ul>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Switch to steel and lengthen the upper arm: the torque check fails, and the diff shows exactly which lines changed.</li><li>Push the elbow past its range: the joint check fails before anything is built.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>Why a text spec makes hardware reviewable. The generated program is a
+        sketch in build123d's style (Box, RevoluteJoint, export_step), not code run here, and the torque check is a static
+        worst case with a 1.5 safety factor. Tolerances and manufacturability are the unproven part. <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+
+  <h3>Why not Onshape, and what already exists</h3>
+  <p>The talk considered Onshape and rejected it for heavy agent use because of API caps. Onshape's published annual
+    limits are 2,500 calls per user on Free and Standard, 5,000 on Professional and 10,000 per full user on Enterprise;
+    past the cap, requests are rejected with HTTP 402. <span class="g g--m">Measured</span></p>
+  <div class="panel">
+    <div class="ctl" style="max-width:420px"><label for="os-calls">Agent API calls per day <output id="os-calls-o"></output></label><input type="range" id="os-calls" min="10" max="2000" step="10" value="300"></div>
+    <div class="bars" id="os-bars" style="margin-top:.8rem"></div>
+    <p style="margin:.7rem 0 0;font-size:.84rem;color:var(--ink-2)">One caveat from the write-up: calls from public App Store
+      OAuth apps are exempt, and Onshape's FeatureScript MCP server installs through the App Store, so that route may
+      escape the cap. <span class="g g--w">Write-up</span></p>
+  </div>
+  <ul class="dots">
+    <li>OpenAI's Astra launch page: 95.9% geometric overlap on BenchCAD with tools, and a schematic routed into a manufacturable PCB. <span class="g g--w">Write-up</span></li>
+    <li>Onshape Labs' FeatureScript MCP server (early access, August 2026): the model writes FeatureScript, runs it in a document, evaluates the result and fixes errors. <span class="g g--w">Write-up</span></li>
+    <li>A community demo co-designed a quadruped with Astra over 25 loops in five days and trained nine RL motions in simulation. Real hardware is planned, not built. <span class="g g--d">Demo</span></li>
+  </ul>
+  <p data-depth="2">Generalist, Reward AI, Sunday and Dyna came up alongside the pipeline. All four are robot-learning
+    companies, and the write-up found no public account of agent-generated hardware from any of them, so they are context,
+    not evidence that the pipeline runs in production. <span class="g g--w">Write-up</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>The number that would settle this take: the share of agent-designed parts that pass first fabrication and
+      assembly with no human edits. No one has published it.</p>
+  </aside>
+</section>
+
+<!-- 07 ===================================================================== -->
+<section class="part" id="tokens">
+  <div class="part__num">Part 07</div>
+  <h2>Noise is a representation problem</h2>
+  <p class="claim">The exact details of a motion are redundant. What decides success is the representation the policy
+    learns, and where noise is added back into it.
+    <small>Talk and discussion <span class="g g--t">Talk</span></small></p>
+  <p>Two demonstrations of the same grasp differ in timing, path and wrist angle, and most of that variation does not change
+    the outcome. The discussion's claim is that adding noise back, probably inside representation space rather than raw
+    joint space, determines final success. The target it named is continuous dynamics inside a discrete space: a finite
+    token vocabulary whose embeddings still respect continuity.</p>
+  <ul class="dots">
+    <li><b>VQ-VAE</b> (van den Oord et al., 2017) encodes an input, snaps it to the nearest entry of a learned codebook, and decodes from that discrete code. It is the natural interface for any modality. <span class="g g--m">Measured</span></li>
+    <li><b>ViT</b> (Dosovitskiy et al., 2020) is the precedent for brute force: cut an image into 16&times;16 patches, project them linearly, drop the convolutional prior. Strictly, ViT's patch tokens are continuous embeddings; the discrete step belongs to VQ-VAE. <span class="g g--m">Measured</span></li>
+    <li><b>VQ-BeT</b> (Lee et al., ICML 2024) tokenizes continuous actions with residual vector quantization. <span class="g g--m">Measured</span></li>
+    <li><b>FAST</b> (Pertsch et al., Physical Intelligence, January 2025) applies a discrete cosine transform to an action chunk, quantizes the coefficients and compresses them with byte-pair encoding, typically into 30 to 60 tokens. &pi;0-FAST matches the diffusion-based &pi;0 while training up to five times faster, where naive per-dimension binning could not learn the dexterous tasks at all. The price is slower autoregressive decoding. <span class="g g--m">Measured</span></li>
+  </ul>
+
+  <div class="lab lab--wide" id="lab-tok">
+    <div class="lab__head"><span class="lab__tag">Lab D</span><h3>Tokenize an action chunk</h3>
+      <p>A 2-D reach of 50 steps (dashed) is demonstrated with noise (grey). Compare three tokenizers on token count and on
+        how close the reconstruction comes to the intent, then add noise back in three different spaces.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage">
+        <canvas id="tok-cv" width="900" height="520" aria-label="Demonstrated, intended and reconstructed action chunks"></canvas>
+      </div>
+      <div class="lab__side">
+        <div class="chips" role="group" aria-label="Tokenizer">
+          <button type="button" class="chip" data-tok="bin" aria-pressed="false">Per-step bins</button>
+          <button type="button" class="chip" data-tok="dct" aria-pressed="true">DCT + quantize</button>
+          <button type="button" class="chip" data-tok="vq" aria-pressed="false">VQ codebook</button>
+        </div>
+        <div class="ctl"><label for="tok-noise">Demonstration noise <output id="tok-noise-o"></output></label><input type="range" id="tok-noise" min="0" max="0.08" step="0.001" value="0.04"></div>
+        <div class="ctl" data-tokc="bin"><label for="tok-bins">Bins per dimension <output id="tok-bins-o"></output></label><input type="range" id="tok-bins" min="4" max="256" step="1" value="256"></div>
+        <div class="ctl" data-tokc="dct"><label for="tok-q">Quantization step <output id="tok-q-o"></output></label><input type="range" id="tok-q" min="0.01" max="1" step="0.01" value="0.25"></div>
+        <div class="ctl" data-tokc="vq"><label for="tok-k">Codebook size <output id="tok-k-o"></output></label><input type="range" id="tok-k" min="4" max="128" step="1" value="32"></div>
+        <div class="reads">
+          <div class="read"><b id="tok-n">-</b><span>tokens</span></div>
+          <div class="read"><b id="tok-e1">-</b><span>error to intent</span></div>
+          <div class="read"><b id="tok-e2">-</b><span>error to demo</span></div>
+        </div>
+        <div class="ctl"><label>Add noise back in</label>
+          <div class="btns">
+            <button type="button" class="btn btn--sm" data-tokn="raw">raw actions</button>
+            <button type="button" class="btn btn--sm" data-tokn="dct">low frequencies</button>
+            <button type="button" class="btn btn--sm" data-tokn="vq">code space</button>
+            <button type="button" class="btn btn--sm" data-tokn="">clear</button>
+          </div></div>
+        <p class="status" id="tok-status">With a coarse quantization step the DCT reconstruction sits closer to the intent
+          than the demonstration itself does: the discarded detail was mostly noise.</p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>Sweep the DCT step. Below about 0.1, rounding keeps the noise and can even enlarge it; around 0.25 to 0.35 six to eight tokens sit closer to the intent than the demonstration does; past 0.5 the step starts erasing the reach itself.</li><li>Compare 256 bins (100 tokens, no better than the demonstration) with the DCT at 6 to 8 tokens.</li><li>Grow the codebook from 8 to 128 entries and watch the error fall.</li><li>Add noise in raw space, then in low frequencies: jitter against plausible alternative reaches.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>Why a frequency or codebook representation keeps the intent and drops
+        the noise, and why the space you perturb shapes the samples. Token counts here are nonzero coefficients before
+        byte-pair encoding, not FAST's numbers, and nothing here predicts task success. <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>The counter-case is insertion. Peg-in-hole tolerances may need exactly the kinematic detail this take calls
+      redundant, and precision is where Astra scores 4.00%. The clean test: ablate where noise is injected, action space
+      against latent space, on tasks with known tolerances.</p>
+  </aside>
+</section>
+
+<!-- 08 ===================================================================== -->
+<section class="part" id="control-language">
+  <div class="part__num">Part 08</div>
+  <h2>A language for control</h2>
+  <p class="claim">The language model can be the reward model, the trainer, the planner and the controller. To make it a
+    controller, invent a control language, or just use Python and tool calls, and attach each tool to its own harness.
+    <small>Talk, Implication 3 <span class="g g--t">Talk</span></small></p>
+  <p>Three claims sit inside this. In-context learning comes free of robot data. Reflexes can be trained into the
+    language model itself instead of living in a hand-built controller. And the interface between the model and the robot
+    is a design choice that can be written down. <span class="g g--t">Talk</span> The first is now measured, with a catch:
+    free of robot data is not free of design. The same model got worse with naive demonstrations (Part 03) and much
+    better with a structured context.</p>
+
+  <h3>RoboICL's grammar</h3>
+  <p>RoboICL (Liu et al., arXiv 2609.34261) gives the model one action tool. The model emits a continuous action chunk and
+    a short note; deterministic code validates it, solves inverse kinematics and executes the admissible prefix.
+    <span class="g g--w">Write-up</span> Everything in context, whether a recorded demonstration or the model's own last
+    attempt, is written in one grammar: observation, action chunk, execution receipt, result observation. Sampled
+    demonstration blocks sit beside a bounded memory with fixed anchors, so early experience survives later stages, and
+    the latest interaction is always present for immediate correction. When steps are discarded, an explicit
+    <code>&lt;TRAJECTORY_GAP&gt;</code> record stops the model reading two blocks as consecutive. <span class="g g--m">Measured</span></p>
+
+  <div class="panel" id="ctx-builder">
+    <h4>Build the context</h4>
+    <div class="ctrl" style="display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center">
+      <div class="chips" role="group" aria-label="Demonstrations" style="margin:0">
+        <button type="button" class="chip" data-shots="0" aria-pressed="false">0 demos</button>
+        <button type="button" class="chip" data-shots="1" aria-pressed="true">1 demo</button>
+        <button type="button" class="chip" data-shots="3" aria-pressed="false">3 demos</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="ctx-anchor" checked> Anchored memory</label>
+      <label class="chk"><input type="checkbox" id="ctx-latest" checked> Latest interaction</label>
+      <label class="chk"><input type="checkbox" id="ctx-naive"> Naive format (raw images and poses)</label>
+    </div>
+    <div class="ribbon" id="ctx-ribbon" aria-live="polite"></div>
+    <div class="bars" id="ctx-bars"></div>
+    <p id="ctx-note" style="margin:.7rem 0 0;font-size:.86rem;color:var(--ink-2)"></p>
+  </div>
+  <p data-depth="2">On two development tasks, an optional Jev-gated action reuse cut Astra calls by 33 to 48%, which matters
+    for Part 09's speed budget. On a ten-task subset RoboICL with Astra alone scores 60.60 against 62.60 reported for a
+    &pi;0.5 plus Astra ensemble. <span class="g g--m">Measured</span></p>
+
+  <h3>Tools as backends: AgentSTAR</h3>
+  <p>AgentSTAR (Mazur, Karaev, Chang, Malik and Shafiullah, arXiv 2609.24487) reconstructs and tracks articulated objects
+    from one monocular video. A vision-language agent refines shape and generalized pose in a render-and-compare loop,
+    mixing coarse visual reasoning with numerical pose optimisation, and the output is a structured 3D object model with
+    parts, joint axes and pivots. It beats 3D point-tracking baselines for articulated objects on ARCTIC and every
+    evaluated rigid-object tracker on HOT3D. <span class="g g--m">Measured</span> The discussion's point is the role it
+    could play: a kinematic-replay backend that an agent calls when it needs an object's geometry, the way a coding agent
+    calls a compiler. <span class="g g--t">Talk</span></p>
+</section>
+
+<!-- 09 ===================================================================== -->
+<section class="part" id="fast-loop">
+  <div class="part__num">Part 09</div>
+  <h2>Low-level control without chain-of-thought</h2>
+  <p class="claim">Low-level control does not need chain-of-thought, and nothing stops a language model from skipping it.
+    Give the output format room to reason when needed and to act directly otherwise.
+    <small>Discussion <span class="g g--t">Talk</span></small></p>
+  <p>Rotations, simple contacts and kinematic primitives are intuitive: they need neither reasoning nor tokens spent on
+    it. The continuous dynamics underneath may need a JEPA-style model, which the discussion did not see as a
+    contradiction of the thesis. There is no need to inject these skills into the weights; the output format can force the
+    choice. <span class="g g--t">Talk</span></p>
+  <p>Shipped systems already make this choice. &pi;0.5 decodes discrete tokens for high-level steps and continuous
+    flow-matching outputs for motor commands, in one model. <span class="g g--m">Measured</span> In the Galbot hybrid,
+    Astra passed &pi;0.5's actions through and rewrote only 14.4% of control steps. On RoboCurve's bowl task Astra spent
+    2.1k output tokens per run against 12.9k for Claude Fable 5.1, and succeeded 19 times to 8. That is a cross-model
+    comparison, so it does not isolate thinking, but heavy token use was clearly not required. <span class="g g--d">Demo</span></p>
+
+  <div class="lab lab--wide" id="lab-rate">
+    <div class="lab__head"><span class="lab__tag">Lab E</span><h3>The control-rate budget</h3>
+      <p>A controller must deliver an action every 1/f seconds. Each model call costs a fixed latency plus its reasoning
+        tokens, and returns a chunk of actions. Find the settings that keep up with the robot.</p></div>
+    <div class="lab__body">
+      <div class="lab__stage"><canvas id="rate-cv" width="900" height="460" aria-label="Timeline of control ticks and model calls"></canvas></div>
+      <div class="lab__side">
+        <div class="ctl"><label for="rt-f">Control rate f (Hz) <output id="rt-f-o"></output></label><input type="range" id="rt-f" min="1" max="500" step="1" value="50"></div>
+        <div class="ctl"><label for="rt-lat">Call latency (ms) <output id="rt-lat-o"></output></label><input type="range" id="rt-lat" min="0" max="100" step="1" value="62"></div>
+        <div class="ctl"><label for="rt-h">Actions per call <output id="rt-h-o"></output></label><input type="range" id="rt-h" min="1" max="100" step="1" value="1"></div>
+        <div class="ctl"><label for="rt-tok">Reasoning tokens per call <output id="rt-tok-o"></output></label><input type="range" id="rt-tok" min="0" max="4000" step="50" value="0"></div>
+        <div class="ctl"><label for="rt-tps">Decode speed (tokens/s) <output id="rt-tps-o"></output></label><input type="range" id="rt-tps" min="20" max="2000" step="10" value="150"></div>
+        <div class="ctl"><label for="rt-reuse">Calls skipped by action reuse <output id="rt-reuse-o"></output></label><input type="range" id="rt-reuse" min="0" max="0.6" step="0.01" value="0"></div>
+        <div class="btns">
+          <button type="button" class="btn btn--sm" data-rt="50,62,1,0,150,0">Joint control at 50 Hz</button>
+          <button type="button" class="btn btn--sm" data-rt="50,62,25,0,150,0">Chunked</button>
+          <button type="button" class="btn btn--sm" data-rt="50,62,25,1500,150,0">Chunked + thinking</button>
+          <button type="button" class="btn btn--sm" data-rt="50,62,25,0,150,0.4">+ reuse</button>
+        </div>
+        <div class="reads">
+          <div class="read"><b id="rt-rtf">-</b><span>real-time factor</span></div>
+          <div class="read"><b id="rt-wall">-</b><span>wall time for 5 s</span></div>
+          <div class="read"><b id="rt-calls">-</b><span>calls for 5 s</span></div>
+        </div>
+        <p class="status" id="rt-status"></p>
+      </div>
+    </div>
+    <div class="lab__foot">
+      <div><h4>Try</h4><ul><li>At 50 Hz with one action per call, 5 s of walking costs 250 calls, the number in the Go1 report. Any call slower than 20 ms forces the simulator to pause.</li><li>Chunk 25 actions per call and the same latency keeps up; add 1,500 reasoning tokens and it falls behind again.</li></ul></div>
+      <div><h4>What it shows, and what it does not</h4>Why speed sits at the bottom of the difficulty ordering and why
+        reasoning has to be optional at control rate. Astra's real latency and decode speed are not published; the sliders
+        are assumptions, not measurements. <span class="g g--r">Reviewer</span></div>
+    </div>
+  </div>
+
+  <h3>Two architecture pointers</h3>
+  <p><b>RoboJEPA as a residual.</b> The discussion proposed placing a RoboJEPA-style world model beside the language model
+    to absorb the low-level dynamics the language model should not reason about. The RoboJEPA paper itself has no such
+    module; "residual" is the discussion's proposal. <span class="g g--t">Talk</span></p>
+  <p><b>Attention Residuals.</b> Kimi's AttnRes (arXiv 2603.15031) replaces the fixed, unit-weight residual sum of PreNorm
+    transformers with softmax attention over all earlier layer outputs, so each layer chooses which depths to read with
+    learned, input-dependent weights. Block AttnRes attends over block summaries to save memory. In Kimi Linear (48B total,
+    3B active) pre-trained on 1.4T tokens it improved every evaluated downstream task. <span class="g g--m">Measured</span>
+    The write-up's reading of why it came up: if each layer can choose its depth, shallow intuitive features and deep
+    reasoning features can live in one network. <span class="g g--w">Write-up</span></p>
+  <div class="panel">
+    <h4>Depth mixing, sketched</h4>
+    <div class="chips" role="group" aria-label="Residual type">
+      <button type="button" class="chip" data-ar="std" aria-pressed="true">Standard residual</button>
+      <button type="button" class="chip" data-ar="fast" aria-pressed="false">AttnRes, intuitive input</button>
+      <button type="button" class="chip" data-ar="slow" aria-pressed="false">AttnRes, deliberate input</button>
+    </div>
+    <canvas id="ar-cv" width="900" height="260" aria-label="Weights that layer 12 gives to earlier layers"></canvas>
+    <p style="margin:.6rem 0 0;font-size:.84rem;color:var(--ink-2)">Weights layer 12 places on the outputs of layers 0 to 11.
+      The two AttnRes patterns are my illustration of the write-up's reading, not weights from the paper.
+      <span class="g g--r">Reviewer</span></p>
+  </div>
+</section>
+
+<!-- 10 ===================================================================== -->
+<section class="part" id="e2e">
+  <div class="part__num">Part 10</div>
+  <h2>One system or two</h2>
+  <p class="claim">A System 1 and System 2 split makes sense as an intermediate step. If end-to-end is possible, you do
+    end-to-end.
+    <small>Talk <span class="g g--t">Talk</span></small></p>
+  <p>The boundary is blurrier than the labels. Figure's Helix runs a 7 to 9 Hz vision-language model as System 2 and a
+    200 Hz visuomotor policy as System 1, and trains the pair end-to-end. <span class="g g--m">Measured</span> So the useful
+    question is not one system or two but whether the interface between them is learned or hand-designed. Click a system
+    to place it on that axis.</p>
+  <div class="panel">
+    <div class="spectrum" id="spec-axis">
+      <div class="spectrum__axis"></div>
+      <span class="spectrum__lab">hand-designed interface</span>
+      <span class="spectrum__lab spectrum__lab--r">learned end-to-end</span>
+    </div>
+    <div class="detail" id="spec-detail" aria-live="polite" style="margin-bottom:0"></div>
+  </div>
+  <p>Current data cut both ways. On bimanual RoboDojo tasks the &pi;0.5 plus Astra hybrid beat Astra alone, 48% to 26%. On
+    simpler single-arm RoboLab tasks Astra alone won, 98% to 92%. <span class="g g--w">Write-up</span></p>
+  <aside class="mn"><span class="mn__h">Reviewer's margin</span>
+    <p>Neither comparison holds compute and data fixed. The experiment the take needs is end-to-end against dual-system on
+      identical tasks at equal training compute and equal robot data, which nobody has run at this scale.</p>
+  </aside>
+</section>
