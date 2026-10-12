@@ -651,7 +651,8 @@ span.dk-dl__b { cursor: default; }
   display: flex;
   flex-direction: column;
   gap: .45rem;
-  padding: .85rem 1rem .8rem;
+  min-height: 19rem;
+  padding: .95rem 1.1rem .9rem;
   border: 1px solid var(--border);
   border-left: 3px solid var(--ax);
   border-radius: var(--dk-radius);
@@ -697,7 +698,7 @@ span.dk-dl__b { cursor: default; }
   line-height: 1.5;
   pointer-events: none;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 12;
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: anywhere;
