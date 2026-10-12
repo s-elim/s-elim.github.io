@@ -1,0 +1,53 @@
+{%- comment -%}
+  V-JEPA handbook, section 14: what the experiments establish across the family,
+  what they only suggest, and what remains open. Included by vjepa-explainer.html.
+  The ledger filter is wired in vjepa-hjepa-script.html. No Liquid beyond this comment.
+{%- endcomment -%}
+  <!-- 14 ----------------------------------------------------------------- -->
+  <section id="ledger">
+    <div class="sec-head"><span class="num">14</span><h2>What is established, and what is not</h2></div>
+    <div class="col">
+      <p>
+        Fourteen claims that circulate about this family, each with the strongest evidence for it, the protocol behind that
+        evidence, and what would change the verdict. Status is mine, judged on the evidence cited.
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__head"><span>Claim ledger</span><span class="readout" id="vj-ledger-note" style="margin-left:auto"></span></div>
+      <div class="ctlrow" id="vj-ledger-filter" style="border-top:0;border-bottom:1px solid var(--line)"></div>
+      <div class="panel__body tablewrap">
+        <table class="tprose" id="vj-ledger">
+          <thead><tr><th scope="col">Claim</th><th scope="col">Status</th><th scope="col">Evidence and protocol</th><th scope="col">What would change it</th></tr></thead>
+          <tbody>
+            <tr data-st="est" data-ev="pap"><td style="white-space:normal">Predicting features beats predicting pixels for frozen video representations</td><td><span class="flag flag--ok">established</span></td><td style="white-space:normal">V-JEPA's pixel-versus-feature ablation at matched architecture; V-JEPA 2 ViT-g at 75.3 on frozen SSv2 against 49.9 to 55.4 for the best image encoders under one protocol</td><td style="white-space:normal">A pixel-target model matching it at equal compute under the same probe</td></tr>
+            <tr data-st="est" data-ev="pap"><td style="white-space:normal">More data, a bigger model, longer training and higher resolution each improve the frozen encoder</td><td><span class="flag flag--ok">established, thin</span></td><td style="white-space:normal">+1.0, +1.5, +0.8, +0.7 average points, each on top of the last, one seed each (Fig. 3)</td><td style="white-space:normal">Seed variance comparable to the gains; a different order of ingredients</td></tr>
+            <tr data-st="part" data-ev="pap"><td style="white-space:normal">V-JEPA 2-AC plans zero-shot pick-and-place in unseen labs</td><td><span class="flag">partly</span></td><td style="white-space:normal">80% for both objects in Lab 1, 80% and 50% in Lab 2, with human sub-goal images, 10 trials per cell, one model, a camera placement tuned by hand (Table 2, §4.3)</td><td style="white-space:normal">50 trials per cell over several seeds and camera positions</td></tr>
+            <tr data-st="hyp" data-ev="inf"><td style="white-space:normal">Video pretraining is what makes V-JEPA 2-AC work</td><td><span class="flag">hypothesis</span></td><td style="white-space:normal">No encoder ablation at the action-conditioned stage; JEPA-WMs reports a design that beats V-JEPA 2-AC and DINO-WM, so the recipe matters beyond the encoder</td><td style="white-space:normal">The same predictor and data over DINOv2, V-JEPA 2.1 and a random encoder</td></tr>
+            <tr data-st="ref" data-ev="ctx"><td style="white-space:normal">A flat V-JEPA 2-AC planner solves non-greedy tasks from a single goal image</td><td><span class="flag">contradicted</span></td><td style="white-space:normal">0% on cup and box pick-and-place, 50 trials each, in HWM's Franka evaluation with the same architecture and data as HWM's low level (HWM Table 1)</td><td style="white-space:normal">A longer-horizon flat planner reaching non-zero success on the same protocol</td></tr>
+            <tr data-st="part" data-ev="ctx"><td style="white-space:normal">A temporal hierarchy over a V-JEPA 2-AC-style model makes single-goal pick-and-place work on a real arm</td><td><span class="flag">partly</span></td><td style="white-space:normal">HWM: 70% cup, 60% box, 70% drawer; 10 start-goal pairs × 5 trials per object; one lab; Clopper-Pearson intervals in its Table 17</td><td style="white-space:normal">Replication in a second lab, or by another group</td></tr>
+            <tr data-st="est" data-ev="hj"><td style="white-space:normal">Separate latent spaces per level add to a temporal hierarchy</td><td><span class="flag flag--ok">established in simulation</span></td><td style="white-space:normal">Nearly twice HWM's success on Visual AntMaze at matched implementation; ties on FourRoom and Push-T; three seeds, 50 tasks (Fig. 6)</td><td style="white-space:normal">The same comparison on a physical robot, closed loop</td></tr>
+            <tr data-st="est" data-ev="hj"><td style="white-space:normal">Higher levels drop fast, unpredictable detail and keep slow state</td><td><span class="flag flag--ok">established, conditional</span></td><td style="white-space:normal">MLP probes in AntMaze, Humanoid and FourRoom; absent when the frequency gap is below about 2×, as in Push-T and Cube (Figs. 4, 5)</td><td style="white-space:normal">Probes on a manipulation dataset with a large gap, such as in-hand rotation</td></tr>
+            <tr data-st="hyp" data-ev="hj"><td style="white-space:normal">H-JEPA improves real-robot control</td><td><span class="flag">untested</span></td><td style="white-space:normal">DROID results are offline and open-loop on 16 selected clips; the authors list closed-loop control as the next step (§6)</td><td style="white-space:normal">Closed-loop success on HWM's Franka protocol</td></tr>
+            <tr data-st="ref" data-ev="hj"><td style="white-space:normal">SIGReg alone prevents collapse</td><td><span class="flag">contradicted on diverse scenes</span></td><td style="white-space:normal">Holds with fixed scenes; on DROID every SIGReg-only run collapses to the scene identity (Table 12, Fig. 17), as Propositions 1 and 3 predict</td><td style="white-space:normal">A label-free joint-in-time regulariser that clears the zero-action floor</td></tr>
+            <tr data-st="ref" data-ev="hj"><td style="white-space:normal">A high-rank, non-collapsed representation is enough to plan</td><td><span class="flag">contradicted</span></td><td style="white-space:normal">With SIGReg on and no IDM, rank stays high and DROID planning stays near the floor (Fig. 17)</td><td style="white-space:normal">n/a: rank is necessary, not sufficient</td></tr>
+            <tr data-st="part" data-ev="hj"><td style="white-space:normal">Fréchet fidelity measures task success</td><td><span class="flag">partly</span></td><td style="white-space:normal">A necessary condition on OGBench Cube; ranks graded progress on RoboCasa CloseDrawer (App. J.2)</td><td style="white-space:normal">Calibration against executed outcomes on a real arm</td></tr>
+            <tr data-st="est" data-ev="code"><td style="white-space:normal">V-JEPA 2-AC sees DROID at 4 frames per second</td><td><span class="flag">by the file clock only</span></td><td style="white-space:normal">The released loader strides by ⌈container fps / 4⌉; DROID MP4s are timestamped at 60 fps for 15 Hz recordings, so frames are about 1 s apart in real time (measured here, and stated in H-JEPA App. J.1)</td><td style="white-space:normal">A statement that the paper's runs used a corrected frame rate</td></tr>
+            <tr data-st="hyp" data-ev="inf"><td style="white-space:normal">Low latent prediction error predicts planning success</td><td><span class="flag">not established</span></td><td style="white-space:normal">No paper in the family reports a cross-model correlation between open-loop latent error and closed-loop success; RoboJEPA reports one between imagination error and planning success within its own model family</td><td style="white-space:normal">Rank correlation across encoders and predictors on shared tasks</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="inf">Status words are my judgement on the evidence cited; "established" means replicated or measured under a stated protocol with seeds, not proven. RoboJEPA: arXiv 2610.10515. <span class="ev ev--inf">Inference</span></div>
+    </div>
+
+    <div class="col">
+      <h3>Open research questions, most decision-relevant first</h3>
+      <ol class="checks" style="list-style:decimal;padding-left:1.2rem">
+        <li style="padding-left:0" data-ev="inf"><b>Does hierarchy survive closed-loop contact?</b> Every H-JEPA success is simulated with a fixed camera, or offline on DROID. The first physical test, on HWM's Franka protocol, decides whether separate latent spaces matter on a real arm at all. <span class="ev ev--inf">Inference</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>What replaces inverse dynamics when there are no actions?</b> Internet video has none, and the paper shows SIGReg and time repulsion are not enough on diverse scenes. Latent actions learned from video, or a joint-in-time regulariser, are the candidates. <span class="ev ev--inf">Inference</span> <span class="ev ev--hj">App. J.5, L.6</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Where should a level's step end?</b> Fixed strides ignore task structure. In manipulation, contact and gripper events mark the natural boundaries; DROID's evaluation already reads its waypoints off the gripper trace. <span class="ev ev--inf">Inference</span> <span class="ev ev--hj">§6, App. J.1</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Can a frozen foundation encoder be the bottom level?</b> V-JEPA 2-AC brings a 1B encoder trained on a million hours; H-JEPA brings a training recipe that shapes small encoders per level. Whether the two compose, a frozen V-JEPA 2 or 2.1 at level 1 with learned levels above, is untested. <span class="ev ev--inf">Inference</span></li>
+        <li style="padding-left:0" data-ev="inf"><b>Which latent distance should a planner trust?</b> Both papers plan on a uniform distance over every feature. Tables 1 and 9 show the choice of space changes success by up to a factor of four (FourRoom, two levels: 9.3% native against 38.7% projected); nobody has learned the metric for planning directly. <span class="ev ev--inf">Inference</span></li>
+        <li style="padding-left:0" data-ev="spec"><b>How should uncertainty propagate down the hierarchy?</b> Every predictor in the family is deterministic. A top level that is unsure which of two routes the world takes should hand the level below two subgoals, not their average. <span class="ev ev--spec">Speculation</span></li>
+      </ol>
+    </div>
+  </section>

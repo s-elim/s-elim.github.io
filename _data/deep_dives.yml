@@ -235,65 +235,68 @@ dives:
         url: https://research.nvidia.com/labs/cosmos-lab/cosmos3/
     idea: video-for-policy-wam
   - id: v-jepa-latent-world-models
-    title: V-JEPA 2 and V-JEPA 2-AC
-    subtitle: Masked video prediction in feature space, then an action-conditioned predictor that plans on
-      a real Franka arm
-    kicker: 'Latent world models · 22 Sep 2026'
-    read: 40 min
+    title: V-JEPA, V-JEPA 2-AC and H-JEPA
+    subtitle: From masked video prediction in feature space to an action-conditioned predictor on a real Franka
+      arm and a hierarchy of latent world models that plans top-down
+    kicker: 'Latent world models · rev. 12 Oct 2026'
+    read: 70 min
+    cta: Open the handbook
     summary: >-
-      V-JEPA 2 learns a video encoder by predicting masked tubes of video in a feature space it invents;
-      V-JEPA 2-AC freezes that encoder, trains a 300M block-causal predictor on under 62 hours of DROID and
-      plans with the cross-entropy method on Franka arms in two unseen labs. This teardown checks every number
-      against the paper, the released code and V-JEPA 2.1, measures what the masking sampler actually hides,
-      audits the robot evidence with the intervals the paper leaves out, ends in a sixteen-step 3D tour with a
-      story mode, and turns the setup's eight assumptions into research directions for dexterous hands,
-      bimanual arms, mobile manipulators and humanoids.
+      V-JEPA 2 learns a video encoder by predicting masked tubes of video in a feature space it invents; V-JEPA 2-AC
+      freezes that encoder, trains a 300M block-causal predictor on 23k DROID trajectories and plans with the
+      cross-entropy method on Franka arms in two unseen labs; H-JEPA (arXiv 2610.06805, Oct 2026) stacks
+      action-conditioned JEPAs at several timescales, each in its own latent space, and plans top-down. This handbook
+      traces the family from I-JEPA, checks every number against the papers and the released code, measures what the
+      DROID loader actually feeds V-JEPA 2-AC, audits the robot evidence with intervals, and adds a hierarchy builder,
+      a cost-geometry toy, a sixteen-step 3D tour and research directions for dexterous manipulation.
     verdict: >-
-      The representation claims are well supported where the protocol is shared: a 20-point frozen-probe lead
-      on SSv2 over the best image encoder. The planning claims are real and thin: 10 trials per cell, one model,
-      a camera position tuned by hand, a planner that looks one step ahead, and sub-goal images supplied by a
-      person for the only multi-stage task. At n = 20 per task, V-JEPA 2-AC separates from Octo on four of seven
-      tasks. The world model infers its action frame from a fixed view with an error that grows linearly with
-      camera angle, which is the assumption that blocks mobile and humanoid use first.
+      The representation claims are well supported where the protocol is shared: a 20-point frozen-probe lead on SSv2
+      over the best image encoder. V-JEPA 2-AC's planning claims are real and thin: 10 trials per cell, a camera tuned
+      by hand and human sub-goal images; from a single goal image the flat planner scores 0% on pick-and-place in HWM's
+      Franka test, and a two-level hierarchy on the same backbone reaches 70% and 60% (50 trials each). H-JEPA shows in
+      simulation that separate latent spaces per level add to a temporal hierarchy (73.3% against 18.0% flat on Visual
+      AntMaze, three seeds), but its real-robot evidence is offline path fidelity on 16 DROID clips, not executed control.
     highlights:
       - >-
-        Running the released sampler: the short-range and long-range masks hide 62% and 81% of tokens per clip,
-        and after the collator truncates to the batch minimum the encoder sees 25% and 6%, not the "about 90%"
-        usually quoted.
+        DROID's video files are timestamped at 60 fps for 15 Hz captures, so the released V-JEPA 2-AC loader samples one
+        frame per second of real motion, not four: measured on two raw episodes and stated independently by H-JEPA.
       - >-
-        V-JEPA 2 fixes the EMA at 0.99925; every deployed plan uses horizon 1 with 800 samples, top 10 and 10
-        iterations, about 1.2e15 FLOPs and 16 s per action on an RTX 4090.
+        On diverse scenes a SIGReg-only JEPA collapses to the scene identity; H-JEPA proves no regulariser on the marginal
+        law can prevent it and shows an inverse-dynamics term is the barrier that works on DROID.
       - >-
-        The Epic-Kitchens anticipation gain is mostly encoder semantics (39.1 from the encoder alone, 39.7 with
-        the predictor), and PerceptionTest 84.0 is fine-tuned while its comparison rows are zero-shot.
+        Changing only the latent space in which goal distance is measured moves success by up to 4× (FourRoom, 9.3% to
+        38.7%), and subgoal-tracking costs fall monotonically along expert paths where full-horizon costs do not.
       - >-
-        The one energy landscape in the paper has its minimum on the edge of the swept square and spans about
-        10% of its level, and the paper's "L1-ball of radius 0.075" only yields its stated 13 cm step if it is
-        the per-axis box the code implements.
+        Running the released sampler: V-JEPA 2's masks hide 62% and 81% of tokens per clip and the encoder sees 25% and
+        6%, not the "about 90%" usually quoted; every deployed V-JEPA 2-AC plan uses horizon 1 and 16 s per action.
     page: /notes/v-jepa/
     tags:
       - JEPA
       - world models
       - V-JEPA 2
       - V-JEPA 2-AC
+      - H-JEPA
+      - hierarchical planning
+      - SIGReg
       - CEM
-      - MPC
-      - humanoids
       - evaluation
     source:
-      label: 'V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning (arXiv 2506.09985v1)'
-      url: https://arxiv.org/abs/2506.09985
-      date: 11 Jun 2025
+      label: 'V-JEPA 2 (arXiv 2506.09985v1) and H-JEPA: End-to-End Learning of Hierarchical World Models for Visual Planning (arXiv 2610.06805v1)'
+      url: https://arxiv.org/abs/2610.06805
+      date: 11 Jun 2025 and 5 Oct 2026
     links:
       - label: 'Code: facebookresearch/vjepa2'
         url: https://github.com/facebookresearch/vjepa2
+      - label: 'Code: kevinghst/H-JEPA'
+        url: https://github.com/kevinghst/H-JEPA
+      - label: 'V-JEPA 2 paper (arXiv 2506.09985)'
+        url: https://arxiv.org/abs/2506.09985
+      - label: 'HWM (arXiv 2604.03208)'
+        url: https://arxiv.org/abs/2604.03208
       - label: 'V-JEPA 2.1 (arXiv 2603.14482)'
         url: https://arxiv.org/abs/2603.14482
-      - label: 'IntPhys 2 (arXiv 2506.09849)'
-        url: https://arxiv.org/abs/2506.09849
-      - label: DINO-WM paper
-        url: https://arxiv.org/abs/2411.04983
     idea: action-sensitivity-jepa
+
   - id: world-labs-atlas
     title: World Labs Atlas
     subtitle: The world model World Labs says will power future versions of Marble

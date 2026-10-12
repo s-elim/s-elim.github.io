@@ -1,0 +1,405 @@
+{%- comment -%}
+  V-JEPA handbook: styles and script for the sections added on 12 Oct 2026
+  (lineage map, DROID clock, hierarchy builder, cost-geometry maze, H-JEPA
+  results explorer, HWM intervals, claim ledger). Runs after the page core and
+  reuses its helpers through window.VJ.u. Plain JavaScript, no dependencies.
+  Every number in RES and LIN is quoted from the paper named next to it.
+{%- endcomment -%}
+<style>
+:root { --hj-ev: #b0306a; --hj-ev-soft: rgba(176, 48, 106, .1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hj-ev: #f08cb8; --hj-ev-soft: rgba(240, 140, 184, .14); } }
+:root[data-theme="dark"] { --hj-ev: #f08cb8; --hj-ev-soft: rgba(240, 140, 184, .14); }
+.sw--hj .sw__dot { background: var(--hj-ev); }
+.ev--hj { color: var(--hj-ev); background: var(--hj-ev-soft); }
+.lin svg { width: 100%; height: auto; display: block; }
+.lin svg .node { cursor: pointer; }
+.lin svg .node:focus-visible { outline: none; }
+.lin svg .node:focus-visible rect, .lin svg .node:hover rect { stroke-width: 2.6; }
+.lin__card { margin-top: .8rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: .8rem .95rem; font-size: .93rem; }
+.lin__card h4 { margin: 0 0 .25rem; font-size: 1.02rem; }
+.lin__card .meta { font-family: var(--mono); font-size: .7rem; color: var(--ink-3); margin-bottom: .5rem; }
+.lin__card dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem .8rem; margin: 0; }
+.lin__card dt { font-family: var(--mono); font-size: .72rem; color: var(--ink-3); }
+.lin__card dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .lin__card dl { grid-template-columns: 1fr; } .lin__card dt { margin-top: .3rem; } }
+.hb-bars { display: grid; gap: .45rem; }
+.hb-row { display: grid; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr) 6.5rem; gap: .6rem; align-items: center; font-size: .86rem; }
+.hb-track { position: relative; height: 14px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--line); }
+.hb-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.hb-fill.ref { background: color-mix(in srgb, var(--ink-3) 45%, transparent); }
+.hb-fill.hier { background: var(--hj-ev); opacity: .8; }
+.hb-err { position: absolute; top: 3px; bottom: 3px; border-left: 1.5px solid var(--ink); border-right: 1.5px solid var(--ink); }
+.hb-val { font-family: var(--mono); font-size: .76rem; text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .hb-row { grid-template-columns: minmax(0, 1fr) 5.6rem; } .hb-row .hb-track { grid-column: 1 / -1; grid-row: 2; } }
+.maze { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.maze canvas { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--line); background: var(--stage-bg); touch-action: manipulation; }
+@media (max-width: 760px) { .maze { grid-template-columns: 1fr; } }
+.clock { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .5rem; margin-top: .6rem; }
+.hier-svg { width: 100%; height: auto; display: block; }
+#vj table.tprose th, #vj table.tprose td { text-align: left; vertical-align: top; }
+#vj table.tprose td { font-family: var(--body); font-size: .9rem; white-space: normal; font-variant-numeric: normal; }
+#vj table.tprose td:first-child { font-family: var(--display); font-weight: 600; }
+#vj table.tprose td .flag { white-space: nowrap; }
+</style>
+<script>
+(function () {
+  'use strict';
+  var VJ = window.VJ, doc = document;
+  if (!VJ || !VJ.u || !doc.getElementById('vj')) return;
+  var $ = VJ.u.$, $$ = VJ.u.$$, h = VJ.u.h, css = VJ.u.css, esc = VJ.u.esc, wilson = VJ.u.wilson;
+  function setText(id, t) { var e = doc.getElementById(id); if (e) e.textContent = t; }
+  function chips(host, items, cur, on) {
+    host.innerHTML = '';
+    items.forEach(function (it) {
+      var b = h('button', { type: 'button', class: 'chip', 'aria-pressed': String(it[0] === cur) }, it[1]);
+      b.addEventListener('click', function () { $$('.chip', host).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); on(it[0]); });
+      host.appendChild(b);
+    });
+  }
+  var redraws = [];
+  function onTheme(fn) { redraws.push(fn); }
+  new MutationObserver(function () { redraws.forEach(function (f) { f(); }); }).observe(doc.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (window.matchMedia) { var mq = window.matchMedia('(prefers-color-scheme: dark)'); if (mq.addEventListener) mq.addEventListener('change', function () { redraws.forEach(function (f) { f(); }); }); }
+
+  /* ---- static accordions in the new sections ------------------------------ */
+  ['hjepa', 'hjplan', 'lineage', 'ledger'].forEach(function (id) {
+    var sec = doc.getElementById(id); if (!sec) return;
+    $$('.acc__head', sec).forEach(function (head) {
+      var body = head.nextElementSibling;
+      body.hidden = head.getAttribute('aria-expanded') !== 'true';
+      head.addEventListener('click', function () { var open = head.getAttribute('aria-expanded') === 'true'; head.setAttribute('aria-expanded', String(!open)); body.hidden = open; });
+    });
+  });
+
+  /* ---- lineage map ----------------------------------------------------------- */
+  var LIN = [
+    { id: 'lecun', t: 'A Path Towards AMI', d: 2022.55, lane: 0, dy: 0, ev: 'ctx', meta: 'LeCun · OpenReview v0.9.2 · 2022', url: 'https://openreview.net/forum?id=BZ5a1r-kVsf',
+      f: [['Contribution', 'Proposes the JEPA as an energy-based building block for world models, non-contrastive training, and H-JEPA: stacked JEPAs predicting at longer horizons from more abstract representations, with planning across levels.'], ['Evidence', 'A position paper: no training recipe and no experiments.']] },
+    { id: 'ijepa', t: 'I-JEPA', d: 2023.05, lane: 1, dy: 0, ev: 'ctx', meta: 'Assran et al. · CVPR 2023 · arXiv 2301.08243', url: 'https://arxiv.org/abs/2301.08243',
+      f: [['Predicts', 'Representations of 4 target blocks (scale 0.15 to 0.2, aspect 0.75 to 1.5) from one context block (scale 0.85 to 1.0) of the same image, L2 loss.'], ['Anti-collapse', 'EMA target encoder, momentum 0.996 rising to 1.0, stop-gradient.'], ['Scale', 'ViT-H/14 pretrained on ImageNet-1K in under 1,200 GPU-hours (16 A100s, under 72 h).'], ['Headline', '81.1% ImageNet linear probe, ViT-H/16 at 448 px, 300 epochs (Table 1). With 1% labels, ViT-L/16: 66.9 predicting target-encoder outputs against 40.7 predicting pixels (Table 7).']] },
+    { id: 'vjepa', t: 'V-JEPA', d: 2024.12, lane: 1, dy: 0, ev: 'ctx', meta: 'Bardes et al. · 2024 · arXiv 2404.08471', url: 'https://arxiv.org/abs/2404.08471',
+      f: [['Predicts', 'Masked spatiotemporal tubes from the visible ones (multiblock masking), L1 loss, "found to be more stable" than L2.'], ['Anti-collapse', 'EMA target, momentum 0.998 rising to 1.0, stop-gradient.'], ['Data', 'VideoMix2M: about 2M public videos.'], ['Headline', 'Frozen ViT-H/16 at 384 px: 81.9 K400, 72.2 SSv2, 77.9 IN1K with a two-layer attentive probe (77.4 with one). Masking ablation, ViT-L: random tubes at 90% give 51.5 / 46.4 / 55.6 against multiblock 72.9 / 67.4 / 72.8 on K400 / SSv2 / IN1K (Table 4).']] },
+    { id: 'dinowm', t: 'DINO-WM', d: 2024.86, lane: 2, dy: 44, ev: 'ctx', meta: 'Zhou, Pan, LeCun, Pinto · ICML 2025 · arXiv 2411.04983', url: 'https://arxiv.org/abs/2411.04983',
+      f: [['Predicts', 'Future DINOv2 patch features from offline trajectories; the image encoder is frozen and pretrained elsewhere.'], ['Used for', 'Zero-shot planning by optimising action sequences toward an observation goal; no reconstruction.'], ['Role here', 'The image-encoder reference point for V-JEPA 2-AC, and one of HWM\'s three backbones (push manipulation).']] },
+    { id: 'pldm', t: 'PLDM', d: 2025.14, lane: 2, dy: -44, ev: 'ctx', meta: 'Sobal, Zhang et al. · arXiv 2502.14819', url: 'https://arxiv.org/abs/2502.14819',
+      f: [['Contribution', 'Compares goal-conditioned RL with planning in a JEPA latent dynamics model on reward-free offline navigation data of varying quality.'], ['Role here', 'HWM\'s maze-navigation backbone; part of the line of JEPA world models that adds an inverse-dynamics term, which H-JEPA cites for its IDM loss.']] },
+    { id: 'vjepa2', t: 'V-JEPA 2', d: 2025.45, lane: 1, dy: 0, ev: 'pap', meta: 'Assran, Bardes, Fan, Garrido et al. · arXiv 2506.09985', url: 'https://arxiv.org/abs/2506.09985',
+      f: [['Predicts', 'V-JEPA\'s masked-tube objective, L1, at 1B parameters with 3D-RoPE and progressive resolution.'], ['Anti-collapse', 'EMA fixed at 0.99925, stop-gradient; no collapse diagnostic is reported.'], ['Data', 'VideoMix22M, over a million hours.'], ['Headline', '75.3 SSv2 frozen at 256 px, 77.3 at 384 px, under one protocol for every encoder (Table 4); 39.7 recall@5 on EK-100 anticipation. Sections 03 and 04.']] },
+    { id: 'vjepa2ac', t: 'V-JEPA 2-AC', d: 2025.45, lane: 2, dy: 0, ev: 'pap', meta: 'same paper, §3 and §4', url: 'https://arxiv.org/abs/2506.09985',
+      f: [['Predicts', 'Next-frame latents of the frozen ViT-g given 7-D actions and states; 300M block-causal predictor; teacher forcing plus a 2-step rollout, L1.'], ['Data', '23k DROID trajectories from the left exterior camera; "under 62 hours" and "4 fps" by the video files\' clock, which runs 4× fast (section 05).'], ['Planner', 'CEM, 800 samples, top 10, 10 iterations, horizon 1, MPC; 16 s per action on an RTX 4090.'], ['Headline', 'Pick-and-place 80% (Lab 1, both objects) and 80% / 50% (Lab 2, cup / box) with human sub-goal images, 10 trials per cell (Table 2).']] },
+    { id: 'lejepa', t: 'LeJEPA (SIGReg)', d: 2025.86, lane: 0, dy: 0, ev: 'ctx', meta: 'Balestriero, LeCun · arXiv 2511.08544', url: 'https://arxiv.org/abs/2511.08544',
+      f: [['Contribution', 'Argues the isotropic Gaussian is the optimal embedding distribution for downstream prediction risk, and introduces SIGReg: a sketched normality test on random 1-D projections of the batch.'], ['Why it matters here', 'Replaces the EMA teacher and stop-gradient with one regulariser and one trade-off weight; LeWM and H-JEPA use it.']] },
+    { id: 'jepawm', t: 'JEPA-WMs', d: 2025.99, lane: 2, dy: -44, ev: 'ctx', meta: 'Terver, Yang, Ponce, Bardes, LeCun · TMLR 2026 · arXiv 2512.24497', url: 'https://arxiv.org/abs/2512.24497',
+      f: [['Contribution', 'A systematic study of architecture, objective and planner choices for JEPA world models in simulation and on real robot data.'], ['Headline', 'Its combined design outperforms DINO-WM and V-JEPA 2-AC in navigation and manipulation (abstract).'], ['Role here', 'One of the two public frozen-encoder baselines H-JEPA evaluates on DROID, at 1 fps.']] },
+    { id: 'lewm', t: 'LeWM', d: 2026.2, lane: 2, dy: 44, ev: 'ctx', meta: 'Maes, Le Lidec, Scieur, LeCun, Balestriero · arXiv 2603.19312', url: 'https://arxiv.org/abs/2603.19312',
+      f: [['Predicts', 'The next global embedding from pixels and actions, end to end, with two terms: prediction and SIGReg. One tunable loss weight instead of six.'], ['Scale', 'About 15M parameters, trainable on one GPU in a few hours; plans up to 48× faster than foundation-model world models.'], ['Role here', 'Level 1 of every simulated H-JEPA, and the flat baseline it is compared against.']] },
+    { id: 'vjepa21', t: 'V-JEPA 2.1', d: 2026.2, lane: 1, dy: 0, ev: 'ctx', meta: 'Mur-Labadia et al. · arXiv 2603.14482v3', url: 'https://arxiv.org/abs/2603.14482',
+      f: [['Changes', 'A dense loss on visible and masked tokens, deep self-supervision at intermediate layers, image and video tokenizers, and a 2B ViT-G.'], ['Headline', 'With the same 300M action-conditioned predictor, Grasp rises from 60% to 70% at identical planner settings and to 80% with an 8-step horizon (Table 6).']] },
+    { id: 'hwm', t: 'HWM', d: 2026.3, lane: 2, dy: 0, ev: 'ctx', meta: 'Zhang, Terver, Zholus et al. · arXiv 2604.03208', url: 'https://arxiv.org/abs/2604.03208',
+      f: [['Predicts', 'Latents at two timescales in one shared space; a learned action encoder compresses primitive chunks into macro-actions.'], ['Headline', 'Real Franka pick-and-place from a single goal image: 70% cup, 60% box, against 0% for the flat V-JEPA 2-AC planner on the same architecture and data, 50 trials per object (Table 1).'], ['Role here', 'H-JEPA\'s direct baseline: identical except that its upper encoders are identities.']] },
+    { id: 'hjepa', t: 'H-JEPA', d: 2026.76, lane: 2, dy: 0, ev: 'hj', meta: 'Zhang, Terver, Rabbat, LeCun, Balestriero · arXiv 2610.06805', url: 'https://arxiv.org/abs/2610.06805',
+      f: [['Predicts', 'One action-conditioned JEPA per timescale, each in its own learned latent space, trained end to end with SIGReg per level and, on diverse scenes, an inverse-dynamics term.'], ['Planner', 'Top-down: the top level optimises macro-actions toward its goal latent, each level\'s predictions become the subgoals of the level below; gradient descent at every level.'], ['Headline', 'Visual AntMaze: 73.3 ± 3.5% with three levels against 18.0 ± 3.5% flat, 50 tasks, three seeds (Table 1). DROID: better offline path fidelity than flat and HWM at lower planner compute, no robot execution. Sections 06 and 07.']] }
+  ];
+  var EDGES = [['ijepa', 'vjepa'], ['vjepa', 'vjepa2'], ['vjepa2', 'vjepa2ac'], ['vjepa2', 'vjepa21'], ['vjepa2ac', 'hwm'], ['pldm', 'hwm'], ['dinowm', 'hwm'],
+    ['lejepa', 'lewm'], ['lewm', 'hjepa'], ['hwm', 'hjepa'], ['dinowm', 'jepawm'], ['vjepa2ac', 'jepawm'], ['lecun', 'hjepa', 1], ['lecun', 'ijepa', 1]];
+  (function lineage() {
+    var host = $('#vj-lineage'), card = $('#vj-lineage-card');
+    if (!host) return;
+    var cur = 'hjepa';
+    var W = 900, H = 370, X0 = 2021.95, X1 = 2027.1, L = 24, R = 24, laneY = [64, 158, 272];
+    function x(d) { return L + (d - X0) / (X1 - X0) * (W - L - R); }
+    function pos(n) { return [x(n.d), laneY[n.lane] + n.dy]; }
+    function byId(id) { return LIN.filter(function (n) { return n.id === id; })[0]; }
+    function draw() {
+      var acc = css('--accent'), ink = css('--ink'), ink3 = css('--ink-3'), line = css('--line-strong'), surf = css('--surface'), hj = css('--hj-ev');
+      var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="JEPA lineage map">';
+      ['proposal and theory', 'representation learning', 'world models and planning'].forEach(function (lab, i) {
+        s += '<text x="' + L + '" y="' + (laneY[i] - 34) + '" font-family="var(--mono)" font-size="10.5" letter-spacing=".08em" fill="' + ink3 + '">' + lab.toUpperCase() + '</text>';
+      });
+      for (var yr = 2023; yr <= 2026; yr++) {
+        s += '<line x1="' + x(yr) + '" x2="' + x(yr) + '" y1="22" y2="' + (H - 18) + '" stroke="' + line + '" stroke-dasharray="2 4" opacity=".6"/>';
+        s += '<text x="' + (x(yr) + 4) + '" y="' + (H - 6) + '" font-family="var(--mono)" font-size="10.5" fill="' + ink3 + '">' + yr + '</text>';
+      }
+      EDGES.forEach(function (e) {
+        var a = pos(byId(e[0])), b = pos(byId(e[1])), mx = (a[0] + b[0]) / 2;
+        s += '<path d="M' + a[0] + ' ' + a[1] + ' C' + mx + ' ' + a[1] + ' ' + mx + ' ' + b[1] + ' ' + b[0] + ' ' + b[1] + '" fill="none" stroke="' + (e[2] ? ink3 : line) + '" stroke-width="1.4"' + (e[2] ? ' stroke-dasharray="5 4"' : '') + '/>';
+      });
+      LIN.forEach(function (n) {
+        var p = pos(n), on = n.id === cur, w = Math.max(54, n.t.length * 7 + 16), col = n.ev === 'hj' ? hj : n.ev === 'pap' ? acc : ink3;
+        s += '<g class="node" tabindex="0" role="button" aria-pressed="' + on + '" aria-label="' + esc(n.t) + '" data-id="' + n.id + '">' +
+          '<rect x="' + (p[0] - w / 2) + '" y="' + (p[1] - 12) + '" width="' + w + '" height="24" rx="12" fill="' + (on ? col : surf) + '" stroke="' + col + '" stroke-width="' + (on ? 2.2 : 1.4) + '"/>' +
+          '<text x="' + p[0] + '" y="' + (p[1] + 4) + '" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="600" fill="' + (on ? surf : ink) + '">' + esc(n.t) + '</text></g>';
+      });
+      s += '</svg>';
+      host.innerHTML = s;
+      $$('.node', host).forEach(function (g) {
+        function pick() { cur = g.getAttribute('data-id'); draw(); show(); }
+        g.addEventListener('click', pick);
+        g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      });
+    }
+    function show() {
+      var n = byId(cur), tag = { ctx: ['ctx', 'Context'], pap: ['pap', 'Paper'], hj: ['hj', 'H-JEPA'] }[n.ev];
+      card.setAttribute('data-ev', n.ev);
+      card.innerHTML = '<h4>' + esc(n.t) + ' <span class="ev ev--' + tag[0] + '">' + tag[1] + '</span></h4><div class="meta">' + esc(n.meta) + ' · <a href="' + n.url + '" target="_blank" rel="noopener">source</a></div><dl>' +
+        n.f.map(function (f) { return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('') + '</dl>';
+      setText('vj-lin-note', n.t + ' · ' + Math.floor(n.d));
+      if (VJ.applyFilter) VJ.applyFilter();
+    }
+    draw(); show();
+    onTheme(draw);
+  })();
+
+  /* ---- DROID clock --------------------------------------------------------- */
+  (function clock() {
+    var host = $('#vj-clock');
+    if (!host) return;
+    host.innerHTML =
+      '<div class="ctlrow" style="border-top:0;padding-inline:0">' +
+      '<label>Configured fps <select id="ck-fps"><option>4</option><option>5</option><option>8</option></select></label>' +
+      '<label>Frames per clip <select id="ck-fpc"><option>8</option><option selected>16</option></select></label>' +
+      '<label>Container rate the loader reads <select id="ck-tag"><option value="60" selected>60 fps (what DROID MP4s report)</option><option value="15">15 fps (the true capture rate)</option></select></label>' +
+      '</div><div class="clock" id="ck-out"></div><p class="mini" id="ck-note" style="margin-top:.5rem"></p>';
+    function up() {
+      var f = +$('#ck-fps').value, fpc = +$('#ck-fpc').value, tag = +$('#ck-tag').value, hz = 15;
+      var stride = Math.ceil(tag / f), dt = stride / hz, span = fpc * stride / hz, scale = tag / hz;
+      $('#ck-out').innerHTML = VJ.u.tile(stride + ' frames', 'loader stride ⌈' + tag + '/' + f + '⌉') + VJ.u.tile(dt.toFixed(2) + ' s', 'real time between frames', dt > 0.5) +
+        VJ.u.tile(span.toFixed(1) + ' s', 'real span of one clip') + VJ.u.tile(dt.toFixed(2) + ' s', 'real motion per action (frameskip 1)') + VJ.u.tile('× ' + scale.toFixed(0), 'file time to wall-clock time');
+      setText('ck-note', tag === 60 ? 'With the files as published, "4 s clips at 4 fps" are ' + (16 * stride / hz).toFixed(0) + ' s of teleoperation sampled once per ' + dt.toFixed(1) + ' s, and "under 62 hours" of file time is about ' + Math.round(62 * scale) + ' hours of robot operation if the count used file durations (an inference: see the text).' :
+        'If the loader read the true 15 fps, the configured rate would hold: ' + (hz / stride).toFixed(2) + ' Hz, the figure this page gave before 12 Oct 2026.');
+    }
+    ['ck-fps', 'ck-fpc', 'ck-tag'].forEach(function (id) { $('#' + id).addEventListener('change', up); });
+    up();
+  })();
+
+  /* ---- HWM real-robot intervals ------------------------------------------- */
+  (function hwm() {
+    var host = $('#vj-hwm');
+    if (!host) return;
+    var rows = [['Octo', 0, 0, '43%'], ['π0-FAST-DROID', 26, 9, 'n/a'], ['π0.5-DROID', 34, 18, 'n/a'], ['V-JEPA 2-AC, flat', 0, 0, '30%'], ['V-JEPA 2-AC with HWM\'s hierarchy', 35, 30, '70%']];
+    function cell(k) { var w = wilson(k, 50); return '<span class="mono">' + k + '/50 · ' + Math.round(2 * k) + '%</span><span class="mini"> [' + Math.round(100 * w[0]) + ', ' + Math.round(100 * w[1]) + ']</span>' +
+      '<span class="cibar" aria-hidden="true"><i style="left:' + (100 * w[0]) + '%;width:' + (100 * (w[1] - w[0])) + '%"></i><b style="left:calc(' + (2 * k) + '% - 1px)"></b></span>'; }
+    host.innerHTML = '<table><thead><tr><th scope="col">Method</th><th scope="col">Pick-and-place, cup</th><th scope="col">Pick-and-place, box</th><th scope="col">Drawer</th></tr></thead><tbody>' +
+      rows.map(function (r, i) { return '<tr' + (i === 4 ? ' class="best"' : '') + '><td>' + r[0] + '</td><td style="white-space:normal">' + cell(r[1]) + '</td><td style="white-space:normal">' + cell(r[2]) + '</td><td>' + r[3] + '</td></tr>'; }).join('') + '</tbody></table>';
+  })();
+
+  /* ---- hierarchy builder --------------------------------------------------- */
+  (function hier() {
+    var host = $('#vj-hier');
+    if (!host) return;
+    var T3 = { 1: [4, 16], 2: [7, 31], 3: [13, 61], 4: [25, 121] };
+    host.innerHTML = '<div class="ctlrow" style="border-top:0;padding-inline:0">' +
+      '<label>Levels <input type="range" id="hb-L" min="1" max="4" value="3"><span class="readout" id="hb-L-o"></span></label>' +
+      '<label>Stride s <input type="range" id="hb-s" min="2" max="4" value="2"><span class="readout" id="hb-s-o"></span></label>' +
+      '<label>Window w <input type="range" id="hb-w" min="1" max="3" value="1"><span class="readout" id="hb-w-o"></span></label>' +
+      '<label>Subgoals matched K <input type="range" id="hb-K" min="1" max="3" value="1"><span class="readout" id="hb-K-o"></span></label></div>' +
+      '<div id="hb-svg"></div><div class="clock" id="hb-out"></div>';
+    function up() {
+      var Lv = +$('#hb-L').value, s = +$('#hb-s').value, w = +$('#hb-w').value, K = +$('#hb-K').value;
+      setText('hb-L-o', Lv); setText('hb-s-o', s); setText('hb-w-o', w); setText('hb-K-o', K);
+      var n = []; n[Lv] = 4;
+      for (var l = Lv; l > 1; l--) n[l - 1] = (n[l] - 1) * s + w;
+      var n1 = n[1], clip = 5 * (n1 - 1) + 1;
+      // positions of each level's states in level-1 frame units (window start) and their spans
+      var starts = { 1: [] }, spans = { 1: 1 };
+      for (var i = 0; i < n1; i++) starts[1].push(i);
+      for (l = 2; l <= Lv; l++) {
+        starts[l] = []; spans[l] = spans[l - 1] * 1 + (w - 1) * Math.pow(s, l - 2);
+        for (var t = 0; t < n[l]; t++) starts[l].push(starts[l - 1][t * s]);
+      }
+      var W = 900, top = 24, rowH = 46, Hh = top + rowH * Lv + 26, left = 92, cw = (W - left - 16) / Math.max(n1, 1);
+      var acc = css('--accent'), hj = css('--hj-ev'), ink2 = css('--ink-2'), ink3 = css('--ink-3'), line = css('--line-strong');
+      var sv = '<svg class="hier-svg" viewBox="0 0 ' + W + ' ' + Hh + '" role="img" aria-label="States of each level placed on level-1 time">';
+      for (l = Lv; l >= 1; l--) {
+        var y = top + (Lv - l) * rowH + 16;
+        sv += '<text x="6" y="' + (y + 4) + '" font-family="var(--mono)" font-size="11" fill="' + ink2 + '">level ' + l + '</text>';
+        sv += '<text x="6" y="' + (y + 18) + '" font-family="var(--mono)" font-size="9.5" fill="' + ink3 + '">' + n[l] + ' states</text>';
+        sv += '<line x1="' + left + '" x2="' + (W - 16) + '" y1="' + y + '" y2="' + y + '" stroke="' + line + '" stroke-width="1"/>';
+        starts[l].forEach(function (st, k) {
+          var cx = left + (st + 0.5) * cw, r = Math.max(2.5, Math.min(7, cw * 0.32));
+          if (spans[l] > 1) sv += '<rect x="' + (left + st * cw + 1) + '" y="' + (y - 7) + '" width="' + Math.max(2, spans[l] * cw - 2) + '" height="14" rx="5" fill="' + (l === 1 ? acc : hj) + '" opacity=".18"/>';
+          sv += '<circle cx="' + cx + '" cy="' + y + '" r="' + r + '" fill="' + (l === 1 ? acc : hj) + '"' + (k >= 1 ? '' : ' stroke="' + ink2 + '" stroke-width="1"') + '/>';
+          if (l > 1 && k < starts[l].length - 1) {
+            var nx = left + (starts[l][k + 1] + 0.5) * cw;
+            sv += '<path d="M' + (cx + r + 1) + ' ' + (y - 9) + ' Q' + ((cx + nx) / 2) + ' ' + (y - 20) + ' ' + (nx - r - 1) + ' ' + (y - 9) + '" fill="none" stroke="' + ink3 + '" stroke-width="1"/>';
+          }
+        });
+      }
+      sv += '<text x="' + left + '" y="' + (Hh - 6) + '" font-family="var(--mono)" font-size="10" fill="' + ink3 + '">level-1 frames 0 to ' + (n1 - 1) + ', each 5 environment steps; arcs are one upper-level transition (one macro-action)</text></svg>';
+      $('#hb-svg').innerHTML = sv;
+      var match = (s === 2 && w === 1) ? (T3[Lv][0] === n1 && T3[Lv][1] === clip ? 'matches Table 3' : 'does not match Table 3') : 'paper uses s = 2, w = 1';
+      var Hl = K * s + w - 1;
+      $('#hb-out').innerHTML = VJ.u.tile(n1, 'level-1 frames per sample') + VJ.u.tile(clip, 'min clip length, env steps') +
+        VJ.u.tile(Lv > 1 ? (5 * Math.pow(s, Lv - 1)) : 5, 'env steps per top-level step') + VJ.u.tile(Lv > 1 ? Hl : 'n/a', 'H<sub>ℓ</sub> to cover K subgoals');
+      setText('vj-hier-note', match);
+    }
+    ['hb-L', 'hb-s', 'hb-w', 'hb-K'].forEach(function (id) { $('#' + id).addEventListener('input', up); });
+    up(); onTheme(up);
+  })();
+
+  /* ---- cost-geometry maze ----------------------------------------------------- */
+  (function maze() {
+    var host = $('#vj-maze');
+    if (!host) return;
+    var MAP = [
+      '###############',
+      '#.......#.....#',
+      '#.#####.#.###.#',
+      '#.#...#.#...#.#',
+      '#.#.#.#.###.#.#',
+      '#...#.#.....#.#',
+      '#####.#######.#',
+      '#.....#.......#',
+      '#.#####.#####.#',
+      '#.............#',
+      '###############'];
+    var R = MAP.length, C = MAP[0].length, goal = [3, 3], start = [1, 13], mode = 'geo', path = [], subs = [], result = '';
+    function free(r, c) { return r >= 0 && c >= 0 && r < R && c < C && MAP[r].charAt(c) !== '#'; }
+    var geo = (function () {
+      var d = MAP.map(function (row) { return row.split('').map(function () { return Infinity; }); }), q = [goal]; d[goal[0]][goal[1]] = 0;
+      while (q.length) { var p = q.shift(); [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (m) { var r = p[0] + m[0], c = p[1] + m[1]; if (free(r, c) && d[r][c] === Infinity) { d[r][c] = d[p[0]][p[1]] + 1; q.push([r, c]); } }); }
+      return d;
+    })();
+    function eu(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1]); }
+    function cost(m, p, sub) {
+      if (m === 'sat') return Math.min(eu(p, goal), 2.5);
+      if (m === 'euc') return eu(p, goal);
+      if (m === 'geo') return geo[p[0]][p[1]];
+      return eu(p, sub);
+    }
+    function geoPath(from) {
+      var p = from, out = [from];
+      while (geo[p[0]][p[1]] > 0) { var best = null; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (m) { var q = [p[0] + m[0], p[1] + m[1]]; if (free(q[0], q[1]) && geo[q[0]][q[1]] < geo[p[0]][p[1]] && !best) best = q; }); p = best; out.push(p); }
+      return out;
+    }
+    function run() {
+      var rnd = (function (s) { return function () { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; }; })(7);
+      var p = start, budget = 140, seen = 0, falls = 0, moves = 0;
+      path = [p]; subs = [];
+      if (mode === 'hier') { var gp = geoPath(start); for (var i = 3; i < gp.length; i += 3) subs.push(gp[i]); subs.push(goal); }
+      var si = 0;
+      while (budget-- > 0 && !(p[0] === goal[0] && p[1] === goal[1])) {
+        var sub = subs[si] || goal, here = cost(mode, p, sub), best = null, bestC = here;
+        var nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(function (m) { return [p[0] + m[0], p[1] + m[1]]; }).filter(function (q) { return free(q[0], q[1]); });
+        nb.forEach(function (q) { var cq = cost(mode, q, sub); if (cq < bestC - 1e-9) { bestC = cq; best = q; } });
+        if (!best) {
+          if (mode === 'sat' && here >= 2.5 - 1e-9) { best = nb[Math.floor(rnd() * nb.length)]; } else break;
+        } else falls++;
+        moves++; p = best; path.push(p);
+        if (mode === 'hier' && p[0] === sub[0] && p[1] === sub[1] && si < subs.length - 1) si++;
+      }
+      var ok = p[0] === goal[0] && p[1] === goal[1];
+      result = (ok ? 'Reached the goal in ' + moves + ' moves.' : (budget < 0 ? 'Out of budget after 140 moves.' : 'Stuck after ' + moves + ' moves: no neighbour lowers the cost.')) +
+        ' The cost fell on ' + (moves ? Math.round(100 * falls / moves) : 0) + '% of moves.';
+      draw();
+    }
+    host.innerHTML = '<div class="maze"><canvas id="mz-cv" width="750" height="550" aria-label="Maze with a cost map, a start, a goal and the planner\'s path"></canvas><div>' +
+      '<div class="board__filters" id="mz-modes" style="display:flex;flex-wrap:wrap;gap:.35rem"></div>' +
+      '<div class="ctlrow" style="padding-inline:0"><button type="button" class="btn" id="mz-run">Plan</button><button type="button" class="btn" id="mz-new">New start</button></div>' +
+      '<p class="readout" id="mz-res" style="margin:.4rem 0" aria-live="polite"></p><p class="mini" id="mz-why"></p></div></div>';
+    var WHY = {
+      sat: 'A distance that stops changing a few cells from the goal: the planner gets no signal until it is close and wanders. This is what level-1 latents look like far from the anchor in the paper\'s Fig. 7.',
+      euc: 'Straight-line distance ignores walls, so a greedy planner walks into a dead end that is closer as the crow flies.',
+      geo: 'A graded distance that rises along the corridors: greedy descent reaches the goal. The paper\'s upper-level costs show this shape on AntMaze.',
+      hier: 'The upper level proposes subgoals every three cells along its route; the lower level tracks each with the same wall-blind local distance that failed on its own. Each subproblem is short enough to be easy: temporal decomposition.'
+    };
+    chips($('#mz-modes'), [['sat', 'level-1-like'], ['euc', 'straight line'], ['geo', 'upper-level-like'], ['hier', 'subgoals + local cost']], mode, function (m) { mode = m; run(); });
+    $('#mz-run').addEventListener('click', run);
+    var starts = [[1, 13], [9, 13], [7, 1], [5, 9], [1, 9], [9, 7]], sk = 0;
+    $('#mz-new').addEventListener('click', function () { sk = (sk + 1) % starts.length; start = starts[sk]; run(); });
+    function draw() {
+      var cv = $('#mz-cv'), ctx = cv.getContext('2d'), cs = cv.width / C, wall = css('--ink'), bg = css('--stage-bg'), acc = css('--accent'), hj = css('--hj-ev'), warn = css('--warn'), goalc = css('--k-goal');
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      var maxc = 0, r, c;
+      for (r = 0; r < R; r++) for (c = 0; c < C; c++) if (free(r, c)) maxc = Math.max(maxc, cost(mode === 'hier' ? 'geo' : mode, [r, c], goal));
+      for (r = 0; r < R; r++) for (c = 0; c < C; c++) {
+        if (!free(r, c)) { ctx.fillStyle = wall; ctx.globalAlpha = 0.85; ctx.fillRect(c * cs, r * cs, cs, cs); ctx.globalAlpha = 1; continue; }
+        var v = cost(mode === 'hier' ? 'geo' : mode, [r, c], goal) / (maxc || 1);
+        ctx.fillStyle = bg; ctx.fillRect(c * cs, r * cs, cs, cs);
+        ctx.fillStyle = acc; ctx.globalAlpha = 0.08 + 0.55 * (1 - v); ctx.fillRect(c * cs + 1, r * cs + 1, cs - 2, cs - 2); ctx.globalAlpha = 1;
+      }
+      subs.forEach(function (sg) { ctx.fillStyle = hj; ctx.beginPath(); ctx.arc((sg[1] + 0.5) * cs, (sg[0] + 0.5) * cs, cs * 0.22, 0, 7); ctx.fill(); });
+      if (path.length > 1) { ctx.strokeStyle = warn; ctx.lineWidth = Math.max(2, cs * 0.12); ctx.lineJoin = 'round'; ctx.beginPath(); path.forEach(function (p, i) { var X = (p[1] + 0.5) * cs, Y = (p[0] + 0.5) * cs; if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); }); ctx.stroke(); }
+      ctx.fillStyle = goalc; ctx.font = (cs * 0.8) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('★', (goal[1] + 0.5) * cs, (goal[0] + 0.55) * cs);
+      ctx.fillStyle = css('--k-ctx'); ctx.beginPath(); ctx.arc((start[1] + 0.5) * cs, (start[0] + 0.5) * cs, cs * 0.3, 0, 7); ctx.fill();
+      setText('mz-res', result); setText('mz-why', WHY[mode]);
+    }
+    run(); onTheme(draw);
+  })();
+
+  /* ---- H-JEPA results explorer ----------------------------------------------- */
+  var RES = {
+    'Visual AntMaze': { flat: [18.0, 3.5], d: {
+      2: { native: [23.3, 3.3], L2: [31.3, 2.7], hier: [39.3, 3.7] },
+      3: { native: [16.7, 1.8], L2: [20.7, 4.8], L3: [22.0, 2.3], hier: [73.3, 3.5] },
+      4: { native: [10.0, 0.0], L2: [20.7, 1.8], L3: [21.3, 4.7], L4: [26.7, 2.9], hier: [63.3, 7.7] } }, src: 'Table 1; flat LeWM in the text of §4.2' },
+    'FourRoom Distractors': { flat: [40.7, 6.8], d: {
+      2: { native: [9.3, 0.7], L2: [38.7, 6.6], hier: [81.3, 6.7] },
+      3: { native: [43.3, 8.7], L2: [65.3, 5.5], L3: [71.3, 4.1], hier: [96.0, 1.1] },
+      4: { native: [68.7, 4.7], L2: [72.0, 3.1], L3: [66.0, 3.1], L4: [70.7, 2.7], hier: [80.0, 4.0] } }, src: 'Table 9' },
+    'OGBench Cube': { flat: [32.0, 6.1], d: {
+      2: { native: [24.0, 1.2], L2: [13.3, 0.7], hier: [47.3, 2.7] },
+      3: { native: [24.7, 1.3], L2: [28.0, 4.2], L3: [14.0, 3.5], hier: [60.0, 5.0] },
+      4: { native: [26.7, 2.7], L2: [25.3, 2.4], L3: [12.0, 2.0], L4: [12.0, 2.3], hier: [55.3, 4.4] } }, src: 'Table 9' },
+    'Push-T': { flat: [40.0, 2.3], d: {
+      2: { native: [36.7, 1.8], L2: [38.0, 3.1], hier: [45.3, 1.3] },
+      3: { native: [30.7, 1.8], L2: [28.0, 4.0], L3: [24.7, 4.1], hier: [17.3, 3.5] },
+      4: { native: [1.3, 0.7], L2: [1.3, 0.7], L3: [0.7, 0.7], L4: [1.3, 1.3], hier: [0.7, 0.7] } }, src: 'Table 9' }
+  };
+  (function results() {
+    var host = $('#vj-hres');
+    if (!host) return;
+    var env = 'Visual AntMaze', view = 'depth', depth = 3;
+    host.innerHTML = '<div class="ctlrow" style="border-top:0;padding-inline:0;gap:.4rem .6rem"><span id="hr-env" style="display:flex;flex-wrap:wrap;gap:.35rem"></span></div>' +
+      '<div class="ctlrow" style="padding-inline:0;gap:.4rem .6rem"><span id="hr-view" style="display:flex;flex-wrap:wrap;gap:.35rem"></span><span id="hr-depth" style="display:flex;flex-wrap:wrap;gap:.35rem"></span></div>' +
+      '<div class="hb-bars" id="hr-bars"></div>';
+    function bar(label, v, cls) {
+      var m = v[0], se = v[1];
+      return '<div class="hb-row"><span>' + label + '</span><span class="hb-track"><span class="hb-fill ' + (cls || '') + '" style="width:' + m + '%"></span>' +
+        (se > 0 ? '<span class="hb-err" style="left:' + Math.max(0, m - se) + '%;width:' + (Math.min(100, m + se) - Math.max(0, m - se)) + '%"></span>' : '') + '</span><span class="hb-val">' + m.toFixed(1) + ' ± ' + se.toFixed(1) + '</span></div>';
+    }
+    function draw() {
+      var E = RES[env], out = '';
+      if (view === 'depth') {
+        out += bar('flat LeWM', E.flat, 'ref');
+        [2, 3, 4].forEach(function (k) { out += bar(k + ' levels, hierarchical', E.d[k].hier, 'hier'); });
+        var best = [2, 3, 4].reduce(function (a, k) { return E.d[k].hier[0] > E.d[a].hier[0] ? k : a; }, 2);
+        setText('vj-hres-note', env + ': best ' + best + ' levels, ' + E.d[best].hier[0].toFixed(1) + '% against ' + E.flat[0].toFixed(1) + '% flat (' + E.src + ')');
+      } else {
+        var D = E.d[depth];
+        out += bar('flat LeWM (separate model)', E.flat, 'ref');
+        out += bar('level-1 planning, native cost', D.native);
+        ['L2', 'L3', 'L4'].forEach(function (k) { if (D[k]) out += bar('level-1 planning, ' + k + ' cost', D[k]); });
+        out += bar('full hierarchical planner', D.hier, 'hier');
+        var proj = ['L2', 'L3', 'L4'].filter(function (k) { return D[k]; }), bestP = proj.reduce(function (a, k) { return D[k][0] > D[a][0] ? k : a; }, proj[0]);
+        setText('vj-hres-note', env + ', ' + depth + ' levels: best projected cost ' + bestP + ' at ' + D[bestP][0].toFixed(1) + '% against ' + D.native[0].toFixed(1) + '% native (' + E.src + ')');
+      }
+      $('#hr-bars').innerHTML = out;
+      $('#hr-depth').style.display = view === 'cost' ? 'flex' : 'none';
+    }
+    chips($('#hr-env'), Object.keys(RES).map(function (k) { return [k, k]; }), env, function (k) { env = k; draw(); });
+    chips($('#hr-view'), [['depth', 'success by depth'], ['cost', 'change only the cost space']], view, function (k) { view = k; draw(); });
+    chips($('#hr-depth'), [[2, '2 levels'], [3, '3 levels'], [4, '4 levels']], depth, function (k) { depth = k; draw(); });
+    draw();
+  })();
+
+  /* ---- claim ledger filter ------------------------------------------------------ */
+  (function ledger() {
+    var bar = $('#vj-ledger-filter'), rows = $$('#vj-ledger tbody tr');
+    if (!bar || !rows.length) return;
+    var labels = { all: 'all', est: 'established', part: 'partly', hyp: 'untested', ref: 'contradicted' };
+    function show(k) {
+      var n = 0;
+      rows.forEach(function (r) { var on = k === 'all' || r.getAttribute('data-st') === k; r.hidden = !on; if (on) n++; });
+      setText('vj-ledger-note', n + ' of ' + rows.length + ' claims');
+    }
+    bar.appendChild(h('span', { class: 'mono', style: 'font-size:.68rem;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase' }, 'Show'));
+    var span = h('span', { style: 'display:flex;flex-wrap:wrap;gap:.35rem' });
+    bar.appendChild(span);
+    chips(span, Object.keys(labels).map(function (k) { return [k, labels[k]]; }), 'all', show);
+    show('all');
+  })();
+
+  if (VJ.applyFilter) VJ.applyFilter();
+})();
+</script>

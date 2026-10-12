@@ -1,0 +1,295 @@
+{%- comment -%}
+  V-JEPA handbook, sections 06 and 07: H-JEPA (arXiv 2610.06805v1), read in full
+  on 12 Oct 2026, with the code at github.com/kevinghst/H-JEPA. Included by
+  vjepa-explainer.html. Widgets (#vj-hier, #vj-maze, #vj-hres) are drawn by
+  vjepa-hjepa-script.html. No Liquid beyond this comment.
+{%- endcomment -%}
+  <!-- 6 ------------------------------------------------------------------ -->
+  <section id="hjepa">
+    <div class="sec-head"><span class="num">06</span><h2>H-JEPA: a hierarchy of action-conditioned JEPAs</h2></div>
+    <div class="col">
+      <p data-ev="hj">
+        V-JEPA 2-AC predicts one frame ahead and plans one step ahead; pick-and-place works only because a person supplies the
+        intermediate goal images. H-JEPA names the two reasons a single-level JEPA world model struggles further out. Rolling one
+        fine-grained predictor over a long horizon compounds its error and grows the action search space. And one latent space
+        has to serve both short-range dynamics and goal matching, although a goal such as "reach that room" is more abstract than
+        the full state that matches it. Its answer is a stack of JEPAs, each predicting farther ahead in a latent space of its
+        own, trained jointly from pixels. <span class="ev ev--hj">H-JEPA §1</span>
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">At a glance</div>
+      <div class="panel__body">
+        <dl class="kv">
+          <dt>Levels</dt><dd data-ev="hj">Up to four in simulation, two on DROID. Level 1 is LeWM: a ViT-Tiny encoder read through its [CLS] token and an MLP projector with BatchNorm, and a causal transformer predictor (4 layers, 8 heads, width 192, feed-forward 1024) conditioned on actions through adaptive LayerNorm. <span class="ev ev--hj">§3, App. C.1</span></dd>
+          <dt>Upper levels</dt><dd data-ev="hj">A two-layer MLP encoder (hidden 384) applied to one lower-level latent, a one-layer transformer that pools the intervening lower-level action embeddings into a 4-D macro-action, and a causal transformer predictor. Stride s<sub>ℓ</sub> = 2 and window w<sub>ℓ</sub> = 1 at every upper level, so each step up doubles the time a prediction spans. <span class="ev ev--hj">App. C.1, Table 4</span></dd>
+          <dt>Time base</dt><dd data-ev="hj">A level-1 step is 5 environment steps with the intervening actions concatenated; a level-ℓ step is 5·2<sup>ℓ−1</sup> environment steps. <span class="ev ev--hj">App. C.1</span></dd>
+          <dt>Training</dt><dd data-ev="hj">All levels from scratch in one run, upper-level losses backpropagating into the encoders below. No EMA target, no stop-gradient, no pretrained weights. AdamW, weight decay 1e-3, 1% warm-up then cosine decay, clipping at 1.0, bfloat16; peak learning rate 5e-5 at level 1 and 1e-5 above; 5 to 9 epochs; seeds 42, 43, 44; H200 GPUs. Training FLOPs are not matched across depths. <span class="ev ev--hj">App. C.1</span></dd>
+          <dt>Data</dt><dd data-ev="hj">1.0M transitions (FourRoom), 10.05M (AntMaze explore plus stitch), the Push-T expert set, the OGBench Cube scripted set; a re-encoded copy of DROID for §07. <span class="ev ev--hj">App. B, C.1, J.4</span></dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Building the hierarchy</h3>
+      <p data-ev="hj">
+        Higher levels are built from the latents of the level below. With stride s<sub>ℓ</sub> (how far each window advances) and
+        window w<sub>ℓ</sub> (how far it spans), and a:b meaning a, …, b−1:
+      </p>
+      <div class="formula">z<sup>(ℓ)</sup><sub>t</sub> = E<sup>(ℓ)</sup>( z<sup>(ℓ−1)</sup><sub>t·s<sub>ℓ</sub> : t·s<sub>ℓ</sub>+w<sub>ℓ</sub></sub> ),&nbsp;&nbsp; a<sup>(ℓ)</sup><sub>t</sub> = A<sup>(ℓ)</sup>( a<sup>(ℓ−1)</sup><sub>t·s<sub>ℓ</sub>+w<sub>ℓ</sub>−1 : (t+1)·s<sub>ℓ</sub>+w<sub>ℓ</sub>−1</sub> ) <span class="dim">&nbsp;&nbsp;// Eq. 1</span></div>
+      <p data-ev="hj">
+        The state encoder pools a w-step window into one abstract state; the action encoder pools the s action embeddings that
+        carry the system from that state to the next upper-level state. Each level is then an ordinary action-conditioned JEPA in
+        its own space, trained by one-step teacher forcing over a context of c<sub>ℓ</sub> states, with SIGReg on the batch of
+        embeddings:
+      </p>
+      <div class="formula">L<sup>(ℓ)</sup> = (1/c<sub>ℓ</sub>) Σ<sub>τ=1..c<sub>ℓ</sub></sub> ‖ F<sup>(ℓ)</sup>(z<sup>(ℓ)</sup><sub>1:τ</sub>, a<sup>(ℓ)</sup><sub>1:τ</sub>) − z<sup>(ℓ)</sup><sub>τ+1</sub> ‖²<sub>2</sub> + λ<sub>ℓ</sub>·SIGReg(Z<sup>(ℓ)</sup>),&nbsp;&nbsp; L = Σ<sub>ℓ</sub> L<sup>(ℓ)</sup> <span class="dim">&nbsp;&nbsp;// Eqs. 2 and 3</span></div>
+      <p class="mini" data-ev="hj">Eq. 2 prints the context as z<sub>&lt;τ</sub>; the text describes a causal predictor that sees the c<sub>ℓ</sub> preceding states and their actions, which is what the line above writes. SIGReg weight λ is shared by all levels of a model: 0.18 on FourRoom, 0.09 elsewhere, with M = 1024 random projections. <span class="ev ev--hj">§2.1, App. C.1, Table 4</span></p>
+      <p>Change the depth, stride and window below. The page recomputes how many level-1 frames one training sample needs and checks the result against the paper's Table 3.</p>
+    </div>
+    <div class="panel">
+      <div class="panel__head"><span>Hierarchy builder: one training sample</span><span class="readout" id="vj-hier-note" style="margin-left:auto"></span></div>
+      <div class="panel__body"><div id="vj-hier"></div></div>
+      <div class="panel__foot" data-ev="hj">Recurrence from App. C.1: the top level needs n<sub>L</sub> = 4 states, and n<sub>ℓ−1</sub> = (n<sub>ℓ</sub> − 1)·s<sub>ℓ</sub> + w<sub>ℓ</sub>. A clip spans 5·(n<sub>1</sub> − 1) + 1 environment steps. A sample yields three teacher-forced transitions per level. The lower-level horizon needed to cover K upper-level subgoals is H<sub>ℓ</sub> = K·s<sub>ℓ+1</sub> + w<sub>ℓ+1</sub> − 1 (§2.2). <span class="ev ev--hj">App. C.1, Table 3, §2.2</span></div>
+    </div>
+
+    <div class="col">
+      <h3>The DROID model, with shapes</h3>
+    </div>
+    <div class="panel">
+      <div class="panel__body">
+<pre class="code"><b>frames</b>   DROID re-encode, 256 × 256, one exterior view per window, <b>5 fps</b>, 8 level-1 states per clip
+<b>level 1</b>  ViT-S/16 → CLS → projector → z<sup>(1)</sup><sub>t</sub> ∈ ℝ<sup>384</sup>         actions a<sub>t</sub> ∈ ℝ<sup>7</sup> (Δxyz, Δrpy, gripper)
+         predictor: causal transformer, width 384, depth 12, 6 heads, FF 1536, dropout 0.1, AdaLN on actions
+         context c<sub>1</sub> = 7 states; loss = pred + 0.08·SIGReg<sub>(T,N,D)</sub> + 100·IDM
+<b>level 2</b>  stride 3, window 1: z<sup>(2)</sup><sub>t</sub> = MLP<sub>768</sub>(z<sup>(1)</sup><sub>3t</sub>)
+         macro-action: concat 3 × 7 raw commands → MLP(64) → LN → ℝ<sup>8</sup>, with 0.005·SIGReg on it
+         predictor width 384, depth 12; context c<sub>2</sub> = 2; loss = pred + 0.16·SIGReg + 50·IDM
+<b>optimiser</b> AdamW (0.9, 0.999), batch 256, peak 5e-4, 10% warm-up, cosine to 0, wd 1e-4,
+         clip 1.0 per level, bf16, 100 epochs × 292 iterations, seeds 1, 1000, 10000</pre>
+      </div>
+      <div class="panel__foot" data-ev="hj">Table 5 and App. C.2. "(T,N,D)" means SIGReg tests normality within each timestep across the N sequences of the batch. The DROID models see pixels and actions only, no proprioception. <span class="ev ev--hj">App. C.2, Table 5</span></div>
+    </div>
+
+    <div class="col">
+      <h3>What each level keeps: selective abstraction</h3>
+      <p data-ev="hj">
+        Two-layer MLP probes on frozen latents, reported as variance-normalised MSE (1 is the marginal mean, 0 is exact recovery),
+        three seeds. In four-level models on Visual AntMaze the ant's joint configuration becomes less recoverable with each
+        level while its position stays recoverable; on FourRoomDistractors the independently moving distractor fades while the
+        agent stays. <span class="ev ev--hj">§3, Fig. 4</span>
+        The effect tracks the data. Measured as the ratio of spectral centroids of the fastest and slowest state components,
+        environments with a frequency gap below about 2× show little abstraction; AntMaze, Humanoid and FourRoom show it, and
+        the manipulation datasets, Push-T and Cube, have small gaps and do not. <span class="ev ev--hj">§3, Fig. 5, App. F</span>
+      </p>
+      <p data-ev="inf">
+        The mechanism the paper offers is the joint training itself: prediction-error gradients flow into every encoder, so each
+        level keeps what it can predict at its own stride and drops what it cannot. That is a statement about what the
+        objective rewards, demonstrated by probes in three environments, not a guarantee; in tabletop manipulation, where object
+        and gripper move on similar timescales, the hierarchy decomposes time but does not abstract state.
+        <span class="ev ev--inf">Inference</span>
+      </p>
+
+      <h3>Why diverse scenes need an inverse-dynamics term</h3>
+      <p data-ev="hj">
+        On DROID the scene, lighting, camera pose and objects change every episode. Within an episode the background is the most
+        predictable part of the signal, so a purely predictive objective can keep the scene identity and drop the arm. The paper
+        calls this slow-feature collapse and measures it as the within-episode share of latent variance,
+        χ(E) = E<sub>b</sub>[tr Var<sub>t</sub>(z<sub>t</sub> | b)] / tr Var<sub>b,t</sub>(z<sub>t</sub>), which is 0 at exact collapse.
+        Latent variance is 75% between episodes on DROID against 28% on OGBench Cube. <span class="ev ev--hj">§4.3, App. L.1, L.2</span>
+      </p>
+    </div>
+    <div class="acc"><button type="button" class="acc__head" aria-expanded="true"><span class="n">L.3</span> No regulariser on the marginal law can exclude it <span class="ev ev--hj" style="margin-left:.4rem">H-JEPA</span><span class="chev">›</span></button>
+      <div class="acc__body" data-ev="hj"><p><b>Proposition 1.</b> If R is any functional of the marginal law of a single embedding, zero at some law μ<sub>0</sub>, and the background law is atomless, then an encoder E = Q∘U∘b (reading the background only) and the identity predictor reach L<sub>pred</sub> = 0 and R = 0 together. VICReg-style variance and covariance terms, whitening, entropy penalties and SIGReg all look at the marginal law only. A barrier must act on the joint law of z across time.</p></div></div>
+    <div class="acc"><button type="button" class="acc__head" aria-expanded="false"><span class="n">L.4</span> The objective selects by predictability, and the collapse is an optimum <span class="ev ev--hj" style="margin-left:.4rem">H-JEPA</span><span class="chev">›</span></button>
+      <div class="acc__body" data-ev="hj"><p><b>Theorem 1.</b> For any measurable E, the irreducible prediction risk ℰ(E) = E‖z<sub>t+1</sub> − E[z<sub>t+1</sub> | z<sub>t</sub>, a<sub>t</sub>]‖² satisfies ℰ(E) ≥ ν(E) ≥ 0, where ν is the next-embedding variance that survives knowing the full latent state and the action; ℰ = 0 exactly when z<sub>t+1</sub> is a measurable function of (z<sub>t</sub>, a<sub>t</sub>). Reading only the background gives ν = 0 with the identity as predictor. In practice training picked that optimum: action sensitivity fell below 0.05 in all fifteen seeds of the SIGReg ladder.</p></div></div>
+    <div class="acc"><button type="button" class="acc__head" aria-expanded="false"><span class="n">L.5</span> Pooling time into SIGReg's sample axis is a real but small barrier <span class="ev ev--hj" style="margin-left:.4rem">H-JEPA</span><span class="chev">›</span></button>
+      <div class="acc__body" data-ev="hj"><p><b>Proposition 2.</b> At exact collapse, a grouping that puts several timesteps of one sequence into the same normality test raises SIGReg above its null value by Δ = λ(T − 1)κ; a grouping with time in the group axis, which the headline DROID runs use, adds nothing. The ladder runs that do carry Δ all collapse anyway, later at larger λ, with χ between 0.008 and 0.016 past epoch 50.</p></div></div>
+    <div class="acc"><button type="button" class="acc__head" aria-expanded="false"><span class="n">L.7</span> The inverse-dynamics term is a barrier of a different order <span class="ev ev--hj" style="margin-left:.4rem">H-JEPA</span><span class="chev">›</span></button>
+      <div class="acc__body" data-ev="hj"><p><b>Proposition 3.</b> With the IDM loss L<sub>idm</sub> = (1/(T−1)) Σ<sub>t</sub> (1/d<sub>a</sub>) ‖I(z<sub>t</sub>, z<sub>t+1</sub>) − sg[a<sub>t</sub>]‖² (Eq. 8), a collapsed encoder pays at least (1/d<sub>a</sub>) times the action variance not explained by episode identity. With unit-variance actions that floor is 1, so at weight γ = 50 collapse costs 50, against a SIGReg barrier of zero for the grouping used. It needs action labels, and it never penalises keeping distractors.</p></div></div>
+
+    <div class="panel">
+      <div class="panel__head">What each anti-collapse lever does on DROID, level 1 at 5 fps</div>
+      <div class="panel__body tablewrap">
+        <table class="tprose">
+          <thead><tr><th scope="col">Setting</th><th scope="col">Representation</th><th scope="col">Action sensitivity</th><th scope="col">Fréchet fidelity</th></tr></thead>
+          <tbody>
+            <tr><td>No SIGReg, any IDM weight</td><td style="white-space:normal">effective rank 1 to 14 of 384</td><td>n/a</td><td>below the zero-action floor</td></tr>
+            <tr><td>SIGReg ladder, no IDM (5 weights)</td><td style="white-space:normal">collapses later at larger λ; χ 0.008 to 0.016</td><td>below 0.05</td><td>−81% final at the largest λ</td></tr>
+            <tr><td>SIGReg + time repulsion, no IDM</td><td style="white-space:normal">keeps moving within episodes</td><td>0.21 to 0.53</td><td>no run clears the floor</td></tr>
+            <tr class="best"><td>SIGReg + IDM, γ = 50</td><td style="white-space:normal">χ = 0.12</td><td>0.28</td><td>30.66%, best and final</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="hj">Fig. 17 (16-cell grid; IDM weight 100 best) and Table 12, three training seeds, 100 epochs; the spreads Table 12 prints in parentheses are omitted here. Action sensitivity is the relative change of a predicted rollout when the true actions are swapped for another episode's. <span class="ev ev--hj">App. K.1, L.5 to L.7, Table 12</span></div>
+    </div>
+    <div class="col">
+      <div class="note" data-ev="inf">
+        <p><b>Read across the family.</b> V-JEPA 2-AC never meets this problem: its encoder is frozen after pretraining on
+        a million hours of varied video, so nothing can collapse, but nothing shapes it toward the arm either, and App. B.4's
+        camera-dependent action error is one symptom. H-JEPA trains a small encoder end to end and must therefore add an
+        explicit, action-supervised barrier. The direction card D2 on this page proposed an inverse-dynamics head as a
+        controllability signal; on DROID it is now measured to be necessary, not optional. <span class="ev ev--inf">Inference</span>
+        <a class="goto" href="#future">see D2 →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 ------------------------------------------------------------------ -->
+  <section id="hjplan">
+    <div class="sec-head"><span class="num">07</span><h2>H-JEPA: planning top-down, results and ablations</h2></div>
+    <div class="col">
+      <h3>The planner</h3>
+      <p data-ev="hj">
+        Encode the current and goal observations at every level, giving z<sup>(ℓ)</sup><sub>0</sub> and g<sup>(ℓ)</sup>. The top level
+        optimises macro-actions so that its final predicted state lands on its own goal latent:
+      </p>
+      <div class="formula">a<sup>(L),⋆</sup><sub>0:H<sub>L</sub>−1</sub> = argmin ‖ ẑ<sup>(L)</sup><sub>H<sub>L</sub></sub> − g<sup>(L)</sup> ‖²<sub>2</sub>,&nbsp;&nbsp; (ẑ<sub>1</sub>, …, ẑ<sub>H</sub>) = Roll<sup>(L)</sup>(z<sub>0</sub>, a<sub>0:H−1</sub>) <span class="dim">&nbsp;&nbsp;// Eq. 4</span></div>
+      <p data-ev="hj">
+        Each lower level then plans toward the subgoals the level above predicted. It rolls its own model forward, lifts the
+        rollout into the upper space through the upper encoder, and matches K of the upper predictions, the last one weighted 1
+        and the intermediate ones β:
+      </p>
+      <div class="formula">z̃<sup>(ℓ+1)</sup><sub>i</sub> = E<sup>(ℓ+1)</sup>(ẑ<sup>(ℓ)</sup><sub>i·s : i·s+w</sub>),&nbsp;&nbsp; a<sup>(ℓ),⋆</sup> = argmin [ ‖z̃<sub>K</sub> − ẑ<sup>(ℓ+1),⋆</sup><sub>K</sub>‖² + β Σ<sub>i&lt;K</sub> ‖z̃<sub>i</sub> − ẑ<sup>(ℓ+1),⋆</sup><sub>i</sub>‖² ] <span class="dim">&nbsp;&nbsp;// Eqs. 5, 6</span></div>
+      <p data-ev="hj">
+        K = 1 is closed-loop planning, matching only the first subgoal; K = H with β = 0 matches only the terminal prediction;
+        β &gt; 0 also tracks the intermediate ones. Every level optimises by gradient descent through its rollout, not by CEM.
+        <span class="ev ev--hj">§2.2, App. E</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__body">
+<pre class="code"><b>def</b> plan(o, o_goal, levels):                                  <i># one replanning call</i>
+    z, g = [E_l(o) for l], [E_l(o_goal) for l]                   <i># encode bottom-up, one frame each</i>
+    target = g[L]                                                 <i># top level aims at its goal latent</i>
+    <b>for</b> l <b>in</b> L, L-1, ..., 1:
+        init = N(0, I) <b>if</b> l == 1 <b>else</b> Gaussian fit to the last 4,000 training macro-actions
+        A = S_l candidates from init                              <i># S_l per level, e.g. (25, 200) on AntMaze</i>
+        <b>repeat</b> ≤ 90 AdamW steps, stop when the best cost stalls:
+            Z = Roll_l(z[l], A)                                   <i># context c = 1: latest state only</i>
+            cost = ‖Z[-1] − target‖² <b>if</b> l == L                  <i># level 1 scores its last two states</i>
+                   <b>else</b> subgoal cost of Eq. 6 after lifting Z through E_(l+1)
+            A ← A − η ∇<sub>A</sub> cost;  clip upper-level A to the 2nd–98th percentile box
+        best = argmin cost;  target = Roll_l(z[l], best)[1]          <i># first predicted state → subgoal below</i>
+    <b>return</b> best level-1 actions
+
+<i># MPC: execute 2 level-1 blocks (10 environment steps), observe, call plan() again from scratch;</i>
+<i># the top horizon shrinks from H to 1 over the episode, and a level at horizon 1 is skipped.</i></pre>
+      </div>
+      <div class="panel__foot" data-ev="hj">Paraphrased from App. E ("Shared solver", "Replanning and horizons") and Table 7. On Push-T and Cube the level-1 actions are also pooled and matched to the first macro-action with weight 0.2; DROID widens the initial Gaussians 1.5× and clips every level to ±2 standard deviations. <span class="ev ev--hj">App. E, Tables 7 and 8</span></div>
+    </div>
+
+    <div class="col">
+      <h3>Why the hierarchy helps: two levers, separated</h3>
+      <p data-ev="hj">
+        Hierarchical planning changes two things at once: it splits the search in time, and it scores progress in a more
+        abstract space. The paper isolates the second by keeping level-1 rollouts and planner settings fixed and changing only
+        the space in which the goal distance is measured, projecting both prediction and goal through the upper encoders. On
+        AntMaze every multilevel model gains from at least one projected cost, and the best projected flat planner beats the
+        separately trained LeWM at every depth. Cost maps show why: level-1 distances to an anchor are nearly constant away from
+        it, so a gradient planner gets no signal until it is close, while upper-level distances rise smoothly along corridors.
+        <span class="ev ev--hj">§4.2, Table 1, Fig. 7</span>
+        The first lever shows in a different measurement: along held-out expert trajectories, the cost of tracking the next
+        subgoal falls monotonically (−Spearman 0.89 to 1.00 for H-JEPA) where the full-horizon goal cost does not (0.48 to 0.75
+        for the flat level-1 cost). <span class="ev ev--hj">§4.2, Table 10</span>
+      </p>
+      <p>The toy below makes both levers visible on a maze. It is schematic: a grid, a greedy planner and hand-made costs, not the
+        paper's models.</p>
+    </div>
+    <div class="panel">
+      <div class="panel__head"><span>Cost geometry and subgoals, a toy maze</span><span class="ev ev--sch" style="margin-left:auto">schematic, computed live</span></div>
+      <div class="panel__body"><div id="vj-maze"></div></div>
+      <div class="panel__foot" data-ev="inf">The four costs mimic Fig. 7 qualitatively: a distance that saturates beyond a radius (a level-1 latent far from the goal), straight-line distance that ignores walls, a graded geodesic distance (an upper level), and subgoals along that geodesic tracked with the local cost (temporal decomposition). The planner moves greedily one cell at a time with a step budget. <span class="ev ev--inf">Illustration</span></div>
+    </div>
+
+    <div class="col"><h3>Results in simulation, every number the paper tabulates</h3></div>
+    <div class="panel">
+      <div class="panel__head"><span>Success (%), mean ± SE over three seeds, 50 tasks per environment</span><span class="readout" id="vj-hres-note" style="margin-left:auto"></span></div>
+      <div class="panel__body"><div id="vj-hres"></div></div>
+      <div class="panel__foot" data-ev="hj">Tables 1 and 9: one evaluation set of 50 start-goal tasks per environment, generated with seeds different from the compute-sweep tasks used to choose planner settings under a 100-TFLOP budget. "Hierarchical" is the full top-down planner; the other rows plan at level 1 only and vary the cost space. HWM's per-depth numbers appear only in Fig. 6 and are not reproduced. <span class="ev ev--hj">§4, App. E, H</span></div>
+    </div>
+    <div class="col">
+      <ul class="checks">
+        <li data-ev="hj"><b>Depth helps, then the data run out.</b> Three levels is best on AntMaze (73.3) and FourRoom (96.0); Cube peaks at three (60.0); Push-T collapses at three and four levels because a clip must lie within one short episode, leaving three- and four-level models 58% and 14% of LeWM's training transitions per epoch. <span class="ev ev--hj">§4.1, Table 3</span></li>
+        <li data-ev="hj"><b>Distinct spaces add to temporal hierarchy where abstraction emerges.</b> Against HWM at matched implementation, data and depth (upper encoders replaced by identities), H-JEPA reaches nearly twice HWM's success on AntMaze, scores higher on Cube at larger depths, and ties on FourRoom and Push-T. HWM itself beats flat LeWM in all four environments. <span class="ev ev--hj">§4.1, Fig. 6</span></li>
+        <li data-ev="hj"><b>Projected costs are not free.</b> On Cube the level-3 and level-4 projections roughly halve success, and on Push-T no cost helps; these are the environments without selective abstraction. <span class="ev ev--hj">App. H, Table 9</span></li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Cost monotonicity along held-out expert trajectories (−Spearman of cost against time, higher is better)</div>
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">Environment</th><th scope="col">Level-1 goal cost</th><th scope="col">HWM level 2</th><th scope="col">HWM subgoal</th><th scope="col">H-JEPA level 2</th><th scope="col">H-JEPA subgoal</th></tr></thead>
+          <tbody>
+            <tr><td>Visual AntMaze</td><td>0.48</td><td>0.52</td><td>0.94</td><td>0.68</td><td>0.94</td></tr>
+            <tr><td>Push-T</td><td>0.75</td><td>0.77</td><td>0.85</td><td>0.77</td><td>0.89</td></tr>
+            <tr><td>OGBench Cube</td><td>0.65</td><td>0.74</td><td>0.79</td><td>1.00</td><td>0.99</td></tr>
+            <tr><td>FourRoom Distractors</td><td>0.56</td><td>0.62</td><td>0.92</td><td>0.85</td><td>1.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="hj">Table 10, mean over three training seeds, two-level models. These characterise costs along expert trajectories, not the success of optimised plans. <span class="ev ev--hj">App. I</span></div>
+    </div>
+
+    <div class="col">
+      <h3>DROID: real robot video, offline</h3>
+      <p data-ev="hj">
+        DROID has no simulator that runs without ray-tracing hardware, so every DROID number is offline and open-loop: one plan
+        covers a fixed 108-frame window (about 7.2 s) centred on the grasp of 16 hand-picked pick-and-place clips with good
+        lighting and visible objects; nothing is executed or replanned. Plans are scored by Fréchet fidelity, how closely the
+        planned end-effector path follows the expert's, relative to not moving at all:
+      </p>
+      <div class="formula">fidelity = ( d<sub>F</sub>(0, p̃) − d<sub>F</sub>(p, p̃) ) / d<sub>F</sub>(0, p̃) <span class="dim">&nbsp;&nbsp;// Eq. 7: 0 = arm still, 100% = expert path, negative = worse than still</span></div>
+      <p data-ev="hj">
+        p and p̃ are the cumulative xyz paths of the planned and expert delta poses and d<sub>F</sub> is the discrete Fréchet
+        distance. Each planner seed is averaged over clips, and the median over the 3 × 3 training and planner seeds is
+        reported. The authors calibrate it in simulation: on OGBench Cube no episode succeeds below a fidelity floor, but clearing
+        the floor does not predict success; on RoboCasa CloseDrawer it ranks graded progress with a positive, moderate
+        within-configuration rank correlation. They therefore read a DROID gap as a direction, not a size.
+        <span class="ev ev--hj">§4.3, App. J.1, J.2</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__head">DROID at 5 fps, Fréchet fidelity (%) on the 16-clip set</div>
+      <div class="panel__body tablewrap">
+        <table class="tprose">
+          <thead><tr><th scope="col">Model</th><th scope="col">Levels</th><th scope="col">Fidelity</th><th scope="col">Note</th></tr></thead>
+          <tbody>
+            <tr><td>LeWM, no IDM</td><td>1</td><td>collapsed</td><td style="white-space:normal">slow-feature collapse; "performance is zero"</td></tr>
+            <tr><td>LeWM + IDM</td><td>1</td><td>≈ 34</td><td style="white-space:normal">strong flat baseline</td></tr>
+            <tr><td>HWM (identity level-2 encoder)</td><td>2</td><td>≈ 35</td><td style="white-space:normal">temporal hierarchy only</td></tr>
+            <tr class="best"><td>H-JEPA</td><td>2</td><td>≈ 40</td><td style="white-space:normal">learned level-2 space; best at lower planner TFLOPs (Fig. 9c Pareto front)</td></tr>
+            <tr><td>V-JEPA 2-AC, JEPA-WM (public checkpoints)</td><td>1</td><td>lower</td><td style="white-space:normal">evaluated at their native 1 fps on the 15 clips whose window fits; "orders of magnitude more compute for a lower fidelity"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="hj">Values read from the bar labels of Fig. 9b in the PDF (the HTML version of the figure has no numbers); intervals are SE over three training seeds. The frozen-encoder rows have no number in the text, only their position in Fig. 9c. <span class="ev ev--hj">§4.3, Fig. 9</span> <span class="ev ev--inf">read from the figure</span></div>
+    </div>
+    <div class="col">
+      <p data-ev="hj">
+        <b>The corpus.</b> Raw DROID would make H.264 decoding, not the GPU, set the epoch time over about 5.5 TB. The authors
+        re-encode every camera view to 256 × 256 with libx264 at CRF 18 and repack each trajectory: 127.6 GB for 74,530 episodes,
+        about 45× smaller and 17.9× faster to decode, with trajectories bitwise identical and a median video PSNR of 33.75 dB. The
+        16 evaluation clips are removed from training. <span class="ev ev--hj">App. J.4, J.1</span>
+      </p>
+      <div class="note note--warn" data-ev="inf">
+        <p><b>What the DROID result does and does not show.</b> It shows that on one real-robot corpus with varying scenes, a
+        learned second level improves the path a planner proposes, at less planner compute, under a metric the authors
+        calibrated themselves. It does not show a robot succeeding more often: no plan was executed, the 16 clips were selected
+        for visibility, the baselines with frozen encoders ran at a different frame rate on 15 clips, and the paper's own
+        stated next step is closed-loop control on a physical robot. <span class="ev ev--inf">Inference</span>
+        <span class="ev ev--hj">§6</span></p>
+      </div>
+      <h3>Limitations, stated and inferred</h3>
+      <ul class="checks">
+        <li data-ev="hj"><b>Fixed strides.</b> Upper levels advance by a fixed stride; variable-duration segments are named as future work. <span class="ev ev--hj">§6</span></li>
+        <li data-ev="hj"><b>Action labels are required on diverse scenes.</b> The inverse-dynamics term is the only Ω(1) barrier against slow-feature collapse; time repulsion alone did not clear the zero-action floor. Action-free video is open. <span class="ev ev--hj">App. J.5, L.6, L.7</span></li>
+        <li data-ev="hj"><b>One exterior camera at a time, no wrist view.</b> The authors expect joint multi-view encoding, wrist included, to matter most for precise manipulation. <span class="ev ev--hj">App. J.5</span></li>
+        <li data-ev="hj"><b>Goals are images.</b> Language-aligned upper latents are a stated direction. <span class="ev ev--hj">§6</span></li>
+        <li data-ev="inf"><b>Deterministic at every level.</b> Each predictor is a point estimate trained with L2, so bimodal outcomes such as a slip average out at every timescale, as they do in V-JEPA 2-AC. <span class="ev ev--inf">Inference</span></li>
+        <li data-ev="inf"><b>Small models, simple scenes.</b> The simulated results use a ViT-Tiny with fixed camera and background; whether the selective abstraction survives at V-JEPA 2 scale, or on a frozen V-JEPA 2 encoder, is untested. <span class="ev ev--inf">Inference</span></li>
+      </ul>
+    </div>
+  </section>

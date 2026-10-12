@@ -1,11 +1,14 @@
 {%- comment -%}
-  V-JEPA Teardown - the interactive explainer (rev. 2026-09-22).
+  V-JEPA handbook - the interactive explainer (rev. 2026-10-12): V-JEPA, V-JEPA 2,
+  V-JEPA 2-AC and H-JEPA. Sections 02, 06, 07 and 14 and their widgets live in
+  vjepa-family.html, vjepa-hjepa.html, vjepa-ledger.html and
+  vjepa-hjepa-script.html, included below; earlier revision 2026-09-22.
 
   Same contract as the Atlas and Cosmos 3 explainers: _pages/vjepa.html wraps
   this in a standalone document at /notes/v-jepa/, and the identical body is
   published as a Claude artifact by scripts/build_dive_artifacts.py. Shared
   look comes from dive-styles.html; only this page's own pieces are styled
-  below. No Liquid outside this comment and the one include, and no <title>
+  below. No Liquid outside this comment and the includes, and no <title>
   (each host supplies its own). Three.js r128 is the only external script,
   loaded from cdnjs because the artifact host admits nothing else.
 
@@ -13,8 +16,9 @@
     data-ev="pap"   [Paper]       arXiv 2506.09985v1, with appendices        (teal)
     data-ev="code"  [Code]        facebookresearch/vjepa2 @ 204698b, incl.
                                   numbers measured by running that code      (blue)
-    data-ev="ctx"   [Context]     other primary sources: V-JEPA, V-JEPA 2.1,
-                                  IntPhys 2, CausalVQA, LeWM, DINO-WM, ...   (slate)
+    data-ev="ctx"   [Context]     other primary sources: I-JEPA, V-JEPA, V-JEPA 2.1,
+                                  IntPhys 2, CausalVQA, LeWM, DINO-WM, HWM ...   (slate)
+    data-ev="hj"    [H-JEPA]      arXiv 2610.06805v1 and github.com/kevinghst/H-JEPA (rose)
     data-ev="inf"   [Inference]   reasoned from the sources, not stated      (amber)
     data-ev="spec"  [Speculation] plausible, unsupported                     (violet)
   Scenes that are not to scale carry a grey "schematic" badge, which is not a
@@ -333,26 +337,32 @@ th.app { color: var(--k-pred); }
 <div class="wrap" id="vj">
 
   <header class="head">
-    <div class="plate">Teardown · Latent world models · rev. 2026-09-22</div>
-    <h1>V-JEPA 2 and 2-AC, taken apart</h1>
+    <div class="plate">Research handbook · Latent world models · rev. 2026-10-12</div>
+    <h1>V-JEPA, V-JEPA 2-AC and H-JEPA, taken apart</h1>
     <p class="lede">
       V-JEPA 2 learns a video encoder by predicting masked video in a feature space it invents. V-JEPA 2-AC freezes that
-      encoder, trains an action-conditioned predictor on under 62 hours of robot video, and plans with it on Franka arms it
-      never saw. This page checks every number against the paper, the released code and the successor, audits the robot
-      evidence trial by trial, and ends in a sixteen-step 3D tour and a research agenda for manipulation and humanoids.
+      encoder, trains an action-conditioned predictor on DROID robot video, and plans with it on Franka arms it never saw.
+      H-JEPA, released in October 2026, stacks action-conditioned JEPAs at several timescales, each in its own latent space,
+      and plans top-down. This page traces the family from I-JEPA, checks every number against the papers and the released
+      code, measures what the DROID loader actually feeds V-JEPA 2-AC, audits the robot evidence trial by trial, and ends in
+      a sixteen-step 3D tour and a research agenda for manipulation and humanoids.
     </p>
     <div class="byline">
       <span>Primary source: arXiv 2506.09985v1, 11 Jun 2025</span>
       <span>Code: facebookresearch/vjepa2 @ 204698b</span>
       <span>Successor: V-JEPA 2.1, arXiv 2603.14482v3</span>
-      <span>Reading: 40 min, tour: 20 min</span>
+      <span>Hierarchy: H-JEPA, arXiv 2610.06805v1, code kevinghst/H-JEPA</span>
+      <span>Reading: 70 min, tour: 20 min</span>
     </div>
     <div class="jump">
       <a class="primary" href="#tour">Open the 3D tour</a>
-      <a href="#story">Story mode</a>
+      <a href="#lineage">The JEPA family</a>
       <a href="#s4">V-JEPA 2-AC</a>
+      <a href="#hjepa">H-JEPA</a>
       <a href="#s5">Evaluation audit</a>
+      <a href="#ledger">Established or not</a>
       <a href="#future">Physical Super Intelligence directions</a>
+      <a href="#story">Story mode</a>
     </div>
 
     <div class="filter" id="vj-filter">
@@ -360,6 +370,7 @@ th.app { color: var(--k-pred); }
       <label class="sw sw--pap"><input type="checkbox" data-evf="pap" checked><span class="sw__dot"></span> Paper</label>
       <label class="sw sw--code"><input type="checkbox" data-evf="code" checked><span class="sw__dot"></span> Code</label>
       <label class="sw sw--ctx"><input type="checkbox" data-evf="ctx" checked><span class="sw__dot"></span> Context</label>
+      <label class="sw sw--hj"><input type="checkbox" data-evf="hj" checked><span class="sw__dot"></span> H-JEPA</label>
       <label class="sw sw--inf"><input type="checkbox" data-evf="inf" checked><span class="sw__dot"></span> Inference</label>
       <label class="sw sw--spec"><input type="checkbox" data-evf="spec" checked><span class="sw__dot"></span> Speculation</label>
       <span class="filter__note" id="vj-filter-note">All shown</span>
@@ -371,11 +382,12 @@ th.app { color: var(--k-pred); }
     <div class="sec-head"><span class="num">00</span><h2>Corrections before the answers</h2></div>
     <div class="col">
       <p>
-        Fourteen premises that circulate about these models, including three that the previous version of this page got
-        wrong. Each is checked against the paper, the code at commit 204698b, or a named primary source. Tags:
-        <span class="ev ev--pap">Paper</span> the V-JEPA 2 paper, <span class="ev ev--code">Code</span> the official
-        repository or numbers measured by running it, <span class="ev ev--ctx">Context</span> another primary source,
-        <span class="ev ev--inf">Inference</span> and <span class="ev ev--spec">Speculation</span> my own reasoning.
+        Twenty-one premises that circulate about these models, including four that earlier versions of this page got wrong;
+        items 15 to 21 are new on 12 Oct 2026. Each is checked against the paper, the code at commit 204698b, or a named
+        primary source. Tags: <span class="ev ev--pap">Paper</span> the V-JEPA 2 paper, <span class="ev ev--code">Code</span>
+        the official repository or numbers measured by running it, <span class="ev ev--hj">H-JEPA</span> the H-JEPA paper and
+        its code, <span class="ev ev--ctx">Context</span> another primary source, <span class="ev ev--inf">Inference</span> and
+        <span class="ev ev--spec">Speculation</span> my own reasoning.
       </p>
     </div>
     <ol class="fixes">
@@ -393,6 +405,12 @@ th.app { color: var(--k-pred); }
       <li data-ev="inf"><b>"L1-ball of radius 0.075" cannot give the stated 13 cm step.</b> An L1 ball of that radius caps displacement at 7.5 cm. A per-axis box of half-width 0.075 caps it at 0.075·√3 ≈ 13 cm, which is the figure the paper gives, and the released planner clips each axis, which is a box. <span class="ev ev--pap">Paper §4.1, Fig. 8</span> <span class="ev ev--code">notebooks/utils/mpc_utils.py</span> <span class="ev ev--inf">Inference</span></li>
       <li data-ev="code"><b>The released code is not the paper's configuration.</b> The DROID config trains on 8-frame clips (7 teacher-forced steps), not 16-frame clips with T = 15. The released pretraining config mixes three datasets (K710, SSv2, HowTo100M), not VideoMix22M. The released planner samples 400 actions over a horizon of 2 with rotation frozen at zero, not 800 over a horizon of 1. <span class="ev ev--code">configs/train/vitg16/*.yaml, notebooks/utils/world_model_wrapper.py</span></li>
       <li data-ev="ctx"><b>A successor exists.</b> V-JEPA 2.1 (arXiv 2603.14482v3, 11 Jun 2026) adds a dense loss on visible tokens, deep self-supervision at intermediate layers, modality-specific tokenizers and a 2B ViT-G. With the same 300M action-conditioned predictor it reports Grasp rising from 60% to 70% at identical planner settings, and to 80% with an 8-step horizon. This page keeps V-JEPA 2 and 2-AC as the subject and flags 2.1 where it changes a conclusion. <span class="ev ev--ctx">V-JEPA 2.1 §3.3, Table 6</span></li>
+      <li data-ev="code"><b>V-JEPA 2-AC's "4 fps" is the video file's clock; the robot moved about a second between frames.</b> DROID's MP4s are timestamped at 60 fps although the cameras capture at 15 Hz. Two episodes measured here: 220 frames in a file that claims 3.67 s, against 221 robot steps whose camera timestamps span 15.6 s; and 251 frames, 4.18 s, against 252 steps over 17.8 s. The released loader strides by ⌈container fps / 4⌉ = 15 frames, so consecutive frames are about 1 s apart, a 16-frame clip spans 16 s and each action is about 1 s of teleoperated motion. The previous version of this page said 3.75 Hz and 0.27 s. H-JEPA reports the same mismatch independently. <span class="ev ev--code">droid.py, measured on DROID raw 1.0.1</span> <span class="ev ev--hj">H-JEPA App. J.1</span> <a class="goto" href="#vj-clock">calculator →</a></li>
+      <li data-ev="inf"><b>"Under 62 hours" is most likely file time too.</b> The paper describes DROID videos as "typically 3–4 seconds long", which is their file duration; real episodes run about four times longer. Discarding "videos shorter than 4 seconds" by file time keeps roughly 62 hours of file time, which is about four times as much robot operation, plausibly near 250 hours. DROID's own total is 350 hours. <span class="ev ev--pap">§3.1, App. B.1</span> <span class="ev ev--inf">Inference</span></li>
+      <li data-ev="hj"><b>"H-JEPA" names three different things.</b> LeCun's 2022 proposal of stacked JEPAs (no experiments); an unrelated January 2026 wireless-control paper and several unrelated repositories; and the October 2026 method by Zhang, Terver, Rabbat, LeCun and Balestriero that this page covers. <span class="ev ev--ctx">arXiv 2306.02572, 2602.07000</span> <span class="ev ev--hj">arXiv 2610.06805</span> <a class="goto" href="#lineage">disambiguation →</a></li>
+      <li data-ev="ctx"><b>From a single goal image, flat V-JEPA 2-AC scores zero on pick-and-place.</b> In HWM's Franka evaluation, with the same architecture and data as HWM's low level, the flat planner succeeds 0 times in 50 for the cup and 0 in 50 for the box; the two-level planner reaches 35 and 30. Table 2's 80% relies on human sub-goal images. <span class="ev ev--ctx">HWM Table 1</span></li>
+      <li data-ev="hj"><b>H-JEPA's "18% to 73%" is a simulated maze against a 15M-parameter baseline.</b> Visual AntMaze, three levels, 50 tasks, three seeds; the flat baseline is LeWM, not V-JEPA 2-AC. Its real-robot results are offline path fidelity on 16 selected DROID clips; no plan was executed. <span class="ev ev--hj">Table 1, §4.3, §6</span></li>
+      <li data-ev="hj"><b>H-JEPA has no teacher network.</b> No EMA target, no stop-gradient: SIGReg at every level, plus an inverse-dynamics term on DROID that the paper shows is necessary when scenes change between episodes. <span class="ev ev--hj">App. C, K, L</span></li>
     </ol>
   </section>
 
@@ -453,7 +471,8 @@ th.app { color: var(--k-pred); }
       <p data-ev="pap">
         The stated target is to "learn to understand the world and learn to act largely by observation". The recipe splits
         the learning in two: action-free pretraining on over a million hours of internet video, then action-conditioned
-        post-training on under 62 hours of one robot's logs. <span class="ev ev--pap">Paper abstract, Fig. 1</span>
+        post-training on "under 62 hours" of one robot's logs, a figure most likely counted by the video files' clock, which
+        runs four times fast (section 05). <span class="ev ev--pap">Paper abstract, Fig. 1</span>
       </p>
       <p data-ev="inf">
         The split is the central bet because interaction data is the scarce resource. If the representation learned from
@@ -468,9 +487,11 @@ th.app { color: var(--k-pred); }
     </div>
   </section>
 
-  <!-- 2 ------------------------------------------------------------------ -->
+{% include vjepa-family.html %}
+
+  <!-- 3 ------------------------------------------------------------------ -->
   <section id="s2">
-    <div class="sec-head"><span class="num">02</span><h2>V-JEPA 2: architecture and pretraining</h2></div>
+    <div class="sec-head"><span class="num">03</span><h2>V-JEPA 2: architecture and pretraining</h2></div>
     <div class="panel">
       <div class="panel__head">Encoders and predictor</div>
       <div class="panel__body tablewrap">
@@ -632,7 +653,7 @@ Conv3d k=s=(2,16,16) → (B, 1408, 8, 16, 16) → flatten → (B, 2048, 1408)
 
   <!-- 3 ------------------------------------------------------------------ -->
   <section id="s3">
-    <div class="sec-head"><span class="num">03</span><h2>What the frozen encoder is good for</h2></div>
+    <div class="sec-head"><span class="num">04</span><h2>What the frozen encoder is good for</h2></div>
     <div class="col">
       <h3>The attentive probe, and what it measures</h3>
       <p data-ev="pap">
@@ -726,20 +747,54 @@ Conv3d k=s=(2,16,16) → (B, 1408, 8, 16, 16) → flatten → (B, 2048, 1408)
 
   <!-- 4 ------------------------------------------------------------------ -->
   <section id="s4">
-    <div class="sec-head"><span class="num">04</span><h2>V-JEPA 2-AC: the action-conditioned world model</h2></div>
+    <div class="sec-head"><span class="num">05</span><h2>V-JEPA 2-AC: the action-conditioned world model</h2></div>
     <div class="panel">
       <div class="panel__head">Post-training setup</div>
       <div class="panel__body">
         <dl class="kv">
           <dt>Encoder</dt><dd data-ev="pap">V-JEPA 2 ViT-g, frozen; each frame encoded alone, 16 × 16 × 1408. The code loads the EMA teacher weights for both context and targets. <span class="ev ev--pap">§3.1</span> <span class="ev ev--code">droid-256px-8f.yaml</span></dd>
           <dt>Predictor</dt><dd data-ev="pap">∼300M transformer, 24 layers, 16 heads, width 1024, GELU, block-causal. <span class="ev ev--pap">§3.1</span></dd>
-          <dt>Data</dt><dd data-ev="pap">Raw DROID, left exocentric camera only, clips of 4 s at 4 fps, 256 × 256, videos under 4 s discarded: 23k trajectories, under 62 hours. Training on left and right views without conditioning on the camera degraded performance. <span class="ev ev--pap">§3.1, App. B.1</span></dd>
+          <dt>Data</dt><dd data-ev="pap">Raw DROID, left exocentric camera only, 16-frame clips described as "4 seconds at 4 fps", 256 × 256, videos "shorter than 4 seconds" discarded: 23k trajectories, "under 62 hours". All three durations are by the video files' clock, which runs about 4× fast; see Rate. Training on left and right views without conditioning on the camera degraded performance. <span class="ev ev--pap">§3.1, App. B.1</span></dd>
           <dt>State s<sub>k</sub></dt><dd data-ev="pap">7-D, relative to the robot base: x, y, z, three extrinsic Euler angles, gripper. <span class="ev ev--pap">§3.1</span></dd>
           <dt>Action a<sub>k</sub></dt><dd data-ev="code">s<sub>k+1</sub> ⊖ s<sub>k</sub>: Δxyz, the extrinsic Euler angles of R<sub>k+1</sub>R<sub>k</sub><sup>⊤</sup>, Δgripper. The repository's example step is Δ = (+9.2, +3.1, +8.4) cm, rotation (−0.017, −0.010, 0.000) rad, gripper 0. <span class="ev ev--code">droid.py poses_to_diffs; franka_example_traj.npz</span></dd>
-          <dt>Rate</dt><dd data-ev="inf">4 fps nominal. The loader strides by ⌈f<sub>video</sub>/4⌉ frames, so for DROID's 15 fps recordings the effective rate is 3.75 Hz and one action spans about 0.27 s of teleoperation. <span class="ev ev--code">droid.py</span> <span class="ev ev--inf">Inference on the 15 fps source</span></dd>
+          <dt>Rate</dt><dd data-ev="code">4 fps by the file clock, about 1 frame per second of real time. The loader strides by ⌈f<sub>container</sub>/4⌉ frames using the rate the MP4 reports; DROID's files report 60 fps for 15 Hz captures, so the stride is 15 frames, frames are about 1 s apart, and one action spans about 1 s of teleoperation. This page said 3.75 Hz and 0.27 s until 12 Oct 2026. <span class="ev ev--code">droid.py; measured on two DROID raw episodes</span> <span class="ev ev--hj">H-JEPA App. J.1</span></dd>
           <dt>Optimisation</dt><dd data-ev="pap">AdamW, batch 256, weight decay 0.04; learning rate 7.5e-5 → 4.25e-4 over 4,500 iterations, constant for 85,500, decayed to 0 over 4,500. <span class="ev ev--pap">App. B.1</span></dd>
         </dl>
       </div>
+    </div>
+
+    <div class="col">
+      <h3>What a DROID frame is: the file clock and the wall clock</h3>
+      <p data-ev="code">
+        The loader asks the video file for its frame rate and strides by ⌈rate / 4⌉ frames to get "4 fps". DROID's MP4s do not
+        carry the capture rate. Each holds one frame per 15 Hz control step but is timestamped as if recorded at 60 fps, so the
+        file plays four times too fast and the loader takes every fifteenth frame. Two raw episodes, read on 12 Oct 2026:
+        <span class="ev ev--code">droid.py at 204698b; DROID raw 1.0.1</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__body tablewrap">
+        <table>
+          <thead><tr><th scope="col">Episode</th><th scope="col">Video frames</th><th scope="col">File says</th><th scope="col">Robot steps</th><th scope="col">Camera timestamps span</th><th scope="col">File rate</th></tr></thead>
+          <tbody>
+            <tr><td>AUTOLab, 2023-07-07, left camera</td><td>220</td><td>3.67 s</td><td>221</td><td>15.6 s, 67 ms apart</td><td>60 fps</td></tr>
+            <tr><td>RAIL, 2023-04-05, left camera</td><td>251</td><td>4.18 s</td><td>252</td><td>17.8 s, 67 ms apart</td><td>60 fps</td></tr>
+          </tbody>
+        </table>
+        <div id="vj-clock"></div>
+      </div>
+      <div class="panel__foot" data-ev="code">Frame counts and durations from the MP4 movie and media headers (stts: 220 samples of 256 ticks at timescale 15,360); robot steps and timestamps from trajectory.h5. H-JEPA's App. J.1 states the same 60 fps tagging and evaluates the public V-JEPA 2-AC checkpoint "at its native 1 fps" accordingly. <span class="ev ev--code">measured</span> <span class="ev ev--hj">H-JEPA App. J.1</span></div>
+    </div>
+    <div class="col">
+      <p data-ev="inf">
+        <b>What changes.</b> One step of the world model is about a second of teleoperated motion, not a quarter of one. That
+        fits the numbers that looked odd before: the repository's example step moves 12.9 cm, and the planner's box allows up to
+        13 cm per step, ordinary for a second of motion and fast for 0.27 s. The paper's "videos typically 3–4 seconds long"
+        are their file durations; real DROID episodes run about four times longer. Any comparison that treats V-JEPA 2-AC as a
+        4 Hz model is off by a factor of four, and models trained at true 5 fps, as in H-JEPA, see a different action
+        granularity. Whether Meta's internal training pipeline read the same tag cannot be checked from outside; the released
+        loader does. <span class="ev ev--inf">Inference</span>
+      </p>
     </div>
 
     <div class="col">
@@ -805,6 +860,33 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
     </div>
 
     <div class="panel">
+      <div class="panel__head">Training step and MPC loop, as pseudocode</div>
+      <div class="panel__body">
+<pre class="code"><i># ---- one training step (App. B.1; app/vjepa_droid/train.py) ----</i>
+x, s   = clip (B, 16 frames), states (B, 16, 7)           <i># the released config uses 8 frames</i>
+a      = s[1:] ⊖ s[:-1]                                   <i># (B, 15, 7): Δxyz, Euler(R<sub>k+1</sub>R<sub>k</sub><sup>⊤</sup>), Δgripper</i>
+z      = LN(E<sub>frozen</sub>(each frame, duplicated to a 2-frame tubelet))   <i># (B, 16, 256, 1408), no gradient</i>
+ẑ      = P(a, s[:-1], z[:-1])                             <i># block-causal: all 15 next frames in one pass</i>
+L<sub>tf</sub>   = mean |ẑ − z[1:]|
+ẑ<sub>1</sub>     = P(a[:1], s[:1], z[:1]);   ẑ<sub>2</sub> = P(a[:2], s[:2], [z<sub>0</sub>, ẑ<sub>1</sub>])[-1]     <i># a 2-step rollout</i>
+L<sub>roll</sub> = mean |[ẑ<sub>1</sub>, ẑ<sub>2</sub>] − z[1:3]|
+(L<sub>tf</sub> + L<sub>roll</sub>).backward();   AdamW step on P only
+
+<i># ---- deployment: CEM inside MPC (§3.2, App. B.2) ----</i>
+z<sub>g</sub> = LN(E(goal image))
+<b>loop</b>:
+    z<sub>k</sub>, s<sub>k</sub> = LN(E(current frame)), proprioception
+    μ, σ = 0, 1 per action coordinate, horizon 1
+    <b>repeat</b> 10:
+        A = 800 samples ~ N(μ, σ²), each axis clipped to ±0.075
+        energy<sub>i</sub> = mean |P(A<sub>i</sub>; s<sub>k</sub>, z<sub>k</sub>) − z<sub>g</sub>|                 <i># terminal L1 over 256 × 1408</i>
+        μ, σ = mean, std of the 10 lowest-energy samples
+    execute μ, wait for it to finish, observe                  <i># pick-and-place: sub-goal 1 for 4 steps, 2 for 10, goal for 4</i></pre>
+      </div>
+      <div class="panel__foot" data-ev="pap">Eqs. 2 to 5, §3.2, App. B.1 and B.2; the rollout indexing and the per-axis clip follow the released code. <span class="ev ev--pap">Paper</span> <span class="ev ev--code">train.py, mpc_utils.py</span></div>
+    </div>
+
+    <div class="panel">
       <div class="panel__head">Zero-shot deployment: success out of 10 trials per cell (Table 2)</div>
       <div class="panel__body tablewrap">
         <table>
@@ -858,12 +940,36 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
         This is a controllability measurement, and it is the most informative quantitative diagnostic of the world model in the
         paper. <span class="ev ev--inf">Inference</span>
       </p>
+
+      <h3>Without the sub-goal images</h3>
+      <p data-ev="ctx">
+        Table 2's pick-and-place gives the planner three goal images. HWM (arXiv 2604.03208) ran the experiment the paper does
+        not: one goal image, a Franka arm in one lab, 10 start-goal pairs per object with 5 trials each. Its flat baseline uses the
+        V-JEPA 2-AC architecture retrained on the same data as HWM's low level (about 96 hours of DROID and 30 of RoboSet), and the
+        hierarchy adds a long-horizon predictor in the same latent space with learned macro-actions. Intervals below are 95%
+        Wilson, computed by this page from the percentages and n = 50. <span class="ev ev--ctx">HWM §3.1, Table 1, App. A.2</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__head">Franka, single goal image (HWM Table 1)</div>
+      <div class="panel__body tablewrap" id="vj-hwm"></div>
+      <div class="panel__foot" data-ev="inf">Drawer rates cover 7 tasks × 5 trials, but 30% and 70% are not multiples of 1/35, so the counts cannot be recovered and no interval is shown. π0-FAST-DROID and π0.5-DROID are policies fine-tuned on DROID, a different class of method. <span class="ev ev--ctx">HWM Table 1</span> <span class="ev ev--inf">intervals computed here</span></div>
+    </div>
+    <div class="col">
+      <p data-ev="inf">
+        The flat planner's zero is the expected failure of a horizon-1 greedy energy on a task that must first move away from the
+        goal image to grasp the object, and the hierarchy's 70% shows a learned subgoal can replace the human's. Two things are not
+        shown: a second lab, and whether separate latent spaces per level, H-JEPA's change, add anything on a real arm.
+        <span class="ev ev--inf">Inference</span> <a class="goto" href="#hjepa">H-JEPA →</a>
+      </p>
     </div>
   </section>
 
+{% include vjepa-hjepa.html %}
+
   <!-- 5 ------------------------------------------------------------------ -->
   <section id="s5">
-    <div class="sec-head"><span class="num">05</span><h2>Evaluation audit and limitations</h2></div>
+    <div class="sec-head"><span class="num">08</span><h2>Evaluation audit and limitations</h2></div>
     <div class="col">
       <h3>The robot numbers, with the intervals the paper leaves out</h3>
       <p data-ev="inf">
@@ -936,7 +1042,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
         <li data-ev="pap"><b>Long horizons.</b> Autoregressive error grows and the search space grows exponentially with horizon; pick-and-place needs sub-goal images. <span class="ev ev--pap">§4.3</span></li>
         <li data-ev="pap"><b>Image goals only.</b> Language goals are named as future work. <span class="ev ev--pap">§4.3, §9</span></li>
         <li data-ev="inf"><b>A non-convex energy with no uncertainty.</b> CEM with 10 elites can lock onto a wrong basin, and a deterministic predictor offers no signal for when its prediction is off-manifold. <span class="ev ev--inf">Inference</span></li>
-        <li data-ev="inf"><b>Slow, blocking, gripper-only control.</b> About 4 Hz at best, 16 s of planning per step, a parallel gripper, rigid objects. Contact transients, deformables and dexterous hands are outside what was tested. <span class="ev ev--inf">Inference</span></li>
+        <li data-ev="inf"><b>Slow, blocking, gripper-only control.</b> Each model step is about 1 s of DROID motion, each planned step takes 16 s, a parallel gripper, rigid objects. Contact transients, deformables and dexterous hands are outside what was tested. <span class="ev ev--inf">Inference</span></li>
       </ul>
 
       <div class="note note--warn" data-ev="inf">
@@ -950,12 +1056,23 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
         <span class="ev ev--inf">Inference</span> <span class="ev ev--ctx">V-JEPA 2.1 §3.3</span>
         <a class="goto" href="#tour" data-goto="13">open step 13 →</a></p>
       </div>
+
+      <h3>Protocol flags for H-JEPA and HWM</h3>
+      <ul class="checks">
+        <li data-ev="hj"><b>Good practice worth copying.</b> Planner settings are chosen on a separate compute-sweep task set under a fixed 100-TFLOP budget, then frozen and evaluated on 50 new tasks per environment; three paired model and planner seeds; the 16 DROID evaluation clips are removed from training. <span class="ev ev--hj">App. E, J.1</span></li>
+        <li data-ev="hj"><b>Simulation with a fixed camera and background.</b> Every success rate in §4.1 and §4.2 comes from four simulators; the real-robot evidence is offline. <span class="ev ev--hj">§4</span></li>
+        <li data-ev="hj"><b>An offline metric the authors designed.</b> Fréchet fidelity is a necessary condition on Cube and ranks graded progress on RoboCasa; on DROID the paper reads a gap as a direction, not a size, and so should anyone citing it. <span class="ev ev--hj">App. J.2</span></li>
+        <li data-ev="hj"><b>Curated clips.</b> The 16 DROID clips were chosen for good lighting, visible objects and large manipulated objects, and windowed around the grasp. <span class="ev ev--hj">App. J.1</span></li>
+        <li data-ev="inf"><b>Baselines at a different rate and on a different set.</b> The frozen-encoder baselines run at their native 1 fps on 15 clips, the H-JEPA models at 5 fps on 16, with intervals over planner seeds rather than training seeds. The comparison supports "far more compute for lower fidelity", not a matched ranking. <span class="ev ev--hj">Fig. 9c</span> <span class="ev ev--inf">Inference</span></li>
+        <li data-ev="hj"><b>Unmatched training compute across depths.</b> Depths share an epoch budget; deeper models see fewer clips per epoch, and optimiser steps and training FLOPs are not matched. Push-T's failure at three and four levels is attributed to this, not tested. <span class="ev ev--hj">App. C.1, §4.1</span></li>
+        <li data-ev="ctx"><b>HWM's real-robot table is one lab, five trials per configuration.</b> 50 trials per object is ten times V-JEPA 2-AC's per-cell count, with intervals reported; the flat baseline is HWM's own retrained model, not the public checkpoint. <span class="ev ev--ctx">HWM §3.1, Table 1</span></li>
+      </ul>
     </div>
   </section>
 
   <!-- 6 ------------------------------------------------------------------ -->
   <section id="s6">
-    <div class="sec-head"><span class="num">06</span><h2>Positioning, cost, and the missing experiments</h2></div>
+    <div class="sec-head"><span class="num">09</span><h2>Positioning, cost, and the missing experiments</h2></div>
     <div class="panel">
       <div class="panel__head">What each system predicts and how it acts</div>
       <div class="panel__body tablewrap">
@@ -969,6 +1086,8 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
             <tr><td>DreamerV3</td><td>latents, with a decoder</td><td style="white-space:normal">actions; trained with rewards per environment</td><td style="white-space:normal">actor-critic learned in imagination</td><td>simulator inside an RL learner</td></tr>
             <tr><td>TD-MPC2</td><td>latents, decoder-free</td><td style="white-space:normal">actions; reward and value heads</td><td style="white-space:normal">MPPI with a learned policy prior and terminal value</td><td>simulator plus planner</td></tr>
             <tr><td>DINO-WM, LeWM</td><td>latents</td><td style="white-space:normal">actions; per-environment offline data</td><td style="white-space:normal">CEM, MPC</td><td>simulator for a planner</td></tr>
+            <tr><td>HWM</td><td>latents at two timescales, one space</td><td style="white-space:normal">actions, learned macro-actions</td><td style="white-space:normal">top-down MPC: long-horizon plan supplies the short-horizon subgoal</td><td>hierarchical simulator for a planner</td></tr>
+            <tr><td>H-JEPA</td><td>latents at up to four timescales, one space each</td><td style="white-space:normal">actions, pooled macro-actions per level</td><td style="white-space:normal">gradient-based top-down planning, MPC</td><td>hierarchical simulator for a planner</td></tr>
             <tr><td>π0 / π0.5, OpenVLA</td><td>actions</td><td style="white-space:normal">images, language, proprioception</td><td style="white-space:normal">direct action chunks (π0) or tokens (OpenVLA)</td><td>policy</td></tr>
           </tbody>
         </table>
@@ -996,6 +1115,27 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
         hour" the paper reports. <span class="ev ev--pap">§4.2, Table 3</span>
       </p>
 
+      <h3>Compute and data across the family</h3>
+    </div>
+    <div class="panel">
+      <div class="panel__body tablewrap">
+        <table class="tprose">
+          <thead><tr><th scope="col">Model</th><th scope="col">Trained parameters</th><th scope="col">Training data</th><th scope="col">Training compute</th><th scope="col">Planning cost</th></tr></thead>
+          <tbody>
+            <tr><td>I-JEPA ViT-H/14</td><td>ViT-H/14</td><td style="white-space:normal">ImageNet-1K</td><td style="white-space:normal">under 1,200 GPU-hours (stated)</td><td>n/a</td></tr>
+            <tr><td>V-JEPA ViT-H/16</td><td>630M</td><td style="white-space:normal">VideoMix2M, about 2M videos</td><td>not stated</td><td>n/a</td></tr>
+            <tr><td>V-JEPA 2 ViT-g</td><td style="white-space:normal">1B encoder, 22M predictor</td><td style="white-space:normal">VideoMix22M, over 1M hours</td><td style="white-space:normal">≈ 62,000 A100-hours (derived above)</td><td>n/a</td></tr>
+            <tr class="best"><td>V-JEPA 2-AC</td><td style="white-space:normal">300M predictor, encoder frozen</td><td style="white-space:normal">23k DROID trajectories</td><td style="white-space:normal">≈ 1,000 A100-hours (derived above)</td><td style="white-space:normal">8,000 predictor passes per action; 16 s on an RTX 4090</td></tr>
+            <tr><td>LeWM</td><td>about 15M</td><td style="white-space:normal">per-environment offline data</td><td style="white-space:normal">one GPU, a few hours (stated)</td><td style="white-space:normal">up to 48× faster than foundation-model world models (stated)</td></tr>
+            <tr><td>HWM</td><td style="white-space:normal">a V-JEPA 2-AC-recipe low level plus a long-horizon predictor</td><td style="white-space:normal">about 96 h DROID and 30 h RoboSet</td><td>not stated</td><td style="white-space:normal">up to 3× less planning compute in simulation (stated)</td></tr>
+            <tr><td>H-JEPA, simulation</td><td style="white-space:normal">ViT-Tiny level 1, small MLP and transformer levels above</td><td style="white-space:normal">1.0M to 10.05M transitions per environment</td><td style="white-space:normal">H200 GPUs; hours not stated</td><td style="white-space:normal">settings chosen under 100 TFLOP per episode</td></tr>
+            <tr><td>H-JEPA, DROID</td><td style="white-space:normal">ViT-S/16 level 1, 768-wide MLP level 2</td><td style="white-space:normal">74,530 re-encoded episodes, 127.6 GB</td><td style="white-space:normal">100 epochs × 292 iterations at batch 256; hours not stated</td><td style="white-space:normal">best fidelity per planner TFLOP of the models compared (Fig. 9c)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="ctx">I-JEPA §1; V-JEPA's comparison table (630M for ViT-H/16); V-JEPA 2 §2.4 and Table 12 with this page's derivations; LeWM and HWM abstracts and HWM App. A.2; H-JEPA App. C and J.4. "Not stated" means the paper gives no number, not that the cost is small. <span class="ev ev--ctx">Context</span> <span class="ev ev--hj">H-JEPA</span> <span class="ev ev--inf">derived rows</span></div>
+    </div>
+    <div class="col">
       <h3>Three experiments a strong reviewer would demand</h3>
       <ol class="checks" style="list-style:decimal;padding-left:1.2rem">
         <li style="padding-left:0" data-ev="spec"><b>Encoder ablation at the AC stage.</b> The same predictor and 62 hours over V-JEPA 2, DINOv2, SigLIP2 and V-JEPA 2.1, each frozen, plus V-JEPA 2 fine-tuned, three seeds each, evaluated on Reach, Grasp and pick-and-place with 50 trials per cell. This is the direct test of the paper's central bet. Cost: 15 runs at about 1,000 A100-hours is 15,000 GPU-hours, far less with cached features, plus about 30 robot-days. <span class="ev ev--spec">Speculation</span></li>
@@ -1007,15 +1147,15 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
 
   <!-- 7 ------------------------------------------------------------------ -->
   <section id="s7">
-    <div class="sec-head"><span class="num">07</span><h2>Concept guide</h2></div>
-    <div class="col"><p>Fourteen prerequisites, each with a mechanical picture and one line of maths. Click a card for the picture.</p></div>
+    <div class="sec-head"><span class="num">10</span><h2>Concept guide</h2></div>
+    <div class="col"><p>Twenty-one prerequisites, each with a mechanical picture and one line of maths; the last seven belong to H-JEPA. Click a card for the picture.</p></div>
     <div class="gloss" id="vj-gloss"></div>
   </section>
 
 
   <!-- 8 ------------------------------------------------------------------ -->
   <section id="tour">
-    <div class="sec-head"><span class="num">08</span><h2>Interactive tour: one mechanism per step</h2></div>
+    <div class="sec-head"><span class="num">11</span><h2>Interactive tour: one mechanism per step</h2></div>
     <div class="col">
       <p>
         Sixteen steps, each isolating one mechanism, then a summary. Drag a 3D scene to orbit it; click it and scroll, or use
@@ -1266,7 +1406,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
           <div class="step__text">
             <p class="cap" data-lv="1">A robot log is a video plus, for every frame, where the gripper is and how open it is. V-JEPA 2-AC samples 4 seconds at 4 frames per second, and turns the change in the gripper's position between two frames into an "action". Nobody labels the task or says whether it worked.</p>
             <p class="cap" data-lv="2">State s<sub>k</sub>: 7 numbers, position, extrinsic Euler angles, gripper, relative to the robot base. Action a<sub>k</sub> = s<sub>k+1</sub> ⊖ s<sub>k</sub>. 16 frames give 15 actions. Only the left exocentric camera is used. Each frame is duplicated to fill a 2-frame tubelet and encoded alone into 256 tokens. Tick the checkbox for the one real step shipped with the code.</p>
-            <p class="cap" data-lv="3">The rotation delta is the extrinsic xyz Euler angles of R<sub>k+1</sub>R<sub>k</sub><sup>⊤</sup>, not a difference of angles, which avoids wrap-around jumps. With DROID's 15 fps video the loader's stride is ⌈15/4⌉ = 4 frames, so the effective rate is 3.75 Hz. The repository's example step moves 12.9 cm, larger than any single action the deployed planner may take.</p>
+            <p class="cap" data-lv="3">The rotation delta is the extrinsic xyz Euler angles of R<sub>k+1</sub>R<sub>k</sub><sup>⊤</sup>, not a difference of angles, which avoids wrap-around jumps. DROID's files report 60 fps for 15 Hz captures, so the loader's stride is ⌈60/4⌉ = 15 frames and consecutive frames are about 1 s apart in real time. The repository's example step moves 12.9 cm, about what a second of teleoperation covers and close to the 13 cm the deployed planner allows.</p>
             <div id="vj-dr-vec"></div>
             <p class="analogy">A flight recorder: camera footage plus the stick positions, without the flight plan.</p>
             <h4>Governing expression</h4>
@@ -1476,7 +1616,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
 
   <!-- 9 ------------------------------------------------------------------ -->
   <section id="story">
-    <div class="sec-head"><span class="num">09</span><h2>Story mode: a cup onto a plate</h2></div>
+    <div class="sec-head"><span class="num">12</span><h2>Story mode: a cup onto a plate</h2></div>
     <div class="col">
       <p>
         One continuous run through the tour with a single example. A Franka arm in a lab it has never seen must pick up a cup and
@@ -1489,7 +1629,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
 
   <!-- 10 ----------------------------------------------------------------- -->
   <section id="future">
-    <div class="sec-head"><span class="num">10</span><h2>Research directions for physical super intelligence</h2></div>
+    <div class="sec-head"><span class="num">13</span><h2>Research directions for physical super intelligence</h2></div>
     <div class="col">
       <p data-ev="inf">
         V-JEPA 2-AC works inside eight assumptions, most stated in the paper and a few implicit in its setup. They hold well enough
@@ -1515,33 +1655,48 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
         <p><b>Where I would start.</b> D1 and D6 first. D1 because the released predictor already has an unused extrinsics
         token path, so the experiment is a config change plus App. B.4's own protocol, and because every non-tabletop body
         needs it. D6 because no humanoid will wait 16 s for a step: a latent planner at 1 to 4 Hz feeding a learned whole-body
-        controller at 50 Hz or more is the only architecture I see that keeps the world model in the loop at all.
-        <span class="ev ev--spec">Speculation</span></p>
+        controller at 50 Hz or more is the only architecture I see that keeps the world model in the loop at all. Since
+        October 2026 I would run D10 alongside them: HWM's protocol makes it directly comparable, and it is the experiment
+        H-JEPA's authors name as their next. <span class="ev ev--spec">Speculation</span></p>
+      </div>
+      <div class="note note--wl" data-ev="spec">
+        <p><b>How this maps onto my own work.</b> Agentic latent world models: top-down subgoal refinement is a concrete
+        form of latent lookahead across timescales, and HWM's 0% to 70% is the cleanest evidence so far that a manipulation
+        planner needs it. Representation: an upper level that keeps only what it can predict over its horizon is close to the
+        outcome-sufficient representations I study, and the paper's per-entity probes are the test I would reuse. Dexterous
+        manipulation: D11 is where the hierarchy should either earn its keep or show that hands need a different decomposition.
+        Goals: replacing goal images with affordance- or language-grounded goal latents at the top level is where my affordance
+        work would plug in. None of this is a result yet. <span class="ev ev--spec">Speculation</span></p>
       </div>
     </div>
   </section>
 
-  <!-- 11 ----------------------------------------------------------------- -->
+{% include vjepa-ledger.html %}
+
+  <!-- 15 ----------------------------------------------------------------- -->
   <section id="s11">
-    <div class="sec-head"><span class="num">11</span><h2>What is data-faithful and what is schematic</h2></div>
+    <div class="sec-head"><span class="num">15</span><h2>What is data-faithful and what is schematic</h2></div>
     <div class="col">
       <p data-ev="inf">
-        Data-faithful to the paper or the code: every number in sections 00 to 06; the token calculator (step 2); the mask
+        Data-faithful to the papers or the code: every number in sections 00 to 09 and 14, including the lineage cards, the
+        DROID clock and its measured episodes, the hierarchy builder's recurrence (checked against H-JEPA Table 3), the results
+        explorer (Tables 1 and 9) and the HWM table; the token calculator (step 2); the mask
         sampler, its statistics and the truncation (3); the shapes and counts in tooltips (4, 7, 9); the EMA equation (5); the
         ladder values (6); the state and action layouts and the repository's example step (8); the attention-mask structure (9);
         the CEM algorithm, its defaults and the Fig. 9 minimum and ground-truth markers (11); the sub-goal schedule and timings
         (12); the audit numbers and intervals (14). Schematic: the pixel-versus-latent toy (1), the grid density in step 2, block
         sizes (4), the toy linear collapse model (5, a real simulation of a different model), arm, cup and trajectories (8, 12,
         13, 16), the latent path and error band (10, from a stated bound with chosen constants), the energy surface shape (11),
-        taxonomy placements (15) and the severity matrix (10).
+        taxonomy placements (15) and the severity matrix (section 13); the cost-geometry maze in section 07 is a toy that mimics
+        the paper's Fig. 7 qualitatively.
       </p>
-      <p id="vj-verify" class="mono" style="font-size:.78rem;color:var(--ink-2)">Checked on 22 Sep 2026 in headless Chromium with software WebGL (SwiftShader), at 1440×900 in light mode, at 1440×900 in dark mode with reduced motion, and at 390×844: all sixteen steps and the summary render; every slider, select, checkbox, segment button, zoom button and segment chip on every step was exercised, as were the provenance filter, concept cards, audit filters, taxonomy, matrix cells and direction filters; story mode ran all fifteen stops; no console or page errors; no horizontal scroll at any width. Not verified: hover tooltips, drag-to-orbit and wheel zoom with a real pointer, and touch orbit on a physical phone.</p>
+      <p id="vj-verify" class="mono" style="font-size:.78rem;color:var(--ink-2)">Checked on 12 Oct 2026 in headless Chromium with software WebGL (SwiftShader), at 1440×900 in light and dark mode and at 390×844: sections numbered 00 to 16 in order; all tour steps and the summary visited through the rail; story mode started; the lineage map (13 nodes, cards), the DROID clock (stride 15 at the 60 fps tag, 4 at 15 fps), the HWM interval table, the hierarchy builder (matches H-JEPA Table 3 at one to four levels, flags other strides), the maze (graded and subgoal costs reach the goal, the other two do not), the results explorer (AntMaze 73.3 against 18.0; FourRoom cost ablation 38.7 against 9.3), the ledger filter, the provenance filter including the new H-JEPA level, the accordions, 21 concept cards, 11 direction cards, the assumption matrix and the interval table all exercised; no console or page errors; no horizontal scroll. All in-page anchors resolve; external links answer, except OpenReview and the Meta blog, which refuse scripted requests. Not verified: hover tooltips, drag-to-orbit and wheel zoom with a real pointer, and touch on a physical phone.</p>
     </div>
   </section>
 
   <!-- 12 ----------------------------------------------------------------- -->
   <section id="s12">
-    <div class="sec-head"><span class="num">12</span><h2>The code, and the sources</h2></div>
+    <div class="sec-head"><span class="num">16</span><h2>The code, and the sources</h2></div>
     <div class="repos" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.5rem">
       <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/facebookresearch/vjepa2" target="_blank" rel="noopener"><h4>V-JEPA 2, 2-AC and 2.1</h4><p class="mono">github.com/facebookresearch/vjepa2</p></a>
       <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://arxiv.org/abs/2506.09985" target="_blank" rel="noopener"><h4>V-JEPA 2 paper</h4><p class="mono">arXiv:2506.09985</p></a>
@@ -1549,21 +1704,31 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
       <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/facebookresearch/jepa" target="_blank" rel="noopener"><h4>V-JEPA (original)</h4><p class="mono">github.com/facebookresearch/jepa · arXiv:2404.08471</p></a>
       <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/facebookresearch/IntPhys2" target="_blank" rel="noopener"><h4>IntPhys 2</h4><p class="mono">arXiv:2506.09849</p></a>
       <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/gaoyuezhou/dino_wm" target="_blank" rel="noopener"><h4>DINO-WM</h4><p class="mono">github.com/gaoyuezhou/dino_wm · arXiv:2411.04983</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/kevinghst/H-JEPA" target="_blank" rel="noopener"><h4>H-JEPA (Oct 2026)</h4><p class="mono">github.com/kevinghst/H-JEPA · arXiv:2610.06805</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://arxiv.org/abs/2604.03208" target="_blank" rel="noopener"><h4>HWM</h4><p class="mono">arXiv:2604.03208</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/lucas-maes/le-wm" target="_blank" rel="noopener"><h4>LeWM</h4><p class="mono">github.com/lucas-maes/le-wm · arXiv:2603.19312</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://github.com/facebookresearch/ijepa" target="_blank" rel="noopener"><h4>I-JEPA</h4><p class="mono">github.com/facebookresearch/ijepa · arXiv:2301.08243</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://arxiv.org/abs/2512.24497" target="_blank" rel="noopener"><h4>JEPA-WMs</h4><p class="mono">arXiv:2512.24497 · TMLR 2026</p></a>
+      <a class="repo gcard" style="text-decoration:none;color:var(--ink)" href="https://arxiv.org/abs/2511.08544" target="_blank" rel="noopener"><h4>LeJEPA and SIGReg</h4><p class="mono">arXiv:2511.08544</p></a>
     </div>
   </section>
 
   <footer class="foot">
     <div class="col">
-      <p><b>Sources.</b> Every number on this page was read from these on 22 Sep 2026, or measured by running the named code.</p>
+      <p><b>Sources.</b> Every number on this page was read from these on 22 Sep 2026 (V-JEPA 2 material) or 12 Oct 2026 (the family, H-JEPA, HWM and the DROID clock), or measured by running the named code or reading the named files.</p>
       <ul>
         <li>Assran, Bardes, Fan, Garrido et al., <a href="https://arxiv.org/abs/2506.09985">V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning</a>, arXiv 2506.09985v1, 11 Jun 2025, main text and appendices A to E.</li>
         <li>Code: <a href="https://github.com/facebookresearch/vjepa2">facebookresearch/vjepa2</a> at commit 204698b: configs/train/vitg16, src/masks/multiseq_multiblock3d.py, src/models/ac_predictor.py, src/models/utils/modules.py, app/vjepa/train.py, app/vjepa_droid/{train,droid}.py, notebooks/utils/{mpc_utils,world_model_wrapper}.py, notebooks/franka_example_traj.npz.</li>
         <li>Predecessors: Assran et al., <a href="https://arxiv.org/abs/2301.08243">I-JEPA</a> (CVPR 2023); Bardes et al., <a href="https://arxiv.org/abs/2404.08471">V-JEPA</a> (2024); LeCun, <a href="https://openreview.net/pdf?id=BZ5a1r-kVsf">A Path Towards Autonomous Machine Intelligence</a> (2022).</li>
         <li>Successor and companions: Mur-Labadia et al., <a href="https://arxiv.org/abs/2603.14482">V-JEPA 2.1</a>, arXiv 2603.14482v3; <a href="https://arxiv.org/abs/2506.09849">IntPhys 2</a>; <a href="https://arxiv.org/abs/2506.09943">CausalVQA</a>.</li>
+        <li>Hierarchy: Zhang, Terver, Rabbat, LeCun and Balestriero, <a href="https://arxiv.org/abs/2610.06805">H-JEPA: End-to-End Learning of Hierarchical World Models for Visual Planning</a>, arXiv 2610.06805v1, 5 Oct 2026, main text and appendices A to M, and <a href="https://github.com/kevinghst/H-JEPA">kevinghst/H-JEPA</a> (README); Zhang, Terver et al., <a href="https://arxiv.org/abs/2604.03208">Hierarchical Planning with Latent World Models (HWM)</a>, arXiv 2604.03208v2, Table 1 and App. A.2.</li>
+        <li>End-to-end JEPA world models and their study: Maes et al., <a href="https://arxiv.org/abs/2603.19312">LeWM</a>; Balestriero and LeCun, <a href="https://arxiv.org/abs/2511.08544">LeJEPA</a>; Terver et al., <a href="https://arxiv.org/abs/2512.24497">What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?</a> (TMLR 2026); Sobal, Zhang et al., <a href="https://arxiv.org/abs/2502.14819">PLDM</a>; Sobal et al., <a href="https://arxiv.org/abs/2211.10831">JEPAs Focus on Slow Features</a> (2022).</li>
+        <li>The H-JEPA name elsewhere: Dawid and LeCun, <a href="https://arxiv.org/abs/2306.02572">Introduction to Latent Variable Energy-Based Models</a> (§6.2); Girgis, Labriji and Bennis, <a href="https://arxiv.org/abs/2602.07000">Hierarchical JEPA Meets Predictive Remote Control in Beyond 5G Networks</a>.</li>
+        <li>Data: DROID raw 1.0.1, two episodes (AUTOLab 2023-07-07 and RAIL 2023-04-05), MP4 headers and trajectory.h5 timestamps, read from the public gresearch bucket on 12 Oct 2026; <a href="https://github.com/facebookresearch/vjepa2/blob/204698b/app/vjepa_droid/droid.py">app/vjepa_droid/droid.py</a> and configs/train/vitg16/droid-256px-8f.yaml at 204698b.</li>
         <li>Neighbours: <a href="https://arxiv.org/abs/2411.04983">DINO-WM</a>; <a href="https://arxiv.org/abs/2603.19312">LeWM</a>; Tian, Chen and Ganguli, ICML 2021; Chen and He, SimSiam, CVPR 2021; Littwin et al., NeurIPS 2024; <a href="https://arxiv.org/abs/2301.04104">DreamerV3</a>; <a href="https://arxiv.org/abs/2310.16828">TD-MPC2</a>; <a href="https://arxiv.org/abs/2410.24164">π0</a>; <a href="https://arxiv.org/abs/2504.16054">π0.5</a>; <a href="https://arxiv.org/abs/2406.09246">OpenVLA</a>; <a href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/">Genie 3</a>; and my <a href="https://s-elim.github.io/notes/cosmos3/">Cosmos 3</a> and <a href="https://s-elim.github.io/notes/atlas/">Atlas</a> teardowns.</li>
         <li>Context only: <a href="https://ai.meta.com/blog/v-jepa-2-world-model-benchmarks/">Meta AI blog post</a>.</li>
       </ul>
-      <p class="mono" style="font-size:.72rem;color:var(--ink-3)">Figures are redrawn, not copied. Table values are quoted with their table references. This page replaces the 21 Sep 2026 version built from my AVI Lab note; three statements from that version are corrected in section 00.</p>
+      <p class="mono" style="font-size:.72rem;color:var(--ink-3)">Figures are redrawn, not copied. Table values are quoted with their table references. This page replaces the 21 Sep 2026 version built from my AVI Lab note and extends the 22 Sep 2026 revision; four statements from earlier versions are corrected in section 00.</p>
     </div>
   </footer>
 </div>
@@ -1652,7 +1817,14 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
       ['Block-causal attention', 'Tokens are grouped per time step; a token sees its own step and earlier ones, never later ones.', 'M<sub>ij</sub> = 1 ⇔ block(j) ≤ block(i)', 'A diary you may reread but never read ahead in.'],
       ['Cross-entropy method', 'Sample candidate actions from a Gaussian, keep the best few, refit the Gaussian to them, repeat.', 'μ, σ ← mean, std of top-k samples', 'Throwing darts in the dark, keeping the ten best, aiming the next handful at them.'],
       ['Model-predictive control', 'Plan a short sequence, execute only its first action, observe, and replan from the new state.', 'a<sub>t</sub> = first(argmin<sub>a<sub>1:H</sub></sub> E(a<sub>1:H</sub>; o<sub>t</sub>))', 'Driving by looking a few metres ahead and correcting every second.'],
-      ['Zero-shot transfer', 'Deploying without any data or training from the target setting. For V-JEPA 2-AC: no data from the test labs, but post-trained on DROID.', 'train ∩ deploy environments = ∅', 'Driving a rental car in a new city with no practice lap.']
+      ['Zero-shot transfer', 'Deploying without any data or training from the target setting. For V-JEPA 2-AC: no data from the test labs, but post-trained on DROID.', 'train ∩ deploy environments = ∅', 'Driving a rental car in a new city with no practice lap.'],
+      ['SIGReg', 'A regulariser that pushes a batch of embeddings toward an isotropic Gaussian by testing many random one-dimensional projections against the normal law. It replaces the EMA teacher in LeWM and H-JEPA.', 'SIGReg(Z): normality test on Zu for M = 1024 random directions u', 'Checking a crowd is evenly spread by looking at its shadow from many angles.'],
+      ['Slow-feature collapse', 'An encoder that keeps only what is constant within an episode, such as the scene, so its latents never move and next-step prediction is trivially perfect.', 'χ(E) = E<sub>b</sub>[tr Var<sub>t</sub>(z<sub>t</sub> | b)] / tr Var(z) → 0', 'A security camera log that records which building it is in, and nothing that happens there.'],
+      ['Inverse-dynamics loss', 'A head must recover the action from two consecutive latents, so the encoder has to keep whatever the action changed.', 'L<sub>idm</sub> = ‖I(z<sub>t</sub>, z<sub>t+1</sub>) − sg[a<sub>t</sub>]‖² / d<sub>a</sub>', 'Asking which way the door was pushed, given photos before and after.'],
+      ['Stride and window', 'A higher level advances s lower-level steps per step and summarises w of them into one state. H-JEPA uses s = 2, w = 1 in simulation and s = 3 on DROID.', 'z<sup>(ℓ)</sup><sub>t</sub> = E<sup>(ℓ)</sup>(z<sup>(ℓ−1)</sup><sub>ts : ts+w</sub>)', 'Reading every second page of a book, one page at a time.'],
+      ['Macro-action', 'An upper-level action: a learned embedding pooled from the lower-level actions between two upper-level states.', 'a<sup>(ℓ)</sup><sub>t</sub> = A<sup>(ℓ)</sup>(a<sup>(ℓ−1)</sup> over one stride)', 'Saying "drive to the station" instead of listing every turn of the wheel.'],
+      ['Top-down subgoal refinement', 'Plan coarsely at the top, hand each predicted upper-level state down as the target for the level below, and repeat until primitive actions.', 'C<sup>(ℓ)</sup> = ‖E<sup>(ℓ+1)</sup>(ẑ<sup>(ℓ)</sup>) − ẑ<sup>(ℓ+1),⋆</sup>‖²', 'An itinerary: cities first, then streets, then steps.'],
+      ['Fréchet fidelity', 'How closely a planned end-effector path follows the expert path, relative to not moving: 0 for standing still, 100% for the expert path, negative for worse than still.', '(d<sub>F</sub>(0, p̃) − d<sub>F</sub>(p, p̃)) / d<sub>F</sub>(0, p̃)', 'Grading a route by its worst deviation from the guide\'s route, not by where it ends.']
     ];
     cards.forEach(function (c) {
       var card = h('div', { class: 'gcard', role: 'button', tabindex: '0', 'aria-expanded': 'false' });
@@ -1888,7 +2060,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
   var ASSUME = [
     ['A1', 'Fixed exocentric camera; action frame inferred from a static view', [1, 1, 1, 2, 2], ['holds after manual camera tuning; App. B.4 error grows with angle', 'wrist or palm cameras move with the hand, and fingers occlude', 'one static view rarely covers both workspaces', 'the base moves, so the camera-to-action transform changes every step', 'the head camera moves with gait and gaze; the action frame must be tracked, not inferred once']],
     ['A2', '7-D end-effector delta with a scalar gripper', [0, 2, 1, 1, 2], ['matches the DROID interface it was trained on', '16 to 24 finger joints; a 7-D delta cannot express a grasp shape', '14-D plus two grippers, coupled by coordination', 'base velocity plus arm; the action mixes two frames', '29+ joints and a floating base; balance constrains every action']],
-    ['A3', 'Blocking control near 4 Hz, 16 s of planning per step', [1, 2, 1, 1, 2], ['works slowly: 18 steps take about 5 minutes of planning', 'contact transients last milliseconds; blocking 4 Hz control misses them', 'handovers need synchronised timing', 'driving tolerates low rates, docking and grasping less so', 'balance runs at hundreds of Hz; a blocking planner falls over']],
+    ['A3', 'Blocking control, about 1 s of motion per model step, 16 s of planning per step', [1, 2, 1, 1, 2], ['works slowly: 18 steps take about 5 minutes of planning', 'contact transients last milliseconds; a model whose step is a second of motion cannot see them', 'handovers need synchronised timing', 'driving tolerates low rates, docking and grasping less so', 'balance runs at hundreds of Hz; a blocking planner falls over']],
     ['A4', 'Greedy tasks: horizon 1 plus human sub-goal images', [1, 1, 2, 2, 2], ['reach and grasp are greedy; pick-and-place already needs sub-goals', 'regrasps and in-hand rotations are multi-stage', 'folding, handing over, inserting: long sequences with no greedy path', 'navigate then manipulate: the goal is out of view most of the episode', 'loco-manipulation chains dozens of sub-goals']],
     ['A5', 'Goals as images from the deployment camera', [1, 1, 1, 2, 2], ['fine in a lab; in a home nobody has the goal photo', 'a photo of a grasp hides the contact state', 'two-handed goals are occluded in one image', 'the goal is in another room', 'goals are tasks, not views; language is the natural interface']],
     ['A6', 'Quasi-static, rigid, prehensile interaction', [1, 2, 2, 1, 2], ['cup and box only; slip and deformables untested', 'in-hand manipulation is contact-rich by definition', 'cloth and cables dominate bimanual tasks', 'mostly rigid objects, plus doors and drawers', 'whole-body contact with the world and the object']],
@@ -1902,15 +2074,15 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
       fal: 'Rotation error still grows with camera angle, or success at unseen positions stays inside the uncalibrated model\'s interval.',
       cost: '≈ 1,000 A100-h per predictor run; 2 to 3 robot-days' },
     { id: 'D2', t: 'Controllability as a training signal', emb: ['arm', 'hand', 'bi'], fix: ['A7'], ev: 'spec',
-      hyp: 'An inverse-dynamics head on predicted latents, or a lower bound on action sensitivity, stops the predictor from explaining the future through passive dynamics and sharpens the energy landscape.',
+      hyp: 'An inverse-dynamics head on predicted latents, or a lower bound on action sensitivity, stops the predictor from explaining the future through passive dynamics and sharpens the energy landscape. Partly tested since: on DROID, H-JEPA finds an inverse-dynamics term necessary for an end-to-end encoder, with SIGReg alone keeping rank but planning at the zero-action floor (App. K.1, Table 12). Open: whether the same head helps a predictor on a frozen encoder such as V-JEPA 2-AC.',
       exp: 'Add ‖ID(ẑ<sub>k</sub>, ẑ<sub>k+1</sub>) − a<sub>k</sub>‖ at weights 0.01 to 1; report the four-axis table and Fig. 9-style slices at 50 start states.',
       fal: 'The rank correlation between energy and realised distance does not improve, or latent fidelity drops more than success rises.',
       cost: '3 weights × 3 seeds ≈ 9,000 A100-h, ≈ 3,000 with cached features' },
     { id: 'D3', t: 'Sub-goals the robot proposes itself', emb: ['arm', 'bi', 'mobile', 'humanoid'], fix: ['A4'], ev: 'spec',
-      hyp: 'A goal-conditioned generator of intermediate latents, trained on DROID to propose z<sub>k+Δ</sub> from z<sub>k</sub> and z<sub>g</sub>, removes the human sub-goal images from pick-and-place at a cost of under 10 points.',
-      exp: 'Train a flow or diffusion head in V-JEPA 2 feature space over 2 to 4 s hops; plan hierarchically with a proposed sub-goal every 4 steps.',
-      fal: 'Single-goal pick-and-place with proposed sub-goals stays below 30%, the regime where the greedy energy already fails.',
-      cost: '≈ 500 A100-h; 2 tasks × 50 robot trials' },
+      hyp: 'Tested since this card was written: HWM\'s two-level planner on a V-JEPA 2-AC-style model reaches 70% and 60% on single-goal pick-and-place where the flat planner scores 0% (50 trials each), and H-JEPA learns the upper level end to end. Open: whether learned sub-goals match human ones at equal planning time, and whether they hold in a second lab.',
+      exp: 'HWM\'s 10 start-goal pairs in a second lab: flat with human sub-goal images against hierarchical with one goal image, 50 trials each, planning time logged.',
+      fal: 'The hierarchy loses more than 10 points in the second lab, or human sub-goals still win at equal planning time.',
+      cost: 'no training if HWM\'s checkpoints are public; ≈ 3 robot-days' },
     { id: 'D4', t: 'Language goals through the aligned LLM', emb: ['arm', 'bi', 'mobile', 'humanoid'], fix: ['A5'], ev: 'spec',
       hyp: 'The VidQA alignment already maps V-JEPA 2 features into an LLM. The reverse map, instruction to goal features, trained on DROID\'s language annotations, turns image goals into instructions. The paper names language goals as future work.',
       exp: 'Predict the final frame\'s feature map from the episode\'s instruction; plan against the predicted goal and compare with the true goal image on the same tasks.',
@@ -1935,7 +2107,22 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
       hyp: 'The rank correlation between planner energy and realised distance to goal predicts closed-loop success across models better than latent or pixel error. For humanoids, add falls and contact-force violations per hour.',
       exp: 'Log executed plans from V-JEPA 2-AC, a V-JEPA 2.1 predictor, DINO-WM and a pixel model on shared tasks; test which metric ranks the models by success.',
       fal: 'Energy calibration ranks models no better than open-loop latent error.',
-      cost: '≈ 300 GPU-h of evaluation on existing rollouts' }
+      cost: '≈ 300 GPU-h of evaluation on existing rollouts' },
+    { id: 'D9', t: 'Contact events as level boundaries', emb: ['arm', 'hand', 'bi'], fix: ['A4', 'A6'], ev: 'spec',
+      hyp: 'H-JEPA\'s upper levels advance by a fixed stride, and the paper names variable-duration segments as future work. Manipulation phases are separated by contact and gripper events, which DROID already exposes: its evaluation reads grasp and release waypoints off the gripper trace. Upper-level states anchored at those events should yield sub-goals aligned with task phases and create the timescale gap selective abstraction needs.',
+      exp: 'Segment DROID at gripper-closure and contact-onset events; train a two-level H-JEPA with level-2 states at event boundaries against the stride-3 model; compare Fréchet fidelity, decoded sub-goals and per-entity probes on the 16-clip set, then on HWM\'s Franka tasks.',
+      fal: 'No gain over stride 3 at matched planner compute, or level-2 probes keep gripper state as well as level 1.',
+      cost: 'ViT-S scale, ≈ 100 to 300 GPU-h per run, 3 seeds' },
+    { id: 'D10', t: 'Closed-loop H-JEPA on a real arm, with wrist and exterior views', emb: ['arm', 'hand', 'bi'], fix: ['A1', 'A8'], ev: 'spec',
+      hyp: 'H-JEPA\'s stated next step is closed-loop control on a physical robot, and its App. J.5 names joint multi-view encoding with the wrist camera as the clearest route to precise manipulation. A two-level H-JEPA with both views should match HWM\'s 70% on single-goal pick-and-place and beat it on precision-limited grasps.',
+      exp: 'HWM\'s Franka protocol (10 start-goal pairs × 5 trials, cup and box) for flat LeWM+IDM, HWM and H-JEPA, each with exterior-only and exterior-plus-wrist encoders; Wilson intervals and planning time per step.',
+      fal: 'H-JEPA does not separate from HWM, with overlapping 95% intervals, under either view set.',
+      cost: 'small models; ≈ 4 to 6 robot-days for 600 episodes' },
+    { id: 'D11', t: 'Which level owns the fingers?', emb: ['hand', 'bi', 'humanoid'], fix: ['A2', 'A6'], ev: 'spec',
+      hyp: 'Selective abstraction appears when state factors move on timescales about 2× apart or more. In in-hand manipulation finger joints move fast while object pose drifts slowly, so an upper level should drop finger configuration and keep object pose, the abstraction a regrasp planner wants: the dexterous analogue of the ant\'s legs in Visual AntMaze.',
+      exp: 'Measure the spectral-centroid gap on a simulated in-hand rotation dataset for a multi-fingered hand; train a three-level H-JEPA and run the paper\'s per-entity MLP probes for finger joints and object pose at each level.',
+      fal: 'The gap is under 2×, or level-2 probes recover finger joints as well as level 1.',
+      cost: 'simulation only, ≈ 200 GPU-h' }
   ];
   VJ.DIRS = DIRS; VJ.ASSUME = ASSUME; VJ.EMB = EMB;
   (function () {
@@ -2518,7 +2705,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
     { s: 5, pre: function () { setCtl('vj-cl-sg', true); setCtl('vj-cl-pred', true); var b = $('#vj-cl-run'); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); },
       t: 'What keeps those answers from collapsing to one constant vector: the stop-gradient and the predictor, shown here on a toy model that can be broken on purpose.' },
     { s: 8, pre: function () { setCtl('vj-dr-real', true); },
-      t: 'Now the robot part. 62 hours of other people\'s Franka logs from DROID: frames at 4 fps and the gripper\'s pose in each. No task labels, no rewards. Each action is simply how the gripper moved between two frames.' },
+      t: 'Now the robot part. 23,000 Franka logs that other people recorded for DROID: one frame per second of real time (the files claim 4 fps) and the gripper\'s pose in each. No task labels, no rewards. Each action is simply how the gripper moved between two frames.' },
     { s: 9, pre: function () { setCtl('vj-bc-T', 4); },
       t: 'A new 300M-parameter predictor reads frame features, actions and poses in time order, and learns what the next frame will look like in feature space after each action.' },
     { s: 10, pre: function () { pickSeg(10, 'ro-mode', 'both'); setCtl('vj-ro-H', 2); },
@@ -3605,10 +3792,10 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
     var gTab = ctx.part('table', 'Table', 'workspace, not to scale', '--ink-3');
     var gArm = ctx.part('arm', 'Arm', 'Franka Panda in DROID; drawn as a 2-link chain', '--ink-2');
     var gCup = ctx.part('cup', 'Object', 'a cup; DROID has no object labels', '--k-state');
-    var gCam = ctx.part('cam', 'Left exocentric camera', 'the only view used for training; 256 × 256, 4 fps', '--k-ctx', new V(-0.4, 0.4, 0.4));
+    var gCam = ctx.part('cam', 'Left exocentric camera', 'the only view used for training; 256 × 256, 4 fps by the file clock, about 1 frame/s real', '--k-ctx', new V(-0.4, 0.4, 0.4));
     var gTraj = ctx.part('traj', 'State trail s_k', '7-D: xyz, extrinsic Euler, gripper', '--k-state', new V(0, 0.4, 0));
     var gAct = ctx.part('act', 'Action a_k', 's_(k+1) ⊖ s_k, 7-D', '--k-act', new V(0, 0.8, 0));
-    var gFilm = ctx.part('film', 'Frames x_k', '16 frames at 4 fps = 4 s; each encoded alone', '--k-ctx', new V(0, 0.8, -0.6));
+    var gFilm = ctx.part('film', 'Frames x_k', '16 frames at "4 fps" = 4 s of file time, about 16 s of real motion; each encoded alone', '--k-ctx', new V(0, 0.8, -0.6));
     H3.makeTable(ctx, gTab, 4.4, 3.2);
     var arm = VJ.makeArm(ctx, gArm, new V(BASEX, 0, 0));
     var cup = H3.makeCup(ctx, gCup, '--k-state');
@@ -3634,7 +3821,7 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
     var aLbl = ctx.label('a_k', new V(), { part: 'act', cls: 'lbl--strong' });
     var film = [], fMat = ctx.mat('--k-ctx', { opacity: 0.3 }), fOn = ctx.mat('--k-ctx', { opacity: 0.95 });
     for (k = 0; k < 16; k++) { var pl = ctx.box(0.22, 0.22, 0.02, fMat); pl.position.set(-1.9 + k * 0.26, 2.7, -1.4); gFilm.add(pl); film.push(pl); }
-    ctx.tip(film[0], 'Frame x_k', '256 × 256 RGB at 4 fps; duplicated into a 2-frame tubelet; 256 tokens');
+    ctx.tip(film[0], 'Frame x_k', '256 × 256 RGB, about 1 s after the previous frame; duplicated into a 2-frame tubelet; 256 tokens');
     var fLbl = ctx.label('', new V(0, 3.0, -1.4), { part: 'film', cls: 'lbl--strong' });
     var kIn = byId('vj-dr-k'), autoIn = byId('vj-dr-auto'), realIn = byId('vj-dr-real');
     var kf = 0;
@@ -4353,3 +4540,4 @@ drop the 2 conditioning tokens per step → (B, T·256, 1024) → LN → linear 
   if (VJ.boot) VJ.boot();
 })();
 </script>
+{% include vjepa-hjepa-script.html %}

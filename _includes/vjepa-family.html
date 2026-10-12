@@ -1,0 +1,96 @@
+{%- comment -%}
+  V-JEPA handbook, section 02: the JEPA family from I-JEPA to H-JEPA.
+  Included by vjepa-explainer.html; the lineage map is drawn by
+  vjepa-hjepa-script.html into #vj-lineage. No Liquid beyond this comment.
+{%- endcomment -%}
+  <!-- 2 ------------------------------------------------------------------ -->
+  <section id="lineage">
+    <div class="sec-head"><span class="num">02</span><h2>The JEPA family, from I-JEPA to H-JEPA</h2></div>
+    <div class="col">
+      <p data-ev="inf">
+        Every model on this page makes the same move: encode what is visible, predict the encoding of what is hidden or
+        still to come, and score the prediction in a space the encoder learned. What changes from one model to the next is
+        five design choices: what is hidden (image blocks, video tubes, the next frame, a state several steps ahead), what
+        the prediction is conditioned on (token positions, actions, pooled macro-actions), the distance (L2 or L1), how
+        collapse is prevented (a slow teacher network, or a regulariser on the batch, or an action-regression head), and
+        what the result is used for (frozen features, or a simulator a planner searches). Click a model on the map for its
+        recipe, its headline number and the protocol behind that number. <span class="ev ev--inf">Inference</span>
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><span>Lineage map, by publication date</span><span class="readout" id="vj-lin-note" style="margin-left:auto">click a node</span></div>
+      <div class="panel__body">
+        <div id="vj-lineage" class="lin"></div>
+        <div id="vj-lineage-card" class="lin__card" aria-live="polite"></div>
+      </div>
+      <div class="panel__foot">Solid edges: one paper builds directly on the other's recipe or code. Dashed: shares the name or the idea, not the method. Grades on each card follow the provenance filter at the top.</div>
+    </div>
+
+    <div class="col">
+      <h3>One notation for the whole family</h3>
+      <p>
+        Write <span class="eq">E<sub>θ</sub></span> for the online encoder, <span class="eq">E<sub>θ̄</sub></span> for the
+        target encoder, <span class="eq">P<sub>φ</sub></span> for the predictor, sg for stop-gradient and
+        <span class="eq">M</span> for the hidden tokens. The objectives then read:
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel__body">
+<pre class="code"><b>I-JEPA</b>      Σ<sub>i∈targets</sub> Σ<sub>j∈B<sub>i</sub></sub> ‖ P<sub>φ</sub>(E<sub>θ</sub>(x<sub>ctx</sub>), m<sub>j</sub>) − sg(E<sub>θ̄</sub>(x))<sub>j</sub> ‖²<sub>2</sub>          <i># 4 image blocks, L2, EMA 0.996 → 1.0</i>
+<b>V-JEPA</b>      ‖ P<sub>φ</sub>(Δ<sub>y</sub>, E<sub>θ</sub>(x)) − sg(E<sub>θ̄</sub>(y)) ‖<sub>1</sub>                       <i># masked video tubes, L1, EMA 0.998 → 1.0</i>
+<b>V-JEPA 2</b>    same, EMA fixed at m = 0.99925, 3D-RoPE, ViT-g, 22M videos    <i># §03 of this page</i>
+<b>V-JEPA 2-AC</b> ‖ P<sub>φ</sub>((a<sub>t</sub>, s<sub>t</sub>, z<sub>t</sub>)<sub>t≤k</sub>) − z<sub>k+1</sub> ‖<sub>1</sub>  +  2-step rollout term   <i># E frozen, z = LN(E(x))</i>
+<b>LeWM</b>        ‖ F(z<sub>≤t</sub>, a<sub>≤t</sub>) − z<sub>t+1</sub> ‖²<sub>2</sub>  +  λ·SIGReg(Z)                         <i># end to end, no EMA, no sg</i>
+<b>H-JEPA</b>      Σ<sub>ℓ</sub> [ L<sup>(ℓ)</sup><sub>pred</sub> + λ<sub>ℓ</sub>·SIGReg(Z<sup>(ℓ)</sup>) + γ<sub>ℓ</sub>·L<sup>(ℓ)</sup><sub>idm</sub> ]                     <i># one JEPA per timescale, §06</i></pre>
+      </div>
+      <div class="panel__foot" data-ev="ctx">I-JEPA §3 (target blocks at scale 0.15 to 0.2, context block at 0.85 to 1.0, momentum 0.996 rising to 1.0); V-JEPA Eq. 1 and its hyperparameter table (ℓ1 "found to be more stable", momentum 0.998 to 1.0); V-JEPA 2 Eq. 1 and Table 9; LeWM §3; H-JEPA Eqs. 2, 3 and 8 (the IDM term only on DROID). <span class="ev ev--ctx">Context</span> <span class="ev ev--pap">V-JEPA 2</span> <span class="ev ev--hj">H-JEPA</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">Seven models, one table</div>
+      <div class="panel__body tablewrap">
+        <table class="tprose">
+          <thead><tr><th scope="col">Model</th><th scope="col">Predicts</th><th scope="col">Anti-collapse</th><th scope="col">Encoder, data</th><th scope="col">Used for</th><th scope="col">Headline, with its protocol</th></tr></thead>
+          <tbody>
+            <tr><td>I-JEPA (CVPR 2023)</td><td style="white-space:normal">4 image blocks from one context block</td><td style="white-space:normal">EMA teacher, stop-gradient</td><td style="white-space:normal">ViT up to H/14 and H/16 at 448 px; ImageNet-1K</td><td>frozen features</td><td style="white-space:normal">81.1% ImageNet linear probe, ViT-H/16 at 448 px, 300 epochs (Table 1); ViT-H/14 pretraining in under 1,200 GPU-hours</td></tr>
+            <tr><td>V-JEPA (2024)</td><td style="white-space:normal">masked spatiotemporal tubes</td><td style="white-space:normal">EMA teacher, stop-gradient</td><td style="white-space:normal">ViT-L/16, ViT-H/16; VideoMix2M, 2M videos</td><td>frozen features</td><td style="white-space:normal">81.9 K400, 72.2 SSv2, 77.9 IN1K, frozen ViT-H/16 at 384 px with its own attentive probe; V-JEPA 2's shared 4-layer probe puts V-JEPA ViT-H at 74.3 on SSv2</td></tr>
+            <tr><td>V-JEPA 2 (2025)</td><td style="white-space:normal">masked tubes, longer clips</td><td style="white-space:normal">EMA fixed at 0.99925, stop-gradient</td><td style="white-space:normal">ViT-g 1B; VideoMix22M, over 1M hours</td><td>frozen features</td><td style="white-space:normal">75.3 SSv2 at 256 px, 77.3 at 384 px, same frozen protocol for all encoders (Table 4)</td></tr>
+            <tr class="best"><td>V-JEPA 2-AC (2025)</td><td style="white-space:normal">next-frame latents given action and state</td><td style="white-space:normal">frozen encoder; nothing to collapse</td><td style="white-space:normal">frozen ViT-g plus a 300M predictor; 23k DROID trajectories</td><td>planning with CEM</td><td style="white-space:normal">pick-and-place cup and box 80% and 80% in Lab 1, 80% and 50% in Lab 2, with human sub-goal images, 10 trials per cell (Table 2)</td></tr>
+            <tr><td>LeWM (2026)</td><td style="white-space:normal">next global latent given actions</td><td style="white-space:normal">SIGReg only</td><td style="white-space:normal">ViT-Tiny from pixels, about 15M parameters; per-environment offline data</td><td>planning</td><td style="white-space:normal">trains on one GPU in hours; plans up to 48× faster than foundation-model world models (abstract)</td></tr>
+            <tr><td>HWM (2026)</td><td style="white-space:normal">latents at two timescales, one shared space</td><td style="white-space:normal">inherits its backbone's</td><td style="white-space:normal">a V-JEPA 2-AC-recipe low level plus a long-horizon predictor; about 96 h DROID and 30 h RoboSet</td><td>hierarchical planning</td><td style="white-space:normal">Franka pick-and-place from one goal image: 70% cup, 60% box against 0% for flat V-JEPA 2-AC, 50 trials per object (Table 1)</td></tr>
+            <tr><td>H-JEPA (Oct 2026)</td><td style="white-space:normal">latents at each of up to four timescales, each in its own space</td><td style="white-space:normal">SIGReg per level; plus inverse dynamics on diverse scenes</td><td style="white-space:normal">LeWM at level 1, MLP encoders above; four simulators, and DROID offline</td><td>top-down hierarchical planning</td><td style="white-space:normal">Visual AntMaze 73.3 ± 3.5% (three levels) against 18.0 ± 3.5% flat, 50 tasks, three seeds (Table 1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel__foot" data-ev="ctx">Numbers read from each paper on 12 Oct 2026, with the table cited. Rows are not comparable to one another: each headline uses its own protocol, which is the point of the last column. <span class="ev ev--ctx">Context</span> <span class="ev ev--pap">V-JEPA 2</span> <span class="ev ev--hj">H-JEPA</span></div>
+    </div>
+
+    <div class="col">
+      <h3>Which "H-JEPA"?</h3>
+      <p>
+        Three different things carry the name, and citing the wrong one is easy. This page means the first item of the third
+        group whenever it writes H-JEPA without qualification.
+      </p>
+    </div>
+    <div class="two">
+      <div class="panel" style="margin:0">
+        <div class="panel__head">1. The proposal (2022 to 2023)</div>
+        <div class="panel__body" data-ev="ctx">
+          <p style="font-size:.93rem">LeCun's position paper, <a href="https://openreview.net/forum?id=BZ5a1r-kVsf" target="_blank" rel="noopener">A Path Towards Autonomous Machine Intelligence</a> (OpenReview, v0.9.2, 2022), proposes stacking JEPAs: a lower JEPA makes short-term predictions from detailed representations, a higher one makes longer-term predictions from more abstract ones, and planning runs across the levels. Dawid and LeCun's lecture notes (<a href="https://arxiv.org/abs/2306.02572" target="_blank" rel="noopener">arXiv 2306.02572</a>, §6.2) restate it. No training recipe, no experiments. <span class="ev ev--ctx">Context</span></p>
+        </div>
+      </div>
+      <div class="panel" style="margin:0">
+        <div class="panel__head">2. Same name, different subject</div>
+        <div class="panel__body" data-ev="ctx">
+          <p style="font-size:.93rem">Girgis, Labriji and Bennis, <a href="https://arxiv.org/abs/2602.07000" target="_blank" rel="noopener">Hierarchical JEPA Meets Predictive Remote Control in Beyond 5G Networks</a> (arXiv 2602.07000, Jan 2026): an H-JEPA for compressing device states in wireless networked control. Unrelated GitHub repositories also use the name for multi-scale image SSL (jonwiggins/H-JEPA), a language model (Griffith-7/H-JEPA-LM), biosignals (lucapegolotti/h-jepa) and recommendation (csanadlajko/H-JEPA4Rec). None of these is the October 2026 method. <span class="ev ev--ctx">Context, checked 12 Oct 2026</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel__head">3. The method this page covers, and its nearest predecessor</div>
+      <div class="panel__body" data-ev="hj">
+        <p style="font-size:.93rem"><b>H-JEPA: End-to-End Learning of Hierarchical World Models for Visual Planning.</b> Wancong Zhang and Basile Terver (equal contribution), Michael Rabbat, Yann LeCun and Randall Balestriero (equal advising), <a href="https://arxiv.org/abs/2610.06805" target="_blank" rel="noopener">arXiv 2610.06805</a>, submitted 5 Oct 2026; code at <a href="https://github.com/kevinghst/H-JEPA" target="_blank" rel="noopener">github.com/kevinghst/H-JEPA</a> (MIT), built on LeWM and stable-worldmodel. It is the first instance of the 2022 proposal trained end to end with planning results, and it differs from <a href="https://arxiv.org/abs/2604.03208" target="_blank" rel="noopener">HWM</a> (Zhang, Terver et al., Apr 2026) on exactly one axis: HWM's levels predict in one shared latent space, H-JEPA gives each level its own encoder and space. <span class="ev ev--hj">H-JEPA §1, Table 13</span></p>
+      </div>
+    </div>
+  </section>
