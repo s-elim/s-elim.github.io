@@ -612,9 +612,9 @@
         '</div>' +
         '<p class="dk-quick__preview" id="dk-quick-preview" aria-live="polite"></p>' +
       '</form>';
+    // Pinned sits in the grid so its cards line up under Agenda and Tasks.
     return '<div class="dk-today">' + head +
-      '<div class="dk-today__grid">' + panelAgenda(t) + panelTasks(t) + panelDeadlines() + '</div>' +
-      panelPinned() + '</div>';
+      '<div class="dk-today__grid">' + panelAgenda(t) + panelTasks(t) + panelPinned() + panelDeadlines() + '</div></div>';
   }
 
   function isoWeek(d) {

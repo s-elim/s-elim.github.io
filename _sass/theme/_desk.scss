@@ -418,13 +418,28 @@ i.dk-dot::before { margin-top: .35rem; }
   i { color: var(--dk-near); }
 }
 
-// auto-fit rather than viewport queries: the panel width depends on the sidebar
-// and on whether the desk is embedded or full screen.
+// Container queries rather than viewport queries: the panel width depends on the
+// sidebar and on whether the desk is embedded or full screen. DOM order is Agenda,
+// Tasks, Pinned, Deadlines; at three columns Deadlines takes the right column and
+// the pinned cards sit two abreast under Agenda and Tasks.
+.dk-today { container-type: inline-size; }
 .dk-today__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dk-gap);
   align-items: start;
+  > .dk-pinned, > .dk-panel--deadlines { grid-column: 1 / -1; }
+}
+@container (min-width: 600px) {
+  .dk-today__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dk-today__grid .dk-pinned__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+// The 1fr second row absorbs the rest of a long Deadlines list, so the first
+// row stays as tall as Agenda or Tasks and the pinned cards start right below.
+@container (min-width: 900px) {
+  .dk-today__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto 1fr; }
+  .dk-today__grid > .dk-pinned { grid-column: 1 / 3; grid-row: 2; }
+  .dk-today__grid > .dk-panel--deadlines { grid-column: 3; grid-row: 1 / 3; }
 }
 .dk-panel {
   min-width: 0;
@@ -595,10 +610,10 @@ span.dk-dl__b { cursor: default; }
 .dk-dl__title { font-weight: 600; font-size: .87rem; line-height: 1.35; color: var(--text-strong); overflow-wrap: anywhere; }
 .dk-dl__meta { display: inline-flex; align-items: center; gap: .35rem; color: var(--muted); font-size: .74rem; }
 
-// pinned strip
-.dk-pinned { margin-top: calc(var(--dk-gap) * 1.4); }
+// pinned board entries, a grid item of .dk-today__grid
+.dk-pinned { min-width: 0; margin-top: calc(var(--dk-gap) * .4); }
 .dk-pinned__h { margin: 0 0 .6rem; font: 700 .95rem var(--font-head); color: var(--text-strong); i { color: var(--accent); margin-right: .3rem; } }
-.dk-pinned__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--dk-gap); }
+.dk-pinned__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--dk-gap); }
 .dk-quote {
   display: grid;
   gap: .45rem;
