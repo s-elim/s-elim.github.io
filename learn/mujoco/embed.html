@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>MuJoCo lab (embed)</title>
+  <!--
+    One course lab on its own, for embedding in another page:
+      embed.html?lab=frankavla&title=...&height=360&theme=dark
+    Used by the AVIL lab website (avil-lab.github.io/avil/research/). Only labs
+    registered in js/widgets/registry.js can be mounted.
+  -->
+  <script>
+    (function () {
+      var t = new URLSearchParams(location.search).get("theme");
+      if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/course.css?v=20261007_5">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    html, body { margin: 0; background: transparent; }
+    .embed { padding: 0; }
+    .embed .widget { margin: 0; }
+    .embed__more { display: block; margin: 8px 2px 0; font: 500 12px/1.4 "IBM Plex Sans", sans-serif; color: #6b7280; text-align: right; }
+    .embed__more a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main class="embed" id="lab" aria-live="polite"></main>
+  <script type="module">
+    import { hasWidget, mountWidget } from "./js/widgets/registry.js";
+    const p = new URLSearchParams(location.search);
+    const lab = p.get("lab") || "frankavla";
+    const el = document.getElementById("lab");
+    if (!hasWidget(lab)) {
+      el.textContent = "Unknown lab.";
+    } else {
+      await mountWidget(lab, el, {
+        kind: "Lab",
+        title: p.get("title") || "7-DOF Franka Panda on LIBERO Benchmark Tasks",
+        height: Math.max(220, Math.min(720, parseInt(p.get("height"), 10) || 340)),
+      });
+      const more = document.createElement("span");
+      more.className = "embed__more";
+      more.innerHTML = 'MuJoCo 3.14.0 running in your browser · <a href="https://s-elim.github.io/learn/mujoco/" target="_blank" rel="noopener">Open the full course</a>';
+      el.appendChild(more);
+    }
+  </script>
+</body>
+</html>
