@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v5
@@ -22,10 +22,10 @@ jobs:
           version: "latest"
           python-version: "3.12"
 
+      # Free public sources only (EURAXESS, ROS Discourse, lab pages, DuckDuckGo HTML,
+      # LinkedIn guest listings, jobs.ac.uk, AcademicTransfer) and a rule-based parser:
+      # no API keys, no language models, no cost.
       - name: Run discovery and rebuild openings dataset
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           uv run --with pyyaml --with pydantic --with httpx --with beautifulsoup4 python3 scripts/manage.py openings run
 

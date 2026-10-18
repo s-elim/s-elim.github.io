@@ -1,4 +1,3 @@
-import os
 import re
 import datetime
 from typing import Dict, Any, Optional, List, Tuple
@@ -173,37 +172,10 @@ def format_human_date(iso_date: str) -> str:
     except Exception:
         return iso_date
 
-# ==============================================================================
-#  LLM Provider Abstraction (Optional modular fallback)
-# ==============================================================================
-class LLMProvider:
-    def extract_position_info(self, raw_html: str, url: str) -> Optional[Dict[str, Any]]:
-        raise NotImplementedError
-
-class GeminiProvider(LLMProvider):
-    def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
-
-    def extract_position_info(self, raw_html: str, url: str) -> Optional[Dict[str, Any]]:
-        if not self.api_key:
-            return None
-        # Stub for optional gemini client calls via official google-genai
-        # Will only execute when explicitly configured and needed
-        return None
-
-class ClaudeProvider(LLMProvider):
-    def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-
-    def extract_position_info(self, raw_html: str, url: str) -> Optional[Dict[str, Any]]:
-        if not self.api_key:
-            return None
-        # Stub for optional anthropic client calls
-        return None
-
-def extract_from_discovered(item: DiscoveredItem, llm_provider: Optional[LLMProvider] = None, enable_headless: bool = True) -> Dict[str, Any]:
+def extract_from_discovered(item: DiscoveredItem, enable_headless: bool = True) -> Dict[str, Any]:
     """
-    Main extraction pipeline: deterministic parser first, optional Playwright rendered fetch for SPAs, optional LLM fallback.
+    Main extraction pipeline: deterministic rule-based parser, with an optional Playwright rendered
+    fetch for single-page job portals. No paid API or language model is used anywhere.
     """
     raw_content = item.raw_html or ""
     # Fetch rendered DOM if it's an SPA portal or official university page without full content
@@ -240,17 +212,6 @@ def extract_from_discovered(item: DiscoveredItem, llm_provider: Optional[LLMProv
     deadline_iso, deadline_human = extract_deadline(combined_text)
 
     region = item.detected_region or COUNTRY_TO_REGION.get(country, "Europe")
-
-    # If deterministic extraction needs refinement and LLM is available
-    if llm_provider and inst == "University / Research Institute":
-        llm_data = llm_provider.extract_position_info(combined_text[:3000], item.url)
-        if llm_data:
-            inst = llm_data.get("institution", inst)
-            country = llm_data.get("country", country)
-            region = COUNTRY_TO_REGION.get(country, region)
-            deadline_iso = llm_data.get("deadline", deadline_iso)
-            if deadline_iso:
-                deadline_human = format_human_date(deadline_iso)
 
     return {
         "title": item.title,
