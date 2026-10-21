@@ -657,10 +657,8 @@
     else if (g && !g.ok) body = '<div class="dk-empty is-bad"><p>' + esc(g.error || "Google failed.") + '</p></div>';
     else if (!S.sync) body = '<div class="dk-empty"><p>Waiting for the first sync…</p></div>';
     else {
-      var now = new Date(), all = events();
+      var now = new Date(), all = events(), base = C.parseYmd(t);
       var todays = all.filter(function (e) { return C.eventOnDay(e, t); });
-      var tom = C.ymd(C.addDays(now, 1));
-      var tomorrows = all.filter(function (e) { return C.eventOnDay(e, tom); });
       var list = "", nowPlaced = false;
       todays.forEach(function (e) {
         if (!nowPlaced && !e.allDay && e.start > now) {
@@ -670,9 +668,17 @@
         list += eventRow(e, now);
       });
       if (!nowPlaced && todays.length) list += '<li class="dk-now"><span>' + hhmm(now) + '</span></li>';
-      body = (todays.length ? '<ol class="dk-evs">' + list + '</ol>' : '<p class="dk-quiet">Nothing scheduled today.</p>') +
-        '<h4 class="dk-sub">Tomorrow</h4>' +
-        (tomorrows.length ? '<ol class="dk-evs">' + tomorrows.map(function (e) { return eventRow(e, now, true); }).join("") + '</ol>' : '<p class="dk-quiet">Free.</p>');
+      var weekHtml = "";
+      for (var d = 1; d <= 6; d++) {
+        var dayYmd = C.ymd(C.addDays(base, d));
+        var dayEvs = all.filter(function (e) { return C.eventOnDay(e, dayYmd); });
+        if (d === 1 || dayEvs.length) {
+          var sub = d === 1 ? "Tomorrow" : fmtDate(dayYmd, { weekday: "short", day: "numeric", month: "short" });
+          weekHtml += '<h4 class="dk-sub">' + esc(sub) + '</h4>' +
+            (dayEvs.length ? '<ol class="dk-evs">' + dayEvs.map(function (e) { return eventRow(e, now, true); }).join("") + '</ol>' : '<p class="dk-quiet">Free.</p>');
+        }
+      }
+      body = (todays.length ? '<ol class="dk-evs">' + list + '</ol>' : '<p class="dk-quiet">Nothing scheduled today.</p>') + weekHtml;
     }
     return '<section class="dk-panel dk-panel--agenda" aria-label="Agenda"><header class="dk-panel__head"><h3><i class="fas fa-clock" aria-hidden="true"></i> Agenda</h3>' +
       '<button type="button" class="dk-link" data-go="calendar">Calendar</button></header>' + body + '</section>';
@@ -691,22 +697,32 @@
     '</li>';
   }
 
+  var TASK_CAP = 15;
   function panelTasks(t) {
     var b = C.bucketTasks(allTasks(), t);
     var soon = C.ymd(C.addDays(C.parseYmd(t), 7));
     var upcoming = b.upcoming.filter(function (x) { return x.due <= soon; });
-    var later = b.upcoming.length - upcoming.length;
-    var group = function (title, list, cls) {
-      if (!list.length) return "";
-      return '<h4 class="dk-sub ' + (cls || "") + '">' + title + ' <span>' + list.length + '</span></h4><ul class="dk-tasks">' +
-        list.map(function (x) { return taskRow(x, t); }).join("") + '</ul>';
+    var laterList = b.upcoming.filter(function (x) { return x.due > soon; });
+    var rem = TASK_CAP;
+    var take = function (arr) { var s = arr.slice(0, rem); rem -= s.length; return s; };
+    var gOverdue = take(b.overdue), gToday = take(b.today), gUpcoming = take(upcoming), gLater = take(laterList), gUndated = take(b.undated);
+    var totalOpen = b.overdue.length + b.today.length + b.upcoming.length + b.undated.length;
+    var shownOpen = gOverdue.length + gToday.length + gUpcoming.length + gLater.length + gUndated.length;
+    var hiddenOpen = totalOpen - shownOpen;
+    var group = function (title, shown, total, cls) {
+      if (!shown.length) return "";
+      var badge = shown.length < total ? shown.length + "/" + total : String(total);
+      return '<h4 class="dk-sub ' + (cls || "") + '">' + title + ' <span>' + badge + '</span></h4><ul class="dk-tasks">' +
+        shown.map(function (x) { return taskRow(x, t); }).join("") + '</ul>';
     };
     var g = S.sync && S.sync.google;
-    var open = b.overdue.length + b.today.length + upcoming.length + b.undated.length;
-    var html = group("Overdue", b.overdue, "is-late") + group("Today", b.today) + group("Next 7 days", upcoming) +
-      (later ? '<p class="dk-quiet">' + plural(later, "more task") + ' after next week.</p>' : "") +
-      group("No date", b.undated);
-    if (!open) html = '<p class="dk-quiet">' + (g && !g.configured ? "No desk tasks. Add one above." : "Nothing open. Good.") + '</p>' + html;
+    var html = group("Overdue", gOverdue, b.overdue.length, "is-late") +
+      group("Today", gToday, b.today.length) +
+      group("Next 7 days", gUpcoming, upcoming.length) +
+      group("Later", gLater, laterList.length) +
+      group("No date", gUndated, b.undated.length) +
+      (hiddenOpen > 0 ? '<p class="dk-quiet">' + plural(hiddenOpen, "more open task") + ' not shown (capped at ' + TASK_CAP + ').</p>' : "");
+    if (!totalOpen) html = '<p class="dk-quiet">' + (g && !g.configured ? "No desk tasks. Add one above." : "Nothing open. Good.") + '</p>' + html;
     if (b.done.length) {
       html += '<button type="button" class="dk-link dk-link--sub" data-act="toggle-done">' + (S.ui.showDoneTasks ? "Hide" : "Show") + " " + plural(b.done.length, "finished task") + '</button>' +
         (S.ui.showDoneTasks ? '<ul class="dk-tasks">' + b.done.map(function (x) { return taskRow(x, t); }).join("") + '</ul>' : "");
