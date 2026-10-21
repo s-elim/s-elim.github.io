@@ -2,6 +2,10 @@
 certifications_url: 'https://drive.google.com/drive/folders/1IhelAGlwlUyQ4z2BGqwHXrKYfooh21Rr'
 
 latest:
+  - title: 'How to Simulate, Train, Validate, and Deploy an End-to-End Robotics Workflow With NVIDIA Isaac (DLIW1026)'
+    category: 'Bootcamp'
+    meta: 'DLI Full-Day Hands-on Workshop · NVIDIA AI Day Seoul 2026 · COEX, Seoul (10 Nov. 2026)'
+    desc: '<p>Full-day hands-on training by the NVIDIA Deep Learning Institute (DLI) on building and executing end-to-end physical AI and robotics pipelines across the NVIDIA Isaac ecosystem.</p><ul><li><strong>Simulate:</strong> Photo-realistic scene, sensor, and physics simulation using NVIDIA Isaac Sim built on OpenUSD and NVIDIA Omniverse</li><li><strong>Train:</strong> Robot manipulation and locomotion policy training with reinforcement learning and imitation learning in NVIDIA Isaac Lab and Isaac GR00T</li><li><strong>Validate:</strong> Software-in-the-Loop (SIL) and Hardware-in-the-Loop (HIL) evaluation, synthetic data generation, and policy refinement to close the sim-to-real gap</li><li><strong>Deploy:</strong> Edge deployment of trained policies onto physical robot hardware and NVIDIA Jetson platforms</li></ul><p><a href="https://www.nvidia.com/ko-kr/ai-days/" target="_blank" rel="noopener">NVIDIA AI Day Seoul 2026</a></p>'
   - title: 'World Models (CIS 6280, University of Pennsylvania)'
     category: 'Bootcamp'
     meta: 'Graduate Course · Fall 2026 · Instructor: Jiatao Gu'
@@ -80,6 +84,9 @@ skills:
   - group: 'Frameworks & Libraries'
     icon: 'fa-cubes'
     items: ['PyTorch', 'Hugging Face', 'TensorFlow', 'Matplotlib', 'Open3D', 'ROS2', 'CUDA', 'OpenCV']
+  - group: 'Agentic & Claw Systems'
+    icon: 'fa-robot'
+    items: ['OpenClaw', 'ClaudeClaw', 'SpatialClaw']
   - group: 'Research Tools & Hardware'
     icon: 'fa-microchip'
     items: ['Blender (3D Modeling)', 'Isaac Sim', 'Isaac Lab', 'LaTeX', 'World Models', 'VLAs', 'Jetson AGX Orin', 'RGBD+LiDAR sensor']
