@@ -1,4 +1,8 @@
 # Home page "Updates" timeline (most recent first). HTML allowed in `text`.
+- date: 'November 2026'
+  text: 'Attending <a href="https://www.nvidia.com/ko-kr/ai-days/" target="_blank" rel="noopener"><strong>NVIDIA AI Day Seoul 2026</strong></a> at COEX, Seoul, South Korea (9-10 Nov. 2026), focusing on Physical AI, Robotics, and Agentic AI.'
+- date: 'October 2026'
+  text: 'Attending <a href="https://www.fixkorea.or.kr/" target="_blank" rel="noopener"><strong>Future Innovation Tech Expo 2026 (FIX 2026)</strong></a> at EXCO, Daegu, South Korea (21-24 Oct. 2026).'
 - date: 'July 2026'
   text: 'Two papers accepted at <strong>BMVC''26</strong> (CORE Rank A): <a href="https://gaussvla.github.io/GaussVLA/" target="_blank" rel="noopener">GaussVLA</a>, geometry-aware spatial reasoning for VLA models (first author), and <a href="https://github.com/s-elim/RWFL-HNH40K" target="_blank" rel="noopener">HNH40K</a>, a robust dataset and risk-weighted learning for hand filtering.'
 - date: 'June 2026'

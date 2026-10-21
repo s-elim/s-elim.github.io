@@ -4,6 +4,18 @@
 # `url` optional; `org` / `where` hold the verbatim organizer / location+date text.
 - year: '2026'
   events:
+    - type: 'In person (Delegate)'
+      cat: 'delegate'
+      title: 'NVIDIA AI Day Seoul 2026'
+      detail: 'Physical AI, Robotics & Agentic AI'
+      url: 'https://www.nvidia.com/ko-kr/ai-days/'
+      where: 'COEX, Seoul, South Korea (9-10 Nov. 2026)'
+    - type: 'In person (Delegate)'
+      cat: 'delegate'
+      title: 'Future Innovation Tech Expo 2026 (FIX 2026)'
+      detail: 'Future Mobility, Robotics & AI'
+      url: 'https://www.fixkorea.or.kr/'
+      where: 'EXCO, Daegu, South Korea (21-24 Oct. 2026)'
     - type: 'Course'
       cat: 'bootcamp'
       title: 'World Models (CIS 6280)'
