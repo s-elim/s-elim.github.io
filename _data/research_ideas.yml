@@ -444,7 +444,6 @@ ideas:
       - label: 'Weights: Cosmos3-Edge-Policy-DROID'
         url: https://huggingface.co/nvidia/Cosmos3-Edge-Policy-DROID
     connects:
-      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
       - 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
       - 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
     related:
@@ -524,7 +523,6 @@ ideas:
       - label: 'Code: gaoyuezhou/dino_wm'
         url: https://github.com/gaoyuezhou/dino_wm
     connects:
-      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
       - 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
       - Future Drive world models
     related:
@@ -606,7 +604,6 @@ ideas:
       - label: World Labs, Atlas
         url: https://www.worldlabs.ai/blog/atlas
     connects:
-      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
       - AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning
       - Future Drive world models
     related:
@@ -729,7 +726,6 @@ ideas:
       - label: CoRL 2026
         url: https://www.corl.org/
     connects:
-      - Learning Manipulation-Sufficient Representations via Outcome Bottlenecks
       - AFFORD-X
       - AFFORD-Bench
       - Future Drive world models

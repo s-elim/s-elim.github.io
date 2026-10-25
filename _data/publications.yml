@@ -41,24 +41,6 @@
     - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD-X/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
-- title: 'Learning Manipulation-Sufficient Representations via Outcome Bottlenecks'
-  authors: 'Md Selim Sarowar and Sungho Kim*'
-  venue: 'IEEE International Conference on Robotics and Automation'
-  venue_short: "ICRA'27"
-  year: 2027
-  type: 'conference'
-  flagship: 'robotics'
-  rank: 'A*'
-  status: 'Under Review'
-  image: '/images/msp-framework.webp'
-  thumb: "ICRA '27"
-  url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
-  links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
-    - { label: 'arXiv', url: 'https://arxiv.org/abs/2609.13235', kind: 'link' }
-    - { label: 'PDF', url: 'https://arxiv.org/pdf/2609.13235', kind: 'pdf' }
-    - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
-
 - title: 'AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
@@ -72,6 +54,21 @@
   url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset'
   links:
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset', kind: 'code' }
+
+- title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
+  venue: 'Scientific Reports'
+  impact: 'SCIE-Q1, IF: 3.9'
+  year: 2026
+  type: 'journal'
+  flagship: 'robotics'
+  status: 'Under Review'
+  image: '/images/msp-framework.webp'
+  thumb: 'Sci. Reports'
+  url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
+  links:
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
