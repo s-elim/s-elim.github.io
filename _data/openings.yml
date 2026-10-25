@@ -10,9 +10,9 @@
 #  Update openings: python scripts/manage.py openings run
 # ==========================================================================
 
-last_updated: '2026-10-24T21:28:38.101643+00:00'
-last_updated_human: 24 October 2026
-total_count: 100
+last_updated: '2026-10-25T21:35:22.934189+00:00'
+last_updated_human: 25 October 2026
+total_count: 101
 openings:
   - id: ellis-institute-finland-tampere-university-phd-postd
     title: 'PhD & Postdoc Positions in Embodied AI and Robot Learning'
@@ -62,11 +62,11 @@ openings:
     source: ELLIS Institute Finland / Tampere University
     source_url: 'https://donghao51.github.io/open-positions'
     application_url: 'https://donghao51.github.io/open-positions/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from ELLIS Institute Finland / Tampere University
   - id: university-of-zurich-phd-postdoctoral-fellowships-in
     title: 'PhD & Postdoctoral Fellowships in Machine Learning and Robotics'
@@ -111,11 +111,11 @@ openings:
     source: University of Zurich (RPG Lab)
     source_url: 'https://rpg.ifi.uzh.ch/positions.html'
     application_url: 'https://rpg.ifi.uzh.ch/positions.html'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from University of Zurich (RPG Lab)
   - id: national-university-of-singapore-nus-phd-postdoc-pos
     title: 'PhD & Postdoc Positions in Embodied Minds and Agents'
@@ -163,11 +163,11 @@ openings:
     source: National University of Singapore (LEMA Lab)
     source_url: 'https://lema-nus.github.io/'
     application_url: 'https://lema-nus.github.io/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from National University of Singapore (LEMA Lab)
   - id: mbzuai-phd-postdoctoral-positions-in-computer-vision
     title: 'PhD & Postdoctoral Positions in Computer Vision and Visual Intelligence'
@@ -202,11 +202,11 @@ openings:
     source: MBZUAI Vision Lab
     source_url: 'https://sites.google.com/view/fahadkhans/open-positions'
     application_url: 'https://sites.google.com/view/fahadkhans/open-positions'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from MBZUAI Vision Lab
   - id: university-of-southern-california-phd-postdoctoral-p
     title: 'PhD & Postdoctoral Positions in 3D Computer Vision and Robot Perception'
@@ -244,11 +244,11 @@ openings:
     source: USC Iris Computer Vision Lab
     source_url: 'https://sites.usc.edu/iris-cvlab/position'
     application_url: 'https://sites.usc.edu/iris-cvlab/position/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from USC Iris Computer Vision Lab
   - id: epfl-phd-postdoctoral-research-positions-in-robot-le
     title: 'PhD & Postdoctoral Research Positions in Robot Learning'
@@ -286,11 +286,11 @@ openings:
     source: EPFL SPRING Lab
     source_url: 'https://spring.epfl.ch/open_positions.html'
     application_url: 'https://spring.epfl.ch/open_positions.html'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from EPFL SPRING Lab
   - id: technology-innovation-institute-research-scientist-r
     title: 'Research Scientist & Robotics Engineer in Autonomous Systems and World Models'
@@ -332,11 +332,11 @@ openings:
     source: Technology Innovation Institute (TII)
     source_url: 'https://tii.ae/'
     application_url: 'https://www.tii.ae/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Technology Innovation Institute (TII)
   - id: kaust-postdoctoral-fellowships-and-phd-openings-in-v
     title: Postdoctoral Fellowships and PhD Openings in Visual Computing and AI
@@ -374,11 +374,11 @@ openings:
     source: KAUST Visual Computing Center
     source_url: 'https://vcc.kaust.edu.sa/'
     application_url: 'https://vcc.kaust.edu.sa/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from KAUST Visual Computing Center
   - id: kaust-postdoctoral-research-fellow-in-computer-visio
     title: Postdoctoral Research Fellow in Computer Vision and Deep Learning
@@ -415,11 +415,11 @@ openings:
     source: KAUST (OPRA)
     source_url: 'https://opra.kaust.edu.sa/postdocs/prospective'
     application_url: 'https://opra.kaust.edu.sa/postdocs/prospective'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from KAUST (OPRA)
   - id: eth-zurich-phd-and-postdoc-positions-in-autonomous-m
     title: PhD and Postdoc Positions in Autonomous Mobile Robotics and Perception
@@ -458,11 +458,11 @@ openings:
     source: ETH Zürich (ASL)
     source_url: 'https://asl.ethz.ch/'
     application_url: 'https://asl.ethz.ch/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from ETH Zürich (ASL)
   - id: eth-zurich-phd-postdoc-positions-in-legged-robotics-
     title: 'PhD & Postdoc Positions in Legged Robotics and Dexterous Manipulation'
@@ -500,11 +500,11 @@ openings:
     source: ETH Zürich (RSL)
     source_url: 'https://rsl.ethz.ch/'
     application_url: 'https://rsl.ethz.ch/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from ETH Zürich (RSL)
   - id: eth-zurich-doctoral-and-postdoctoral-positions-in-3d
     title: Doctoral and Postdoctoral Positions in 3D Computer Vision and Spatial AI
@@ -523,8 +523,13 @@ openings:
       - Computer Vision
       - Machine Learning
       - Foundation Models
-    description: "Computer Vision and Geometry Group Our Team Research Publications Lectures News Events Opportunities Welcome To Computer Vision and Geometry Group Welcome to the website of the ETH Computer Vision and Geometry group.\n                        The CVG group is part of the Institute for Visual Computing (IVC). Computer Vision & Geometry Group. Welcome to the website of the ETH Computer Vision and Geometry group.\n                     The CVG group is part of the Institute for Visual Computing (IVC).\n                     Our research and education focuses on computer vision with a particular focus on\n                     geometric aspects. Our goal is to study and develop techniques to extract 3D shape, motion,\n                     appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view\
-      \ matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research Robotics Robotics Localization, Mapping, Planning, and Scene Understanding for Robotics. Read More 3D Scenes 3D Reconstruction 3D dense reconstruction from RGB-(D) images or point clouds. Read More Geometry Image Matching Point correspondences "
+    description: |-
+      Computer Vision and Geometry Group Our Team Research Publications Lectures News Events Opportunities Welcome To Computer Vision and Geometry Group Welcome to the website of the ETH Computer Vision and Geometry group.
+                              The CVG group is part of the Institute for Visual Computing (IVC). Computer Vision & Geometry Group. Welcome to the website of the ETH Computer Vision and Geometry group.
+                           The CVG group is part of the Institute for Visual Computing (IVC).
+                           Our research and education focuses on computer vision with a particular focus on
+                           geometric aspects. Our goal is to study and develop techniques to extract 3D shape, motion,
+                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research 3D Scenes Parameteric Scene Representations Reconstruction of vectorized CAD models and parametric representations from 3D scans. Read More 3D Scenes 3D Reconstruction 3D dense reconstruction from RGB-(D) images or point clouds. Read More 3D Sc
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -549,11 +554,11 @@ openings:
     source: ETH Zürich (CVG)
     source_url: 'https://cvg.ethz.ch/'
     application_url: 'https://cvg.ethz.ch/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from ETH Zürich (CVG)
   - id: epfl-phd-postdoctoral-positions-in-robot-learning-an
     title: 'PhD & Postdoctoral Positions in Robot Learning and Control'
@@ -593,11 +598,11 @@ openings:
     source: EPFL (LASA)
     source_url: 'https://epfl.ch/labs/lasa'
     application_url: 'https://www.epfl.ch/labs/lasa/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from EPFL (LASA)
   - id: epfl-postdoc-and-phd-positions-in-deep-learning-and-
     title: Postdoc and PhD Positions in Deep Learning and Computer Vision
@@ -634,11 +639,11 @@ openings:
     source: EPFL (CVLab)
     source_url: 'https://epfl.ch/labs/cvlab'
     application_url: 'https://www.epfl.ch/labs/cvlab/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from EPFL (CVLab)
   - id: technical-university-of-munich-tum-doctoral-research
     title: 'Doctoral Researcher & Postdoc Openings in Visual SLAM and 3D Perception'
@@ -680,11 +685,11 @@ openings:
     source: TU Munich (Cremers Lab)
     source_url: 'https://cvg.cit.tum.de/'
     application_url: 'https://cvg.cit.tum.de/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from TU Munich (Cremers Lab)
   - id: max-planck-institute-postdoctoral-fellowships-in-aut
     title: Postdoctoral Fellowships in Autonomous Systems and Robot Learning
@@ -698,11 +703,9 @@ openings:
     region: Europe
     research_topics:
       - Robot Learning
-      - Machine Learning
       - Autonomous Systems
     description: >-
-      Open Positions | MPI-IS Skip to main content Institute Homepage Institute Homepage DE Sign In Research Research Research Research Overview Publications Departments Empirical Inference Haptic Intelligence Perceiving Systems Physical Intelligence Robotic Materials Social Foundations of Computation Research Groups AI Safety and Alignment Algorithms and Society Biomimetic Materials and Machines Computational Applied Mathematics & AI Lab Cooperative Machine Intelligence for People-Aligned Safe Systems Cyborg Robotics and Intelligent Sensing Deep Models and Optimization Embodied Social Interaction Human Aspects of Machine Learning Learning and Dynamical Systems Mechanics for Intelligent Structures Neuromechanics of Movement Organizational Leadership and Diversity Robotic Composites and Compositions Robust Machine Learning Safety- and Efficiency- aligned Learning Science and Probabilistic Intelligence Verification and Learning for Intelligent Systems Wild, Efficient, and Innovative AI Max
-      Planck Fellow Groups Intelligent Construction and Building Systems Interactive Learning Start-Up Teams CELLnROLL About Us About us People Faculty People Directory Alumni Network Contact Management & Boards Contact Directions Our Institute About our institute Campus Overview Campus Facilities Code of Conduct Points of Contact for Employees Our History 100/10 year anniversary Career Career Career Career Open positions Doctoral Programs Doctoral Programs Overview International Max Planck Research Scho
+      Bot Detection Please wait while we check if you are a Human JavaScript needs to be enabled to complete this challenge. This website is protected with BunkerWeb
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -715,20 +718,19 @@ openings:
     relevance_explanation:
       matched_topics:
         - Robot Learning
-        - Machine Learning
         - Autonomous Systems
-      technical_alignment: Involves Robot Learning, Machine Learning methodology.
+      technical_alignment: Involves Robot Learning, Autonomous Systems methodology.
       research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
     source: Max Planck Institute for Intelligent Systems
     source_url: 'https://is.mpg.de/jobs'
     application_url: 'https://is.mpg.de/jobs'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Max Planck Institute for Intelligent Systems
   - id: university-of-oxford-postdoctoral-research-assistant
     title: Postdoctoral Research Assistant in Autonomous Robot Navigation and Learning
@@ -774,19 +776,19 @@ openings:
     source: Oxford Robotics Institute
     source_url: 'https://ori.ox.ac.uk/'
     application_url: 'https://ori.ox.ac.uk/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Oxford Robotics Institute
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
   - id: imperial-college-london-research-associate-phd-posit
     title: 'Research Associate & PhD Positions in Robot Learning and Dexterity'
@@ -826,11 +828,11 @@ openings:
     source: Imperial College London
     source_url: 'https://imperial.ac.uk/robot-intelligence'
     application_url: 'https://www.imperial.ac.uk/robot-intelligence/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Imperial College London
   - id: kth-royal-institute-of-technology-doctoral-and-postd
     title: Doctoral and Postdoc Openings in Robotics, Perception, and Learning
@@ -874,11 +876,11 @@ openings:
     source: KTH Royal Institute of Technology
     source_url: 'https://kth.se/is/rpl'
     application_url: 'https://www.kth.se/is/rpl'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from KTH Royal Institute of Technology
   - id: inria-postdoctoral-and-phd-fellowships-in-robotics-a
     title: Postdoctoral and PhD Fellowships in Robotics and Computer Vision
@@ -916,11 +918,11 @@ openings:
     source: Inria
     source_url: 'https://inria.fr/en/join-inria'
     application_url: 'https://www.inria.fr/en/join-inria'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Inria
   - id: university-of-mississippi-postdoctoral-research-asso
     title: Postdoctoral Research Associate - Robotics and AI
@@ -954,11 +956,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (University of Mississippi)
     source_url: 'https://linkedin.com/jobs/view/postdoctoral-research-associate-robotics-and-ai-at-university-of-mississippi-4446115965'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (University of Mississippi)
   - id: oak-ridge-national-laboratory-postdoctoral-research-
     title: Postdoctoral Research Associate - Robotics and Navigation
@@ -993,12 +995,50 @@ openings:
     source: LinkedIn (Oak Ridge National Laboratory)
     source_url: >-
       https://linkedin.com/jobs/view/postdoctoral-research-associate-robotics-and-navigation-at-oak-ridge-national-laboratory-4447202462
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Oak Ridge National Laboratory)
+  - id: ut-battelle-postdoctoral-research-associate-robotics
+    title: Postdoctoral Research Associate - Robotics and Navigation
+    position_type: Postdoc
+    institution: UT-Battelle
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Oak Ridge
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+    description: >-
+      Postdoctoral Research Associate - Robotics and Navigation at UT-Battelle. Location: Oak Ridge, TN. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (UT-Battelle)
+    source_url: 'https://linkedin.com/jobs/view/postdoctoral-research-associate-robotics-and-navigation-at-ut-battelle-4483391791'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
+    history:
+      - date: '2026-10-25'
+        event: Discovered from LinkedIn (UT-Battelle)
   - id: johns-hopkins-applied-physics-laboratory-2027-phd-gr
     title: 2027 PhD Graduate - Postdoctoral Researcher in Robotics and Autonomous Systems
     position_type: Postdoc
@@ -1034,13 +1074,13 @@ openings:
     source: LinkedIn (Johns Hopkins Applied Physics Laboratory)
     source_url: >-
       https://linkedin.com/jobs/view/2027-phd-graduate-postdoctoral-researcher-in-robotics-and-autonomous-systems-at-johns-hopkins-applied-physics-laboratory-4459558126
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Johns Hopkins Applied Physics Laboratory)
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
   - id: florida-international-university-postdoctoral-resear
     title: Postdoctoral Researcher - Applied Robotics
@@ -1074,11 +1114,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Florida International University)
     source_url: 'https://linkedin.com/jobs/view/postdoctoral-researcher-applied-robotics-at-florida-international-university-4475118058'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Florida International University)
   - id: north-carolina-agricultural-and-technical-state-univ
     title: Post Doc Research Associate, Autonomy
@@ -1113,11 +1153,11 @@ openings:
     source: LinkedIn (North Carolina Agricultural and Technical State University)
     source_url: >-
       https://linkedin.com/jobs/view/post-doc-research-associate-autonomy-at-north-carolina-agricultural-and-technical-state-university-4480501300
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (North Carolina Agricultural and Technical State University)
   - id: cedars-sinai-postdoctoral-scientist-center-for-auton
     title: Postdoctoral Scientist -Center for Autonomous Robotic Surgery (Robotics Track)
@@ -1154,11 +1194,11 @@ openings:
     source: LinkedIn (Cedars-Sinai)
     source_url: >-
       https://linkedin.com/jobs/view/postdoctoral-scientist-center-for-autonomous-robotic-surgery-robotics-track-at-cedars-sinai-4458330989
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Cedars-Sinai)
   - id: brookhaven-national-laboratory-postdoctoral-research
     title: Postdoctoral Research Associate - Robotics and Embodied AI
@@ -1195,11 +1235,11 @@ openings:
     source: LinkedIn (Brookhaven National Laboratory)
     source_url: >-
       https://linkedin.com/jobs/view/postdoctoral-research-associate-robotics-and-embodied-ai-at-brookhaven-national-laboratory-4480541885
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Brookhaven National Laboratory)
   - id: university-of-arkansas-post-doctoral-fellow-research
     title: Post Doctoral Fellow Researcher - Robotics, Advanced Manufacturing and Materials Innovation- 12 MONTH
@@ -1234,11 +1274,11 @@ openings:
     source: LinkedIn (University of Arkansas)
     source_url: >-
       https://linkedin.com/jobs/view/post-doctoral-fellow-researcher-robotics-advanced-manufacturing-and-materials-innovation-12-month-at-university-of-arkansas-4479264152
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (University of Arkansas)
   - id: nvidia-senior-research-scientist-autonomous-vehicles
     title: Senior Research Scientist - Autonomous Vehicles
@@ -1272,11 +1312,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (NVIDIA)
     source_url: 'https://linkedin.com/jobs/view/senior-research-scientist-autonomous-vehicles-at-nvidia-4395472511'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (NVIDIA)
   - id: nvidia-senior-research-scientist-multimodal-foundati
     title: Senior Research Scientist, Multimodal Foundation Models and Robotics
@@ -1314,11 +1354,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (NVIDIA)
     source_url: 'https://linkedin.com/jobs/view/senior-research-scientist-multimodal-foundation-models-and-robotics-at-nvidia-4407974246'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (NVIDIA)
   - id: kodiak-world-model-research-scientist-physical-ai-re
     title: World Model Research Scientist- Physical AI
@@ -1356,11 +1396,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Kodiak)
     source_url: 'https://linkedin.com/jobs/view/world-model-research-scientist-physical-ai-at-kodiak-4451483925'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Kodiak)
   - id: holiday-robotics-senior-research-scientist-engineer-
     title: 'Senior Research Scientist / Engineer: Dynamics, Planning & Control'
@@ -1395,11 +1435,11 @@ openings:
     source: LinkedIn (Holiday Robotics)
     source_url: >-
       https://linkedin.com/jobs/view/senior-research-scientist-engineer-dynamics-planning-control-at-holiday-robotics-4470214454
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Holiday Robotics)
   - id: meta-ai-research-scientist-robotics-meta-superintell
     title: AI Research Scientist, Robotics - Meta Superintelligence Labs
@@ -1433,11 +1473,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Meta)
     source_url: 'https://linkedin.com/jobs/view/ai-research-scientist-robotics-meta-superintelligence-labs-at-meta-4461155160'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Meta)
   - id: path-robotics-senior-machine-learning-engineer-tech-
     title: Senior Machine Learning Engineer (Tech Lead), Robot Learning, Loco- Manipulation
@@ -1474,11 +1514,11 @@ openings:
     source: LinkedIn (Path Robotics)
     source_url: >-
       https://linkedin.com/jobs/view/senior-machine-learning-engineer-tech-lead-robot-learning-loco-manipulation-at-path-robotics-4440036791
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Path Robotics)
   - id: the-university-of-texas-at-el-paso-research-associat
     title: Research Associate Professor in Autonomous Systems for Space Technologies
@@ -1513,11 +1553,11 @@ openings:
     source: LinkedIn (The University of Texas at El Paso)
     source_url: >-
       https://linkedin.com/jobs/view/research-associate-professor-in-autonomous-systems-for-space-technologies-at-the-university-of-texas-at-el-paso-4315306983
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (The University of Texas at El Paso)
   - id: path-robotics-senior-machine-learning-engineer-reinf
     title: Senior Machine Learning Engineer - Reinforcement Learning
@@ -1553,11 +1593,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Path Robotics)
     source_url: 'https://linkedin.com/jobs/view/senior-machine-learning-engineer-reinforcement-learning-at-path-robotics-4440316966'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Path Robotics)
   - id: amazon-science-sr-applied-research-scientist-safe-au
     title: 'Sr. Applied & Research Scientist - Safe Autonomy Frontiers (SAF) Lab, Safe Autonomy Frontiers (SAF) Lab'
@@ -1592,11 +1632,11 @@ openings:
     source: LinkedIn (Amazon Science)
     source_url: >-
       https://linkedin.com/jobs/view/sr-applied-research-scientist-safe-autonomy-frontiers-saf-lab-safe-autonomy-frontiers-saf-lab-at-amazon-science-4474406766
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Amazon Science)
   - id: dexmate-research-scientist-robotics-ai-research-scie
     title: 'Research Scientist, Robotics & AI'
@@ -1630,11 +1670,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Dexmate)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-robotics-ai-at-dexmate-4375106746'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Dexmate)
   - id: multiply-labs-senior-staff-robotics-research-scienti
     title: 'Senior / Staff Robotics Research Scientist - Dexterous & Mobile Manipulation'
@@ -1671,11 +1711,11 @@ openings:
     source: LinkedIn (Multiply Labs)
     source_url: >-
       https://linkedin.com/jobs/view/senior-staff-robotics-research-scientist-dexterous-mobile-manipulation-at-multiply-labs-4427993984
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Multiply Labs)
   - id: meta-ai-research-scientist-robotics-research-scienti
     title: AI Research Scientist, Robotics
@@ -1709,11 +1749,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Meta)
     source_url: 'https://linkedin.com/jobs/view/ai-research-scientist-robotics-at-meta-4350215410'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Meta)
   - id: florida-atlantic-university-postdoctoral-fellow-appl
     title: Postdoctoral Fellow Application of Machine Learning and Robotics
@@ -1750,11 +1790,11 @@ openings:
     source: LinkedIn (Florida Atlantic University)
     source_url: >-
       https://linkedin.com/jobs/view/postdoctoral-fellow-application-of-machine-learning-and-robotics-at-florida-atlantic-university-4389409007
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Florida Atlantic University)
   - id: basis-research-institute-postdoctoral-fellow-mara-ro
     title: 'Postdoctoral Fellow, MARA & Robotics'
@@ -1788,11 +1828,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Basis Research Institute)
     source_url: 'https://linkedin.com/jobs/view/postdoctoral-fellow-mara-robotics-at-basis-research-institute-4466378393'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Basis Research Institute)
   - id: waymo-research-scientist-rl-for-autonomous-planning-
     title: 'Research Scientist, RL for Autonomous Planning & World Modeling'
@@ -1828,11 +1868,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Waymo)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-rl-for-autonomous-planning-world-modeling-at-waymo-4459726545'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Waymo)
   - id: waymo-senior-research-scientist-perception-research-
     title: Senior Research Scientist, Perception
@@ -1866,11 +1906,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Waymo)
     source_url: 'https://linkedin.com/jobs/view/senior-research-scientist-perception-at-waymo-4427266069'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Waymo)
   - id: waymo-staff-research-scientist-perception-research-s
     title: Staff Research Scientist, Perception
@@ -1904,11 +1944,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Waymo)
     source_url: 'https://linkedin.com/jobs/view/staff-research-scientist-perception-at-waymo-4423995107'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Waymo)
   - id: nissan-motor-corporation-senior-ai-researcher-end-to
     title: Senior AI Researcher, End-to-End Autonomous Systems
@@ -1942,11 +1982,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Nissan Motor Corporation)
     source_url: 'https://linkedin.com/jobs/view/senior-ai-researcher-end-to-end-autonomous-systems-at-nissan-motor-corporation-4483322781'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Nissan Motor Corporation)
   - id: horizon-robotics-research-scientist-research-scienti
     title: Research Scientist
@@ -1980,11 +2020,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Horizon Robotics)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-at-horizon-robotics-4475451762'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Horizon Robotics)
   - id: applied-intuition-research-scientist-world-action-fo
     title: Research Scientist - World-Action Foundation Model, Robotics
@@ -2020,11 +2060,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Applied Intuition)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-world-action-foundation-model-robotics-at-applied-intuition-4423972050'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Applied Intuition)
   - id: bosch-usa-research-scientist-robotics-ai-research-sc
     title: Research Scientist- Robotics AI
@@ -2058,11 +2098,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Bosch USA)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-robotics-ai-at-bosch-usa-4473082519'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Bosch USA)
   - id: lg-electronics-north-america-staffsr-staff-physical-
     title: Staff/Sr. Staff, Physical AI Researcher (LG Emerging Tech Lab)
@@ -2099,11 +2139,11 @@ openings:
     source: LinkedIn (LG Electronics North America)
     source_url: >-
       https://linkedin.com/jobs/view/staff-sr-staff-physical-ai-researcher-lg-emerging-tech-lab-at-lg-electronics-north-america-4482790794
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (LG Electronics North America)
   - id: lg-electronics-staffsr-staff-physical-ai-researcher-
     title: Staff/Sr. Staff, Physical AI Researcher (LG Emerging Tech Lab)
@@ -2139,11 +2179,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (LG Electronics)
     source_url: 'https://linkedin.com/jobs/view/staff-sr-staff-physical-ai-researcher-lg-emerging-tech-lab-at-lg-electronics-4481652495'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (LG Electronics)
   - id: united-imaging-intelligence-sr-research-scientist-co
     title: Sr. Research Scientist, Computer Vision and Robotics
@@ -2180,11 +2220,11 @@ openings:
     source: LinkedIn (United Imaging Intelligence)
     source_url: >-
       https://linkedin.com/jobs/view/sr-research-scientist-computer-vision-and-robotics-at-united-imaging-intelligence-4427716184
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (United Imaging Intelligence)
   - id: general-robotics-robotics-engineer-navigation-focus-
     title: Robotics Engineer - Navigation focus
@@ -2218,11 +2258,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (General Robotics)
     source_url: 'https://linkedin.com/jobs/view/robotics-engineer-navigation-focus-at-general-robotics-4441404740'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (General Robotics)
   - id: general-robotics-robotics-engineer-manipulation-focu
     title: Robotics Engineer - Manipulation focus
@@ -2256,11 +2296,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (General Robotics)
     source_url: 'https://linkedin.com/jobs/view/robotics-engineer-manipulation-focus-at-general-robotics-4465016039'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (General Robotics)
   - id: general-robotics-robotics-engineer-foundation-model-
     title: 'Robotics Engineer: Foundation Model Training'
@@ -2296,11 +2336,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (General Robotics)
     source_url: 'https://linkedin.com/jobs/view/robotics-engineer-foundation-model-training-at-general-robotics-4467032002'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (General Robotics)
   - id: general-robotics-robotics-engineer-humanoids-focus-r
     title: Robotics Engineer - Humanoids focus
@@ -2334,11 +2374,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (General Robotics)
     source_url: 'https://linkedin.com/jobs/view/robotics-engineer-humanoids-focus-at-general-robotics-4465020054'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (General Robotics)
   - id: deft-robotics-research-scientist-research-scientist-
     title: Research Scientist
@@ -2372,11 +2412,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Deft Robotics)
     source_url: 'https://linkedin.com/jobs/view/research-scientist-at-deft-robotics-4441104036'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Deft Robotics)
   - id: molg-robotics-engineer-research-engineer-2026
     title: Robotics Engineer
@@ -2409,11 +2449,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Molg)
     source_url: 'https://linkedin.com/jobs/view/robotics-engineer-at-molg-4443548799'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Molg)
   - id: boost-robotics-robotics-ml-research-engineer-foundin
     title: Robotics ML Research Engineer, Founding
@@ -2447,11 +2487,11 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (Boost Robotics)
     source_url: 'https://linkedin.com/jobs/view/robotics-ml-research-engineer-founding-at-boost-robotics-4450907943'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (Boost Robotics)
   - id: world-labs-research-engineer-scientist-robot-learnin
     title: Research Engineer / Scientist (Robot Learning)
@@ -2485,12 +2525,86 @@ openings:
       potential_gaps: None identified
     source: LinkedIn (World Labs)
     source_url: 'https://linkedin.com/jobs/view/research-engineer-scientist-robot-learning-at-world-labs-4464103846'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from LinkedIn (World Labs)
+  - id: inbolt-robotics-engineer-senior-research-engineer-20
+    title: Robotics Engineer (Senior)
+    position_type: Research Engineer
+    institution: Inbolt
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Paris
+    country: France
+    region: Europe
+    research_topics:
+      - Robot Learning
+    description: 'Robotics Engineer (Senior) at Inbolt. Location: Paris, Île-de-France, France. Regional research opportunity.'
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Inbolt)
+    source_url: 'https://fr.linkedin.com/jobs/view/robotics-engineer-senior-at-inbolt-4478275380'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
+    history:
+      - date: '2026-10-25'
+        event: Discovered from LinkedIn (Inbolt)
+  - id: helsing-ai-research-engineer-robotics-research-engin
+    title: AI Research Engineer - Robotics
+    position_type: Research Engineer
+    institution: Helsing
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Paris
+    country: France
+    region: Europe
+    research_topics:
+      - Robot Learning
+    description: 'AI Research Engineer - Robotics at Helsing. Location: Paris, Île-de-France, France. Regional research opportunity.'
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Helsing)
+    source_url: 'https://fr.linkedin.com/jobs/view/ai-research-engineer-robotics-at-helsing-4375551747'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
+    history:
+      - date: '2026-10-25'
+        event: Discovered from LinkedIn (Helsing)
   - id: uk-academic-institution-faculty-in-robotics-faculty-
     title: Faculty in Robotics
     position_type: Faculty
@@ -2524,11 +2638,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTF441/faculty-in-robotics'
     application_url: 'https://www.jobs.ac.uk/job/DTF441/faculty-in-robotics'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-teaching-fellow-in-robotics-
     title: Teaching Fellow in Robotics Engineering
@@ -2563,11 +2677,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTJ744/teaching-fellow-in-robotics-engineering'
     application_url: 'https://www.jobs.ac.uk/job/DTJ744/teaching-fellow-in-robotics-engineering'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-professor-w3-of-mechatronics
     title: 'Professor (W3) of Mechatronics & Robotics'
@@ -2602,11 +2716,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTI253/professor-w3-of-mechatronics-and-robotics'
     application_url: 'https://www.jobs.ac.uk/job/DTI253/professor-w3-of-mechatronics-and-robotics'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-faculty-position-in-school-o
     title: Faculty Position in School of Robotics (Full Rank)
@@ -2621,7 +2735,7 @@ openings:
     research_topics:
       - Robot Learning
     description: >-
-      Faculty Position in School of Robotics (Full Rank) XJTLU Entrepreneur College (Taicang Campus) - School of Robotics Xi'an Jiaotong - Liverpool University Location: Suzhou Salary: Competitive Date Placed: 25 Aug
+      Faculty Position in School of Robotics (Full Rank) XJTLU Entrepreneur College (Taicang Campus) - School of Robotics Xi'an Jiaotong - Liverpool University Location: Suzhou Salary: Competitive Date Placed: 25 Oct
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -2639,13 +2753,13 @@ openings:
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
     source: jobs.ac.uk (UK Academic Institution)
-    source_url: 'https://jobs.ac.uk/job/DSS253/faculty-position-in-school-of-robotics-full-rank'
-    application_url: 'https://www.jobs.ac.uk/job/DSS253/faculty-position-in-school-of-robotics-full-rank'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    source_url: 'https://jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
+    application_url: 'https://www.jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: imperial-college-london-research-associate-in-dexter
     title: Research Associate in Dexterous Manipulation and Robot Learning
@@ -2682,11 +2796,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
     application_url: 'https://www.jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-phd-studentship-the-physics-
     title: 'PhD Studentship: The Physics of Learning in Robotic Metamaterials'
@@ -2721,11 +2835,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DSN384/phd-studentship-the-physics-of-learning-in-robotic-metamaterials'
     application_url: 'https://www.jobs.ac.uk/job/DSN384/phd-studentship-the-physics-of-learning-in-robotic-metamaterials'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-phd-position-in-physical-ai-
     title: 'PhD Position in Physical AI: Adaptive Foundation Models for Robotics'
@@ -2766,11 +2880,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTA553/phd-position-in-physical-ai-adaptive-foundation-models-for-robotics'
     application_url: 'https://www.jobs.ac.uk/job/DTA553/phd-position-in-physical-ai-adaptive-foundation-models-for-robotics'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-efficient-physical-ai-for-re
     title: Efficient Physical AI for Real-World Robotics - Funded PhD Studentship
@@ -2809,11 +2923,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTI242/efficient-physical-ai-for-real-world-robotics-funded-phd-studentship'
     application_url: 'https://www.jobs.ac.uk/job/DTI242/efficient-physical-ai-for-real-world-robotics-funded-phd-studentship'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-phd-studentship-part-time-in
     title: PhD Studentship (Part-Time) in Control Systems and Robotics (Postgraduate Research Teaching Associate)
@@ -2850,11 +2964,11 @@ openings:
       https://jobs.ac.uk/job/DTG045/phd-studentship-part-time-in-control-systems-and-robotics-postgraduate-research-teaching-associate
     application_url: >-
       https://www.jobs.ac.uk/job/DTG045/phd-studentship-part-time-in-control-systems-and-robotics-postgraduate-research-teaching-associate
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-phd-project-resilient-proces
     title: 'PhD project: Resilient Processes of Nuclear Fusion Plant Maintenance and Decommissioning using Robotic Technologies'
@@ -2891,53 +3005,11 @@ openings:
       https://jobs.ac.uk/job/DTJ092/phd-project-resilient-processes-of-nuclear-fusion-plant-maintenance-and-decommissioning-using-robotic-technologies
     application_url: >-
       https://www.jobs.ac.uk/job/DTJ092/phd-project-resilient-processes-of-nuclear-fusion-plant-maintenance-and-decommissioning-using-robotic-technologies
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
-        event: Discovered from jobs.ac.uk (UK Academic Institution)
-  - id: uk-academic-institution-professor-associate-professo
-    title: >-
-      Professor / Associate Professor / Assistant Professor in AI/Robotics for Aircraft Maintenance / Low-Altitude Economy / Satellite and Space Engineering under Strategic Hiring Scheme
-    position_type: Faculty
-    institution: UK Academic Institution
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: Hong Kong
-    region: UK
-    research_topics:
-      - Robot Learning
-    description: >-
-      Professor / Associate Professor / Assistant Professor in AI/Robotics for Aircraft Maintenance / Low-Altitude Economy / Satellite and Space Engineering under Strategic Hiring Scheme Department of Aeronautical and Aviation Engineering The Hong Kong Polytechnic University Location: Hong Kong Salary: A highly competitive remuneration package will be offered Date Placed: 25 Aug
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Robot Learning
-      technical_alignment: Involves Robot Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: jobs.ac.uk (UK Academic Institution)
-    source_url: >-
-      https://jobs.ac.uk/job/DSR599/professor-associate-professor-assistant-professor-in-ai-robotics-for-aircraft-maintenance-low-altitude-economy-satellite-and-space-engineering-under-strategic-hiring-scheme
-    application_url: >-
-      https://www.jobs.ac.uk/job/DSR599/professor-associate-professor-assistant-professor-in-ai-robotics-for-aircraft-maintenance-low-altitude-economy-satellite-and-space-engineering-under-strategic-hiring-scheme
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
-    history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-computer-vision-ai-data-scie
     title: Computer Vision AI Data Scientist for eSports (KTP Associate)
@@ -2972,11 +3044,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTJ304/computer-vision-ai-data-scientist-for-esports-ktp-associate'
     application_url: 'https://www.jobs.ac.uk/job/DTJ304/computer-vision-ai-data-scientist-for-esports-ktp-associate'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-senior-research-associate-in
     title: Senior Research Associate in Computer Vision and 3D Reconstruction for Wildlife Conservation - (9503)
@@ -3013,11 +3085,11 @@ openings:
       https://jobs.ac.uk/job/DTJ846/senior-research-associate-in-computer-vision-and-3d-reconstruction-for-wildlife-conservation-9503
     application_url: >-
       https://www.jobs.ac.uk/job/DTJ846/senior-research-associate-in-computer-vision-and-3d-reconstruction-for-wildlife-conservation-9503
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-research-fellow-in-multimoda
     title: Research Fellow in Multimodal Physics-Informed Foundation Model for Air Quality Applications
@@ -3058,11 +3130,11 @@ openings:
       https://jobs.ac.uk/job/DTJ699/research-fellow-in-multimodal-physics-informed-foundation-model-for-air-quality-applications
     application_url: >-
       https://www.jobs.ac.uk/job/DTJ699/research-fellow-in-multimodal-physics-informed-foundation-model-for-air-quality-applications
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: university-of-bristol-lecturer-in-artificial-intelli
     title: Lecturer in Artificial Intelligence
@@ -3097,11 +3169,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTF407/lecturer-in-artificial-intelligence'
     application_url: 'https://www.jobs.ac.uk/job/DTF407/lecturer-in-artificial-intelligence'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-tutor-research-artificial-in
     title: Tutor (Research) - Artificial Intelligence and Digital Art (1FTE)
@@ -3136,11 +3208,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTI979/tutor-research-artificial-intelligence-and-digital-art-1fte'
     application_url: 'https://www.jobs.ac.uk/job/DTI979/tutor-research-artificial-intelligence-and-digital-art-1fte'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-postdoctoral-associate-in-ai
     title: Postdoctoral Associate in AI for Precision Medicine and Therapeutics
@@ -3175,11 +3247,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTH301/postdoctoral-associate-in-ai-for-precision-medicine-and-therapeutics'
     application_url: 'https://www.jobs.ac.uk/job/DTH301/postdoctoral-associate-in-ai-for-precision-medicine-and-therapeutics'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-machine-learning-engineer-sh
     title: 'Machine Learning Engineer - Ship Design & Hydrodynamics (KTP Associate)'
@@ -3214,11 +3286,11 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTC097/machine-learning-engineer-ship-design-and-hydrodynamics-ktp-associate'
     application_url: 'https://www.jobs.ac.uk/job/DTC097/machine-learning-engineer-ship-design-and-hydrodynamics-ktp-associate'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: dutch-universities-academictransfer-phd-position-saf
     title: Phd position safe planning and decision making under uncertainty for long horizon robot autonomy
@@ -3234,7 +3306,7 @@ openings:
       - Robot Learning
       - Autonomous Systems
     description: >-
-      PhD Position: Safe Planning and Decision-Making under Uncertainty for Long-Horizon Robot Autonomy Join TU Delft and the EU-funded OPERA consortium. Push the frontier of general-purpose AI for robotics and tackle the fundamental tension between long-horizon reasoning and real-time safety guarantees. Job description Robots that operate for long periods amon… Deadline 15 Nov ’26 Published yesterday Delft Delft University of Technology (TU Delft)
+      PhD Position: Safe Planning and Decision-Making under Uncertainty for Long-Horizon Robot Autonomy Join TU Delft and the EU-funded OPERA consortium. Push the frontier of general-purpose AI for robotics and tackle the fundamental tension between long-horizon reasoning and real-time safety guarantees. Job description Robots that operate for long periods amon… Deadline 15 Nov ’26 Published 23 Oct ’26 Delft Delft University of Technology (TU Delft)
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -3257,11 +3329,11 @@ openings:
       https://academictransfer.com/en/jobs/365008/phd-position-safe-planning-and-decision-making-under-uncertainty-for-long-horizon-robot-autonomy
     application_url: >-
       https://www.academictransfer.com/en/jobs/365008/phd-position-safe-planning-and-decision-making-under-uncertainty-for-long-horizon-robot-autonomy/
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-postdoc-in-meani
     title: Postdoc in meaningful human control for human robot collaboration
@@ -3298,11 +3370,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364464/postdoc-in-meaningful-human-control-for-human-robot-collaboration'
     application_url: 'https://www.academictransfer.com/en/jobs/364464/postdoc-in-meaningful-human-control-for-human-robot-collaboration/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-phd-position-in-
     title: Phd position in foil drone
@@ -3337,11 +3409,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364852/phd-position-in-foil-drone'
     application_url: 'https://www.academictransfer.com/en/jobs/364852/phd-position-in-foil-drone/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-master-thesis-au
     title: Master thesis autonomous synthesis and characterization of thin films
@@ -3378,11 +3450,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/361753/master-thesis-autonomous-synthesis-and-characterization-of-thin-films'
     application_url: 'https://www.academictransfer.com/en/jobs/361753/master-thesis-autonomous-synthesis-and-characterization-of-thin-films/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-master-thesis-op
     title: Master thesis optimization strategies for novel materials
@@ -3419,11 +3491,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/361752/master-thesis-optimization-strategies-for-novel-materials'
     application_url: 'https://www.academictransfer.com/en/jobs/361752/master-thesis-optimization-strategies-for-novel-materials/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-postdoc-in-compu
     title: Postdoc in computer vision and smart sensing for sustainable aluminium recycling
@@ -3460,11 +3532,11 @@ openings:
       https://academictransfer.com/en/jobs/364143/postdoc-in-computer-vision-and-smart-sensing-for-sustainable-aluminium-recycling
     application_url: >-
       https://www.academictransfer.com/en/jobs/364143/postdoc-in-computer-vision-and-smart-sensing-for-sustainable-aluminium-recycling/
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-phd-researcher-o
     title: Phd researcher on ai assisted reverse engineering of integrated circuits 1 fte
@@ -3501,11 +3573,11 @@ openings:
       https://academictransfer.com/en/jobs/363728/phd-researcher-on-ai-assisted-reverse-engineering-of-integrated-circuits-1-fte
     application_url: >-
       https://www.academictransfer.com/en/jobs/363728/phd-researcher-on-ai-assisted-reverse-engineering-of-integrated-circuits-1-fte/
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-phd-kandidaat-ai
     title: Phd kandidaat ai ondersteunde reverse engineering van geintegreerde schakelingen 10 fte
@@ -3542,50 +3614,11 @@ openings:
       https://academictransfer.com/en/jobs/363729/phd-kandidaat-ai-ondersteunde-reverse-engineering-van-geintegreerde-schakelingen-10-fte
     application_url: >-
       https://www.academictransfer.com/en/jobs/363729/phd-kandidaat-ai-ondersteunde-reverse-engineering-van-geintegreerde-schakelingen-10-fte/
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
-        event: Discovered from AcademicTransfer (Netherlands)
-  - id: dutch-universities-academictransfer-phd-position-on-
-    title: Phd position on explainable deepfake detection using foundation models
-    position_type: PhD
-    institution: Dutch Universities (AcademicTransfer)
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Delft / Amsterdam
-    country: Netherlands
-    region: Europe
-    research_topics:
-      - Foundation Models
-    description: >-
-      PhD position on explainable DeepFake detection using Foundation models The challenge: In the past decades, photographs and videos of events were regarded as reliable evidence for both news media and forensic investigations. However, recent developments in AI technology now make it possible, with minimal technological knowledge o… Deadline tomorrow Published 9 Oct ’26 Enschede University of Twente (UT)
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Potentially Relevant
-    relevance_explanation:
-      matched_topics:
-        - Foundation Models
-      technical_alignment: Touches related methods in Foundation Models.
-      research_alignment: Adjacent domain in visual intelligence or robotic systems.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: AcademicTransfer (Netherlands)
-    source_url: 'https://academictransfer.com/en/jobs/364624/phd-position-on-explainable-deepfake-detection-using-foundation-models'
-    application_url: 'https://www.academictransfer.com/en/jobs/364624/phd-position-on-explainable-deepfake-detection-using-foundation-models/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
-    history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-phd-in-hardware-
     title: Phd in hardware architectures for physics informed ai
@@ -3600,7 +3633,7 @@ openings:
     research_topics:
       - Machine Learning
     description: >-
-      PhD in Hardware Architectures for Physics-Informed AI Are you passionate about combining artificial intelligence, physics-based modelling, and digital hardware design? Do you want to develop the next generation of FPGA/ASIC-based computing platforms that make physics-informed AI fast, efficient, and deployable i… Deadline tomorrow Published 23 Sep ’26 Eindhoven Eindhoven University of Technology (TU/e)
+      PhD in Hardware Architectures for Physics-Informed AI Are you passionate about combining artificial intelligence, physics-based modelling, and digital hardware design? Do you want to develop the next generation of FPGA/ASIC-based computing platforms that make physics-informed AI fast, efficient, and deployable i… Deadline today Published 23 Sep ’26 Eindhoven Eindhoven University of Technology (TU/e)
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -3620,11 +3653,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364157/phd-in-hardware-architectures-for-physics-informed-ai'
     application_url: 'https://www.academictransfer.com/en/jobs/364157/phd-in-hardware-architectures-for-physics-informed-ai/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-postdoc-nonmonot
     title: Postdoc nonmonotone game theory
@@ -3659,11 +3692,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364139/postdoc-nonmonotone-game-theory'
     application_url: 'https://www.academictransfer.com/en/jobs/364139/postdoc-nonmonotone-game-theory/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-phd-position-dat
     title: Phd position data driven distributed game theory
@@ -3698,11 +3731,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364140/phd-position-data-driven-distributed-game-theory'
     application_url: 'https://www.academictransfer.com/en/jobs/364140/phd-position-data-driven-distributed-game-theory/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-postdoc-data-dri
     title: Postdoc data driven autonomous shipping and port operations
@@ -3737,11 +3770,11 @@ openings:
     source: AcademicTransfer (Netherlands)
     source_url: 'https://academictransfer.com/en/jobs/364142/postdoc-data-driven-autonomous-shipping-and-port-operations'
     application_url: 'https://www.academictransfer.com/en/jobs/364142/postdoc-data-driven-autonomous-shipping-and-port-operations/'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from AcademicTransfer (Netherlands)
   - id: university-research-institute-founding-robotics-engi
     title: Founding Robotics Engineer - Subsea/Autonomy
@@ -3777,13 +3810,13 @@ openings:
       potential_gaps: None identified
     source: OpenRobotics ROS Discourse
     source_url: 'https://discourse.openrobotics.org/t/founding-robotics-engineer-subsea-autonomy/59020'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Description updated from source
   - id: university-research-institute-tenure-line-faculty-po
     title: Tenure-Line Faculty Positions in Physical AI @ Penn State College of IST in University Park, PA
@@ -3820,11 +3853,11 @@ openings:
     source: OpenRobotics ROS Discourse
     source_url: >-
       https://discourse.openrobotics.org/t/tenure-line-faculty-positions-in-physical-ai-penn-state-college-of-ist-in-university-park-pa/58673
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
   - id: university-research-institute-control-state-estimati
     title: 'Control & state estimation contractor (NL, remote + on-site blocks)'
@@ -3858,11 +3891,11 @@ openings:
       potential_gaps: None identified
     source: OpenRobotics ROS Discourse
     source_url: 'https://discourse.openrobotics.org/t/control-state-estimation-contractor-nl-remote-on-site-blocks/58539'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
   - id: university-research-institute-assistant-research-eng
     title: Assistant Research Engineer (AI/ML) - MATRIX Lab - University of Maryland
@@ -3896,11 +3929,11 @@ openings:
       potential_gaps: None identified
     source: OpenRobotics ROS Discourse
     source_url: 'https://discourse.openrobotics.org/t/assistant-research-engineer-ai-ml-matrix-lab-university-of-maryland/58354'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
   - id: university-research-institute-paid-contract-robotics
     title: '[Paid Contract] Robotics Engineer - Household Manipulation Prototype - Hamilton, Canada / Hybrid'
@@ -3937,11 +3970,11 @@ openings:
     source: OpenRobotics ROS Discourse
     source_url: >-
       https://discourse.openrobotics.org/t/paid-contract-robotics-engineer-household-manipulation-prototype-hamilton-canada-hybrid/57329
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
   - id: university-research-institute-impactful-roles-on-aus
     title: Impactful roles on Aussie medical imaging robot!
@@ -3975,14 +4008,14 @@ openings:
       potential_gaps: None identified
     source: OpenRobotics ROS Discourse
     source_url: 'https://discourse.openrobotics.org/t/impactful-roles-on-aussie-medical-imaging-robot/57100'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from OpenRobotics ROS Discourse
-  - id: university-research-institute-65-fully-funded-phd-po
-    title: 65 Fully Funded PhD Positions in World Models - 2026
+  - id: university-research-institute-57-fully-funded-phd-po
+    title: 57 Fully Funded PhD Positions in World Models - 2026
     position_type: PhD
     institution: University / Research Institute
     department: Not specified
@@ -3994,7 +4027,7 @@ openings:
     research_topics:
       - World Models
     description: >-
-      Discover 65 fully funded PhD positions in World Models for 2026. Browse the latest scholarships, research opportunities, and academic openings for international students across top universities worldwide.
+      Discover 57 fully funded PhD positions in World Models for 2026. Browse the latest scholarships, research opportunities, and academic openings for international students across top universities worldwide.
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -4013,11 +4046,11 @@ openings:
       potential_gaps: None identified
     source: Public Academic Search
     source_url: 'https://phdfinder.com/search/world-models'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Public Academic Search
   - id: university-research-institute-world-models-phd-posit
     title: 'World Models PhD Positions & Scholarships 2026 | Scholar Nexus'
@@ -4061,11 +4094,11 @@ openings:
       potential_gaps: None identified
     source: Public Academic Search
     source_url: 'https://scholarnexus.ai/positions/phds/World-Models?searchQuery=World+Models&program=0'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Public Academic Search
   - id: university-research-institute-two-fully-funded-phd-p
     title: 'Two Fully Funded PhD Positions in World Models & Embodied ... - LinkedIn'
@@ -4101,9 +4134,9 @@ openings:
       potential_gaps: None identified
     source: Public Academic Search
     source_url: 'https://linkedin.com/pulse/two-fully-funded-phd-positions-world-models-embodied-tactile-rwj3e'
-    first_seen: '2026-10-24'
-    last_seen: '2026-10-24'
-    last_verified: '2026-10-24'
+    first_seen: '2026-10-25'
+    last_seen: '2026-10-25'
+    last_verified: '2026-10-25'
     history:
-      - date: '2026-10-24'
+      - date: '2026-10-25'
         event: Discovered from Public Academic Search
