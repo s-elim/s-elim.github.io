@@ -58,7 +58,7 @@
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
-  impact: 'SCIE-Q1, IF: 3.9'
+  impact: 'SCIE-Q1, IF: 4.9'
   year: 2026
   type: 'journal'
   flagship: 'robotics'
@@ -191,7 +191,7 @@
 - title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
   authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
-  impact: 'SCIE-Q1, IF: 3.9'
+  impact: 'SCIE-Q1, IF: 4.9'
   year: 2026
   type: 'journal'
   image: '/images/parkinsons-gait-framework.webp'
