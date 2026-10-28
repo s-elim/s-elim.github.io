@@ -10,6 +10,7 @@ aespc-figure: { w: 640, h: 340, sm: true }
 affordx-framework: { w: 960, h: 448, sm: true }
 agentic-framework: { w: 960, h: 495, sm: true }
 agi-framework: { w: 960, h: 679, sm: true }
+awm-framework: { w: 960, h: 410, sm: true }
 c3g-vm6d-architecture: { w: 960, h: 535, sm: true }
 chatbot: { w: 960, h: 611, sm: true }
 dario-framework: { w: 550, h: 303, sm: true }

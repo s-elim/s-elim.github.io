@@ -41,6 +41,22 @@
     - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD-X/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
+- title: 'Agentic World Models: Grounding Multimodal Policies in Hierarchical Latent World Models'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
+  venue: 'Robotics: Science and Systems'
+  venue_short: "RSS'27"
+  year: 2027
+  type: 'conference'
+  flagship: 'robotics'
+  rank: 'A*'
+  status: 'In Preparation'
+  featured: true
+  image: '/images/awm-framework.webp'
+  thumb: "RSS '27"
+  url: 'https://github.com/s-elim/Agentic-World-Model'
+  links:
+    - { label: 'Code', url: 'https://github.com/s-elim/Agentic-World-Model', kind: 'code' }
+
 - title: 'AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
