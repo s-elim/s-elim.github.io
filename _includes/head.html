@@ -9,7 +9,14 @@
   {% capture page_title %}{{ page.title | default: site.title | strip_html | strip_newlines }} · {{ site.title }}{% endcapture %}
 {% endif %}
 {% assign page_desc = page.description | default: page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 200 %}
-{% assign og_image = site.author.avatar | default: "profile.webp" | prepend: "/images/" | absolute_url %}
+{% assign og_image_path = page.og_image | default: page.header.teaser | default: site.og_image | default: "physical_superintelligence_white_bg.jpg" %}
+{% if og_image_path contains "://" %}
+  {% assign og_image = og_image_path %}
+{% elsif og_image_path contains "/images/" %}
+  {% assign og_image = og_image_path | absolute_url %}
+{% else %}
+  {% assign og_image = og_image_path | prepend: "/images/" | absolute_url %}
+{% endif %}
 
 <title>{{ page_title }}</title>
 <meta name="description" content="{{ page_desc }}">
@@ -23,7 +30,7 @@
 <meta property="og:description" content="{{ page_desc }}">
 <meta property="og:url" content="{{ page.url | absolute_url }}">
 <meta property="og:image" content="{{ og_image }}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="{{ page.twitter_card | default: 'summary_large_image' }}">
 <meta name="twitter:title" content="{{ page_title }}">
 <meta name="twitter:description" content="{{ page_desc }}">
 <meta name="twitter:image" content="{{ og_image }}">
@@ -66,7 +73,7 @@
   "@type": "Person",
   "name": "{{ site.author.name | default: site.name }}",
   "url": "{{ '/' | absolute_url }}",
-  "image": "{{ og_image }}",
+  "image": "{{ site.author.avatar | default: 'profile.webp' | prepend: '/images/' | absolute_url }}",
   "jobTitle": "Graduate Research Assistant",
   "affiliation": {
     "@type": "CollegeOrUniversity",

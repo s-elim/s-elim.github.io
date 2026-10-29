@@ -67,8 +67,9 @@
   rank: 'A*'
   status: 'In Preparation'
   thumb: "RSS '27"
-  url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset'
+  url: 'https://physical-agi.github.io/AFFORD_Bench/'
   links:
+    - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD_Bench/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset', kind: 'code' }
 
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'

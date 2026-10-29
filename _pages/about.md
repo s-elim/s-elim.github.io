@@ -3,6 +3,7 @@ permalink: /
 layout: home
 title: Home
 description: "Md Selim Sarowar: M.Sc. student in Computer Vision & AI at Yeungnam University (GKS Scholar). Research in 3D computer vision, 6D pose estimation, vision-language-action models, world models, and agentic robotics toward physical super intelligence."
+og_image: "physical_superintelligence_white_bg.jpg"
 redirect_from:
   - /about/
   - /about.html
