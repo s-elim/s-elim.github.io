@@ -20,9 +20,9 @@
   status: 'Under Review'
   image: '/images/agi-framework.webp'
   thumb: "ICRA '27"
-  url: 'https://physical-agi.github.io/Agentic-Intelligence/'
+  url: 'https://physical-super-intelligence.github.io/Agentic-Intelligence/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/Agentic-Intelligence/', kind: 'project' }
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/Agentic-Intelligence/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
 - title: 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
@@ -36,9 +36,9 @@
   status: 'Under Review'
   image: '/images/affordx-framework.webp'
   thumb: "CVPR '27"
-  url: 'https://physical-agi.github.io/AFFORD-X/'
+  url: 'https://physical-super-intelligence.github.io/AFFORD-X/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD-X/', kind: 'project' }
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/AFFORD-X/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
 - title: 'Agentic-WM: Grounding Multimodal Policies in Hierarchical Latent World Model'
@@ -67,9 +67,9 @@
   rank: 'A*'
   status: 'In Preparation'
   thumb: "RSS '27"
-  url: 'https://physical-agi.github.io/AFFORD_Bench/'
+  url: 'https://physical-super-intelligence.github.io/AFFORD_Bench/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/AFFORD_Bench/', kind: 'project' }
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/AFFORD_Bench/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset', kind: 'code' }
 
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
@@ -82,9 +82,9 @@
   status: 'Under Review'
   image: '/images/msp-framework.webp'
   thumb: 'Sci. Reports'
-  url: 'https://physical-agi.github.io/MSP-FRAMEWORK/'
+  url: 'https://physical-super-intelligence.github.io/MSP-FRAMEWORK/'
   links:
-    - { label: 'Project Page', url: 'https://physical-agi.github.io/MSP-FRAMEWORK/', kind: 'project' }
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/MSP-FRAMEWORK/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
