@@ -8,8 +8,9 @@
 Picture2: { w: 1600, h: 1040, sm: false }
 aespc-figure: { w: 640, h: 340, sm: true }
 affordx-framework: { w: 960, h: 448, sm: true }
-agentic-framework: { w: 960, h: 495, sm: true }
-agi-framework: { w: 960, h: 679, sm: true }
+agentic-framework: { w: 960, h: 410, sm: true }
+agi-framework: { w: 960, h: 410, sm: true }
+framework: { w: 2267, h: 968, sm: false }
 awm-framework: { w: 960, h: 410, sm: true }
 c3g-vm6d-architecture: { w: 960, h: 535, sm: true }
 chatbot: { w: 960, h: 611, sm: true }

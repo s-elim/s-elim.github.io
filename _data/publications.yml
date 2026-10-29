@@ -53,8 +53,9 @@
   featured: true
   image: '/images/awm-framework.webp'
   thumb: "RSS '27"
-  url: 'https://github.com/s-elim/Agentic-World-Model'
+  url: 'https://physical-super-intelligence.github.io/Agentic-LWM/'
   links:
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/Agentic-LWM/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/Agentic-World-Model', kind: 'code' }
 
 - title: 'AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning'
