@@ -72,9 +72,39 @@
     return "far";
   }
 
+  /* ---- clock arithmetic ("HH:MM" within one day) ------------------------ */
+  function minutesOf(hhmm) { var p = String(hhmm || "").split(":"); return (+p[0] || 0) * 60 + (+p[1] || 0); }
+  function hm(d) { return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+  // An event never runs past midnight here, matching the backend's eventTimes().
+  function addMinutes(hhmm, mins) {
+    var t = Math.max(0, minutesOf(hhmm) + mins);
+    if (t >= 24 * 60) return "23:59";
+    return pad2(Math.floor(t / 60)) + ":" + pad2(t % 60);
+  }
+  function fmtDuration(mins) {
+    if (mins < 60) return mins + " min";
+    var h = Math.floor(mins / 60), r = mins % 60;
+    return h + " h" + (r ? " " + pad2(r) : "");
+  }
+  function atMinutes(dayYmd, mins) { var d = parseYmd(dayYmd); d.setMinutes(mins); return d; }
+  function roundUp(d, step) {
+    var x = new Date(d.getTime());
+    if (x.getSeconds() || x.getMilliseconds()) { x.setSeconds(0, 0); x.setMinutes(x.getMinutes() + 1); }
+    var r = x.getMinutes() % step;
+    if (r) x.setMinutes(x.getMinutes() + step - r);
+    return x;
+  }
+
   /* ---- quick add -------------------------------------------------------
      "Draft rebuttal fri 14:00-15:30 #icra" -> title, date, start, end, tags.
      Unrecognised words stay in the title, so nothing typed is ever lost. */
+  // "45m", "90min", "1h", "1h30", "1h30m" -> minutes; anything else -> 0.
+  function parseDuration(tok) {
+    var m = /^(\d{1,2})h(?:(\d{1,2})m?)?$/i.exec(tok);
+    if (m) return +m[1] * 60 + (+m[2] || 0);
+    m = /^(\d{1,3})(?:m|min|mins)$/i.exec(tok);
+    return m ? +m[1] : 0;
+  }
   function parseTime(tok) {
     var m = /^(\d{1,2})(?::(\d{2}))?(am|pm)?$/i.exec(tok);
     if (!m) return "";
@@ -90,7 +120,7 @@
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var words = String(text || "").trim().split(/\s+/).filter(Boolean);
     var out = { title: "", date: "", start: "", end: "", tags: [] };
-    var keep = [];
+    var keep = [], dur = null;
     for (var i = 0; i < words.length; i++) {
       var w = words[i], lw = w.toLowerCase(), m;
       if (/^#[\w-]{1,40}$/.test(w)) { out.tags.push(w.slice(1).toLowerCase()); continue; }
@@ -127,10 +157,71 @@
         var t = parseTime(w);
         if (t) { out.start = t; continue; }
       }
+      if (!dur) {
+        var withFor = lw === "for" && parseDuration(words[i + 1] || "");
+        var mins = withFor || parseDuration(w);
+        if (mins) {
+          dur = { mins: mins, at: keep.length, words: withFor ? [w, words[i + 1]] : [w] };
+          if (withFor) i++;
+          continue;
+        }
+      }
       keep.push(w);
     }
+    // A duration only means something after a start time; otherwise its words
+    // go back into the title where they were typed.
+    if (dur && out.start && !out.end) out.end = addMinutes(out.start, dur.mins);
+    else if (dur) keep.splice.apply(keep, [dur.at, 0].concat(dur.words));
     out.title = keep.join(" ");
     return out;
+  }
+
+  /* ---- free time ---------------------------------------------------------
+     events are normEvent() objects; the planning window is local "HH:MM". */
+  function freeSlots(events, dayYmd, opts) {
+    opts = opts || {};
+    var min = opts.min == null ? 30 : opts.min;
+    var winStart = atMinutes(dayYmd, minutesOf(opts.start || "08:00"));
+    var winEnd = atMinutes(dayYmd, minutesOf(opts.end || "22:00"));
+    var from = opts.from && opts.from > winStart ? roundUp(opts.from, opts.step || 5) : winStart;
+    var busy = (events || []).filter(function (e) { return e && !e.allDay && e.end > from && e.start < winEnd; })
+      .map(function (e) { return [e.start < from ? from : e.start, e.end > winEnd ? winEnd : e.end]; })
+      .sort(function (a, b) { return a[0] - b[0]; });
+    var out = [], cursor = from;
+    var push = function (s, e) {
+      var mins = Math.round((e - s) / 6e4);
+      if (mins >= min && mins > 0) out.push({ start: s, end: e, mins: mins });
+    };
+    busy.forEach(function (b) {
+      if (b[0] > cursor) push(cursor, b[0]);
+      if (b[1] > cursor) cursor = b[1];
+    });
+    if (winEnd > cursor) push(cursor, winEnd);
+    return out;
+  }
+
+  // The timed event running at `now` that ends first, and the next to start.
+  function nowNext(events, now) {
+    var timed = (events || []).filter(function (e) { return e && !e.allDay; });
+    var current = timed.filter(function (e) { return e.start <= now && e.end > now; }).sort(function (a, b) { return a.end - b.end; })[0] || null;
+    var next = timed.filter(function (e) { return e.start > now; }).sort(function (a, b) { return a.start - b.start; })[0] || null;
+    return { current: current, next: next };
+  }
+
+  // The first free block from `now` on, up to opts.length minutes long and at
+  // least opts.min, starting on a quarter hour. Looks a week ahead at most.
+  function planSlot(events, now, opts) {
+    opts = opts || {};
+    var length = opts.length || 60, min = opts.min || 30, step = opts.step || 15;
+    for (var i = 0; i < (opts.days || 7); i++) {
+      var day = ymd(addDays(now, i));
+      var slots = freeSlots(events, day, { from: now, start: opts.start, end: opts.end, min: min });
+      for (var j = 0; j < slots.length; j++) {
+        var st = roundUp(slots[j].start, step), avail = Math.round((slots[j].end - st) / 6e4);
+        if (avail >= min) return { date: day, start: hm(st), end: hm(new Date(st.getTime() + Math.min(length, avail) * 6e4)) };
+      }
+    }
+    return null;
   }
 
   /* ---- deadlines ------------------------------------------------------- */
@@ -322,7 +413,10 @@
     RT_FIELDS: RT_FIELDS, RT_LABEL: RT_LABEL,
     byId: byId, pad2: pad2, ymd: ymd, parseYmd: parseYmd, addDays: addDays, startOfWeek: startOfWeek,
     dayDiff: dayDiff, isYmd: isYmd, countdown: countdown, urgency: urgency,
-    parseTime: parseTime, parseQuick: parseQuick, conferenceDeadlines: conferenceDeadlines, collectDeadlines: collectDeadlines,
+    minutesOf: minutesOf, addMinutes: addMinutes, fmtDuration: fmtDuration,
+    parseTime: parseTime, parseDuration: parseDuration, parseQuick: parseQuick,
+    freeSlots: freeSlots, nowNext: nowNext, planSlot: planSlot,
+    conferenceDeadlines: conferenceDeadlines, collectDeadlines: collectDeadlines,
     normEvent: normEvent, eventOnDay: eventOnDay, unifyTasks: unifyTasks, bucketTasks: bucketTasks,
     gcalTemplateUrl: gcalTemplateUrl, htmlToText: htmlToText, entryMarkdown: entryMarkdown,
     notionDefaults: notionDefaults, normaliseEntry: normaliseEntry

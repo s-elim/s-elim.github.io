@@ -37,7 +37,10 @@
     conferences: [],
     ui: { view: "today", density: "comfy", quickMode: "task",
           board: { q: "", kind: "all", axis: "all", status: "open", sort: "pinned", layout: "cards" },
-          notionHideDone: true, showDoneTasks: false }
+          notionHideDone: true, showDoneTasks: false,
+          // Free time is counted inside these hours; "newCal" is the calendar
+          // new events went to last.
+          workday: { start: "08:00", end: "22:00" }, newCal: "" }
   };
 
   /* ---- small helpers -------------------------------------------------- */
@@ -271,6 +274,46 @@
       toast("Task deleted.", { action: "Undo", onAction: function () { restoreDoc("tasks", d.id); } });
     });
   }
+  // Reschedule in one click, with an Undo that puts the old date back.
+  function moveTaskDue(t, due) {
+    if (t.source === "google") {
+      var g = googleTask(t), before = g ? g.due : t.due;
+      if (g) { g.due = due; render(); }
+      return call("setTask", { listId: t.listId, id: t.id, due: due }).then(function () { persist(); resync(); return true; }, function (err) {
+        if (g) { g.due = before; render(); }
+        failed(err, "Google Tasks");
+        return false;
+      });
+    }
+    var d = S.deskTasks.filter(function (x) { return x.id === t.id; })[0];
+    if (!d) return Promise.resolve(false);
+    return saveDeskTask(d.id, Object.assign({}, d.data, { due: due }), d.version).then(function () { return true; },
+      function (err) { failed(err, "Task not saved"); return false; });
+  }
+  function setTaskDue(key, due) {
+    var t = allTasks().filter(function (x) { return x.key === key; })[0];
+    if (!t) return;
+    var before = t.due;
+    var label = due === today() ? "today" : due === C.ymd(C.addDays(new Date(), 1)) ? "tomorrow" : fmtDate(due, { weekday: "short", day: "numeric", month: "short" });
+    moveTaskDue(t, due).then(function (ok) {
+      if (ok) toast("Moved to " + label + ".", { action: "Undo", onAction: function () { moveTaskDue(t, before); } });
+    });
+  }
+  // Opens the new-event form on the next free hour, from the task's due day on.
+  function blockTime(key) {
+    var t = allTasks().filter(function (x) { return x.key === key; })[0];
+    if (!t || !Desk.calendar) return;
+    var wd = S.ui.workday, from = t.due && t.due > today() ? C.parseYmd(t.due) : new Date();
+    var slot = C.planSlot(events(), from, { start: wd.start, end: wd.end, length: 60, min: 30 }) ||
+      { date: C.ymd(from), start: wd.start, end: C.addMinutes(wd.start, 60) };
+    Desk.calendar.newEvent(slot.date, slot.start, slot.end, t.title);
+  }
+
+  function quickDues() {
+    var t = C.parseYmd(today());
+    return [["Today", C.ymd(t)], ["Tomorrow", C.ymd(C.addDays(t, 1))], ["Next Mon", C.ymd(C.addDays(C.startOfWeek(t), 7))], ["No date", ""]];
+  }
+
   function editTask(key) {
     var t = allTasks().filter(function (x) { return x.key === key; })[0];
     if (!t) return;
@@ -278,11 +321,20 @@
       '<label class="dk-field"><span>Title</span><input type="text" class="dk-input" id="dk-t-title" value="' + esc(t.title) + '"></label>' +
       '<div class="dk-grid2"><label class="dk-field"><span>Due</span><input type="date" class="dk-input" id="dk-t-due" value="' + esc(t.due) + '"></label>' +
       '<label class="dk-field"><span>List</span><input type="text" class="dk-input" value="' + esc(t.list || (t.source === "google" ? "Google Tasks" : "Desk")) + '" disabled></label></div>' +
+      '<div class="dk-chips" id="dk-t-quick" role="group" aria-label="Set the due date">' + quickDues().map(function (q) {
+        return '<button type="button" class="dk-chip" data-setdue="' + q[1] + '">' + q[0] + '</button>';
+      }).join("") + '</div>' +
       '<label class="dk-field"><span>Notes</span><textarea class="dk-input" id="dk-t-notes" rows="3">' + esc(t.notes) + '</textarea></label>' +
       '<p class="dk-hint" id="dk-t-msg" role="status"></p>',
       '<button type="button" class="dk-btn dk-btn--danger" id="dk-t-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' +
+      '<button type="button" class="dk-btn" id="dk-t-block"><i class="fas fa-clock" aria-hidden="true"></i> Block time</button>' +
       '<button type="button" class="dk-btn dk-btn--primary" id="dk-t-save">Save</button>');
     var msg = $("dk-t-msg");
+    $("dk-t-quick").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-setdue]");
+      if (b) $("dk-t-due").value = b.getAttribute("data-setdue");
+    });
+    $("dk-t-block").addEventListener("click", function () { d.close(); blockTime(key); });
     $("dk-t-save").addEventListener("click", function () {
       var title = $("dk-t-title").value.trim(), due = $("dk-t-due").value, notes = $("dk-t-notes").value;
       if (!title) { $("dk-t-title").focus(); return; }
@@ -350,7 +402,14 @@
     }).then(function () {
       S.syncing = false;
       render();
+      if (S.resyncAfter) { S.resyncAfter = false; refresh(true); }
     });
+  }
+  // After a write to Google: a fresh read, or one more after a read already in
+  // flight, which may have been answered from before the write.
+  function resync() {
+    if (S.syncing) S.resyncAfter = true;
+    else refresh(true);
   }
 
   function savePrefs(delta) {
@@ -450,7 +509,7 @@
           '<header class="dk-top"><div class="dk-top__t"><span class="dk-top__k" id="dk-kicker"></span><h2 class="dk-top__h" id="dk-title"></h2></div>' +
             '<div class="dk-top__a">' +
               '<button type="button" class="dk-icon" id="dk-refresh" title="Refresh from Google and Notion (R)" aria-label="Refresh"><i class="fas fa-sync-alt" aria-hidden="true"></i></button>' +
-              '<button type="button" class="dk-btn dk-btn--primary" id="dk-new" title="New entry (N)"><i class="fas fa-plus" aria-hidden="true"></i> New entry</button>' +
+              '<button type="button" class="dk-btn dk-btn--primary" id="dk-new" title="New entry (N)" aria-label="New entry"><i class="fas fa-plus" aria-hidden="true"></i><span class="dk-btn__label">New entry</span></button>' +
             '</div></header>' +
           '<div class="dk-body" id="dk-body"></div>' +
         '</section>' +
@@ -603,7 +662,7 @@
       '<form class="dk-quick" id="dk-quick" autocomplete="off">' +
         '<div class="dk-quick__row">' +
           '<span class="dk-quick__icon" aria-hidden="true"><i class="fas fa-plus"></i></span>' +
-          '<input type="text" id="dk-quick-text" class="dk-quick__input" placeholder="Add a task, event or idea · try “Draft rebuttal fri 14:00 #icra”" aria-label="Quick add">' +
+          '<input type="text" id="dk-quick-text" class="dk-quick__input" placeholder="Add a task, event or idea · try “Draft rebuttal fri 14:00 for 90m #icra”" aria-label="Quick add">' +
           '<div class="dk-seg" role="group" aria-label="What to add">' + modes.map(function (m) {
             return '<button type="button" class="dk-seg__b" data-quick="' + m[0] + '" aria-pressed="' + (S.ui.quickMode === m[0]) + '"><i class="fas ' + m[2] + '" aria-hidden="true"></i> ' + m[1] + '</button>';
           }).join("") + '</div>' +
@@ -612,9 +671,90 @@
         '</div>' +
         '<p class="dk-quick__preview" id="dk-quick-preview" aria-live="polite"></p>' +
       '</form>';
-    // Pinned sits in the grid so its cards line up under Agenda and Tasks.
-    return '<div class="dk-today">' + head +
-      '<div class="dk-today__grid">' + panelAgenda(t) + panelTasks(t) + panelPinned() + panelDeadlines() + '</div></div>';
+    // Pinned sits in the grid so its cards line up under Agenda and Tasks. On a
+    // narrow screen the tabs show one panel at a time (see .dk-ttabs).
+    var pinned = panelPinned();
+    return '<div class="dk-today">' + head + panelNowNext(t) + todayTabs(t, !!pinned) +
+      '<div class="dk-today__grid" id="dk-today-grid" data-tab="' + esc(todayTab(!!pinned)) + '">' +
+      panelAgenda(t) + panelTasks(t) + pinned + panelDeadlines() + '</div></div>';
+  }
+
+  /* ---- Today on a phone: one panel at a time ---------------------------- */
+  function todayTab(hasPinned) {
+    var tab = S.ui.todayTab || "agenda";
+    return tab === "pinned" && !hasPinned ? "agenda" : tab;
+  }
+  function todayTabs(t, hasPinned) {
+    var b = C.bucketTasks(allTasks(), t), still = eventsOn(t).filter(function (e) { return !e.allDay && e.end > new Date(); });
+    var tabs = [["agenda", "Agenda", still.length], ["tasks", "Tasks", b.overdue.length + b.today.length],
+      ["deadlines", "Deadlines", deadlines().filter(function (d) { return !d.done && d.days <= 7; }).length]];
+    if (hasPinned) tabs.push(["pinned", "Pinned", 0]);
+    var on = todayTab(hasPinned);
+    return '<div class="dk-ttabs" role="group" aria-label="Show one panel">' + tabs.map(function (x) {
+      return '<button type="button" class="dk-ttab" data-ttab="' + x[0] + '" aria-pressed="' + (x[0] === on) + '">' + x[1] +
+        (x[2] ? '<span class="dk-ttab__n">' + x[2] + '</span>' : "") + '</button>';
+    }).join("") + '</div>';
+  }
+  function setTodayTab(tab) {
+    S.ui.todayTab = tab;
+    saveUi();
+    var grid = $("dk-today-grid");
+    if (grid) grid.setAttribute("data-tab", tab);
+    host.querySelectorAll("[data-ttab]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-ttab") === tab)); });
+  }
+
+  /* ---- Now / next / free --------------------------------------------------
+     One row above the panels, redrawn every half minute while Today is open. */
+  function eventsOn(dayYmd) { return events().filter(function (e) { return C.eventOnDay(e, dayYmd); }); }
+  function freeToday(t, min) {
+    var wd = S.ui.workday;
+    return C.freeSlots(eventsOn(t), t, { from: new Date(), start: wd.start, end: wd.end, min: min });
+  }
+  // "date|HH:MM|HH:MM" for the new-event form: the gap's first hour at most.
+  function freeKey(dayYmd, slot) {
+    return dayYmd + "|" + hhmm(slot.start) + "|" + hhmm(new Date(Math.min(slot.end.getTime(), slot.start.getTime() + 36e5)));
+  }
+  function nnTile(kind, label, title, meta, attrs, opts) {
+    opts = opts || {};
+    return '<div class="dk-nn__tile dk-nn__tile--' + kind + '"' + (opts.color ? ' style="--c:' + esc(opts.color) + '"' : "") + '>' +
+      '<button type="button" class="dk-nn__b" ' + attrs + '>' +
+        '<span class="dk-nn__k">' + esc(label) + '</span><span class="dk-nn__t">' + esc(title) + '</span><span class="dk-nn__m">' + esc(meta) + '</span>' +
+      '</button>' +
+      (safeUrl(opts.video) ? '<a class="dk-ev__join" href="' + esc(safeUrl(opts.video)) + '" target="_blank" rel="noopener">Join</a>' : "") +
+      (opts.pct != null ? '<span class="dk-nn__bar" style="--p:' + opts.pct + '%" aria-hidden="true"></span>' : "") +
+    '</div>';
+  }
+  function panelNowNext(t) {
+    if (!googleReady()) return "";
+    var now = new Date(), nn = C.nowNext(events(), now), free = freeToday(t, 15), tiles = [];
+    if (nn.current) {
+      var cur = nn.current, left = Math.max(1, Math.round((cur.end - now) / 6e4));
+      tiles.push(nnTile("now", "Now", cur.title, "until " + hhmm(cur.end) + " · " + C.fmtDuration(left) + " left", 'data-event="' + esc(cur.id) + '"',
+        { color: cur.color, video: cur.video, pct: Math.min(100, Math.max(0, Math.round((now - cur.start) / (cur.end - cur.start) * 100))) }));
+    } else if (free.length && free[0].start - now < 10 * 6e4) {
+      tiles.push(nnTile("free", "Free now", "until " + hhmm(free[0].end), C.fmtDuration(free[0].mins) + " open · plan it", 'data-free="' + esc(freeKey(t, free[0])) + '"'));
+    }
+    if (nn.next) {
+      var nx = nn.next, ahead = Math.round((nx.start - now) / 6e4);
+      var when = C.ymd(nx.start) === t ? hhmm(nx.start) + " · in " + C.fmtDuration(ahead)
+        : fmtDate(C.ymd(nx.start), { weekday: "short", day: "numeric", month: "short" }) + " · " + hhmm(nx.start);
+      tiles.push(nnTile("next", "Next", nx.title, when, 'data-event="' + esc(nx.id) + '"', { color: nx.color, video: ahead <= 10 ? nx.video : "" }));
+    }
+    var b = C.bucketTasks(allTasks(), t);
+    var freeMins = free.reduce(function (n, s) { return n + s.mins; }, 0);
+    var still = eventsOn(t).filter(function (e) { return !e.allDay && e.end > now; }).length;
+    tiles.push(nnTile("day", "Rest of today", freeMins ? C.fmtDuration(freeMins) + " free" : "No free time left",
+      plural(still, "event") + " · " + plural(b.overdue.length + b.today.length, "task") + " due", 'data-go="calendar"'));
+    return '<div class="dk-nn" id="dk-nownext" aria-label="Now and next">' + tiles.join("") + '</div>';
+  }
+  // Skipped while focus is inside the strip, so a keyboard user does not lose
+  // their place; the next tick after they move on catches up.
+  function tickNowNext() {
+    if (!S.mounted || S.ui.view !== "today" || document.visibilityState !== "visible") return;
+    var el = $("dk-nownext");
+    if (!el || el.contains(document.activeElement)) return;
+    var html = panelNowNext(today());
+    if (el.outerHTML !== html) el.outerHTML = html;
   }
 
   function isoWeek(d) {
@@ -650,6 +790,13 @@
     '</li>';
   }
 
+  function freeRow(dayYmd, s) {
+    return '<li class="dk-free"><button type="button" class="dk-free__b" data-free="' + esc(freeKey(dayYmd, s)) + '" title="Plan something in this gap">' +
+      '<span class="dk-free__time">' + hhmm(s.start) + '–' + hhmm(s.end) + '</span>' +
+      '<span class="dk-free__label">Free · ' + esc(C.fmtDuration(s.mins)) + '</span>' +
+      '<i class="fas fa-plus" aria-hidden="true"></i></button></li>';
+  }
+
   function panelAgenda(t) {
     var g = S.sync && S.sync.google;
     var body;
@@ -658,16 +805,18 @@
     else if (!S.sync) body = '<div class="dk-empty"><p>Waiting for the first sync…</p></div>';
     else {
       var now = new Date(), all = events(), base = C.parseYmd(t);
-      var todays = all.filter(function (e) { return C.eventOnDay(e, t); });
+      // Today's events and the free gaps between them, in time order; all-day
+      // events sort first. The now line goes before the first thing still ahead.
+      var rows = eventsOn(t).map(function (e) { return { at: e.allDay ? 0 : e.start.getTime(), timed: !e.allDay, html: eventRow(e, now) }; })
+        .concat(freeToday(t, 30).map(function (s) { return { at: s.start.getTime(), timed: true, html: freeRow(t, s) }; }))
+        .sort(function (p, q) { return p.at - q.at; });
+      var nowLine = '<li class="dk-now" aria-label="Now"><span>' + hhmm(now) + '</span></li>';
       var list = "", nowPlaced = false;
-      todays.forEach(function (e) {
-        if (!nowPlaced && !e.allDay && e.start > now) {
-          list += '<li class="dk-now" aria-label="Now"><span>' + hhmm(now) + '</span></li>';
-          nowPlaced = true;
-        }
-        list += eventRow(e, now);
+      rows.forEach(function (r) {
+        if (!nowPlaced && r.timed && r.at > now.getTime()) { list += nowLine; nowPlaced = true; }
+        list += r.html;
       });
-      if (!nowPlaced && todays.length) list += '<li class="dk-now"><span>' + hhmm(now) + '</span></li>';
+      if (!nowPlaced && rows.length) list += nowLine;
       var weekHtml = "";
       for (var d = 1; d <= 6; d++) {
         var dayYmd = C.ymd(C.addDays(base, d));
@@ -678,7 +827,7 @@
             (dayEvs.length ? '<ol class="dk-evs">' + dayEvs.map(function (e) { return eventRow(e, now, true); }).join("") + '</ol>' : '<p class="dk-quiet">Free.</p>');
         }
       }
-      body = (todays.length ? '<ol class="dk-evs">' + list + '</ol>' : '<p class="dk-quiet">Nothing scheduled today.</p>') + weekHtml;
+      body = (rows.length ? '<ol class="dk-evs">' + list + '</ol>' : '<p class="dk-quiet">Nothing scheduled today.</p>') + weekHtml;
     }
     return '<section class="dk-panel dk-panel--agenda" aria-label="Agenda"><header class="dk-panel__head"><h3><i class="fas fa-clock" aria-hidden="true"></i> Agenda</h3>' +
       '<button type="button" class="dk-link" data-go="calendar">Calendar</button></header>' + body + '</section>';
@@ -687,6 +836,12 @@
   function taskRow(task, t) {
     var due = task.due ? (task.due === t ? "" : C.countdown(C.dayDiff(t, task.due))) : "";
     var multi = S.sync && S.sync.google && (S.sync.google.tasklists || []).length > 1;
+    // Due today -> push to tomorrow; anything else (late, undated, later) -> pull to today.
+    var toTomorrow = task.due === t, moveTo = toTomorrow ? C.ymd(C.addDays(C.parseYmd(t), 1)) : t, moveLabel = toTomorrow ? "Tomorrow" : "Today";
+    var acts = task.done ? "" : '<span class="dk-task__acts">' +
+      '<button type="button" class="dk-task__act" data-taskdue="' + esc(task.key) + '" data-due="' + moveTo + '" title="Move to ' + moveLabel.toLowerCase() + '">' + moveLabel + '</button>' +
+      '<button type="button" class="dk-task__act" data-block="' + esc(task.key) + '" title="Block time for this on the calendar" aria-label="Block time for ' + esc(task.title) + '"><i class="fas fa-clock" aria-hidden="true"></i></button>' +
+    '</span>';
     return '<li class="dk-task' + (task.done ? " is-done" : "") + (task.parent ? " is-sub" : "") + '">' +
       '<label class="dk-check" title="' + (task.done ? "Mark as not done" : "Mark as done") + '"><input type="checkbox" data-task="' + esc(task.key) + '"' + (task.done ? " checked" : "") + ' aria-label="Done: ' + esc(task.title) + '">' +
       '<span class="dk-check__box" aria-hidden="true"></span></label>' +
@@ -694,6 +849,7 @@
       (task.time ? '<span class="dk-task__time">' + esc(task.time) + '</span>' : "") +
       (due ? '<span class="dk-task__due' + (task.due < t && !task.done ? " is-late" : "") + '">' + esc(due) + '</span>' : "") +
       ((multi && task.source === "google") || task.source === "desk" ? '<span class="dk-task__list">' + esc(task.list) + '</span>' : "") +
+      acts +
     '</li>';
   }
 
@@ -791,7 +947,7 @@
     var inp = $("dk-quick-text"), out = $("dk-quick-preview");
     if (!inp || !out) return;
     var v = inp.value.trim();
-    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · #tags</span>' : ""; return; }
+    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · length after a time: for 45m, 1h30 · #tags</span>' : ""; return; }
     var p = C.parseQuick(v), mode = S.ui.quickMode;
     var bits = [mode === "task" ? (tasksReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
     bits.push("“" + (p.title || v) + "”");
@@ -1000,6 +1156,10 @@
     if ((v = t.getAttribute("data-go"))) { setView(v); return; }
     if ((v = t.getAttribute("data-quick"))) { S.ui.quickMode = v; saveUi(); host.querySelectorAll("[data-quick]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === t)); }); paintQuickPreview(); $("dk-quick-text").focus(); return; }
     if ((v = t.getAttribute("data-edittask"))) { editTask(v); return; }
+    if ((v = t.getAttribute("data-taskdue"))) { setTaskDue(v, t.getAttribute("data-due")); return; }
+    if ((v = t.getAttribute("data-block"))) { blockTime(v); return; }
+    if ((v = t.getAttribute("data-free"))) { var f = v.split("|"); if (Desk.calendar) Desk.calendar.newEvent(f[0], f[1], f[2]); return; }
+    if ((v = t.getAttribute("data-ttab"))) { setTodayTab(v); return; }
     if ((v = t.getAttribute("data-layout"))) { S.ui.board.layout = v; saveUi(); render(); return; }
     if ((v = t.getAttribute("data-axis"))) { S.ui.board.axis = v; saveUi(); render(); return; }
     if ((v = t.getAttribute("data-act"))) {
@@ -1145,7 +1305,10 @@
       '<section class="dk-set"><h4>Research OS link</h4><div class="dk-row"><input type="url" class="dk-input" id="dk-notion-home" placeholder="https://www.notion.so/…" value="' + esc(S.prefs.data.notionHome || "") + '">' +
         '<button type="button" class="dk-btn" id="dk-notion-home-save">Save</button></div></section>' +
       '<section class="dk-set"><h4>Display on this device</h4><div class="dk-row">' +
-        '<label class="dk-toggle"><input type="checkbox" id="dk-compact"' + (S.ui.density === "compact" ? " checked" : "") + '> Compact</label></div></section>' +
+        '<label class="dk-toggle"><input type="checkbox" id="dk-compact"' + (S.ui.density === "compact" ? " checked" : "") + '> Compact</label></div>' +
+        '<div class="dk-row dk-row--hours"><span>Count free time between</span>' +
+          '<input type="time" class="dk-input" id="dk-wd-start" value="' + esc(S.ui.workday.start) + '" aria-label="Day starts"><span>and</span>' +
+          '<input type="time" class="dk-input" id="dk-wd-end" value="' + esc(S.ui.workday.end) + '" aria-label="Day ends"></div></section>' +
       '<section class="dk-set"><h4>Your data</h4>' +
         (exportDue() ? '<p class="dk-due"><i class="fas fa-archive" aria-hidden="true"></i> ' + (S.prefs.data.lastExportAt ? "The last export is over three months old." : "No export yet.") + ' Export a copy to keep the desk independent of any one service.</p>' : "") +
         '<p class="dk-hint">Every save keeps a revision in the Sheet. Export a JSON copy each quarter' +
@@ -1169,6 +1332,15 @@
       savePrefs({ notionHome: v }).then(function () { toast("Saved."); });
     });
     d.querySelector("#dk-compact").addEventListener("change", function (e) { S.ui.density = e.target.checked ? "compact" : "comfy"; saveUi(); render(); });
+    var setHours = function () {
+      var s = d.querySelector("#dk-wd-start").value, e = d.querySelector("#dk-wd-end").value;
+      if (!s || !e || s >= e) { toast("The day has to end after it starts.", { error: true }); return; }
+      S.ui.workday = { start: s, end: e };
+      saveUi();
+      render();
+    };
+    d.querySelector("#dk-wd-start").addEventListener("change", setHours);
+    d.querySelector("#dk-wd-end").addEventListener("change", setHours);
     d.querySelector("#dk-export").addEventListener("click", exportJson);
     d.querySelector("#dk-import").addEventListener("change", importJson);
     if (d.querySelector("#dk-signout")) d.querySelector("#dk-signout").addEventListener("click", function () { d.close(); signOut("Signed out on this device."); });
@@ -1255,9 +1427,9 @@
   Desk.app = {
     S: S, call: call, esc: esc, safeUrl: safeUrl, sanitize: sanitize, plain: plain, toast: toast, failed: failed, render: render,
     today: today, tz: tz, hhmm: hhmm, fmtDate: fmtDate, newId: newId, dialog: dialog, deadlines: deadlines, events: events,
-    allTasks: allTasks, entryDoc: entryDoc, entryData: entryData, saveEntry: saveEntry, deleteEntry: deleteEntry,
+    allTasks: allTasks, entryDoc: entryDoc, entryData: entryData, saveEntry: saveEntry, deleteEntry: deleteEntry, saveUi: saveUi,
     googleReady: googleReady, tasksReady: tasksReady, notionReady: notionReady, fetchSync: fetchSync, openEvent: openEvent,
-    toggleTask: toggleTask, refresh: refresh, cardHtml: cardHtml
+    toggleTask: toggleTask, refresh: refresh, resync: resync, cardHtml: cardHtml
   };
 
   function boot() {
@@ -1295,6 +1467,7 @@
     setInterval(function () {
       if (document.visibilityState === "visible" && S.mounted) refresh(true);
     }, AUTO_REFRESH_MS);
+    setInterval(tickNowNext, 30e3);
     document.addEventListener("visibilitychange", function () {
       if (document.visibilityState !== "visible" || !S.mounted || !S.sync) return;
       if (Date.now() - Date.parse(S.sync.at) > 2 * 60e3) refresh(true);

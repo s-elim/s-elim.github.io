@@ -103,17 +103,29 @@ safer if the email ever arrives.
 
 ## Using it
 
-- **Today**: agenda with a now line, Google Tasks, deadlines from entries,
-  Notion and watched conferences, pinned entries and passages.
+- **Today**: a strip with what is on now (and how long it has left), what is
+  next, and how much of the day is still free; the agenda with a now line and
+  the free gaps between events (click a gap to plan something there); Google
+  Tasks, deadlines from entries, Notion and watched conferences, pinned entries
+  and passages. Free time is counted between 08:00 and 22:00 unless
+  **Settings > Display on this device** says otherwise.
 - **Quick add** understands `today`, `tomorrow`, `fri`, `next mon`, `3/2`,
-  `nov 20`, `in 2w`, `2026-11-16`, times `14:00`, `2pm`, `10-11:30`, and
-  `#tags`. Task goes to Google Tasks, Event to Google Calendar, Idea to the board.
-- Click a **task** to rename, reschedule, add notes or delete it; click an
-  **event** to retitle, move, re-time or delete it (read-only calendars just
-  show the details).
+  `nov 20`, `in 2w`, `2026-11-16`, times `14:00`, `2pm`, `10-11:30`, a length
+  after a time (`14:00 for 90m`, `2pm 1h30`), and `#tags`. Task goes to Google
+  Tasks, Event to Google Calendar, Idea to the board.
+- Hover a **task** for **Today** / **Tomorrow** (with Undo) and the clock, which
+  opens a new event on the next free hour with the task's title. Click a task
+  to rename, reschedule, add notes or delete it; the dialog has the same
+  shortcuts for touch screens. Click an **event** to retitle, move, re-time or
+  delete it (read-only calendars just show the details).
+- On a **phone**, Today shows tabs (Agenda, Tasks, Deadlines, Pinned) so each
+  panel is one tap away, and Calendar opens on the day view.
 - **Board**: cards or status lanes, search, filters; the editor has rich text,
   pins, images, history, Send to Notion and Add to Calendar.
-- **Calendar**: month, week, day; click an empty slot for a new event.
+- **Calendar**: month, week, day. In week and day, click or drag across empty
+  time for a new event (the form offers each calendar you can write to), drag an
+  event to move it, or drag its bottom edge to change its length; a toast offers
+  Undo. Dragging works with a mouse or pen; on touch, tap an event to edit it.
 - Keys: `1`-`4` views, `N` new entry, `T` quick add, `/` search, `R` refresh,
   `[` `]` move the calendar, `Ctrl+S` save.
 

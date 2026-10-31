@@ -137,6 +137,7 @@ textarea.dk-input { resize: vertical; }
 
 .dk-toggle { display: inline-flex; align-items: center; gap: .4rem; color: var(--text); font-size: .85rem; cursor: pointer; }
 .dk-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.dk-row--hours { margin-top: .6rem; color: var(--text); font-size: .85rem; .dk-input { width: auto; } }
 .dk-grid2, .dk-grid3 { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .dk-grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: $bp-sm) { .dk-grid2, .dk-grid3 { grid-template-columns: 1fr; } }
@@ -351,6 +352,13 @@ i.dk-dot::before { margin-top: .35rem; }
   .dk-top { padding: .9rem 1rem .8rem; }
   .dk-top__h { font-size: 1.25rem; }
   .dk-body { overflow: visible; padding: 1rem; }
+}
+// A phone: the brand, status dots and buttons share one row, and the title
+// keeps its actions beside it, so the day starts higher up the screen.
+@media (max-width: $bp-sm) {
+  .dk-sync__dots .dk-dot { gap: 0; font-size: 0; }
+  .dk-top { flex-wrap: nowrap; align-items: center; }
+  .dk-btn__label { display: none; }
 }
 
 // ---- Today --------------------------------------------------------------------
@@ -568,6 +576,169 @@ i.dk-dot::before { margin-top: .35rem; }
 .dk-task__time, .dk-task__due, .dk-task__list { flex: 0 0 auto; color: var(--muted); font: 500 .7rem/1.9 var(--font-mono); }
 .dk-task__due.is-late { color: var(--dk-hot); }
 .dk-task__list { max-width: 6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+// Today / Tomorrow / Block time appear over the row's right end on hover or
+// keyboard focus. Touch screens have no hover, so there they live in the task
+// dialog instead and the row stays one line.
+.dk-task { position: relative; }
+.dk-task__acts { display: none; }
+.dk-task__act {
+  padding: .05rem .45rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--muted);
+  font: 600 .66rem/1.6 var(--font-body);
+  cursor: pointer;
+  &:hover, &:focus-visible { border-color: var(--accent); color: var(--accent); }
+}
+@media (hover: hover) {
+  .dk-task__acts {
+    position: absolute;
+    top: .25rem;
+    right: .2rem;
+    display: inline-flex;
+    gap: .2rem;
+    padding-left: .9rem;
+    background: linear-gradient(90deg, transparent, var(--surface) .8rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .12s var(--ease);
+  }
+  .dk-task:hover .dk-task__acts, .dk-task:focus-within .dk-task__acts { opacity: 1; pointer-events: auto; }
+}
+
+// free gaps in the agenda: quiet until hovered, a click plans something there
+.dk-free__b {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5.6rem minmax(0, 1fr) auto;
+  gap: 0 .5rem;
+  align-items: center;
+  padding: .32rem .6rem .32rem .75rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  i { font-size: .7rem; opacity: 0; transition: opacity .15s var(--ease); }
+  &:hover, &:focus-visible { border-color: var(--accent); color: var(--accent); i { opacity: 1; } }
+}
+@media (hover: none) { .dk-free__b i { opacity: 1; } }
+.dk-free__time { font: 500 .75rem/1.5 var(--font-mono); }
+.dk-free__label { font-size: .82rem; }
+
+// now / next / rest of today, above the panels
+.dk-nn {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--dk-gap);
+  margin-bottom: var(--dk-gap);
+}
+.dk-nn__tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  &--now, &--next { box-shadow: inset 3px 0 0 var(--c, var(--accent)); }
+  &--now { background: color-mix(in srgb, var(--c, var(--accent)) 8%, var(--bg)); }
+  &--free { border-style: dashed; border-color: var(--border-strong); }
+}
+.dk-nn__b {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: .1rem;
+  padding: .6rem .8rem .7rem 1rem;
+  border: 0;
+  background: none;
+  color: var(--text-strong);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  &:hover .dk-nn__t { color: var(--accent); }
+}
+.dk-nn__k { color: var(--muted); font: 600 .62rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.dk-nn__tile--now .dk-nn__k {
+  color: var(--dk-hot);
+  &::before {
+    content: "";
+    display: inline-block;
+    width: .42rem;
+    height: .42rem;
+    margin-right: .35rem;
+    border-radius: 50%;
+    background: var(--dk-hot);
+    vertical-align: .05em;
+    animation: dk-pulse 2s var(--ease) infinite;
+  }
+}
+.dk-nn__t { overflow: hidden; font-weight: 700; font-size: .92rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.dk-nn__m { color: var(--muted); font: 500 .72rem var(--font-mono); }
+.dk-nn__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: color-mix(in srgb, var(--c) 20%, transparent);
+  &::before { content: ""; display: block; width: var(--p); height: 100%; background: var(--c); }
+}
+@keyframes dk-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .dk-nn__tile--now .dk-nn__k::before { animation: none; } }
+
+// Narrow screens: the strip swipes sideways, and tabs show one panel at a
+// time so Tasks is not buried under a week of agenda.
+.dk-ttabs { display: none; }
+.dk-ttab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  padding: .45rem .3rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--muted);
+  font: 600 .8rem var(--font-body);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  &[aria-pressed="true"] { background: var(--bg); color: var(--text-strong); box-shadow: var(--shadow-sm); }
+}
+.dk-ttab__n { min-width: 1.1rem; padding: 0 .3rem; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent); font: 600 .66rem/1.5 var(--font-mono); }
+@container (max-width: 599px) {
+  .dk-nn {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(78%, 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    > * { scroll-snap-align: start; }
+  }
+  .dk-ttabs {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    gap: .25rem;
+    margin-bottom: var(--dk-gap);
+    padding: .25rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .dk-today__grid[data-tab="agenda"] > :not(.dk-panel--agenda),
+  .dk-today__grid[data-tab="tasks"] > :not(.dk-panel--tasks),
+  .dk-today__grid[data-tab="deadlines"] > :not(.dk-panel--deadlines),
+  .dk-today__grid[data-tab="pinned"] > :not(.dk-pinned) { display: none; }
+}
 // countdown badge (shared by deadlines, cards and Notion rows)
 .dk-cd {
   flex: 0 0 auto;
@@ -870,9 +1041,32 @@ span.dk-dl__b { cursor: default; }
   &::before { content: ""; position: absolute; left: -4px; top: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--dk-hot); }
 }
 .dk-calhint { text-align: right; }
+// drag to move, resize (bottom edge) and draw events; see calendar.js
+.dk-cal--grid { user-select: none; }
+.dk-tev.is-movable { cursor: grab; }
+.dk-tev__grip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7px;
+  cursor: ns-resize;
+  &::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 16px; height: 2px; margin-left: -8px; border-radius: 2px; background: var(--c); opacity: 0; }
+}
+.dk-tev.is-movable:hover .dk-tev__grip::after { opacity: .7; }
+.dk-cal--grid.is-dragging { cursor: grabbing; .dk-tev { pointer-events: none; } }
+.dk-tev.is-dragging { z-index: 6; opacity: .92; box-shadow: inset 3px 0 0 var(--c), var(--shadow-md); }
+.dk-tev.is-ghost {
+  --c: var(--accent);
+  left: 2px;
+  width: calc(100% - 4px);
+  z-index: 6;
+  outline: 1px dashed var(--accent);
+  pointer-events: none;
+}
 @media (max-width: $bp-md) {
   .dk-cal--grid { overflow-x: auto; }
-  .dk-cal--grid > * { min-width: 640px; }
+  .dk-cal--week > * { min-width: 640px; }
   .dk-layers { margin-left: 0; }
 }
 

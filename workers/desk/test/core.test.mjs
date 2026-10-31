@@ -114,3 +114,65 @@ test('entryMarkdown and notionDefaults turn an entry into a Notion row', () => {
 test('htmlToText decodes entities once and keeps line structure', () => {
   assert.equal(core.htmlToText('<p>a &amp;lt; b</p><p>c&nbsp;d</p>'), 'a &lt; b\nc d');
 });
+
+test('parseQuick turns a duration after a start time into an end time', () => {
+  const r = core.parseQuick('Deep work 14:00 for 90m', NOW);
+  assert.deepEqual([r.title, r.start, r.end], ['Deep work', '14:00', '15:30']);
+  assert.equal(core.parseQuick('Call Prof. Kim 2pm 45m', NOW).end, '14:45');
+  assert.equal(core.parseQuick('Review 10:00 1h30', NOW).end, '11:30');
+  assert.equal(core.parseQuick('Gym 1h tomorrow 18:00', NOW).end, '19:00', 'the duration may come before the time');
+  assert.equal(core.parseQuick('Late session 23:30 for 2h', NOW).end, '23:59', 'an event never runs past midnight');
+});
+
+test('parseQuick keeps a duration in the title when there is no start time', () => {
+  const r = core.parseQuick('Read for 1h tomorrow', NOW);
+  assert.deepEqual([r.title, r.date, r.start, r.end], ['Read for 1h', '2026-10-12', '', '']);
+});
+
+test('addMinutes and fmtDuration handle clock arithmetic and labels', () => {
+  assert.equal(core.addMinutes('14:00', 90), '15:30');
+  assert.equal(core.addMinutes('09:45', 15), '10:00');
+  assert.equal(core.addMinutes('23:30', 60), '23:59');
+  assert.deepEqual([0, 25, 60, 70, 150].map(core.fmtDuration), ['0 min', '25 min', '1 h', '1 h 10', '2 h 30']);
+});
+
+// Local-time events on Sunday 11 Oct 2026.
+const ev = (h1, m1, h2, m2, extra = {}) => ({
+  start: new Date(2026, 9, 11, h1, m1), end: new Date(2026, 9, 11, h2, m2), allDay: false, ...extra,
+});
+
+test('freeSlots finds the gaps of at least the minimum length inside the planning window', () => {
+  const events = [
+    ev(10, 0, 11, 0), ev(10, 30, 12, 0), ev(14, 0, 16, 30), ev(21, 0, 23, 0),
+    { start: new Date(2026, 9, 11), end: new Date(2026, 9, 12), allDay: true },
+  ];
+  const slots = core.freeSlots(events, '2026-10-11', { from: new Date(2026, 9, 11, 9, 32), start: '08:00', end: '22:00', min: 20 });
+  const hm = d => core.pad2(d.getHours()) + ':' + core.pad2(d.getMinutes());
+  assert.deepEqual(slots.map(s => [hm(s.start), hm(s.end), s.mins]),
+    [['09:35', '10:00', 25], ['12:00', '14:00', 120], ['16:30', '21:00', 270]]);
+  assert.deepEqual(core.freeSlots(events, '2026-10-11', { from: new Date(2026, 9, 11, 22, 5), start: '08:00', end: '22:00' }), []);
+  assert.equal(core.freeSlots([], '2026-10-12', { from: new Date(2026, 9, 11, 9, 0), start: '08:00', end: '22:00' })[0].mins, 840,
+    'a later day starts at the window start');
+});
+
+test('nowNext picks the running event that ends first and the next one to start', () => {
+  const at = new Date(2026, 9, 11, 10, 40);
+  const events = [ev(9, 0, 12, 0, { title: 'Long block' }), ev(10, 30, 11, 0, { title: 'Stand-up' }), ev(14, 0, 15, 0, { title: 'Review' }),
+    { start: new Date(2026, 9, 11), end: new Date(2026, 9, 12), allDay: true, title: 'Holiday' }];
+  const r = core.nowNext(events, at);
+  assert.equal(r.current.title, 'Stand-up');
+  assert.equal(r.next.title, 'Review');
+  assert.deepEqual(core.nowNext([], at), { current: null, next: null });
+});
+
+test('planSlot offers the next free block of the wanted length, rolling over to tomorrow', () => {
+  const opts = { start: '08:00', end: '22:00', length: 60, min: 30 };
+  assert.deepEqual(core.planSlot([ev(10, 0, 11, 0), ev(11, 20, 13, 0)], new Date(2026, 9, 11, 10, 20), opts),
+    { date: '2026-10-11', start: '13:00', end: '14:00' }, 'skips a gap shorter than the minimum');
+  assert.deepEqual(core.planSlot([ev(9, 0, 11, 0)], new Date(2026, 9, 11, 8, 50), opts),
+    { date: '2026-10-11', start: '11:00', end: '12:00' }, 'skips a gap that a rounded start leaves too short');
+  assert.deepEqual(core.planSlot([], new Date(2026, 9, 11, 21, 40), opts),
+    { date: '2026-10-12', start: '08:00', end: '09:00' });
+  assert.deepEqual(core.planSlot([ev(14, 0, 15, 0)], new Date(2026, 9, 11, 13, 20), opts),
+    { date: '2026-10-11', start: '13:30', end: '14:00' }, 'a gap shorter than the wanted length still fits the minimum');
+});
