@@ -44,9 +44,25 @@
 #  `tba` stage and a note recording the cycle that just ended, so nothing here
 #  asserts a date that has not been published.
 #
-#  Verified 2026-10-01 against official conference sites. The ccf-deadlines
-#  dataset (github.com/ccfddl/ccf-deadlines) was used only to find candidates;
-#  no date here rests on it alone. Re-check before you submit.
+#  Verified 2026-10-01 against official conference sites. Re-check before you
+#  submit.
+#
+#  Monthly update
+#  --------------
+#  .github/workflows/deadlines_sync.yml runs scripts/manage.py deadlines run
+#  on the 1st of every month. It reads two community lists, ccf-deadlines
+#  (github.com/ccfddl/ccf-deadlines) and Hugging Face ai-deadlines
+#  (github.com/huggingface/ai-deadlines), and per venue it:
+#    - fills a `tba` call once a list publishes its dates;
+#    - moves an edition whose stages have all passed on to the next one, or
+#      to a `tba` stage with a note when nothing newer is published;
+#    - moves a paper deadline that changed (an extension) only when the
+#      official site shows the new date.
+#  New dates the official site does not show yet get a note saying so; the
+#  note goes away in the month the site confirms them. Category, rank and
+#  other notes are never touched. HRI, Humanoids and SIGGRAPH Asia are in
+#  neither list and stay hand-maintained. Rules: scripts/deadlines/merge.py.
+#  Last automated update: never
 # ==========================================================================
 
 # ---- Robotics -------------------------------------------------------------

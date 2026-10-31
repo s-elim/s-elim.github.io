@@ -1,0 +1,55 @@
+name: Sync AI Conference Deadlines
+
+'on':
+  schedule:
+    # 18:00 UTC on the 1st = 03:00 KST on the 2nd, an hour before the daily
+    # openings sync so the two never push at the same moment.
+    - cron: '0 18 1 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deadlines-sync
+  cancel-in-progress: false
+
+jobs:
+  sync-deadlines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+
+      # The rules the update follows are tested before it is allowed to write.
+      - name: Test the updater
+        run: |
+          uv run --with pytest --with pyyaml --with httpx --with beautifulsoup4 pytest tests/test_deadlines.py -q
+
+      # Free public sources only: the ccf-deadlines and Hugging Face
+      # ai-deadlines lists on GitHub, plus each conference's own page to
+      # confirm a date. No API keys, no cost. A summary of every venue that
+      # changed is written to this run's page.
+      - name: Refresh _data/conferences.yml
+        run: |
+          uv run --with pyyaml --with httpx --with beautifulsoup4 python3 scripts/manage.py deadlines run
+
+      - name: Commit and push updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain _data/conferences.yml)" ]; then
+            git add _data/conferences.yml
+            git commit -m "chore(deadlines): automated monthly sync [skip ci]"
+            git pull --rebase origin master
+            git push origin master
+          else
+            echo "No deadline changes this month."
+          fi

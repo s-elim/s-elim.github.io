@@ -750,6 +750,11 @@ def main():
     parser_openings.add_argument('--max-queries', type=int, default=15, help="Maximum search queries to issue")
 
     # Serve command
+    parser_deadlines = subparsers.add_parser('deadlines', help="Refresh conference deadlines from the community lists")
+    parser_deadlines.add_argument('action', nargs='?', default='run', choices=['run'],
+                                  help="run: update _data/conferences.yml")
+    parser_deadlines.add_argument('--dry-run', action='store_true', help="Report what would change without writing")
+
     subparsers.add_parser('serve', help="Run the local Jekyll dev server")
 
     args = parser.parse_args()
@@ -775,6 +780,9 @@ def main():
             export_to_yaml(all_ops)
         else:
             run_openings_pipeline(dry_run=args.dry_run, max_queries=args.max_queries)
+    elif args.command == 'deadlines':
+        from deadlines.pipeline import run_deadlines
+        run_deadlines(dry_run=args.dry_run)
     elif args.command == 'serve':
         run_server()
     else:
