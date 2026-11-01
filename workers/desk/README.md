@@ -118,6 +118,13 @@ safer if the email ever arrives.
   to rename, reschedule, add notes or delete it; the dialog has the same
   shortcuts for touch screens. Click an **event** to retitle, move, re-time or
   delete it (read-only calendars just show the details).
+- **Title styles**: right-click any event or task (in Today or the calendar),
+  use the brush among a task's hover buttons, or the **Style** row in the task
+  and event dialogs, for bold, italic, six text colours, five highlights and a
+  star. A starred task stays at the top of its group. Styles show on the desk
+  only (Google keeps titles as plain text), are kept in the `settings/marks`
+  document, apply to every occurrence of a repeating event, and are forgotten
+  four months after the item was last seen.
 - On a **phone**, Today shows tabs (Agenda, Tasks, Deadlines, Pinned) so each
   panel is one tap away, and Calendar opens on the day view.
 - **Board**: cards or status lanes, search, filters; the editor has rich text,

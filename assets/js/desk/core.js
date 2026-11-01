@@ -35,6 +35,19 @@
     Projects: "#0d9488", Milestones: "#ea7317", "Follow-ups": "#64748b"
   };
   var DEFAULT_WATCH = ["CVPR", "ICCV", "ECCV", "NeurIPS", "ICLR", "ICML", "ICRA", "IROS", "RSS", "CoRL"];
+  // Text colours and highlights, shared by the entry editor (tc-N / hl-N spans)
+  // and the title styles on events and tasks. The swatch is only the button's
+  // fill; the colours on the page come from _desk.scss, per theme.
+  var TEXT_COLORS = [
+    { n: 1, name: "Red", swatch: "hsl(2 62% 42%)" }, { n: 2, name: "Orange", swatch: "hsl(28 68% 42%)" },
+    { n: 3, name: "Yellow", swatch: "hsl(46 72% 36%)" }, { n: 4, name: "Green", swatch: "hsl(150 50% 32%)" },
+    { n: 5, name: "Blue", swatch: "hsl(206 60% 40%)" }, { n: 6, name: "Purple", swatch: "hsl(276 48% 44%)" }
+  ];
+  var HIGHLIGHTS = [
+    { n: 1, name: "Yellow", swatch: "hsl(48 86% 72%)" }, { n: 2, name: "Green", swatch: "hsl(150 56% 72%)" },
+    { n: 3, name: "Blue", swatch: "hsl(204 76% 76%)" }, { n: 4, name: "Pink", swatch: "hsl(318 66% 78%)" },
+    { n: 5, name: "Red", swatch: "hsl(2 72% 78%)" }
+  ];
   var WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   var MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
@@ -295,7 +308,8 @@
       id: ev.id + "@" + (ev.calendarId || ""), title: ev.title || "(no title)", start: start, end: end, allDay: allDay,
       color: ev.color || "#3b82f6", calendar: ev.calendar || "", link: ev.link || "", video: ev.video || "",
       location: ev.location || "", description: ev.description || "", attendees: ev.attendees || 0,
-      eventId: ev.id, calendarId: ev.calendarId || "", editable: !!ev.editable, recurring: !!ev.recurring
+      eventId: ev.id, calendarId: ev.calendarId || "", editable: !!ev.editable, recurring: !!ev.recurring,
+      series: ev.series || ""
     };
   }
   // Does an event touch a given local day? All-day ends are exclusive.
@@ -408,9 +422,82 @@
     };
   }
 
+  /* ---- title styles on events and tasks ---------------------------------
+     Google keeps titles as plain text, so colour, bold, italic, highlight and
+     the star live on the desk: one map in the settings/marks document, keyed
+     by markKey. A mark is { c: 1-6, h: 1-5, b, i, s, at: "YYYY-MM-DD" }. */
+  var MARK_KEY_RE = /^(ev|g|d):/;
+  // A repeating event's occurrences share one style: Google names an
+  // occurrence "<series id>_<start>", and newer backends send the series id.
+  function eventMarkKey(e) {
+    var id = String(e.eventId || "");
+    var series = e.series || (e.recurring ? id.replace(/_\d{8}(T\d{6}Z?)?$/, "") : "");
+    return "ev:" + (series || id) + "@" + (e.calendarId || "");
+  }
+  function taskMarkKey(t) { return String(t.key || ""); }
+  function isMarkKey(k) { return typeof k === "string" && k.length <= 400 && MARK_KEY_RE.test(k); }
+
+  // A clean copy holding only known fields in range, or null when it styles nothing.
+  function normMark(m) {
+    if (!m || typeof m !== "object") return null;
+    var out = {}, c = Number(m.c), h = Number(m.h);
+    if (c >= 1 && c <= TEXT_COLORS.length && c % 1 === 0) out.c = c;
+    if (h >= 1 && h <= HIGHLIGHTS.length && h % 1 === 0) out.h = h;
+    if (m.b === true) out.b = true;
+    if (m.i === true) out.i = true;
+    if (m.s === true) out.s = true;
+    if (!Object.keys(out).length) return null;
+    if (isYmd(m.at)) out.at = m.at;
+    return out;
+  }
+  function normMarks(items) {
+    var out = {};
+    if (!items || typeof items !== "object") return out;
+    Object.keys(items).forEach(function (k) {
+      var m = isMarkKey(k) && normMark(items[k]);
+      if (m) out[k] = m;
+    });
+    return out;
+  }
+  // Classes for the span around a title. opts.text leaves out the highlight,
+  // for a form field whose whole box would otherwise turn that colour.
+  function markClass(m, opts) {
+    m = normMark(m);
+    if (!m) return "";
+    var out = ["dk-mk"];
+    if (m.b) out.push("is-b");
+    if (m.i) out.push("is-i");
+    if (m.s) out.push("is-star");
+    if (m.c) out.push("tc-" + m.c);
+    if (m.h && !(opts && opts.text)) out.push("hl-" + m.h);
+    return out.join(" ");
+  }
+  // "at" is when the item was last seen: items in liveKeys get today, and a
+  // style whose item has not been seen for keepDays (default 120) is dropped.
+  // One with no date is kept. Pass liveKeys only from a complete sync.
+  function pruneMarks(items, liveKeys, todayYmd, keepDays) {
+    var live = {}, cutoff = ymd(addDays(parseYmd(todayYmd), -(keepDays == null ? 120 : keepDays)));
+    (liveKeys || []).forEach(function (k) { live[k] = true; });
+    var out = {};
+    Object.keys(items || {}).forEach(function (k) {
+      var m = items[k];
+      if (live[k]) out[k] = Object.assign({}, m, { at: todayYmd });
+      else if (!m.at || m.at >= cutoff) out[k] = m;
+    });
+    return out;
+  }
+  // Starred items first, otherwise in the order given.
+  function starFirst(list, isStarred) {
+    var top = [], rest = [];
+    (list || []).forEach(function (x) { (isStarred(x) ? top : rest).push(x); });
+    return top.concat(rest);
+  }
+
   var core = {
     AXES: AXES, KINDS: KINDS, STATUSES: STATUSES, SOURCE_COLORS: SOURCE_COLORS, DEFAULT_WATCH: DEFAULT_WATCH,
-    RT_FIELDS: RT_FIELDS, RT_LABEL: RT_LABEL,
+    RT_FIELDS: RT_FIELDS, RT_LABEL: RT_LABEL, TEXT_COLORS: TEXT_COLORS, HIGHLIGHTS: HIGHLIGHTS,
+    eventMarkKey: eventMarkKey, taskMarkKey: taskMarkKey, isMarkKey: isMarkKey, normMark: normMark, normMarks: normMarks,
+    markClass: markClass, pruneMarks: pruneMarks, starFirst: starFirst,
     byId: byId, pad2: pad2, ymd: ymd, parseYmd: parseYmd, addDays: addDays, startOfWeek: startOfWeek,
     dayDiff: dayDiff, isYmd: isYmd, countdown: countdown, urgency: urgency,
     minutesOf: minutesOf, addMinutes: addMinutes, fmtDuration: fmtDuration,

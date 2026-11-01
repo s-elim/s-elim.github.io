@@ -11,7 +11,7 @@
 <section class="desk" id="desk" aria-label="Research desk"
          data-endpoint="{{ site.desk.endpoint }}"
          data-conferences="{{ '/assets/data/desk-conferences.json' | relative_url }}?v={{ desk_v }}"></section>
-{% assign desk_files = "core,editor,calendar,app" | split: "," %}
+{% assign desk_files = "core,editor,calendar,marks,app" | split: "," %}
 {% for f in desk_files %}
 <script src="{{ '/assets/js/desk/' | append: f | append: '.js' | relative_url }}?v={{ desk_v }}" defer></script>
 {% endfor %}

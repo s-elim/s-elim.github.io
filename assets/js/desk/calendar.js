@@ -98,11 +98,15 @@
     return list;
   }
 
+  // Titles with their desk style from marks.js, when it loaded.
+  function evTitle(e) { return Desk.marks ? Desk.marks.eventTitle(e) : A().esc(e.title); }
+  function taskTitle(t) { return Desk.marks ? Desk.marks.taskTitle(t) : A().esc(t.title); }
+
   function chip(it) {
     var a = A(), esc = a.esc, x = it.x;
     if (it.k === "event") {
       return '<button type="button" class="dk-chipev" style="--c:' + esc(x.color) + '" data-event="' + esc(x.id) + '" title="' + esc(x.title) + '">' +
-        (x.allDay ? "" : '<span class="dk-chipev__t">' + a.hhmm(x.start) + '</span>') + esc(x.title) + '</button>';
+        (x.allDay ? "" : '<span class="dk-chipev__t">' + a.hhmm(x.start) + '</span>') + evTitle(x) + '</button>';
     }
     if (it.k === "deadline") {
       var attr = x.entryId ? 'data-entry="' + esc(x.entryId) + '"' : a.safeUrl(x.url) ? 'data-href="' + esc(a.safeUrl(x.url)) + '"' : "";
@@ -110,7 +114,7 @@
         '<i class="fas fa-flag" aria-hidden="true"></i> ' + esc(x.title) + '</button>';
     }
     return '<button type="button" class="dk-chipev dk-chipev--task' + (x.done ? " is-done" : "") + '" data-task="' + esc(x.key) + '" title="' + (x.done ? "Mark as not done" : "Mark as done") + ': ' + esc(x.title) + '">' +
-      '<span class="dk-tick" aria-hidden="true"></span>' + (x.time ? '<span class="dk-chipev__t">' + esc(x.time) + '</span>' : "") + esc(x.title) + '</button>';
+      '<span class="dk-tick" aria-hidden="true"></span>' + (x.time ? '<span class="dk-chipev__t">' + esc(x.time) + '</span>' : "") + taskTitle(x) + '</button>';
   }
 
   /* ---- views ---------------------------------------------------------- */
@@ -165,7 +169,7 @@
         var h = Math.max(0.03, bot - top), w = 100 / lay.n, move = movable(e);
         return '<button type="button" class="dk-tev' + (move ? " is-movable" : "") + '" style="--c:' + esc(e.color) + ';top:' + (top * 100).toFixed(2) + '%;height:' + (h * 100).toFixed(2) +
           '%;left:calc(' + (p.col * w).toFixed(2) + '% + 2px);width:calc(' + w.toFixed(2) + '% - 4px)" data-event="' + esc(e.id) + '">' +
-          '<b>' + esc(e.title) + '</b><span>' + a.hhmm(e.start) + '–' + a.hhmm(e.end) + '</span>' +
+          '<b>' + evTitle(e) + '</b><span class="dk-tev__time">' + a.hhmm(e.start) + '–' + a.hhmm(e.end) + '</span>' +
           (move ? '<i class="dk-tev__grip" aria-hidden="true"></i>' : "") + '</button>';
       }).join("");
       return '<div class="dk-dcol" data-slot="' + key + '">' + lines + (key === t ? '<div class="dk-nowline" data-nowline></div>' : "") + evs + '</div>';
@@ -260,7 +264,7 @@
     var span = (DAY_END - DAY_START) * 60;
     el.style.top = ((s - DAY_START * 60) / span * 100).toFixed(3) + "%";
     el.style.height = (Math.max(SNAP, e - s) / span * 100).toFixed(3) + "%";
-    var label = el.querySelector("span");
+    var label = el.querySelector(".dk-tev__time");
     if (label) label.textContent = clock(s) + "–" + clock(e);
   }
 

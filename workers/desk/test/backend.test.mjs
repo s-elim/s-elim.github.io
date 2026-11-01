@@ -243,6 +243,7 @@ test('sync merges Google and Notion, hides call links in open mode, and isolates
   assert.equal(lab.description, 'Agenda\nJoin [call link hidden]');
   assert.equal(lab.color, '#dc2127');
   assert.deepEqual([lab.editable, s.google.events[2].editable, s.google.events[1].recurring], [true, false, true]);
+  assert.deepEqual(s.google.events.map(e => e.series), ['', 'base', ''], 'a repeating event names its series, for one title style across occurrences');
   assert.deepEqual(s.google.tasks.map(t => [t.id, t.done, t.due]), [['t1', false, '2026-10-15'], ['t2', true, '']]);
   const [pubs, broken] = s.notion.sources;
   assert.deepEqual(pubs.rows.map(r => [r.title, r.done]), [['Camera-ready', false], ['Old', true]]);

@@ -9,8 +9,8 @@
   var Desk = window.Desk = window.Desk || {};
   var C = Desk.core;
   var A = function () { return Desk.app; };
-  var TC = [["tc-1", "hsl(2 62% 42%)"], ["tc-2", "hsl(28 68% 42%)"], ["tc-3", "hsl(46 72% 36%)"], ["tc-4", "hsl(150 50% 32%)"], ["tc-5", "hsl(206 60% 40%)"], ["tc-6", "hsl(276 48% 44%)"]];
-  var HL = [["hl-1", "hsl(48 86% 72%)"], ["hl-2", "hsl(150 56% 72%)"], ["hl-3", "hsl(204 76% 76%)"], ["hl-4", "hsl(318 66% 78%)"], ["hl-5", "hsl(2 72% 78%)"]];
+  var TC = C.TEXT_COLORS.map(function (c) { return ["tc-" + c.n, c.swatch, c.name]; });
+  var HL = C.HIGHLIGHTS.map(function (c) { return ["hl-" + c.n, c.swatch, c.name]; });
   var PH = {
     thesis: ["Thesis", "the claim in one sentence", "What would be true if this worked?"],
     gap: ["Open question", "what nobody has shown yet", "The gap, stated so it can be attacked."],
@@ -90,9 +90,9 @@
     h += '<button type="button" class="dk-tb" data-cmd="insertOrderedList" title="Numbered list"><i class="fas fa-list-ol" aria-hidden="true"></i></button>';
     h += '<button type="button" class="dk-tb" data-link="1" title="Link"><i class="fas fa-link" aria-hidden="true"></i></button>';
     h += '<span class="dk-tb__sep"></span>';
-    h += TC.map(function (c) { return '<button type="button" class="dk-sw" data-color="' + c[0] + '" style="background:' + c[1] + '" title="Text colour" aria-label="Text colour"></button>'; }).join("");
+    h += TC.map(function (c) { return '<button type="button" class="dk-sw" data-color="' + c[0] + '" style="background:' + c[1] + '" title="' + c[2] + ' text" aria-label="' + c[2] + ' text"></button>'; }).join("");
     h += '<span class="dk-tb__sep"></span>';
-    h += HL.map(function (c) { return '<button type="button" class="dk-sw dk-sw--hl" data-hl="' + c[0] + '" style="background:' + c[1] + '" title="Highlight" aria-label="Highlight"></button>'; }).join("");
+    h += HL.map(function (c) { return '<button type="button" class="dk-sw dk-sw--hl" data-hl="' + c[0] + '" style="background:' + c[1] + '" title="' + c[2] + ' highlight" aria-label="' + c[2] + ' highlight"></button>'; }).join("");
     h += '<span class="dk-tb__sep"></span>';
     h += '<button type="button" class="dk-tb" data-pinsel="1" title="Pin this passage to Today"><i class="fas fa-thumbtack" aria-hidden="true"></i></button>';
     h += '<button type="button" class="dk-tb" data-clear="1" title="Clear formatting"><i class="fas fa-remove-format" aria-hidden="true"></i></button>';

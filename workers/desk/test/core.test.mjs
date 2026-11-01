@@ -176,3 +176,58 @@ test('planSlot offers the next free block of the wanted length, rolling over to 
   assert.deepEqual(core.planSlot([ev(14, 0, 15, 0)], new Date(2026, 9, 11, 13, 20), opts),
     { date: '2026-10-11', start: '13:30', end: '14:00' }, 'a gap shorter than the wanted length still fits the minimum');
 });
+
+test('eventMarkKey gives every occurrence of a repeating event one key', () => {
+  const one = core.eventMarkKey({ eventId: 'abc123', calendarId: 'me@example.com' });
+  assert.equal(one, 'ev:abc123@me@example.com');
+  const occ = id => core.eventMarkKey({ eventId: id, calendarId: 'lab', recurring: true });
+  assert.equal(occ('base9_20261102T090000Z'), 'ev:base9@lab');
+  assert.equal(occ('base9_20261109T090000Z'), 'ev:base9@lab');
+  assert.equal(occ('base9_20261102'), 'ev:base9@lab', 'an all-day occurrence');
+  assert.equal(core.eventMarkKey({ eventId: 'odd_id', calendarId: 'lab', recurring: true, series: 'gym' }), 'ev:gym@lab',
+    'a series id from the backend wins over the name');
+  assert.equal(core.eventMarkKey({ eventId: 'base9_20261102T090000Z', calendarId: 'lab' }), 'ev:base9_20261102T090000Z@lab',
+    'a one-off event keeps its full id');
+  assert.equal(core.normEvent({ id: 'x', start: '2026-11-02', series: 'base9' }).series, 'base9');
+});
+
+test('normMark keeps only known fields in range and treats an empty style as none', () => {
+  assert.deepEqual(core.normMark({ c: 3, h: 2, b: true, i: true, s: true, at: '2026-11-02' }),
+    { c: 3, h: 2, b: true, i: true, s: true, at: '2026-11-02' });
+  assert.deepEqual(core.normMark({ c: 9, h: 0, b: 'yes', i: 1, s: true, at: 'soon', x: '<script>' }), { s: true });
+  assert.deepEqual(core.normMark({ c: 2.5, h: -1 }), null);
+  assert.equal(core.normMark({ b: false, at: '2026-11-02' }), null);
+  assert.equal(core.normMark(null), null);
+  assert.equal(core.normMark('bold'), null);
+});
+
+test('normMarks drops unknown keys and broken styles', () => {
+  const items = JSON.parse('{"__proto__": {"b": true}, "ev:a@c": {"b": true}, "g:L1:t1": {"c": 7}, "d:t9": {"h": 1}, "x": {"b": true}}');
+  assert.deepEqual(core.normMarks(items), { 'ev:a@c': { b: true }, 'd:t9': { h: 1 } });
+  assert.deepEqual(core.normMarks(null), {});
+  assert.deepEqual(core.normMarks([{ b: true }]), {});
+});
+
+test('markClass turns a style into classes, with the highlight optional', () => {
+  assert.equal(core.markClass({ c: 4, h: 1, b: true, i: true, s: true }), 'dk-mk is-b is-i is-star tc-4 hl-1');
+  assert.equal(core.markClass({ c: 4, h: 1 }, { text: true }), 'dk-mk tc-4');
+  assert.equal(core.markClass({ c: 99 }), '');
+  assert.equal(core.markClass(null), '');
+});
+
+test('pruneMarks forgets styles on items gone for months, never ones still in view', () => {
+  const items = { 'ev:old@c': { b: true, at: '2026-05-01' }, 'ev:live@c': { b: true, at: '2026-01-01' },
+    'g:L:t': { c: 1, at: '2026-10-30' }, 'd:t': { s: true } };
+  assert.deepEqual(Object.keys(core.pruneMarks(items, ['ev:live@c'], '2026-11-02')).sort(), ['d:t', 'ev:live@c', 'g:L:t']);
+  assert.deepEqual(Object.keys(core.pruneMarks(items, [], '2026-11-02', 400)).sort(), Object.keys(items).sort());
+  const seen = core.pruneMarks(items, ['ev:live@c'], '2026-11-02');
+  assert.equal(seen['ev:live@c'].at, '2026-11-02', 'an item in view counts as seen today');
+  assert.equal(items['ev:live@c'].at, '2026-01-01', 'the input is not changed');
+});
+
+test('starFirst lifts starred items and keeps the order otherwise', () => {
+  const list = ['a', 'b', 'c', 'd'];
+  assert.deepEqual(core.starFirst(list, x => x === 'c' || x === 'd'), ['c', 'd', 'a', 'b']);
+  assert.deepEqual(core.starFirst(list, () => false), list);
+  assert.deepEqual(core.starFirst(null, () => true), []);
+});

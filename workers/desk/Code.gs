@@ -548,7 +548,7 @@ function eventOut(c, ev, palette) {
     location: clip(ev.location, 200), description: clip(stripHtml(ev.description), 800),
     link: ev.htmlLink || '', video: video, attendees: (ev.attendees || []).length,
     editable: c.accessRole === 'owner' || c.accessRole === 'writer' || c.writable === true,
-    recurring: !!ev.recurringEventId, declined: !!(me && me.responseStatus === 'declined')
+    recurring: !!ev.recurringEventId, series: ev.recurringEventId || '', declined: !!(me && me.responseStatus === 'declined')
   };
   return mode() === 'open' ? stripCallLinks(out) : out;
 }

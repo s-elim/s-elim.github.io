@@ -62,6 +62,10 @@
   }
   function hhmm(d) { return C.pad2(d.getHours()) + ":" + C.pad2(d.getMinutes()); }
   function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
+  // Titles with their desk style (marks.js): colour, bold, italic, highlight, star.
+  function evTitle(e) { return Desk.marks ? Desk.marks.eventTitle(e) : esc(e.title); }
+  function taskTitle(t) { return Desk.marks ? Desk.marks.taskTitle(t) : esc(t.title); }
+  function isStarred(t) { return !!(Desk.marks && Desk.marks.starred(C.taskMarkKey(t))); }
 
   // Rich text from the editor is stored as HTML; only this whitelist survives.
   var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, S: 1, STRIKE: 1, CODE: 1, BR: 1, UL: 1, OL: 1, LI: 1, P: 1, DIV: 1, SPAN: 1, MARK: 1, A: 1 };
@@ -143,7 +147,7 @@
   }
 
   function persist() {
-    store(KEY.cache, { mode: S.mode, entries: S.entries, deskTasks: S.deskTasks, prefs: S.prefs, sync: S.sync });
+    store(KEY.cache, { mode: S.mode, entries: S.entries, deskTasks: S.deskTasks, prefs: S.prefs, sync: S.sync, marks: Desk.marks ? Desk.marks.dump() : null });
   }
   function saveUi() { store(KEY.ui, S.ui); }
 
@@ -319,6 +323,7 @@
     if (!t) return;
     var d = dialog("dk-task", "Task",
       '<label class="dk-field"><span>Title</span><input type="text" class="dk-input" id="dk-t-title" value="' + esc(t.title) + '"></label>' +
+      (Desk.marks ? Desk.marks.field(C.taskMarkKey(t)) : "") +
       '<div class="dk-grid2"><label class="dk-field"><span>Due</span><input type="date" class="dk-input" id="dk-t-due" value="' + esc(t.due) + '"></label>' +
       '<label class="dk-field"><span>List</span><input type="text" class="dk-input" value="' + esc(t.list || (t.source === "google" ? "Google Tasks" : "Desk")) + '" disabled></label></div>' +
       '<div class="dk-chips" id="dk-t-quick" role="group" aria-label="Set the due date">' + quickDues().map(function (q) {
@@ -330,6 +335,7 @@
       '<button type="button" class="dk-btn" id="dk-t-block"><i class="fas fa-clock" aria-hidden="true"></i> Block time</button>' +
       '<button type="button" class="dk-btn dk-btn--primary" id="dk-t-save">Save</button>');
     var msg = $("dk-t-msg");
+    wireStyle(d, $("dk-t-title"), C.taskMarkKey(t));
     $("dk-t-quick").addEventListener("click", function (e) {
       var b = e.target.closest("[data-setdue]");
       if (b) $("dk-t-due").value = b.getAttribute("data-setdue");
@@ -376,6 +382,8 @@
     S.deskTasks = r.docs.tasks || [];
     var p = (r.docs.settings || []).filter(function (d) { return d.id === "prefs"; })[0];
     if (p) S.prefs = { id: "prefs", version: p.version, data: Object.assign({}, S.prefs.data, p.data) };
+    var mk = (r.docs.settings || []).filter(function (d) { return d.id === "marks"; })[0];
+    if (mk && Desk.marks) Desk.marks.apply(mk);
     if (r.sync) S.sync = r.sync;
   }
 
@@ -432,6 +440,7 @@
     store(KEY.token, null);
     store(KEY.cache, null);
     S.entries = []; S.deskTasks = []; S.sync = null;
+    if (Desk.marks) Desk.marks.reset();
     renderSignIn(msg || "");
   }
 
@@ -528,6 +537,7 @@
     $("dk-body").addEventListener("change", onBodyChange);
     $("dk-body").addEventListener("input", onBodyInput);
     $("dk-body").addEventListener("submit", onBodySubmit);
+    if (Desk.marks) $("dk-body").addEventListener("contextmenu", Desk.marks.onContext);
     render();
   }
 
@@ -718,7 +728,7 @@
     opts = opts || {};
     return '<div class="dk-nn__tile dk-nn__tile--' + kind + '"' + (opts.color ? ' style="--c:' + esc(opts.color) + '"' : "") + '>' +
       '<button type="button" class="dk-nn__b" ' + attrs + '>' +
-        '<span class="dk-nn__k">' + esc(label) + '</span><span class="dk-nn__t">' + esc(title) + '</span><span class="dk-nn__m">' + esc(meta) + '</span>' +
+        '<span class="dk-nn__k">' + esc(label) + '</span><span class="dk-nn__t">' + (opts.titleHtml || esc(title)) + '</span><span class="dk-nn__m">' + esc(meta) + '</span>' +
       '</button>' +
       (safeUrl(opts.video) ? '<a class="dk-ev__join" href="' + esc(safeUrl(opts.video)) + '" target="_blank" rel="noopener">Join</a>' : "") +
       (opts.pct != null ? '<span class="dk-nn__bar" style="--p:' + opts.pct + '%" aria-hidden="true"></span>' : "") +
@@ -730,7 +740,7 @@
     if (nn.current) {
       var cur = nn.current, left = Math.max(1, Math.round((cur.end - now) / 6e4));
       tiles.push(nnTile("now", "Now", cur.title, "until " + hhmm(cur.end) + " · " + C.fmtDuration(left) + " left", 'data-event="' + esc(cur.id) + '"',
-        { color: cur.color, video: cur.video, pct: Math.min(100, Math.max(0, Math.round((now - cur.start) / (cur.end - cur.start) * 100))) }));
+        { color: cur.color, video: cur.video, titleHtml: evTitle(cur), pct: Math.min(100, Math.max(0, Math.round((now - cur.start) / (cur.end - cur.start) * 100))) }));
     } else if (free.length && free[0].start - now < 10 * 6e4) {
       tiles.push(nnTile("free", "Free now", "until " + hhmm(free[0].end), C.fmtDuration(free[0].mins) + " open · plan it", 'data-free="' + esc(freeKey(t, free[0])) + '"'));
     }
@@ -738,7 +748,7 @@
       var nx = nn.next, ahead = Math.round((nx.start - now) / 6e4);
       var when = C.ymd(nx.start) === t ? hhmm(nx.start) + " · in " + C.fmtDuration(ahead)
         : fmtDate(C.ymd(nx.start), { weekday: "short", day: "numeric", month: "short" }) + " · " + hhmm(nx.start);
-      tiles.push(nnTile("next", "Next", nx.title, when, 'data-event="' + esc(nx.id) + '"', { color: nx.color, video: ahead <= 10 ? nx.video : "" }));
+      tiles.push(nnTile("next", "Next", nx.title, when, 'data-event="' + esc(nx.id) + '"', { color: nx.color, video: ahead <= 10 ? nx.video : "", titleHtml: evTitle(nx) }));
     }
     var b = C.bucketTasks(allTasks(), t);
     var freeMins = free.reduce(function (n, s) { return n + s.mins; }, 0);
@@ -783,7 +793,7 @@
     return '<li class="dk-ev' + (past ? " is-past" : "") + (compact ? " is-compact" : "") + '" style="--c:' + esc(e.color) + '">' +
       '<button type="button" class="dk-ev__b" data-event="' + esc(e.id) + '">' +
         '<span class="dk-ev__time">' + esc(when) + '</span>' +
-        '<span class="dk-ev__title">' + esc(e.title) + '</span>' +
+        '<span class="dk-ev__title">' + evTitle(e) + '</span>' +
         (e.location ? '<span class="dk-ev__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ' + esc(e.location) + '</span>' : "") +
       '</button>' +
       (safeUrl(e.video) && !past ? '<a class="dk-ev__join" href="' + esc(safeUrl(e.video)) + '" target="_blank" rel="noopener">Join</a>' : "") +
@@ -841,11 +851,12 @@
     var acts = task.done ? "" : '<span class="dk-task__acts">' +
       '<button type="button" class="dk-task__act" data-taskdue="' + esc(task.key) + '" data-due="' + moveTo + '" title="Move to ' + moveLabel.toLowerCase() + '">' + moveLabel + '</button>' +
       '<button type="button" class="dk-task__act" data-block="' + esc(task.key) + '" title="Block time for this on the calendar" aria-label="Block time for ' + esc(task.title) + '"><i class="fas fa-clock" aria-hidden="true"></i></button>' +
+      '<button type="button" class="dk-task__act" data-mkfor="' + esc(C.taskMarkKey(task)) + '" data-mklabel="' + esc(task.title) + '" title="Colour, bold, star (or right-click the task)" aria-label="Style ' + esc(task.title) + '"><i class="fas fa-paint-brush" aria-hidden="true"></i></button>' +
     '</span>';
     return '<li class="dk-task' + (task.done ? " is-done" : "") + (task.parent ? " is-sub" : "") + '">' +
       '<label class="dk-check" title="' + (task.done ? "Mark as not done" : "Mark as done") + '"><input type="checkbox" data-task="' + esc(task.key) + '"' + (task.done ? " checked" : "") + ' aria-label="Done: ' + esc(task.title) + '">' +
       '<span class="dk-check__box" aria-hidden="true"></span></label>' +
-      '<button type="button" class="dk-task__title" data-edittask="' + esc(task.key) + '" title="Edit, reschedule or delete">' + esc(task.title) + '</button>' +
+      '<button type="button" class="dk-task__title" data-edittask="' + esc(task.key) + '" title="Edit, reschedule or delete">' + taskTitle(task) + '</button>' +
       (task.time ? '<span class="dk-task__time">' + esc(task.time) + '</span>' : "") +
       (due ? '<span class="dk-task__due' + (task.due < t && !task.done ? " is-late" : "") + '">' + esc(due) + '</span>' : "") +
       ((multi && task.source === "google") || task.source === "desk" ? '<span class="dk-task__list">' + esc(task.list) + '</span>' : "") +
@@ -856,6 +867,7 @@
   var TASK_CAP = 15;
   function panelTasks(t) {
     var b = C.bucketTasks(allTasks(), t);
+    ["overdue", "today", "upcoming", "undated"].forEach(function (k) { b[k] = C.starFirst(b[k], isStarred); });
     var soon = C.ymd(C.addDays(C.parseYmd(t), 7));
     var upcoming = b.upcoming.filter(function (x) { return x.due <= soon; });
     var laterList = b.upcoming.filter(function (x) { return x.due > soon; });
@@ -1150,6 +1162,7 @@
     var t = e.target.closest("button, a");
     if (!t) return;
     var v;
+    if (t.hasAttribute("data-mkfor")) { if (Desk.marks) Desk.marks.openFor(t); return; }
     if ((v = t.getAttribute("data-entry"))) { Desk.editor.open(v); return; }
     if ((v = t.getAttribute("data-pin"))) { var r = entryDoc(v); if (r) { r.e.pinned = !r.e.pinned; render(); patchEntry(v, { pinned: r.e.pinned }); } return; }
     if ((v = t.getAttribute("data-event"))) { openEvent(v); return; }
@@ -1214,6 +1227,13 @@
     return e || null;
   }
 
+  // The Style row of a dialog: clicks save at once, and the title field shows them.
+  function wireStyle(d, input, key) {
+    if (!Desk.marks) return;
+    var paint = input ? Desk.marks.styleInput(input, key) : null;
+    Desk.marks.wire(d.querySelector(".dk-mkbar"), key, paint);
+  }
+
   function openEvent(id) {
     var e = findEventById(id);
     if (!e) return;
@@ -1225,15 +1245,18 @@
       if (e.location) rows.push(["Where", esc(e.location)]);
       if (safeUrl(e.video)) rows.push(["Call", '<a href="' + esc(safeUrl(e.video)) + '" target="_blank" rel="noopener">Join the call</a>']);
       if (e.description) rows.push(["Notes", '<span class="dk-pre">' + esc(e.description) + '</span>']);
-      dialog("dk-event", e.title, '<dl class="dk-kv">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + '</dl>', link);
+      var ro = dialog("dk-event", e.title, '<dl class="dk-kv">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + '</dl>' +
+        (Desk.marks ? Desk.marks.field(C.eventMarkKey(e)) : ""), link);
+      wireStyle(ro, null, C.eventMarkKey(e));
       return;
     }
     var multiDay = e.allDay && e.end - e.start > 864e5;
     var notes = [];
-    if (e.recurring) notes.push("A repeating event: changes apply to this occurrence only.");
+    if (e.recurring) notes.push("A repeating event: edits change this occurrence only, the style every occurrence.");
     if (multiDay) notes.push("This spans several days; change its dates in Google Calendar.");
     var d = dialog("dk-event", "Event",
       '<label class="dk-field"><span>Title</span><input type="text" class="dk-input dk-input--title" id="dk-e-title" value="' + esc(e.title) + '"></label>' +
+      (Desk.marks ? Desk.marks.field(C.eventMarkKey(e)) : "") +
       '<div class="dk-grid3"><label class="dk-field"><span>Date</span><input type="date" class="dk-input" id="dk-e-date" value="' + C.ymd(e.start) + '"' + (multiDay ? " disabled" : "") + '></label>' +
       '<label class="dk-field"><span>Start</span><input type="time" class="dk-input" id="dk-e-start" value="' + (e.allDay ? "09:00" : hhmm(e.start)) + '"' + (e.allDay ? " disabled" : "") + '></label>' +
       '<label class="dk-field"><span>End</span><input type="time" class="dk-input" id="dk-e-end" value="' + (e.allDay ? "10:00" : hhmm(e.end)) + '"' + (e.allDay ? " disabled" : "") + '></label></div>' +
@@ -1245,6 +1268,7 @@
       '<button type="button" class="dk-btn dk-btn--danger" id="dk-e-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' + link +
       '<button type="button" class="dk-btn dk-btn--primary" id="dk-e-save">Save</button>');
     var msg = $("dk-e-msg");
+    wireStyle(d, $("dk-e-title"), C.eventMarkKey(e));
     $("dk-e-allday").addEventListener("change", function (ev) { $("dk-e-start").disabled = ev.target.checked; $("dk-e-end").disabled = ev.target.checked; });
     $("dk-e-save").addEventListener("click", function () {
       var req = { calendarId: e.calendarId, id: e.eventId, title: $("dk-e-title").value.trim() || e.title,
@@ -1429,7 +1453,8 @@
     today: today, tz: tz, hhmm: hhmm, fmtDate: fmtDate, newId: newId, dialog: dialog, deadlines: deadlines, events: events,
     allTasks: allTasks, entryDoc: entryDoc, entryData: entryData, saveEntry: saveEntry, deleteEntry: deleteEntry, saveUi: saveUi,
     googleReady: googleReady, tasksReady: tasksReady, notionReady: notionReady, fetchSync: fetchSync, openEvent: openEvent,
-    toggleTask: toggleTask, refresh: refresh, resync: resync, cardHtml: cardHtml
+    toggleTask: toggleTask, refresh: refresh, resync: resync, cardHtml: cardHtml,
+    persist: persist, findEvent: findEventById
   };
 
   function boot() {
@@ -1458,6 +1483,7 @@
       S.entries = cache.entries || [];
       S.deskTasks = cache.deskTasks || [];
       if (cache.prefs) S.prefs = cache.prefs;
+      if (cache.marks && Desk.marks) Desk.marks.apply(cache.marks);
       S.sync = cache.sync;
       mount();
     } else {
