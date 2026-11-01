@@ -62,7 +62,7 @@
 #  note goes away in the month the site confirms them. Category, rank and
 #  other notes are never touched. HRI, Humanoids and SIGGRAPH Asia are in
 #  neither list and stay hand-maintained. Rules: scripts/deadlines/merge.py.
-#  Last automated update: never
+#  Last automated update: 2026-11-01 (5 venues changed)
 # ==========================================================================
 
 # ---- Robotics -------------------------------------------------------------
@@ -377,10 +377,16 @@
   flag: "🇨🇳"
   dates: July 13-17, 2027
   website: https://ieee-cas.org/event/conference/2027-ieee-international-conference-multimedia-expo-icme
-  note: IEEE CASS lists ICME 2027 for Xiamen; the call is not out yet. ICME 2026 closed 31 Dec 2025.
   timeline:
     - label: Paper Submission
-      date: tba
+      date: 2026-12-30
+      tz: AoE
+    - label: Rebuttal Ends
+      date: 2027-03-04
+      tz: AoE
+    - label: Notification
+      date: 2027-03-24
+      tz: AoE
 
 - name: IEEE VIS
   edition: 2027
@@ -626,10 +632,17 @@
   flag: "🇯🇵"
   dates: June 28 - July 2, 2027
   website: https://learningtheory.org/colt2027/
-  note: COLT 2027 lists every deadline as TBD. COLT 2026 closed 4 Feb 2026.
+  note: Dates come from the ccf-deadlines community list and are not yet confirmed on the official site.
   timeline:
     - label: Paper Submission
-      date: tba
+      date: 2027-01-29
+      tz: AoE
+    - label: Rebuttal Ends
+      date: 2027-04-02
+      tz: AoE
+    - label: Notification
+      date: 2027-05-03
+      tz: AoE
 
 - name: ICAPS
   edition: 2027
@@ -653,23 +666,40 @@
   edition: 2027
   category: aiml
   rank: "A*"
-  location: TBA
-  website: http://icdm2026.neu.edu.cn/
-  note: ICDM 2026 closed 6 Jun 2026 and runs November 12-15, 2026 in Shenyang, China. The 2027 call is not out yet.
+  location: Brisbane, Australia
+  flag: "🇦🇺"
+  dates: November 15-18, 2027
+  website: https://icdm2027-website.onrender.com/
   timeline:
     - label: Paper Submission
-      date: tba
+      date: 2027-06-06
+      tz: AoE
+    - label: Notification
+      date: 2027-08-16
+      tz: AoE
 
 - name: KR
   edition: 2027
   category: aiml
   rank: "A*"
-  location: TBA
-  website: https://kr.org/KR2026/
-  note: KR 2026 closed 13 Feb 2026 and runs July 20-23, 2026 in Lisbon, Portugal. The 2027 call is not out yet.
+  location: Buenos Aires, Argentina
+  flag: "🇦🇷"
+  dates: September 21-24, 2027
+  website: https://kr.org/KR2027/
+  note: Dates come from the ccf-deadlines community list and are not yet confirmed on the official site.
   timeline:
+    - label: Abstract Submission
+      date: 2027-04-23
+      tz: AoE
     - label: Paper Submission
-      date: tba
+      date: 2027-04-28
+      tz: AoE
+    - label: Rebuttal Ends
+      date: 2027-06-18
+      tz: AoE
+    - label: Notification
+      date: 2027-06-30
+      tz: AoE
 
 - name: SIGIR
   edition: 2027
@@ -771,10 +801,17 @@
   flag: "🇵🇱"
   dates: July 12-16, 2027
   website: https://gecco-2027.sigevo.org/
-  note: GECCO 2027 is confirmed for Kraków but has not posted deadlines. GECCO 2026 closed 26 Jan 2026.
+  note: Dates come from the ccf-deadlines community list and are not yet confirmed on the official site.
   timeline:
+    - label: Abstract Submission
+      date: 2027-01-18
+      tz: AoE
     - label: Paper Submission
-      date: tba
+      date: 2027-01-25
+      tz: AoE
+    - label: Notification
+      date: 2027-03-19
+      tz: AoE
 
 - name: ISWC
   edition: 2027
