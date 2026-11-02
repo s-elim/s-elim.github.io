@@ -22,7 +22,7 @@
  * Install: see README.md beside this file (paste, Run setup, Deploy).
  */
 
-var VERSION = '2026.10.12-passcode';
+var VERSION = '2026.11.03-event-times';
 var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
   importDocs: 500,
@@ -636,9 +636,22 @@ function eventTimes(req) {
   }
   var tz = String(req.tz || '') || Session.getScriptTimeZone();
   var start = TIME_RE.test(req.start || '') ? req.start : '09:00';
-  var end = TIME_RE.test(req.end || '') ? req.end : start;
-  if (end <= start) end = Number(start.slice(0, 2)) >= 23 ? '23:59' : pad2(Number(start.slice(0, 2)) + 1) + start.slice(2);
-  return { start: { dateTime: date + 'T' + start + ':00', timeZone: tz }, end: { dateTime: date + 'T' + end + ':00', timeZone: tz } };
+  var startMin = minutesOfDay(start);
+  var endMin = TIME_RE.test(req.end || '') ? minutesOfDay(req.end) : startMin + 60;
+  // An end at or before the start runs past midnight ("11pm-1am") when that
+  // makes a plausible event (at most 8 h); otherwise it is a slip, so book an hour.
+  if (endMin <= startMin) endMin = endMin + 1440 - startMin <= 480 ? endMin + 1440 : startMin + 60;
+  var endDate = endMin >= 1440 ? addDaysYmd(date, 1) : date;
+  var end = pad2(Math.floor((endMin % 1440) / 60)) + ':' + pad2(endMin % 60);
+  return { start: { dateTime: date + 'T' + start + ':00', timeZone: tz }, end: { dateTime: endDate + 'T' + end + ':00', timeZone: tz } };
+}
+
+function minutesOfDay(hhmm) { return Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5)); }
+
+function addDaysYmd(ymd, n) {
+  var d = new Date(ymd + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
 }
 
 function calendarOf(id) {
@@ -661,7 +674,16 @@ function updateEvent(req) {
   if (typeof req.title === 'string') patch.summary = clip(req.title.trim() || 'Untitled', 250);
   if (typeof req.description === 'string') patch.description = clip(req.description, 4000);
   if (typeof req.location === 'string') patch.location = clip(req.location, 300);
-  if (req.date) { var t = eventTimes(req); patch.start = t.start; patch.end = t.end; }
+  if (req.date) {
+    // A patch merges into the stored event, so switching between all-day and
+    // timed must clear the other form explicitly; otherwise Google keeps the
+    // old `date` next to the new `dateTime` and rejects the start time.
+    var t = eventTimes(req);
+    patch.start = t.start; patch.end = t.end;
+    [patch.start, patch.end].forEach(function (p) {
+      if (p.dateTime) p.date = null; else { p.dateTime = null; p.timeZone = null; }
+    });
+  }
   var ev = Calendar.Events.patch(patch, req.calendarId, req.id);
   return { ok: true, event: eventOut(calendarOf(req.calendarId), ev, {}) };
 }

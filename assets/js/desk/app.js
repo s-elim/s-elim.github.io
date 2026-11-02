@@ -959,7 +959,7 @@
     var inp = $("dk-quick-text"), out = $("dk-quick-preview");
     if (!inp || !out) return;
     var v = inp.value.trim();
-    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 10-11:30 · length after a time: for 45m, 1h30 · #tags</span>' : ""; return; }
+    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 9-10pm, 21:00-22:00, 11pm-1am · length after a time: for 45m, 1h30 · #tags</span>' : ""; return; }
     var p = C.parseQuick(v), mode = S.ui.quickMode;
     var bits = [mode === "task" ? (tasksReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
     bits.push("“" + (p.title || v) + "”");

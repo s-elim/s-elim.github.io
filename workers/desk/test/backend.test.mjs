@@ -303,16 +303,33 @@ test('event writes build timed and all-day resources and edit or remove existing
   assert.equal(gas.call({ action: 'createEvent', title: 'No date' }).status, 400);
   const [[, cal, timed], [, , allDay]] = gas.calls.events.filter(c => c[0] === 'insert');
   assert.equal(cal, 'primary');
-  assert.deepEqual([timed.start.dateTime, timed.end.dateTime, timed.start.timeZone], ['2026-10-12T23:30:00', '2026-10-12T23:59:00', 'Asia/Seoul']);
+  // 23:30 -> 10:00 is too long to be an overnight event, so it is booked as an hour into the next day.
+  assert.deepEqual([timed.start.dateTime, timed.end.dateTime, timed.start.timeZone], ['2026-10-12T23:30:00', '2026-10-13T00:30:00', 'Asia/Seoul']);
   assert.deepEqual([allDay.start.date, allDay.end.date], ['2026-12-31', '2027-01-01']);
+
+  // Evening and overnight events.
+  gas.call({ action: 'createEvent', title: 'Evening', date: '2026-11-03', start: '21:00', end: '22:00', tz: 'Asia/Seoul' });
+  gas.call({ action: 'createEvent', title: 'Late call', date: '2026-12-31', start: '23:00', end: '01:00', tz: 'Asia/Seoul' });
+  gas.call({ action: 'createEvent', title: 'No end', date: '2026-11-03', start: '21:15', tz: 'Asia/Seoul' });
+  const inserts = gas.calls.events.filter(c => c[0] === 'insert').map(c => c[2]);
+  const byTitle = t => inserts.find(r => r.summary === t);
+  assert.deepEqual([byTitle('Evening').start.dateTime, byTitle('Evening').end.dateTime], ['2026-11-03T21:00:00', '2026-11-03T22:00:00']);
+  assert.deepEqual([byTitle('Late call').start.dateTime, byTitle('Late call').end.dateTime], ['2026-12-31T23:00:00', '2027-01-01T01:00:00']);
+  assert.deepEqual([byTitle('No end').start.dateTime, byTitle('No end').end.dateTime], ['2026-11-03T21:15:00', '2026-11-03T22:15:00']);
 
   const up = gas.call({ action: 'updateEvent', calendarId: 'me', id: 'e1', title: 'Lab meeting (moved)', date: '2026-10-13', start: '14:00', end: '15:00', tz: 'Asia/Seoul' });
   assert.equal(up.ok, true);
   const patch = gas.calls.events.find(c => c[0] === 'patch');
   assert.deepEqual([patch[1], patch[2], patch[3].summary, patch[3].start.dateTime], ['me', 'e1', 'Lab meeting (moved)', '2026-10-13T14:00:00']);
+  // Switching forms clears the other one, or Google keeps both and rejects the patch.
+  assert.equal(patch[3].start.date, null, 'a timed patch clears the all-day date');
+  assert.equal(patch[3].end.date, null);
+  gas.call({ action: 'updateEvent', calendarId: 'me', id: 'e1', date: '2026-10-14', allDay: true });
+  const toAllDay = gas.calls.events.filter(c => c[0] === 'patch').pop()[3];
+  assert.deepEqual([toAllDay.start.date, toAllDay.start.dateTime, toAllDay.start.timeZone], ['2026-10-14', null, null]);
   const titleOnly = gas.call({ action: 'updateEvent', calendarId: 'me', id: 'e1', title: 'Renamed' });
   assert.equal(titleOnly.ok, true);
-  assert.equal(gas.calls.events.filter(c => c[0] === 'patch')[1][3].start, undefined, 'a rename leaves the time alone');
+  assert.equal(gas.calls.events.filter(c => c[0] === 'patch').pop()[3].start, undefined, 'a rename leaves the time alone');
   assert.equal(gas.call({ action: 'deleteEvent', calendarId: 'me', id: 'e1' }).ok, true);
   assert.deepEqual(gas.calls.events.find(c => c[0] === 'remove'), ['remove', 'me', 'e1']);
   assert.equal(gas.call({ action: 'deleteEvent' }).status, 400);

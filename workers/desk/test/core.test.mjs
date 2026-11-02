@@ -20,6 +20,19 @@ test('parseQuick pulls dates, times, ranges and tags out of a sentence', () => {
   assert.equal(core.parseQuick('Sunday reset sun', NOW).date, '2026-10-18', 'a weekday always means the next one');
 });
 
+test('parseQuick reads evening ranges however they are typed', () => {
+  const at = t => { const r = core.parseQuick(t, NOW); return [r.title, r.start, r.end]; };
+  assert.deepEqual(at('Meeting 9-10pm'), ['Meeting', '21:00', '22:00'], 'the meridiem on the end applies to the start');
+  assert.deepEqual(at('Meeting 9-10 pm'), ['Meeting', '21:00', '22:00']);
+  assert.deepEqual(at('Meeting 9pm - 10pm'), ['Meeting', '21:00', '22:00']);
+  assert.deepEqual(at('Meeting 9 to 10pm'), ['Meeting', '21:00', '22:00']);
+  assert.deepEqual(at('Dinner 9:30-10:30pm'), ['Dinner', '21:30', '22:30']);
+  assert.deepEqual(at('Lunch 11-1pm'), ['Lunch', '11:00', '13:00'], 'flips the start when the shared meridiem would put it after the end');
+  assert.deepEqual(at('Call 11pm-1am'), ['Call', '23:00', '01:00'], 'past midnight is kept for the backend to book');
+  assert.deepEqual(at('Talk 9 pm'), ['Talk', '21:00', '']);
+  assert.deepEqual(at('Read pages 3 to 5'), ['Read pages 3 to 5', '', ''], 'plain numbers stay words');
+});
+
 test('parseQuick leaves ordinary words and bare numbers in the title', () => {
   const r = core.parseQuick('Read 3 papers on world models', NOW);
   assert.deepEqual([r.title, r.date, r.start], ['Read 3 papers on world models', '', '']);

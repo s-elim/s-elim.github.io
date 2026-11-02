@@ -128,10 +128,38 @@
     if (h > 23 || min > 59) return "";
     return pad2(h) + ":" + pad2(min);
   }
+  // A time range such as "9-10pm", "9:30-10:30pm", "11-1pm", "9pm-10pm" or
+  // "21:00-22:00". A meridiem written only on the end also applies to the
+  // start, flipped if that would put the start after the end ("11-1pm" is
+  // 11:00-13:00). An end before the start means the range runs past midnight
+  // ("11pm-1am"), which the backend books into the next day.
+  function parseTimeRange(tok) {
+    var m = /^(\d{1,2}(?::\d{2})?)(am|pm)?-(\d{1,2}(?::\d{2})?)(am|pm)?$/i.exec(tok);
+    if (!m) return null;
+    var sAp = (m[2] || "").toLowerCase(), eAp = (m[4] || "").toLowerCase();
+    var end = parseTime(m[3] + (eAp || (m[3].indexOf(":") === -1 ? sAp : "")));
+    if (!end) return null;
+    var start;
+    if (sAp) start = parseTime(m[1] + sAp);
+    else if (eAp) {
+      start = parseTime(m[1] + eAp);
+      if (start && start > end) start = parseTime(m[1] + (eAp === "pm" ? "am" : "pm"));
+    } else start = parseTime(m[1]);
+    return start ? { start: start, end: end } : null;
+  }
+  // Joins what people type with spaces back into single tokens before the
+  // word scan: "9 pm" -> "9pm", "9pm - 10pm" / "9 to 10pm" / "9–10pm" -> "9pm-10pm".
+  function tidyTimes(text) {
+    return String(text || "")
+      .replace(/\b(\d{1,2}(?::\d{2})?)\s+(am|pm)\b/gi, "$1$2")
+      .replace(/\b(\d{1,2}(?::\d{2})?(?:am|pm)?)\s*(?:-|–|—|to)\s*(\d{1,2}(?::\d{2})?(?:am|pm)?)(?=\s|$)/gi, function (all, a, b) {
+        return /[:apm]/i.test(a + b) ? a + "-" + b : all; // "3 to 5" alone stays words
+      });
+  }
   function parseQuick(text, now) {
     now = now || new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var words = String(text || "").trim().split(/\s+/).filter(Boolean);
+    var words = tidyTimes(text).trim().split(/\s+/).filter(Boolean);
     var out = { title: "", date: "", start: "", end: "", tags: [] };
     var keep = [], dur = null;
     for (var i = 0; i < words.length; i++) {
@@ -164,9 +192,8 @@
         }
       }
       if (!out.start) {
-        if ((m = /^([\d:apm]+)-([\d:apm]+)$/i.exec(w)) && parseTime(m[1]) && parseTime(m[2])) {
-          out.start = parseTime(m[1]); out.end = parseTime(m[2]); continue;
-        }
+        var range = parseTimeRange(w);
+        if (range) { out.start = range.start; out.end = range.end; continue; }
         var t = parseTime(w);
         if (t) { out.start = t; continue; }
       }
@@ -501,7 +528,7 @@
     byId: byId, pad2: pad2, ymd: ymd, parseYmd: parseYmd, addDays: addDays, startOfWeek: startOfWeek,
     dayDiff: dayDiff, isYmd: isYmd, countdown: countdown, urgency: urgency,
     minutesOf: minutesOf, addMinutes: addMinutes, fmtDuration: fmtDuration,
-    parseTime: parseTime, parseDuration: parseDuration, parseQuick: parseQuick,
+    parseTime: parseTime, parseTimeRange: parseTimeRange, parseDuration: parseDuration, parseQuick: parseQuick,
     freeSlots: freeSlots, nowNext: nowNext, planSlot: planSlot,
     conferenceDeadlines: conferenceDeadlines, collectDeadlines: collectDeadlines,
     normEvent: normEvent, eventOnDay: eventOnDay, unifyTasks: unifyTasks, bucketTasks: bucketTasks,
