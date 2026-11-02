@@ -32,12 +32,12 @@
 <article class="pub-card card reveal" data-type="{{ pub.type }}" data-year="{{ pub.year }}" data-author="{% if is_lead %}lead{% else %}coauthor{% endif %}" data-q1="{{ is_q1 }}" data-toprank="{{ is_toprank }}" data-search="{{ search | escape }}">
   <div class="pub-card__header">
     <div class="pub-card__tags">
-      {% if pub.venue_short and pub.type != "patent" %}<span class="pub-tag pub-tag--venue" title="Venue abbreviation">{{ pub.venue_short }}</span>{% endif %}
+      {% if pub.venue_short and pub.type != "patent" and pub.status != "In Preparation" %}<span class="pub-tag pub-tag--venue" title="Venue abbreviation">{{ pub.venue_short }}</span>{% endif %}
       {% if pub.impact %}<span class="pub-tag pub-tag--impact" title="Journal impact">{{ pub.impact }}</span>{% endif %}
       {% if pub.type == "journal" and pub.status == nil %}<span class="pub-tag pub-tag--published" title="Published in a peer-reviewed journal"><i class="fas fa-check-circle" aria-hidden="true"></i> Published</span>{% endif %}
       {% if is_accepted %}<span class="pub-tag pub-tag--accepted" title="Accepted for publication"><i class="fas fa-check-circle" aria-hidden="true"></i> Accepted</span>{% endif %}
       {% if is_granted %}<span class="pub-tag pub-tag--granted" title="Patent granted"><i class="fas fa-check-circle" aria-hidden="true"></i> Granted</span>{% endif %}
-      {% if pub.rank %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
+      {% if pub.rank and pub.status != "In Preparation" %}<span class="rank-box" title="CORE conference rank">Rank {{ pub.rank }}</span>{% endif %}
       {% if pub.custom_tag %}<span class="pub-tag pub-tag--custom" title="Affiliation/Publisher">{{ pub.custom_tag }}</span>{% endif %}
     </div>
     <h3 class="pub-card__title">

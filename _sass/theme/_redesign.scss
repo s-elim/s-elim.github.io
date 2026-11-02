@@ -1,0 +1,386 @@
+// ==========================================================================
+//  Clean academic redesign (Nov 2026)
+//  Imported after every component partial, so it re-declares the light
+//  tokens and restyles shared components without touching their source.
+//  /deadlines/ and /journals/ do NOT load this file: they use the frozen
+//  stylesheet in /assets/frozen/main.css (see _layouts/frozen.html), because
+//  the AVIL lab site shows them and they must not change.
+//  Keep this libsass-compatible (GitHub Pages): no @use, no Sass min()/max().
+// ==========================================================================
+
+:root {
+  --bg:            #ffffff;
+  --surface:       #ffffff;
+  --surface-2:     #f5f7fa;
+  --card-bg:       #ffffff;
+  --nav-bg:        rgba(255, 255, 255, 0.92);
+  --text:          #3a4352;
+  --text-strong:   #0b1324;
+  --muted:         #6b7383;
+  --border:        #e6e9ef;
+  --border-strong: #d3d9e2;
+
+  --accent:          #1f4fd1;
+  --accent-hover:    #173da6;
+  --accent-soft:     rgba(31, 79, 209, 0.08);
+  --focus-ring:      rgba(31, 79, 209, 0.40);
+
+  // Pills and chips: quiet at rest, accent tint on hover. No glow.
+  --tag-bg:           #eef2fb;
+  --tag-fg:           #23408f;
+  --tag-bd:           transparent;
+  --tag-bg-hover:     linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%);
+  --tag-fg-hover:     #1e3a8a;
+  --tag-bd-hover:     #3b82f6;
+  --tag-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
+
+  --chip-bg:           #f3f5f8;
+  --chip-fg:           #2b3443;
+  --chip-bd:           transparent;
+  --chip-bg-hover:     linear-gradient(135deg, #ffffff 15%, #bfdbfe 75%, #60a5fa 100%);
+  --chip-fg-hover:     #1e3a8a;
+  --chip-bd-hover:     #3b82f6;
+  --chip-shadow-hover: 0 4px 14px rgba(59, 130, 246, .30);
+  --hero-glow-fg:           #2b3443;
+  --hero-glow-bd:           transparent;
+  --hero-glow-bg:           #f3f5f8;
+  --hero-glow-shadow-base:  none;
+  --hero-glow-shadow-hover: none;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, .04);
+  --shadow-md: 0 4px 14px rgba(16, 24, 40, .06);
+  --shadow-lg: 0 14px 36px rgba(16, 24, 40, .10);
+
+  --font-serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --font-head:  "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+:root[data-theme="dark"] {
+  --card-bg: #16233a;
+  --tag-bg: rgba(86, 182, 242, .12);
+  --tag-fg: #cfe8fb;
+  --chip-bg: rgba(255, 255, 255, .06);
+  --chip-fg: #dbe4f0;
+  --hero-glow-bg: rgba(255, 255, 255, .06);
+  --hero-glow-fg: #dbe4f0;
+}
+
+// --- Global calm-down ------------------------------------------------------
+// Floating bubbles stay, but behind the content so they never cross text.
+.ambient-bubbles { z-index: -1; }
+.hero__chips .chip--glow,
+.chip--glow { animation: none !important; box-shadow: none !important; }
+
+body { background: var(--bg); color: var(--text); }
+
+// Homepage container: a readable measure instead of 1700px.
+.site-main > .container:not(.container--content) {
+  max-width: 1120px;
+}
+
+// Headings: serif for page-level titles, sans for everything inside cards.
+.section-title,
+.page-head__title,
+.hero__name {
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+}
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin: 3.25rem 0 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.section-title > i { display: none; }
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  margin-left: .75rem;
+}
+.page-head__title { font-weight: 700; }
+
+// Cards: flat, bordered, gentle hover.
+.card,
+.pub-card,
+.highlight-card,
+.award-card,
+.activity-card,
+.xp-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.card:hover,
+.pub-card:hover,
+.highlight-card:hover,
+.activity-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+// Buttons
+.btn { border-radius: 8px; font-weight: 600; box-shadow: none; }
+.btn--strong { background: var(--text-strong); border-color: var(--text-strong); color: #fff; }
+.btn--strong:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--ghost { background: var(--surface); border: 1px solid var(--border-strong); }
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+// Navigation
+.site-nav {
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+}
+.nav-title { font-family: var(--font-serif); font-weight: 700; letter-spacing: -0.01em; }
+
+// --- Hero ------------------------------------------------------------------
+.hero.hero--clean {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 2.75rem;
+  align-items: center;
+  padding: 3.5rem 0 1rem;
+  text-align: left;
+}
+.hero--clean .hero__avatar {
+  grid-column: 2;
+  grid-row: 1;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+  margin: 0;
+}
+.hero--clean .hero__intro { grid-column: 1; grid-row: 1; min-width: 0; }
+.hero--clean .hero__name {
+  font-size: 2.9rem;
+  line-height: 1.08;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0 0 .5rem;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+.hero--clean .hero__role {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 .15rem;
+}
+.hero--clean .hero__affil {
+  display: block;
+  font-size: .98rem;
+  color: var(--muted);
+  margin: 0 0 1.1rem;
+}
+.hero--clean .hero__affil a { color: inherit; text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 3px; }
+.hero--clean .hero__affil a:hover { color: var(--accent); }
+.hero--clean .hero__bio {
+  font-size: 1.04rem;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 62ch;
+  margin: 0 0 1.1rem;
+}
+.hero--clean .hero__bio strong { color: var(--text-strong); font-weight: 600; }
+.hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 1.1rem;
+  text-decoration: none;
+}
+.hero__status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, .16);
+}
+a.hero__status:hover { color: var(--accent); }
+.hero--clean .hero__chips { gap: .4rem; margin-bottom: 1.4rem; }
+.hero--clean .hero__chips .chip {
+  font-size: .82rem;
+  font-weight: 500;
+  padding: .32rem .7rem;
+  border-radius: 6px;
+}
+.hero--clean .hero__actions { gap: .55rem; }
+
+// --- Home sections -----------------------------------------------------------
+.home-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+// News
+.news-list { list-style: none; margin: 0; padding: 0; }
+.news-list__item {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 1rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+.news-list__item:last-child { border-bottom: 0; }
+.news-list__date {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding-top: .15rem;
+}
+.news-list__text { margin: 0; color: var(--text); }
+.news-more {
+  margin-top: .75rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+.news-more:hover { text-decoration: underline; }
+
+// Research highlights as a plain three-up grid
+.hl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.hl-grid .highlight-card { width: auto; min-width: 0; flex: none; margin: 0; }
+.hl-grid .highlight-card__media { background: var(--surface-2); }
+
+// Awards as a compact two-column list
+.award-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.award-list__item {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr auto;
+  gap: .6rem;
+  align-items: baseline;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.award-list__icon { color: #c08a12; font-size: .95rem; }
+.award-list__title { font-weight: 600; color: var(--text-strong); font-size: .96rem; line-height: 1.45; }
+.award-list__org { display: block; font-weight: 400; color: var(--muted); font-size: .86rem; margin-top: .1rem; }
+.award-list__date { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+
+// Resources (the links that used to crowd the hero)
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+}
+.res-card {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  padding: .95rem 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-strong);
+  text-decoration: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.res-card:hover {
+  background: var(--chip-bg-hover);
+  border-color: var(--chip-bd-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  color: var(--text-strong);
+}
+.res-card:hover .res-card__sub { color: var(--text); }
+.res-card__icon {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.res-card__body { min-width: 0; flex: 1; }
+.res-card__title { display: block; font-weight: 600; font-size: .95rem; }
+.res-card__sub { display: block; font-size: .82rem; color: var(--muted); margin-top: .1rem; }
+.res-card .hero__link-badge { margin-left: auto; }
+.res-card .hero__link-badge:empty { display: none; }
+
+// Featured publications: bigger, legible thumbnails
+#featured-pubs.pub-grid { gap: 1.25rem; }
+.pub-footnote { margin-top: 1rem; }
+
+// Footer: quieter
+.site-footer { background: var(--surface-2); border-top: 1px solid var(--border); }
+
+.hero--clean .hero__bio .news-more { margin: 0; font-size: inherit; line-height: inherit; vertical-align: baseline; }
+.hl-grid .tag { box-shadow: none; }
+.res-card__badge { display: inline-block; margin-top: .4rem; }
+
+// --- Responsive ----------------------------------------------------------------
+@media (max-width: $bp-lg) {
+  .hl-grid { grid-template-columns: 1fr 1fr; }
+  .res-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: $bp-md) {
+  .hero.hero--clean {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-top: 2rem;
+  }
+  .hero--clean .hero__avatar {
+    grid-column: 1;
+    grid-row: 1;
+    width: 112px;
+    height: 112px;
+  }
+  .hero--clean .hero__intro { grid-row: 2; }
+  .hero--clean .hero__name { font-size: 2.15rem; }
+  .home-two,
+  .award-list,
+  .hl-grid,
+  .res-grid { grid-template-columns: 1fr; }
+  .news-list__item { grid-template-columns: 1fr; gap: .15rem; }
+  .section-title { font-size: 1.4rem; margin-top: 2.5rem; }
+  .hero--clean .hero__avatar { justify-self: start; margin: 0; }
+  .hero--clean .hero__chips,
+  .hero--clean .hero__actions { justify-content: flex-start; }
+  .hero--clean .hero__status { align-items: flex-start; }
+  .hero--clean .hero__status::before { margin-top: .45rem; }
+  .res-card,
+  .btn { min-height: 40px; }
+}

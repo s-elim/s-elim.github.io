@@ -11,73 +11,27 @@ redirect_from:
 
 {% assign p = site.data.profiles %}
 
-<section class="hero">
-  <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="{{ p.name }}" width="200" height="200">
+<section class="hero hero--clean">
+  <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="Portrait of {{ p.name }}" width="200" height="200">
   <div class="hero__intro">
     <h1 class="hero__name">{{ p.name }}</h1>
-    <span class="hero__role">M.Sc. Student · 3D Computer Vision &amp; Physical Super Intelligence · Advanced Visual Intelligence Lab</span>
-    <p class="hero__availability"><a class="chip chip--open" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Research%20collaboration%20%2F%20PhD%20opportunity" target="_blank" rel="noopener" title="Email me about a collaboration or PhD opportunity"><i class="fas fa-handshake" aria-hidden="true"></i> Open to research collaborations &amp; PhD opportunities <span class="chip__cta"><i class="fas fa-envelope" aria-hidden="true"></i> Get in touch <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a></p>
+    <span class="hero__role">M.Sc. (Research) Student &middot; 3D Computer Vision &amp; Physical Super Intelligence</span>
+    <span class="hero__affil"><a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, Yeungnam University &middot; GKS Scholar</span>
+    <p class="hero__bio">I build embodied agents that perceive, reason and act in the physical world, working toward <strong>physical super intelligence</strong>. My work spans <strong>3D computer vision &amp; 6D pose estimation</strong>, <strong>vision-language-action (VLA) models</strong> and <strong>latent world models</strong> for robot manipulation, with first-author papers at <strong>BMVC&rsquo;26</strong> and in <strong>IEEE Access</strong>. <button type="button" class="news-more js-modal-open" data-modal-target="#about-modal">More about me &rarr;</button></p>
+    <a class="hero__status" href="mailto:{{ p.email }}?subject=Research%20collaboration%20%2F%20PhD%20opportunity">Open to research collaborations &amp; PhD positions</a>
     <div class="hero__chips">
-      <span class="chip chip--glow">World Models</span>
-      <span class="chip chip--long chip--glow">Joint Embedding Predictive Architecture (H/V-JEPA)</span>
-      <span class="chip">Causal Learning</span>
+      <span class="chip">World Models</span>
+      <span class="chip">Vision-Language-Action Models</span>
+      <span class="chip">JEPA (H/V-JEPA)</span>
+      <span class="chip">Agentic Robotics</span>
+      <span class="chip">6D Pose Estimation</span>
       <span class="chip">Spatial Intelligence</span>
-      <span class="chip">Self Modeling</span>
-      <span class="chip">VLAs</span>
-      <span class="chip chip--glow">Agentic Robotics</span>
-      <span class="chip">RL Fine-Tuning</span>
-      <span class="chip chip--long chip--glow">5D Embodied and Humanoid Super Intelligence</span>
+      <span class="chip">Causal Learning</span>
     </div>
-    {%- comment -%}
-      Quick links: quieter than the interest chips above and the buttons below,
-      so the three rows read as a hierarchy. Styling lives in _hero.scss - see
-      .hero__links. An arrow marks the entries that leave the page; the rest
-      open a modal in place.
-    {%- endcomment -%}
-    <div class="hero__links">
-      <button type="button" class="hero__link js-modal-open" data-modal-target="#about-modal">
-        <i class="fas fa-user-circle" aria-hidden="true"></i><span class="hero__link-text">About me</span>
-      </button>
-      <button type="button" class="hero__link js-modal-open" data-modal-target="#updates-modal">
-        <i class="fas fa-bullhorn" aria-hidden="true"></i><span class="hero__link-text">Updates</span>
-      </button>
-      <a class="hero__link hero__link--page" href="{{ '/research-ideas/' | relative_url }}" title="{{ site.data.research_ideas.ideas | size }} ideas and {{ site.data.link_library.links | size }} tracked links">
-        <i class="fas fa-lightbulb" aria-hidden="true"></i><span class="hero__link-text">Research Resources</span><span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.research_ideas.ideas | size }}</span></span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
-      </a>
-      <a class="hero__link hero__link--page" href="{{ '/deadlines/' | relative_url }}">
-        <i class="fas fa-stopwatch" aria-hidden="true"></i><span class="hero__link-text">Conference Deadlines</span><span class="hero__link-badge" id="deadlines-next-badge"></span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
-      </a>
-      <a class="hero__link hero__link--page" href="{{ '/phd-postdoc-openings/' | relative_url }}" title="PhD and Postdoc positions in Physical AI, World Models, and Robotics">
-        <i class="fas fa-graduation-cap" aria-hidden="true"></i><span class="hero__link-text">PhD &amp; Postdoc Openings</span>{% if site.data.openings.total_count > 0 %}<span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.openings.total_count }}</span></span>{% endif %}<i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
-      </a>
-      <a class="hero__link hero__link--page" href="{{ '/journals/' | relative_url }}">
-        <i class="fas fa-book-open" aria-hidden="true"></i><span class="hero__link-text">Top Q1 Journals</span><i class="fas fa-arrow-right hero__link-arrow" aria-hidden="true"></i>
-      </a>
-      <button type="button" class="hero__link js-modal-open" data-modal-target="#rankings-modal">
-        <i class="fas fa-trophy" aria-hidden="true"></i><span class="hero__link-text">University Rankings</span>
-      </button>
-    </div>
-    {%- comment -%}
-      The full tracker lives on /deadlines/. The home page carries only this
-      compact list of dated stages so the hero link can still show a live
-      countdown to the next call, read by initDeadlineBadge() in main.js.
-    {%- endcomment -%}
-    <script type="application/json" id="deadlines-mini">[
-    {%- assign dl_first = true -%}
-    {%- for c in site.data.conferences -%}
-      {%- for t in c.timeline -%}
-        {%- if t.date and t.date != 'tba' -%}
-          {%- unless dl_first %},{% endunless %}{% assign dl_first = false %}
-          {"n":{{ c.name | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }},"z":{{ t.tz | default: "" | jsonify }}}
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endfor -%}
-    ]</script>
     <div class="hero__actions">
       <a class="btn btn--strong" href="{{ p.cv_url }}" target="_blank" rel="noopener"><i class="fas fa-file-alt" aria-hidden="true"></i> View CV</a>
       <button class="btn btn--ghost js-copy-email" type="button" data-email="{{ p.email }}" title="Copy email address to clipboard"><i class="fas fa-copy" aria-hidden="true"></i> Copy Email</button>
-      <a class="btn btn--ghost" href="https://mail.google.com/mail/?view=cm&amp;fm=1&amp;to={{ p.email }}&amp;su=Contact%20via%20portfolio" target="_blank" rel="noopener"><i class="fas fa-envelope" aria-hidden="true"></i> Contact</a>
-      <a class="btn btn--ghost" href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a>
+      <a class="btn btn--ghost" href="{{ p.scholar }}" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Google Scholar</a>
       <span class="hero__social">
         <a href="https://github.com/{{ p.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
         <a href="https://www.linkedin.com/in/{{ p.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
@@ -200,51 +154,25 @@ redirect_from:
   </div>
 </div>
 
-{%- comment -%}
-  Research Highlights and Awards sit side by side on wide screens, each a
-  fixed-height column whose cards scroll vertically; below $bp-lg they stack
-  and the awards fall back to the horizontal carousel. The awards column is
-  sized by the highlights column, see .home-split__fill in _timeline.scss.
-{%- endcomment -%}
-<div class="home-split">
-<section class="home-split__col">
-<h2 class="section-title reveal"><i class="fas fa-lightbulb" aria-hidden="true"></i> Research Highlights</h2>
 
-{%- comment -%}
-  The three cards below are the content. initResearchMap() in assets/js/main.js
-  reads them and builds the 3D orbit map from what is already in the DOM, then
-  reveals the stage and hides the cards. With JavaScript off the stage and its
-  toolbar stay hidden and the cards render as they always did, so nothing here
-  depends on the map running.
-{%- endcomment -%}
-<div class="rmap reveal" id="rmap">
-  <div class="rmap__bar" id="rmap-bar" hidden>
-    <p class="rmap__hint"><i class="fas fa-hand-pointer" aria-hidden="true"></i> Drag to orbit, scroll to zoom, pick a node to read it.</p>
-    <div class="rmap__tools">
-      <div class="dl-segment" role="group" aria-label="Change how the highlights are shown">
-        <button type="button" class="dl-seg is-active" data-rview="map"><i class="fas fa-cube" aria-hidden="true"></i> 3D map</button>
-        <button type="button" class="dl-seg" data-rview="cards"><i class="fas fa-th-large" aria-hidden="true"></i> Cards</button>
-      </div>
-      <button type="button" class="im-btn" data-rmap="spin" aria-pressed="true" aria-label="Pause the rotation"><i class="fas fa-pause" aria-hidden="true"></i></button>
-      <button type="button" class="im-btn" data-rmap="reset" aria-label="Reset the view"><i class="fas fa-compress" aria-hidden="true"></i></button>
-    </div>
-  </div>
+<h2 class="section-title reveal">Selected Publications</h2>
+<div id="featured-pubs" class="pub-grid">
+{% assign featured = site.data.publications | where: "featured", true %}
+{% for pub in featured %}{% include pub-card.html pub=pub %}{% endfor %}
+</div>
+<p class="pub-footnote reveal"><span class="pub-legend text-muted">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
 
-  <div class="rmap__stage" id="rmap-stage" hidden>
-    <svg class="rmap__edges" id="rmap-edges" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="rmap__nodes" id="rmap-nodes"></div>
-    <aside class="rmap__panel" id="rmap-panel" hidden aria-live="polite">
-      <button type="button" class="rmap__close" aria-label="Close the highlight panel"><i class="fas fa-times" aria-hidden="true"></i></button>
-      <div class="rmap__panel-body"></div>
-    </aside>
-  </div>
+<h2 class="section-title reveal">News</h2>
+<ul class="news-list reveal">
+  {% for item in site.data.news limit: 5 %}
+  <li class="news-list__item"><span class="news-list__date">{{ item.date }}</span><p class="news-list__text">{{ item.text }}</p></li>
+  {% endfor %}
+</ul>
+<button type="button" class="news-more js-modal-open" data-modal-target="#updates-modal">All updates &rarr;</button>
 
-<div class="highlight-carousel-container" id="rmap-cards" data-carousel>
-  <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll research highlights backwards">
-    <i class="fas fa-chevron-left" aria-hidden="true"></i>
-  </button>
-  <div class="highlight-grid" data-carousel-track tabindex="0" role="group" aria-label="Research highlights, scroll or use the arrow keys">
-  <article class="highlight-card card reveal carousel-card" data-delay="1">
+<h2 class="section-title reveal">Research Highlights</h2>
+<div class="hl-grid reveal">
+  <article class="highlight-card card" data-delay="1">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical Super Intelligence &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence." aria-label="Zoom figure">
       {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical super intelligence and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -254,7 +182,7 @@ redirect_from:
       <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D Embodied and Humanoid Super Intelligence</span></div>
     </div>
   </article>
-  <article class="highlight-card card reveal carousel-card" data-delay="2">
+  <article class="highlight-card card" data-delay="2">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/c3g-vm6d-architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
       {% include figure-img.html src="/images/c3g-vm6d-architecture.webp" alt="6D pose estimation architecture" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -264,7 +192,7 @@ redirect_from:
       <div class="tag-list"><span class="tag">3D Vision</span><span class="tag">6D Pose</span><span class="tag">Spatial Intelligence</span></div>
     </div>
   </article>
-  <article class="highlight-card card reveal carousel-card" data-delay="3">
+  <article class="highlight-card card" data-delay="3">
     <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d-point-cloud-visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
       {% include figure-img.html src="/images/3d-point-cloud-visualization.webp" alt="Point cloud representation learning" sizes="(max-width: 700px) 92vw, 350px" %}
     </button>
@@ -274,59 +202,20 @@ redirect_from:
       <div class="tag-list"><span class="tag">Point Clouds</span><span class="tag">Representation Learning</span><span class="tag">Denoising</span></div>
     </div>
   </article>
-  </div>
-  <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll research highlights forwards">
-    <i class="fas fa-chevron-right" aria-hidden="true"></i>
-  </button>
-  <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
-</div>
-</div>
-</section>
-
-<section class="home-split__col">
-<h2 class="section-title reveal"><i class="fas fa-award" aria-hidden="true"></i> Awards &amp; Honors</h2>
-<div class="home-split__fill">
-<div class="awards-carousel-container reveal" data-carousel>
-  <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll awards backwards">
-    <i class="fas fa-chevron-left" aria-hidden="true"></i>
-  </button>
-  
-  <div class="awards-carousel" id="awards-carousel" data-carousel-track tabindex="0" role="group" aria-label="Awards, scroll or use the arrow keys">
-    {% for a in site.data.awards %}
-    <div class="award-card carousel-card">
-      <div class="xp-head">
-        <h3 class="award-card__title">
-          <i class="fas fa-medal award-card__medal" aria-hidden="true"></i> 
-          <span>{{ a.title }}</span>
-        </h3>
-        {% if a.date %}<span class="xp-pills"><span class="xp-pill">{{ a.date }}</span></span>{% endif %}
-      </div>
-      {% if a.org %}
-      <ul class="entry-meta">
-        <li><i class="fas fa-building" aria-hidden="true"></i> {{ a.org }}</li>
-      </ul>
-      {% endif %}
-      {% if a.points %}
-      <ul class="entry-points">
-        {% for pt in a.points %}
-        <li>{{ pt }}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </div>
-    {% endfor %}
-  </div>
-
-  <button class="carousel-btn next" type="button" data-carousel-next aria-label="Scroll awards forwards">
-    <i class="fas fa-chevron-right" aria-hidden="true"></i>
-  </button>
-  <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
-</div>
-</div>
-</section>
 </div>
 
-<h2 class="section-title reveal"><i class="fas fa-tasks" aria-hidden="true"></i> Professional Activities</h2>
+<h2 class="section-title reveal">Awards &amp; Honors</h2>
+<ul class="award-list reveal">
+  {% for a in site.data.awards %}
+  <li class="award-list__item">
+    <i class="fas fa-medal award-list__icon" aria-hidden="true"></i>
+    <span class="award-list__title">{{ a.title }}{% if a.org %}<span class="award-list__org">{{ a.org }}</span>{% endif %}</span>
+    {% if a.date %}<span class="award-list__date">{{ a.date }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+<h2 class="section-title reveal">Activities &amp; Training</h2>
 <div class="activities-carousel-container reveal" data-carousel>
   <button class="carousel-btn prev" type="button" data-carousel-prev aria-label="Scroll professional activities backwards">
     <i class="fas fa-chevron-left" aria-hidden="true"></i>
@@ -366,11 +255,43 @@ redirect_from:
   <div class="carousel-rail" aria-hidden="true"><span class="carousel-rail__bar" data-carousel-progress></span></div>
 </div>
 
-<h2 class="section-title reveal"><i class="fas fa-star" aria-hidden="true"></i> Featured Publications</h2>
-<div id="featured-pubs" class="pub-grid">
-{% assign featured = site.data.publications | where: "featured", true %}
-{% for pub in featured %}{% include pub-card.html pub=pub %}{% endfor %}
+<h2 class="section-title reveal">Resources</h2>
+<div class="res-grid reveal">
+  <a class="res-card" href="{{ '/deadlines/' | relative_url }}">
+    <span class="res-card__icon"><i class="fas fa-stopwatch" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">Conference Deadlines</span><span class="res-card__sub">Live countdowns, CORE A* &amp; A</span><span class="hero__link-badge res-card__badge" id="deadlines-next-badge"></span></span>
+  </a>
+  <a class="res-card" href="{{ '/journals/' | relative_url }}">
+    <span class="res-card__icon"><i class="fas fa-book-open" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">Top Q1 Journals</span><span class="res-card__sub">Where to submit</span></span>
+  </a>
+  <a class="res-card" href="{{ '/phd-postdoc-openings/' | relative_url }}" title="PhD and Postdoc positions in Physical AI, World Models, and Robotics">
+    <span class="res-card__icon"><i class="fas fa-graduation-cap" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">PhD &amp; Postdoc Openings</span><span class="res-card__sub">Physical AI, world models, robotics</span></span>
+    {% if site.data.openings.total_count > 0 %}<span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.openings.total_count }}</span></span>{% endif %}
+  </a>
+  <a class="res-card" href="{{ '/research-ideas/' | relative_url }}" title="{{ site.data.research_ideas.ideas | size }} ideas and {{ site.data.link_library.links | size }} tracked links">
+    <span class="res-card__icon"><i class="fas fa-lightbulb" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">Research Resources</span><span class="res-card__sub">Ideas and a curated link library</span></span>
+    <span class="hero__link-badge"><span class="idea-count-pill">{{ site.data.research_ideas.ideas | size }}</span></span>
+  </a>
+  <button type="button" class="res-card js-modal-open" data-modal-target="#rankings-modal">
+    <span class="res-card__icon"><i class="fas fa-trophy" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">University Rankings</span><span class="res-card__sub">THE &amp; QS top 400</span></span>
+  </button>
+  <button type="button" class="res-card js-modal-open" data-modal-target="#updates-modal">
+    <span class="res-card__icon"><i class="fas fa-bullhorn" aria-hidden="true"></i></span>
+    <span class="res-card__body"><span class="res-card__title">All Updates</span><span class="res-card__sub">Full news timeline</span></span>
+  </button>
 </div>
-<p class="pub-footnote reveal"><span class="pub-legend text-muted">* Corresponding author</span><a class="chip" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right" aria-hidden="true"></i></a></p>
-
-
+<script type="application/json" id="deadlines-mini">[
+    {%- assign dl_first = true -%}
+    {%- for c in site.data.conferences -%}
+      {%- for t in c.timeline -%}
+        {%- if t.date and t.date != 'tba' -%}
+          {%- unless dl_first %},{% endunless %}{% assign dl_first = false %}
+          {"n":{{ c.name | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }},"z":{{ t.tz | default: "" | jsonify }}}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+    ]</script>
