@@ -15,9 +15,9 @@ redirect_from:
   <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="Portrait of {{ p.name }}" width="200" height="200">
   <div class="hero__intro">
     <h1 class="hero__name">{{ p.name }}</h1>
-    <span class="hero__role">M.Sc. (Research) Student &middot; 3D Computer Vision &amp; Embodied AI</span>
+    <span class="hero__role">M.Sc. (Research) Student &middot; 3D Computer Vision &amp; Physical Super Intelligence</span>
     <span class="hero__affil"><a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, Yeungnam University &middot; GKS Scholar</span>
-    <p class="hero__bio">I build embodied agents that perceive, reason and act in the physical world. My work spans <strong>3D computer vision &amp; 6D pose estimation</strong>, <strong>vision-language-action (VLA) models</strong> and <strong>latent world models</strong> for robot manipulation, with first-author papers at <strong>BMVC&rsquo;26</strong> and in <strong>IEEE Access</strong>. <button type="button" class="news-more js-modal-open" data-modal-target="#about-modal">More about me &rarr;</button></p>
+    <p class="hero__bio">I build embodied agents that perceive, reason and act in the physical world, working toward <strong>physical super intelligence</strong>. My work spans <strong>3D computer vision &amp; 6D pose estimation</strong>, <strong>vision-language-action (VLA) models</strong> and <strong>latent world models</strong> for robot manipulation, with first-author papers at <strong>BMVC&rsquo;26</strong> and in <strong>IEEE Access</strong>. <button type="button" class="news-more js-modal-open" data-modal-target="#about-modal">More about me &rarr;</button></p>
     <a class="hero__status" href="mailto:{{ p.email }}?subject=Research%20collaboration%20%2F%20PhD%20opportunity">Open to research collaborations &amp; PhD positions</a>
     <div class="hero__chips">
       <span class="chip">World Models</span>
