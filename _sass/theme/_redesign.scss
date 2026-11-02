@@ -76,9 +76,33 @@
 
 body { background: var(--bg); color: var(--text); }
 
-// Homepage container: a readable measure instead of 1700px.
-.site-main > .container:not(.container--content) {
-  max-width: 1120px;
+// Full width on every page at any screen size (Selim, 2026-11-03): the
+// container has no cap and only its side padding grows with the window.
+// The frozen AVIL pages load assets/frozen/main.css, so they keep their width.
+:root { --container: none; }
+.container {
+  max-width: none;
+  padding-inline: clamp(1rem, 3vw, 4rem);
+}
+.layout-grid { grid-template-columns: clamp(240px, 15vw, 320px) minmax(0, 1fr); }
+@media (max-width: $bp-lg) {
+  .layout-grid { grid-template-columns: 1fr; }
+}
+// Filter toolbars never push a page wider than the screen: a long segmented
+// control scrolls sideways inside itself instead.
+.ideas__tools,
+.linklib__tools,
+.openings__tools {
+  min-width: 0;
+  max-width: 100%;
+  > .dl-segment {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+  > .dl-segment .dl-seg { flex-shrink: 0; }
+  > .dl-search { max-width: 100%; }
 }
 
 // Headings: serif for page-level titles, sans for everything inside cards.
