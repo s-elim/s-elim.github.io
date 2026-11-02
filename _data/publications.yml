@@ -58,7 +58,7 @@
     - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/Agentic-LWM/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/s-elim/Agentic-World-Model', kind: 'code' }
 
-- title: 'AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning'
+- title: 'PLUMB-Bench: A Physically Verified Benchmark for Precise, Generalizable Robot Manipulation'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
   venue_short: "RSS'27"
@@ -67,11 +67,12 @@
   flagship: 'robotics'
   rank: 'A*'
   status: 'In Preparation'
+  image: '/images/plumb-bench-teaser.webp'
   thumb: "RSS '27"
-  url: 'https://physical-super-intelligence.github.io/AFFORD_Bench/'
+  url: 'https://physical-super-intelligence.github.io/PLUMB_Bench/'
   links:
-    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/AFFORD_Bench/', kind: 'project' }
-    - { label: 'Code', url: 'https://github.com/s-elim/AFFORD_PRO_150_Robot_Dataset', kind: 'code' }
+    - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/PLUMB_Bench/', kind: 'project' }
+    - { label: 'Code', url: 'https://github.com/Physical-Super-Intelligence/PLUMB_Bench', kind: 'code' }
 
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
   authors: 'Md Selim Sarowar and Sungho Kim*'
