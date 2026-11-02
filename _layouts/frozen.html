@@ -1,0 +1,35 @@
+{% comment %}
+  FROZEN layout for /deadlines/ and /journals/ (the AVIL lab site shows them).
+  It loads a snapshot of the pre-redesign stylesheet and script
+  (/assets/frozen/main.css, /assets/frozen/main.js) and frozen copies of
+  head/nav/footer, so site-wide design changes cannot alter these pages.
+  Page data (_data/conferences.yml, _data/journals.yml) still updates normally.
+  To restyle them on purpose, rebuild once and copy _site/assets/css/main.css
+  over assets/frozen/main.css.
+{% endcomment %}<!doctype html>
+<html lang="{{ site.locale | slice: 0,2 | default: 'en' }}">
+  <head>
+    {% include frozen/head.html %}
+  </head>
+  <body>
+    <canvas id="ambient-bubbles" class="ambient-bubbles" aria-hidden="true"></canvas>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    {% include frozen/nav.html %}
+
+    {{ content }}
+
+    {% include frozen/footer.html %}
+
+    <script src="{{ '/assets/frozen/main.js' | relative_url }}?v={{ site.github.build_revision | default: site.time | slugify }}" defer></script>
+
+    {% comment %} Google Analytics (preserved from previous site) {% endcomment %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F5BGF1X25M"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-F5BGF1X25M');
+    </script>
+  </body>
+</html>
