@@ -604,7 +604,7 @@ ideas:
       - label: World Labs, Atlas
         url: https://www.worldlabs.ai/blog/atlas
     connects:
-      - AFFORD-Bench: An Affordance-Grounded Benchmark and Generalization Evaluation for Robot Learning
+      - 'PLUMB-Bench: A Physically Verified Benchmark for Precise, Generalizable Robot Manipulation'
       - Future Drive world models
     related:
       - v2d-pipeline-break
@@ -727,7 +727,7 @@ ideas:
         url: https://www.corl.org/
     connects:
       - AFFORD-X
-      - AFFORD-Bench
+      - PLUMB-Bench
       - Future Drive world models
     related:
       - generative-fidelity-vs-policy
