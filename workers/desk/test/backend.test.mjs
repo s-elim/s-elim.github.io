@@ -335,6 +335,35 @@ test('event writes build timed and all-day resources and edit or remove existing
   assert.equal(gas.call({ action: 'deleteEvent' }).status, 400);
 });
 
+test('repeating events get an RRULE built server-side from a structured repeat', () => {
+  const gas = ready({ google: GOOGLE });
+  const make = (title, repeat, date = '2026-11-09') =>
+    gas.call({ action: 'createEvent', title, date, start: '10:00', end: '11:00', tz: 'Asia/Seoul', repeat });
+  assert.equal(make('Lab', { freq: 'weekly' }).ok, true);
+  make('Standup', { freq: 'WEEKLY', byday: ['MO', 'TU', 'WE', 'TH', 'FR', 'MO', 'XX'] });
+  make('Sync', { freq: 'WEEKLY', interval: 2, byday: ['TH'] });
+  make('Report', { freq: 'MONTHLY', interval: 99 }, '2026-11-30');
+  make('Once', undefined);
+  const inserts = gas.calls.events.filter(c => c[0] === 'insert').map(c => c[2]);
+  const rule = t => { const r = inserts.find(x => x.summary === t).recurrence; return r && [...r]; };
+  // 2026-11-09 is a Monday, so a weekly repeat with no days falls on Monday.
+  assert.deepEqual(rule('Lab'), ['RRULE:FREQ=WEEKLY;BYDAY=MO']);
+  assert.deepEqual(rule('Standup'), ['RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'], 'duplicates and junk days are dropped');
+  assert.deepEqual(rule('Sync'), ['RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH']);
+  assert.deepEqual(rule('Report'), ['RRULE:FREQ=MONTHLY;INTERVAL=4'], 'interval is capped');
+  assert.equal(rule('Once'), undefined, 'no repeat means a single event');
+  // Anything else is refused rather than passed through to Google.
+  assert.equal(make('Bad', { freq: 'YEARLY' }).status, 400);
+  assert.equal(make('Raw', 'RRULE:FREQ=SECONDLY').status, 400);
+  assert.equal(inserts.length, gas.calls.events.filter(c => c[0] === 'insert').length, 'refused repeats insert nothing');
+  // The first occurrence lands on a listed weekday: weekdays booked on a Saturday start Monday.
+  const wk = gas.call({ action: 'createEvent', title: 'Weekend standup', date: '2026-11-14', start: '09:00', end: '09:15', tz: 'Asia/Seoul', repeat: { freq: 'WEEKLY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'] } });
+  assert.equal(wk.repeat, 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR', 'the applied rule is reported back');
+  const moved = gas.calls.events.filter(c => c[0] === 'insert').pop()[2];
+  assert.deepEqual([moved.start.dateTime, moved.end.dateTime], ['2026-11-16T09:00:00', '2026-11-16T09:15:00']);
+  assert.equal(gas.call({ action: 'createEvent', title: 'Single', date: '2026-11-14', allDay: true }).repeat, '');
+});
+
 test('task writes create, complete, reopen, rename and delete Google Tasks', () => {
   const gas = ready({ google: GOOGLE });
   const made = gas.call({ action: 'createTask', title: 'Email Prof. Kim', due: '2026-10-12' });

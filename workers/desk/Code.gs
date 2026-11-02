@@ -22,7 +22,7 @@
  * Install: see README.md beside this file (paste, Run setup, Deploy).
  */
 
-var VERSION = '2026.11.03-event-times';
+var VERSION = '2026.11.03-repeat2';
 var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
   importDocs: 500,
@@ -660,12 +660,51 @@ function calendarOf(id) {
   return c;
 }
 
+var RRULE_DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+// Builds the RRULE server-side from a small structured object so a browser
+// can never inject arbitrary recurrence text. Weekly with no days repeats on
+// the event's own weekday. Returns { rule, days } (days: the weekly BYDAY
+// list, else null), or null when there is no repeat.
+function repeatRule(rep, date) {
+  if (rep == null || rep === '') return null;
+  if (typeof rep !== 'object') throw fail(400, 'Unknown repeat.');
+  var freq = String(rep.freq || '').toUpperCase();
+  if (['DAILY', 'WEEKLY', 'MONTHLY'].indexOf(freq) === -1) throw fail(400, 'Unknown repeat.');
+  var interval = Math.max(1, Math.min(4, Math.floor(Number(rep.interval)) || 1));
+  var rule = 'RRULE:FREQ=' + freq + (interval > 1 ? ';INTERVAL=' + interval : '');
+  if (freq === 'WEEKLY') {
+    var days = (Array.isArray(rep.byday) ? rep.byday : []).map(String).filter(function (d, i, all) {
+      return RRULE_DAYS.indexOf(d) !== -1 && all.indexOf(d) === i;
+    });
+    if (!days.length) days = [RRULE_DAYS[new Date(date + 'T12:00:00Z').getUTCDay()]];
+    rule += ';BYDAY=' + days.join(',');
+    return { rule: rule, days: days };
+  }
+  return { rule: rule, days: null };
+}
+
+// The first occurrence must fall on a listed weekday, or Google adds a stray
+// occurrence on the start date (a "weekdays" event created on a Saturday).
+function firstOnDays(date, days) {
+  if (!days) return date;
+  var d = new Date(date + 'T12:00:00Z');
+  for (var n = 0; n < 7 && days.indexOf(RRULE_DAYS[d.getUTCDay()]) === -1; n++) d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 function createEvent(req) {
-  var t = eventTimes(req);
+  var t = eventTimes(req); // validates the date first
+  var rep = repeatRule(req.repeat, req.date);
+  if (rep && rep.days) {
+    var first = firstOnDays(req.date, rep.days);
+    if (first !== req.date) t = eventTimes(Object.assign({}, req, { date: first }));
+  }
   var resource = { summary: clip(req.title || 'Untitled', 250), description: clip(req.description, 4000), location: clip(req.location, 300), start: t.start, end: t.end };
+  if (rep) resource.recurrence = [rep.rule];
   var cal = req.calendarId || 'primary';
   var ev = Calendar.Events.insert(resource, cal);
-  return { ok: true, id: ev.id, link: ev.htmlLink || '', event: eventOut(calendarOf(cal), ev, {}) };
+  return { ok: true, id: ev.id, link: ev.htmlLink || '', repeat: rep ? rep.rule : '', event: eventOut(calendarOf(cal), ev, {}) };
 }
 
 function updateEvent(req) {

@@ -49,6 +49,11 @@
     { n: 5, name: "Red", swatch: "hsl(2 72% 78%)" }
   ];
   var WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  // Whole weekday names and their usual short forms only, so "monthly",
+  // "wedding" or "sunset" are not read as days.
+  var WEEKDAY_WORD = /^(sun(days?)?|mon(days?)?|tue(s(days?)?)?|wed(s|nesdays?)?|thu(r(s(days?)?)?)?|fri(days?)?|sat(urdays?)?)$/;
+  // "mondays", "tuesdays"...: a plural weekday on an event means every week.
+  var PLURAL_DAY = /^(sun|mon|tues|wednes|thurs|fri|satur)days$/;
   var MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
   function byId(list, id) {
@@ -128,6 +133,56 @@
     if (h > 23 || min > 59) return "";
     return pad2(h) + ":" + pad2(min);
   }
+  /* ---- repeating events --------------------------------------------------
+     A repeat is { freq: DAILY|WEEKLY|MONTHLY, interval: 1-4, byday: [MO..] };
+     the backend rebuilds the RRULE from these fields, never from free text. */
+  var RRULE_DAYS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+  function normRepeat(r) {
+    if (!r || ["DAILY", "WEEKLY", "MONTHLY"].indexOf(String(r.freq || "").toUpperCase()) === -1) return null;
+    var out = { freq: String(r.freq).toUpperCase(), interval: Math.max(1, Math.min(4, parseInt(r.interval, 10) || 1)), byday: [] };
+    if (out.freq === "WEEKLY") out.byday = (r.byday || []).map(String).filter(function (d) { return RRULE_DAYS.indexOf(d) !== -1; });
+    return out;
+  }
+  function rrule(r, dateYmd) {
+    r = normRepeat(r);
+    if (!r) return "";
+    var rule = "RRULE:FREQ=" + r.freq + (r.interval > 1 ? ";INTERVAL=" + r.interval : "");
+    if (r.freq === "WEEKLY") rule += ";BYDAY=" + (r.byday.length ? r.byday : [RRULE_DAYS[parseYmd(dateYmd).getDay()]]).join(",");
+    return rule;
+  }
+  // A weekly repeat's first occurrence has to fall on one of its days, or
+  // Google adds a stray one on the start date: move the date forward to the
+  // first listed weekday on or after it.
+  function alignToDays(dateYmd, byday) {
+    if (!isYmd(dateYmd) || !byday || !byday.length) return dateYmd;
+    var d = parseYmd(dateYmd);
+    for (var n = 0; n < 7 && byday.indexOf(RRULE_DAYS[d.getDay()]) === -1; n++) d = addDays(d, 1);
+    return ymd(d);
+  }
+  function repeatLabel(r, dateYmd) {
+    r = normRepeat(r);
+    if (!r) return "";
+    var names = { SU: "Sun", MO: "Mon", TU: "Tue", WE: "Wed", TH: "Thu", FR: "Fri", SA: "Sat" };
+    if (r.freq === "DAILY") return r.interval > 1 ? "every " + r.interval + " days" : "daily";
+    if (r.freq === "MONTHLY") return r.interval > 1 ? "every " + r.interval + " months" : "monthly";
+    var days = r.byday.length ? r.byday : (isYmd(dateYmd) ? [RRULE_DAYS[parseYmd(dateYmd).getDay()]] : []);
+    if (days.join() === "MO,TU,WE,TH,FR") return "weekdays";
+    return (r.interval > 1 ? "every " + r.interval + " weeks" : "weekly") + (days.length ? " on " + days.map(function (d) { return names[d]; }).join(", ") : "");
+  }
+
+  /* ---- reminders -----------------------------------------------------------
+     Timed events (normEvent objects) starting within `leadMin` minutes that
+     have not been announced yet; `sent` maps "eventId|startISO" to a time. */
+  function reminderKey(e) { return e.id + "|" + e.start.toISOString(); }
+  function dueReminders(events, now, leadMin, sent) {
+    var t = now.getTime(), lead = Math.max(1, leadMin || 10) * 60e3;
+    return (events || []).filter(function (e) {
+      if (!e || e.allDay || e.declined) return false;
+      var dt = e.start.getTime() - t;
+      return dt > -60e3 && dt <= lead && !(sent && sent[reminderKey(e)]);
+    }).map(function (e) { return { event: e, key: reminderKey(e), minutes: Math.max(0, Math.round((e.start.getTime() - t) / 60e3)) }; });
+  }
+
   // A time range such as "9-10pm", "9:30-10:30pm", "11-1pm", "9pm-10pm" or
   // "21:00-22:00". A meridiem written only on the end also applies to the
   // start, flipped if that would put the start after the end ("11-1pm" is
@@ -156,8 +211,11 @@
         return /[:apm]/i.test(a + b) ? a + "-" + b : all; // "3 to 5" alone stays words
       });
   }
-  function parseQuick(text, now) {
+  // opts.repeats: false leaves "daily", "every mon" etc. as words (tasks and
+  // ideas cannot repeat, so their titles keep them).
+  function parseQuick(text, now, opts) {
     now = now || new Date();
+    var wantRepeat = !(opts && opts.repeats === false);
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var words = tidyTimes(text).trim().split(/\s+/).filter(Boolean);
     var out = { title: "", date: "", start: "", end: "", tags: [] };
@@ -165,6 +223,10 @@
     for (var i = 0; i < words.length; i++) {
       var w = words[i], lw = w.toLowerCase(), m;
       if (/^#[\w-]{1,40}$/.test(w)) { out.tags.push(w.slice(1).toLowerCase()); continue; }
+      if (wantRepeat && !out.repeat && PLURAL_DAY.test(lw)) {
+        out.repeat = normRepeat({ freq: "WEEKLY", byday: [RRULE_DAYS[WEEKDAYS.indexOf(lw.slice(0, 3))]] });
+        continue;
+      }
       if (!out.date) {
         if (lw === "today" || lw === "tod") { out.date = ymd(today); continue; }
         if (lw === "tomorrow" || lw === "tmr" || lw === "tmrw") { out.date = ymd(addDays(today, 1)); continue; }
@@ -179,7 +241,7 @@
           out.date = ymd(md); continue;
         }
         var wd = WEEKDAYS.indexOf(lw.slice(0, 3));
-        if (wd !== -1 && /^(sun|mon|tue|wed|thu|fri|sat)[a-z]*$/.test(lw)) {
+        if (wd !== -1 && WEEKDAY_WORD.test(lw)) {
           var ahead = (wd - today.getDay() + 7) % 7 || 7;
           if ((words[i - 1] || "").toLowerCase() === "next" && keep[keep.length - 1] && keep[keep.length - 1].toLowerCase() === "next") keep.pop();
           out.date = ymd(addDays(today, ahead)); continue;
@@ -189,6 +251,28 @@
           var dm = new Date(today.getFullYear(), mo, +words[i + 1]);
           if (dm < today) dm = new Date(today.getFullYear() + 1, mo, +words[i + 1]);
           out.date = ymd(dm); i++; continue;
+        }
+      }
+      if (wantRepeat && !out.repeat) {
+        // "daily", "weekdays", "weekly", "biweekly", "monthly", "every day",
+        // "every week", "every 2 weeks", "every other week", "every mon".
+        var nextW = (words[i + 1] || "").toLowerCase(), afterW = (words[i + 2] || "").toLowerCase();
+        var simple = { daily: { freq: "DAILY" }, weekdays: { freq: "WEEKLY", byday: ["MO", "TU", "WE", "TH", "FR"] },
+          weekly: { freq: "WEEKLY" }, biweekly: { freq: "WEEKLY", interval: 2 }, fortnightly: { freq: "WEEKLY", interval: 2 }, monthly: { freq: "MONTHLY" } };
+        if (Object.prototype.hasOwnProperty.call(simple, lw)) { out.repeat = normRepeat(simple[lw]); continue; }
+        if (lw === "every") {
+          var dayIdx = WEEKDAYS.indexOf(nextW.slice(0, 3));
+          if (nextW === "day") { out.repeat = normRepeat({ freq: "DAILY" }); i++; continue; }
+          if (nextW === "weekday") { out.repeat = normRepeat(simple.weekdays); i++; continue; }
+          if (nextW === "week") { out.repeat = normRepeat({ freq: "WEEKLY" }); i++; continue; }
+          if (nextW === "month") { out.repeat = normRepeat({ freq: "MONTHLY" }); i++; continue; }
+          if ((nextW === "other" && afterW === "week") || (/^[2-4]$/.test(nextW) && /^weeks?$/.test(afterW))) {
+            out.repeat = normRepeat({ freq: "WEEKLY", interval: nextW === "other" ? 2 : +nextW }); i += 2; continue;
+          }
+          if (dayIdx !== -1 && WEEKDAY_WORD.test(nextW)) {
+            out.repeat = normRepeat({ freq: "WEEKLY", byday: [RRULE_DAYS[dayIdx]] });
+            i++; continue;
+          }
         }
       }
       if (!out.start) {
@@ -213,6 +297,9 @@
     if (dur && out.start && !out.end) out.end = addMinutes(out.start, dur.mins);
     else if (dur) keep.splice.apply(keep, [dur.at, 0].concat(dur.words));
     out.title = keep.join(" ");
+    // A repeat on set weekdays starts on the first of them from the typed date,
+    // or from today ("every mon" typed on a Monday starts today).
+    if (out.repeat && out.repeat.byday.length) out.date = alignToDays(out.date || ymd(today), out.repeat.byday);
     return out;
   }
 
@@ -336,7 +423,7 @@
       color: ev.color || "#3b82f6", calendar: ev.calendar || "", link: ev.link || "", video: ev.video || "",
       location: ev.location || "", description: ev.description || "", attendees: ev.attendees || 0,
       eventId: ev.id, calendarId: ev.calendarId || "", editable: !!ev.editable, recurring: !!ev.recurring,
-      series: ev.series || ""
+      series: ev.series || "", declined: !!ev.declined
     };
   }
   // Does an event touch a given local day? All-day ends are exclusive.
@@ -382,6 +469,7 @@
     var q = "action=TEMPLATE&text=" + encodeURIComponent(o.title || "") + "&dates=" + dates;
     if (o.details) q += "&details=" + encodeURIComponent(o.details.slice(0, 1500));
     if (o.tz) q += "&ctz=" + encodeURIComponent(o.tz);
+    if (o.repeat && rrule(o.repeat, o.date)) q += "&recur=" + encodeURIComponent(rrule(o.repeat, o.date));
     return "https://calendar.google.com/calendar/render?" + q;
   }
 
@@ -529,6 +617,7 @@
     dayDiff: dayDiff, isYmd: isYmd, countdown: countdown, urgency: urgency,
     minutesOf: minutesOf, addMinutes: addMinutes, fmtDuration: fmtDuration,
     parseTime: parseTime, parseTimeRange: parseTimeRange, parseDuration: parseDuration, parseQuick: parseQuick,
+    normRepeat: normRepeat, rrule: rrule, repeatLabel: repeatLabel, alignToDays: alignToDays, reminderKey: reminderKey, dueReminders: dueReminders,
     freeSlots: freeSlots, nowNext: nowNext, planSlot: planSlot,
     conferenceDeadlines: conferenceDeadlines, collectDeadlines: collectDeadlines,
     normEvent: normEvent, eventOnDay: eventOnDay, unifyTasks: unifyTasks, bucketTasks: bucketTasks,

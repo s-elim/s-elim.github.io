@@ -436,6 +436,17 @@
     }
   }
 
+  // The new-event form's repeat choices; labels follow the chosen date.
+  var REPEATS = [["", null], ["daily", { freq: "DAILY" }], ["weekdays", { freq: "WEEKLY", byday: ["MO", "TU", "WE", "TH", "FR"] }],
+    ["weekly", { freq: "WEEKLY" }], ["biweekly", { freq: "WEEKLY", interval: 2 }], ["monthly", { freq: "MONTHLY" }]];
+  function repeatOptions(dateYmd, chosen) {
+    return REPEATS.map(function (r) {
+      var label = r[1] ? C.repeatLabel(r[1], dateYmd) : "does not repeat";
+      return '<option value="' + r[0] + '"' + (r[0] === chosen ? " selected" : "") + '>' + label.charAt(0).toUpperCase() + label.slice(1) + '</option>';
+    }).join("");
+  }
+  function repeatOf(key) { return (REPEATS.filter(function (r) { return r[0] === key; })[0] || REPEATS[0])[1]; }
+
   // `title` prefills the form (Block time on a task). With more than one
   // writable calendar a picker appears; the last one used is remembered.
   function newEvent(date, start, end, title) {
@@ -450,22 +461,28 @@
       '<div class="dk-grid3"><label class="dk-field"><span>Date</span><input type="date" class="dk-input" id="dk-ne-date" value="' + date + '"></label>' +
       '<label class="dk-field"><span>Start</span><input type="time" class="dk-input" id="dk-ne-start" value="' + start + '"></label>' +
       '<label class="dk-field"><span>End</span><input type="time" class="dk-input" id="dk-ne-end" value="' + end + '"></label></div>' +
-      '<label class="dk-toggle"><input type="checkbox" id="dk-ne-allday"> All day</label>' + calField +
+      '<label class="dk-toggle"><input type="checkbox" id="dk-ne-allday"> All day</label>' +
+      '<label class="dk-field"><span>Repeat</span><select class="dk-input" id="dk-ne-repeat">' + repeatOptions(date, "") + '</select></label>' + calField +
       '<p class="dk-hint" id="dk-ne-msg" role="status">' + (g ? "" : "Google is not connected, so this opens Google Calendar with the event filled in.") + '</p>',
       '<button type="button" class="dk-btn dk-btn--primary" id="dk-ne-go">' + (g ? "Create" : "Open Google Calendar") + '</button>');
     var go = function () {
       var o = { title: document.getElementById("dk-ne-title").value.trim(), date: document.getElementById("dk-ne-date").value, start: document.getElementById("dk-ne-start").value,
-        end: document.getElementById("dk-ne-end").value, allDay: document.getElementById("dk-ne-allday").checked, tz: a.tz() };
+        end: document.getElementById("dk-ne-end").value, allDay: document.getElementById("dk-ne-allday").checked, tz: a.tz(),
+        repeat: repeatOf(document.getElementById("dk-ne-repeat").value) };
       if (!o.title) { document.getElementById("dk-ne-title").focus(); return; }
       if (!g) { window.open(C.gcalTemplateUrl(o), "_blank", "noopener"); d.close(); return; }
       var calSel = document.getElementById("dk-ne-cal"), calId = calSel ? calSel.value : "";
       if (calId) { S.ui.newCal = calId; a.saveUi(); }
       document.getElementById("dk-ne-go").disabled = true;
-      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz, calendarId: calId || undefined }).then(function () {
-        d.close(); a.toast("Event created."); cal.extra = null; a.refresh(true);
+      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz, repeat: o.repeat, calendarId: calId || undefined }).then(function (r) {
+        d.close(); a.toast(r.repeat ? "Repeating event created (" + C.repeatLabel(o.repeat, o.date) + ")." : "Event created."); cal.extra = null; a.resync();
       }, function (err) { document.getElementById("dk-ne-go").disabled = false; document.getElementById("dk-ne-msg").textContent = err.message; });
     };
     document.getElementById("dk-ne-go").addEventListener("click", go);
+    document.getElementById("dk-ne-date").addEventListener("change", function (ev) {
+      var sel = document.getElementById("dk-ne-repeat");
+      if (C.isYmd(ev.target.value)) sel.innerHTML = repeatOptions(ev.target.value, sel.value);
+    });
     document.getElementById("dk-ne-title").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); go(); } });
     setTimeout(function () { document.getElementById("dk-ne-title").focus(); }, 30);
   }

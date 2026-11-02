@@ -244,3 +244,75 @@ test('starFirst lifts starred items and keeps the order otherwise', () => {
   assert.deepEqual(core.starFirst(list, () => false), list);
   assert.deepEqual(core.starFirst(null, () => true), []);
 });
+
+test('parseQuick reads repeats and leaves look-alike words in the title', () => {
+  const rep = t => { const r = core.parseQuick(t, NOW); return [r.title, r.date, r.repeat && core.rrule(r.repeat, r.date)]; };
+  // NOW is Sunday 11 Oct; "every <weekday>" starts on the next one, today included.
+  assert.deepEqual(rep('Lab meeting every mon 10-11am'), ['Lab meeting', '2026-10-12', 'RRULE:FREQ=WEEKLY;BYDAY=MO']);
+  assert.deepEqual(rep('Reset every sunday'), ['Reset', '2026-10-11', 'RRULE:FREQ=WEEKLY;BYDAY=SU']);
+  assert.deepEqual(rep('Standup weekdays 9am'), ['Standup', '2026-10-12', 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'], 'typed on a Sunday, weekdays start Monday');
+  assert.deepEqual(rep('1:1 biweekly thu'), ['1:1', '2026-10-15', 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH']);
+  assert.deepEqual(rep('Sync every other week tomorrow'), ['Sync', '2026-10-12', 'RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO']);
+  assert.deepEqual(rep('Group sync every 3 weeks 2026-10-14'), ['Group sync', '2026-10-14', 'RRULE:FREQ=WEEKLY;INTERVAL=3;BYDAY=WE']);
+  assert.deepEqual(rep('Journal daily 22:00'), ['Journal', '', 'RRULE:FREQ=DAILY']);
+  assert.deepEqual(rep('Report monthly 2026-11-30'), ['Report', '2026-11-30', 'RRULE:FREQ=MONTHLY']);
+  assert.equal(core.parseQuick('Plain event tomorrow', NOW).repeat, undefined, 'no repeat key unless one is typed');
+  // Words that merely start like a weekday or month are not dates.
+  assert.equal(core.parseQuick('Wedding photos', NOW).date, '');
+  assert.equal(core.parseQuick('Sunset walk', NOW).date, '');
+  assert.equal(core.parseQuick('Thurs seminar', NOW).date, '2026-10-15');
+});
+
+test('normRepeat, rrule and repeatLabel only accept known frequencies and days', () => {
+  assert.equal(core.normRepeat({ freq: 'YEARLY' }), null);
+  assert.equal(core.normRepeat(null), null);
+  assert.deepEqual(core.normRepeat({ freq: 'weekly', interval: 9, byday: ['MO', 'ZZ'] }), { freq: 'WEEKLY', interval: 4, byday: ['MO'] });
+  assert.equal(core.rrule({ freq: 'nope' }, '2026-10-12'), '');
+  assert.equal(core.repeatLabel({ freq: 'DAILY' }), 'daily');
+  assert.equal(core.repeatLabel({ freq: 'WEEKLY' }, '2026-10-15'), 'weekly on Thu');
+  assert.equal(core.repeatLabel({ freq: 'WEEKLY', interval: 2, byday: ['TH'] }), 'every 2 weeks on Thu');
+  assert.equal(core.repeatLabel({ freq: 'WEEKLY', byday: ['MO', 'TU', 'WE', 'TH', 'FR'] }), 'weekdays');
+  assert.equal(core.repeatLabel({ freq: 'MONTHLY', interval: 3 }), 'every 3 months');
+});
+
+test('gcalTemplateUrl carries a repeat as a recur rule', () => {
+  const url = core.gcalTemplateUrl({ title: 'Lab', date: '2026-10-12', start: '10:00', end: '11:00', tz: 'Asia/Seoul', repeat: { freq: 'WEEKLY' } });
+  assert.match(url, /&recur=RRULE%3AFREQ%3DWEEKLY%3BBYDAY%3DMO/);
+  assert.doesNotMatch(core.gcalTemplateUrl({ title: 'Once', date: '2026-10-12', allDay: true }), /recur=/);
+});
+
+test('dueReminders announces each upcoming timed occurrence once', () => {
+  const at = (id, min, extra = {}) => ({ id, start: new Date(NOW.getTime() + min * 60e3), end: new Date(NOW.getTime() + (min + 60) * 60e3), allDay: false, ...extra });
+  const evs = [at('soon', 9), at('edge', 10), at('later', 11), at('started', -0.5), at('long-gone', -5), at('day', 5, { allDay: true })];
+  const due = core.dueReminders(evs, NOW, 10, {});
+  assert.deepEqual(due.map(d => d.event.id), ['soon', 'edge', 'started']);
+  assert.deepEqual(due.map(d => d.minutes), [9, 10, 0]);
+  const sent = { [due[0].key]: 1 };
+  assert.deepEqual(core.dueReminders(evs, NOW, 10, sent).map(d => d.event.id), ['edge', 'started'], 'already-sent keys are skipped');
+  // A repeating event's next occurrence has a new start, so it gets its own reminder.
+  const nextWeek = at('soon', 9 + 7 * 1440);
+  assert.notEqual(core.reminderKey(nextWeek), due[0].key);
+  assert.deepEqual(core.dueReminders(evs, NOW, 15, {}).map(d => d.event.id), ['soon', 'edge', 'later', 'started']);
+});
+
+test('repeat words stay in the title when repeats are switched off, and declined events stay quiet', () => {
+  const r = core.parseQuick('Water plants weekly fri', NOW, { repeats: false });
+  assert.deepEqual([r.title, r.date, r.repeat], ['Water plants weekly', '2026-10-16', undefined]);
+  const declined = core.normEvent({ id: 'x', calendarId: 'me', title: 'Skip', start: new Date(NOW.getTime() + 5 * 60e3).toISOString(), declined: true });
+  assert.equal(declined.declined, true);
+  assert.deepEqual(core.dueReminders([declined], NOW, 10, {}), []);
+});
+
+test('a weekly repeat starts on one of its days, wherever the date was typed', () => {
+  const rep = t => { const r = core.parseQuick(t, NOW); return [r.title, r.date, r.repeat && core.rrule(r.repeat, r.date)]; };
+  assert.deepEqual(rep('Lab fri every mon'), ['Lab', '2026-10-19', 'RRULE:FREQ=WEEKLY;BYDAY=MO'], 'a Friday date moves to the next Monday');
+  assert.deepEqual(rep('Seminar every wed 2026-11-18 3pm'), ['Seminar', '2026-11-18', 'RRULE:FREQ=WEEKLY;BYDAY=WE'], 'a date after the repeat is still read');
+  assert.deepEqual(rep('Lab every mon tomorrow'), ['Lab', '2026-10-12', 'RRULE:FREQ=WEEKLY;BYDAY=MO']);
+  assert.deepEqual(rep('Gym mondays 7pm'), ['Gym', '2026-10-12', 'RRULE:FREQ=WEEKLY;BYDAY=MO'], 'a plural weekday repeats');
+  assert.deepEqual(rep('Fix constructor bug tomorrow 3pm'), ['Fix constructor bug', '2026-10-12', undefined], 'object property names are just words');
+  const task = core.parseQuick('Team sync tuesdays', NOW, { repeats: false });
+  assert.deepEqual([task.title, task.date, task.repeat], ['Team sync', '2026-10-13', undefined], 'without repeats a plural weekday is a date again');
+  assert.equal(core.alignToDays('2026-11-14', ['MO', 'TU', 'WE', 'TH', 'FR']), '2026-11-16');
+  assert.equal(core.alignToDays('2026-11-16', ['MO']), '2026-11-16');
+  assert.equal(core.alignToDays('', ['MO']), '');
+});

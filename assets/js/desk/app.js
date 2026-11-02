@@ -12,7 +12,7 @@
   var host = document.getElementById("desk");
   if (!host || !C) return;
 
-  var KEY = { token: "desk.token", cache: "desk.cache.v1", ui: "desk.ui.v1" };
+  var KEY = { token: "desk.token", cache: "desk.cache.v1", ui: "desk.ui.v1", reminded: "desk.reminded.v1" };
   var VIEWS = [
     { id: "today", label: "Today", icon: "fa-sun" },
     { id: "board", label: "Board", icon: "fa-th-large" },
@@ -40,7 +40,9 @@
           notionHideDone: true, showDoneTasks: false,
           // Free time is counted inside these hours; "newCal" is the calendar
           // new events went to last.
-          workday: { start: "08:00", end: "22:00" }, newCal: "" }
+          workday: { start: "08:00", end: "22:00" }, newCal: "",
+          // Browser notifications before timed events, per device.
+          remind: { on: false, lead: 10 } }
   };
 
   /* ---- small helpers -------------------------------------------------- */
@@ -767,6 +769,53 @@
     if (el.outerHTML !== html) el.outerHTML = html;
   }
 
+  /* ---- Reminders ----------------------------------------------------------
+     A browser notification a few minutes before each timed event, while the
+     desk is open in a tab. Sent keys live in localStorage, so several tabs, a
+     reload or a refresh never announce the same occurrence twice. */
+  var REMIND_LEADS = [5, 10, 15, 30];
+  function canNotify() { return typeof Notification !== "undefined"; }
+  function checkReminders() {
+    var r = S.ui.remind;
+    if (!r || !r.on || !S.mounted || !googleReady() || !canNotify() || Notification.permission !== "granted") return;
+    var now = new Date(), sent = load(KEY.reminded) || {};
+    var due = C.dueReminders(events(), now, r.lead, sent);
+    if (!due.length) return;
+    due.forEach(function (d) {
+      var e = d.event;
+      var body = (d.minutes ? "In " + C.fmtDuration(d.minutes) + " · " : "Starting now · ") + hhmm(e.start) + "–" + hhmm(e.end) + (e.location ? " · " + e.location : "");
+      sent[d.key] = now.getTime();
+      try {
+        var n = new Notification(e.title, { body: body, tag: d.key });
+        n.onclick = function () { window.focus(); openEvent(e.id); n.close(); };
+      } catch (err) {
+        // Some phones only allow notifications from a service worker; the toast still tells you.
+        toast("⏰ " + e.title + " · " + body, { action: "Open", onAction: function () { openEvent(e.id); } });
+      }
+    });
+    // Forget keys older than two days so the list stays small.
+    Object.keys(sent).forEach(function (k) { if (now.getTime() - sent[k] > 2 * 864e5) delete sent[k]; });
+    store(KEY.reminded, sent);
+  }
+  function setReminders(on, lead) {
+    var apply = function () {
+      S.ui.remind = { on: on, lead: REMIND_LEADS.indexOf(lead) === -1 ? 10 : lead };
+      saveUi();
+      checkReminders();
+    };
+    if (!on) { apply(); return Promise.resolve(true); }
+    if (!canNotify()) { toast("This browser cannot show notifications.", { error: true }); return Promise.resolve(false); }
+    var ask = Notification.permission === "granted" ? Promise.resolve("granted") : Promise.resolve(Notification.requestPermission());
+    return ask.then(function (perm) {
+      if (perm !== "granted") {
+        toast("Notifications are blocked for this site. Allow them in the browser's site settings, then try again.", { error: true });
+        return false;
+      }
+      apply();
+      return true;
+    });
+  }
+
   function isoWeek(d) {
     var x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     var day = x.getUTCDay() || 7;
@@ -959,14 +1008,15 @@
     var inp = $("dk-quick-text"), out = $("dk-quick-preview");
     if (!inp || !out) return;
     var v = inp.value.trim();
-    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 9-10pm, 21:00-22:00, 11pm-1am · length after a time: for 45m, 1h30 · #tags</span>' : ""; return; }
-    var p = C.parseQuick(v), mode = S.ui.quickMode;
+    if (!v) { out.innerHTML = S.quickHelp ? '<span class="dk-quiet">Dates: today, tomorrow, fri, next mon, 3/2, nov 20, in 2w, 2026-11-16 · times: 14:00, 2pm, 9-10pm, 21:00-22:00, 11pm-1am · length after a time: for 45m, 1h30 · events repeat: daily, weekdays, weekly, every mon, every 2 weeks, monthly · #tags</span>' : ""; return; }
+    var mode = S.ui.quickMode, p = C.parseQuick(v, null, { repeats: mode === "event" });
     var bits = [mode === "task" ? (tasksReady() ? "Google task" : "Desk task") : mode === "event" ? (googleReady() ? "Calendar event" : "Opens Google Calendar") : "Board idea"];
     bits.push("“" + (p.title || v) + "”");
     if (p.date) bits.push(fmtDate(p.date, { weekday: "short", day: "numeric", month: "short" }));
     else if (mode === "event") bits.push("today");
     if (p.start) bits.push(p.start + (p.end ? "–" + p.end : ""));
     else if (mode === "event") bits.push("all day");
+    if (p.repeat) bits.push("repeats " + C.repeatLabel(p.repeat, p.date || today()));
     if (p.tags.length) bits.push(p.tags.map(function (x) { return "#" + x; }).join(" "));
     out.textContent = bits.join(" · ");
   }
@@ -975,7 +1025,7 @@
     var inp = $("dk-quick-text");
     var raw = inp.value.trim();
     if (!raw) { inp.focus(); return; }
-    var p = C.parseQuick(raw), mode = S.ui.quickMode, title = p.title || raw;
+    var mode = S.ui.quickMode, p = C.parseQuick(raw, null, { repeats: mode === "event" }), title = p.title || raw;
     var done = function (msg, opts) { inp.value = ""; paintQuickPreview(); toast(msg, opts); };
     if (mode === "idea") {
       var id = newId("e");
@@ -985,18 +1035,20 @@
       return;
     }
     if (mode === "event") {
-      var ev = { title: title, date: p.date || today(), start: p.start, end: p.end || "", allDay: !p.start, tz: tz() };
+      var ev = { title: title, date: p.date || today(), start: p.start, end: p.end || "", allDay: !p.start, tz: tz(), repeat: p.repeat || null };
       if (!googleReady()) {
         window.open(C.gcalTemplateUrl(ev), "_blank", "noopener");
         done("Opened Google Calendar with the event filled in.");
         return;
       }
-      call("createEvent", { title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz })
+      call("createEvent", { title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz, repeat: ev.repeat })
         .then(function (r) {
-          if (r.event) S.sync.google.events.push(r.event);
-          done("Event added to Google Calendar.");
+          // A repeating event comes back as the series, not an occurrence; the
+          // refresh below brings its occurrences instead.
+          if (r.event && !r.repeat) S.sync.google.events.push(r.event);
+          done(r.repeat ? "Repeating event added (" + C.repeatLabel(ev.repeat, ev.date) + ")." : "Event added to Google Calendar.");
           render();
-          refresh(true);
+          resync();
         }, function (err) { failed(err, "Google Calendar"); });
       return;
     }
@@ -1333,6 +1385,13 @@
         '<div class="dk-row dk-row--hours"><span>Count free time between</span>' +
           '<input type="time" class="dk-input" id="dk-wd-start" value="' + esc(S.ui.workday.start) + '" aria-label="Day starts"><span>and</span>' +
           '<input type="time" class="dk-input" id="dk-wd-end" value="' + esc(S.ui.workday.end) + '" aria-label="Day ends"></div></section>' +
+      '<section class="dk-set"><h4>Reminders on this device</h4><div class="dk-row">' +
+        '<label class="dk-toggle"><input type="checkbox" id="dk-remind"' + (S.ui.remind.on ? " checked" : "") + '> Notify me before events</label></div>' +
+        '<div class="dk-row dk-row--hours"><select class="dk-input" id="dk-remind-lead" aria-label="How long before">' + REMIND_LEADS.map(function (m) {
+          return '<option value="' + m + '"' + (m === S.ui.remind.lead ? " selected" : "") + '>' + m + ' min</option>';
+        }).join("") + '</select><span>before each timed event</span></div>' +
+        '<p class="dk-hint">Works while the desk is open in a tab (it can be in the background).' +
+        (S.ui.remind.on && canNotify() && Notification.permission !== "granted" ? ' <b>Notifications are blocked for this site right now.</b>' : "") + '</p></section>' +
       '<section class="dk-set"><h4>Your data</h4>' +
         (exportDue() ? '<p class="dk-due"><i class="fas fa-archive" aria-hidden="true"></i> ' + (S.prefs.data.lastExportAt ? "The last export is over three months old." : "No export yet.") + ' Export a copy to keep the desk independent of any one service.</p>' : "") +
         '<p class="dk-hint">Every save keeps a revision in the Sheet. Export a JSON copy each quarter' +
@@ -1363,6 +1422,15 @@
       saveUi();
       render();
     };
+    var remindBox = d.querySelector("#dk-remind"), remindLead = d.querySelector("#dk-remind-lead");
+    var setRemind = function () {
+      setReminders(remindBox.checked, +remindLead.value).then(function (ok) {
+        if (!ok) remindBox.checked = false;
+        else if (remindBox.checked) toast("Reminders on: " + remindLead.value + " min before each timed event.");
+      });
+    };
+    remindBox.addEventListener("change", setRemind);
+    remindLead.addEventListener("change", function () { if (remindBox.checked) setRemind(); else { S.ui.remind.lead = +remindLead.value; saveUi(); } });
     d.querySelector("#dk-wd-start").addEventListener("change", setHours);
     d.querySelector("#dk-wd-end").addEventListener("change", setHours);
     d.querySelector("#dk-export").addEventListener("click", exportJson);
@@ -1466,7 +1534,12 @@
       render();
     }, function () {});
     var ui = load(KEY.ui);
-    if (ui) { S.ui = Object.assign(S.ui, ui); S.ui.board = Object.assign({}, S.ui.board, ui.board || {}); }
+    if (ui) {
+      var remindDefault = S.ui.remind;
+      S.ui = Object.assign(S.ui, ui);
+      S.ui.board = Object.assign({}, S.ui.board, ui.board || {});
+      S.ui.remind = Object.assign({}, remindDefault, ui.remind || {});
+    }
     S.token = load(KEY.token) || "";
     if (!S.endpoint) {
       renderNotice("Research Desk", "The desk is not connected yet: its Google Apps Script URL is not set in the site's _config.yml (desk.endpoint).");
@@ -1493,7 +1566,7 @@
     setInterval(function () {
       if (document.visibilityState === "visible" && S.mounted) refresh(true);
     }, AUTO_REFRESH_MS);
-    setInterval(tickNowNext, 30e3);
+    setInterval(function () { tickNowNext(); checkReminders(); }, 30e3);
     document.addEventListener("visibilitychange", function () {
       if (document.visibilityState !== "visible" || !S.mounted || !S.sync) return;
       if (Date.now() - Date.parse(S.sync.at) > 2 * 60e3) refresh(true);
