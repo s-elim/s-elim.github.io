@@ -74,6 +74,17 @@
     - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/PLUMB_Bench/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-Super-Intelligence/PLUMB_Bench', kind: 'code' }
 
+- title: 'World Models, Vision-Language-Action Models, and Agentic Robotics: A Survey Toward Physical Superintelligence'
+  authors: 'Md Selim Sarowar and Sungho Kim*'
+  venue: 'Korea Robotics Society Annual Conference, South Korea'
+  venue_short: "KRoS'27"
+  year: 2027
+  type: 'conference'
+  flagship: 'robotics'
+  status: 'In Preparation'
+  image: '/images/wave-framework.webp'
+  thumb: "KRoS '27"
+
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
