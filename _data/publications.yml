@@ -81,9 +81,17 @@
   year: 2027
   type: 'conference'
   flagship: 'robotics'
-  status: 'In Preparation'
+  status: 'Under Review'
   image: '/images/wave-framework.webp'
   thumb: "KRoS '27"
+  bibtex: |
+    @inproceedings{Sarowar_2027_KRoS,
+    author    = {Md Selim Sarowar and Sungho Kim},
+    title     = {World Models, Vision-Language-Action Models, and Agentic Robotics: A Survey Toward Physical Superintelligence},
+    booktitle = {Korea Robotics Society Annual Conference (KRoS 2027)},
+    year      = {2027},
+    note      = {Under review}
+    }
 
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
   authors: 'Md Selim Sarowar and Sungho Kim*'
