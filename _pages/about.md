@@ -266,40 +266,6 @@ redirect_from:
 </ul>
 <button type="button" class="news-more js-modal-open" data-modal-target="#updates-modal">All updates &rarr;</button>
 
-<h2 class="section-title reveal">Research Highlights</h2>
-<div class="hl-grid reveal">
-  <article class="highlight-card card" data-delay="1">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/10-years-robotics-taxonomy.webp' | relative_url }}" data-caption="Physical Super Intelligence &amp; Agentic Robotics: Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence." aria-label="Zoom figure">
-      {% include figure-img.html src="/images/10-years-robotics-taxonomy.webp" alt="Ten-year robotics taxonomy for physical super intelligence and agentic robotics" sizes="(max-width: 700px) 92vw, 350px" %}
-    </button>
-    <div class="highlight-card__body">
-      <h3 class="highlight-card__title">Physical Super Intelligence &amp; Agentic Robotics</h3>
-      <p class="highlight-card__desc">Embodied agents that plan and act in latent world models for robot manipulation, bridging perception, reasoning, and control toward physical super intelligence.</p>
-      <div class="tag-list"><span class="tag">VLAs</span><span class="tag">World Models</span><span class="tag">Agentic Robotics</span><span class="tag">Causal Learning</span><span class="tag">Self Modeling</span><span class="tag">Human-Robot Interaction</span><span class="tag">5D Embodied and Humanoid Super Intelligence</span></div>
-    </div>
-  </article>
-  <article class="highlight-card card" data-delay="2">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/c3g-vm6d-architecture.webp' | relative_url }}" data-caption="3D Vision &amp; 6D Pose Estimation: Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding." aria-label="Zoom figure">
-      {% include figure-img.html src="/images/c3g-vm6d-architecture.webp" alt="6D pose estimation architecture" sizes="(max-width: 700px) 92vw, 350px" %}
-    </button>
-    <div class="highlight-card__body">
-      <h3 class="highlight-card__title">3D Vision &amp; 6D Pose Estimation</h3>
-      <p class="highlight-card__desc">Recovering full object pose and geometry from images and point clouds for spatially-grounded, robust scene understanding.</p>
-      <div class="tag-list"><span class="tag">3D Vision</span><span class="tag">6D Pose</span><span class="tag">Spatial Intelligence</span></div>
-    </div>
-  </article>
-  <article class="highlight-card card" data-delay="3">
-    <button class="highlight-card__media js-lightbox" type="button" data-full="{{ '/images/3d-point-cloud-visualization.webp' | relative_url }}" data-caption="Perception &amp; Representation Learning: Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks." aria-label="Zoom figure">
-      {% include figure-img.html src="/images/3d-point-cloud-visualization.webp" alt="Point cloud representation learning" sizes="(max-width: 700px) 92vw, 350px" %}
-    </button>
-    <div class="highlight-card__body">
-      <h3 class="highlight-card__title">Perception &amp; Representation Learning</h3>
-      <p class="highlight-card__desc">Learning transferable visual representations, from image denoising and autoencoders to point-cloud understanding for downstream 3D tasks.</p>
-      <div class="tag-list"><span class="tag">Point Clouds</span><span class="tag">Representation Learning</span><span class="tag">Denoising</span></div>
-    </div>
-  </article>
-</div>
-
 <h2 class="section-title reveal" id="awards">Awards &amp; Honors</h2>
 <ul class="award-list reveal">
   {% for a in site.data.awards %}
