@@ -1068,6 +1068,164 @@
     window.setInterval(render, 1000);
   }
 
+  /* ---- Home-page "At a glance" panel --------------------------------- */
+  // The live parts of the hero side panel: a Korea clock, the countdown to
+  // the next submission-type deadline (same #deadlines-mini payload and
+  // timezone rules as the tracker) and a one-off count-up on the stat
+  // numbers. Jekyll renders the panel in full first, so without JS it still
+  // reads: static day count, dashes for the clock units.
+  var GLANCE_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var GLANCE_DEADLINE_RE = /submission|abstract|registration|deadline/i;
+
+  function initGlance() {
+    var panel = document.getElementById("glance");
+    if (!panel) return;
+
+    initGlanceClock(panel.querySelector("[data-glance-clock]"));
+    initGlanceDeadline(panel.querySelector("[data-glance-deadline]"));
+    initGlanceCounts(panel);
+  }
+
+  function initGlanceClock(clock) {
+    if (!clock) return;
+    var fmt = null;
+    try {
+      fmt = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Seoul", hourCycle: "h23", hour: "2-digit", minute: "2-digit", second: "2-digit"
+      });
+    } catch (e) { fmt = null; }
+    function tick() {
+      var now = new Date();
+      var s;
+      if (fmt) {
+        s = fmt.format(now);
+      } else {
+        // No zone data: KST is a fixed UTC+9, so shift the viewer's clock.
+        var k = new Date(now.getTime() + (now.getTimezoneOffset() + 540) * 60000);
+        s = dlPad(k.getHours()) + ":" + dlPad(k.getMinutes()) + ":" + dlPad(k.getSeconds());
+      }
+      clock.textContent = s + " KST";
+    }
+    tick();
+    window.setInterval(tick, 1000);
+  }
+
+  function initGlanceDeadline(dl) {
+    var payload = document.getElementById("deadlines-mini");
+    if (!dl || !payload) return;
+
+    var raw;
+    try {
+      raw = JSON.parse(payload.textContent || payload.innerHTML || "[]");
+    } catch (e) {
+      return;
+    }
+    if (!raw || !raw.length) return;
+
+    // Only stages that are something to submit; reviews/notifications stay
+    // on /deadlines/. Read exactly as the tracker reads the same stages.
+    var stages = [];
+    raw.forEach(function (s) {
+      if (!GLANCE_DEADLINE_RE.test(s.l || "")) return;
+      var at = dlInstant(s.d, s.t, s.z);
+      if (at !== null) stages.push({ name: s.n || "", edition: s.e, label: s.l || "", date: s.d, time: s.t, tz: s.z || "", when: at });
+    });
+
+    var nameEl = dl.querySelector("[data-dl-name]");
+    var stageEl = dl.querySelector("[data-dl-stage]");
+    var meta = dl.querySelector(".glance-dl__meta");
+    var timer = dl.querySelector("[data-dl-timer]");
+    var empty = dl.querySelector("[data-dl-empty]");
+    var unit = {
+      d: dl.querySelector("[data-dl-d]"), h: dl.querySelector("[data-dl-h]"),
+      m: dl.querySelector("[data-dl-m]"), s: dl.querySelector("[data-dl-s]")
+    };
+    if (!nameEl || !stageEl || !timer || !unit.d || !unit.h || !unit.m || !unit.s) return;
+
+    function stageText(st) {
+      var d = String(st.date || "").split("-");
+      var when = d.length === 3 ? GLANCE_MONTHS[(parseInt(d[1], 10) || 1) - 1] + " " + parseInt(d[2], 10) + ", " + d[0] : st.date;
+      var t = st.time && st.time !== "23:59" ? " " + st.time : "";
+      return st.label + " · " + when + t + (st.tz ? " (" + st.tz + ")" : "");
+    }
+    function shortName(st) {
+      var ed = String(st.edition || "");
+      return st.name + (ed.length === 4 ? "’" + ed.slice(2) : "");
+    }
+
+    var current = null;
+    function render() {
+      var now = Date.now();
+      var next = null;
+      stages.forEach(function (s) {
+        if (s.when > now && (!next || s.when < next.when)) next = s;
+      });
+      if (!next) {
+        if (meta) meta.hidden = true;
+        timer.hidden = true;
+        if (empty) empty.hidden = false;
+        return;
+      }
+      if (next !== current) {
+        current = next;
+        nameEl.textContent = shortName(next);
+        stageEl.textContent = stageText(next);
+        if (meta) meta.hidden = false;
+        timer.hidden = false;
+        if (empty) empty.hidden = true;
+      }
+      var left = next.when - now;
+      var days = Math.floor(left / DL_MS_DAY);
+      var hours = Math.floor((left % DL_MS_DAY) / 3600000);
+      var mins = Math.floor((left % 3600000) / 60000);
+      var secs = Math.floor((left % 60000) / 1000);
+      unit.d.textContent = String(days);
+      unit.h.textContent = dlPad(hours);
+      unit.m.textContent = dlPad(mins);
+      unit.s.textContent = dlPad(secs);
+      dl.classList.toggle("is-urgent", left <= 7 * DL_MS_DAY);
+      // Screen readers get a once-a-minute summary rather than every tick.
+      if (secs === 0 || !timer.getAttribute("data-live")) {
+        timer.setAttribute("data-live", "1");
+        timer.setAttribute("aria-label", days + " days " + hours + " hours " + mins + " minutes until the " +
+          next.name + " " + next.label.toLowerCase());
+      }
+    }
+
+    render();
+    window.setInterval(render, 1000);
+  }
+
+  function initGlanceCounts(panel) {
+    var nums = Array.prototype.slice.call(panel.querySelectorAll("[data-count]"));
+    if (!nums.length || prefersReduced || !window.requestAnimationFrame) return;
+
+    var started = false;
+    function run() {
+      if (started) return;
+      started = true;
+      var targets = nums.map(function (el) { return parseInt(el.getAttribute("data-count"), 10) || 0; });
+      var t0 = null;
+      function frame(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 900);
+        var eased = 1 - Math.pow(1 - p, 3);
+        nums.forEach(function (el, i) { el.textContent = String(Math.round(targets[i] * eased)); });
+        if (p < 1) window.requestAnimationFrame(frame);
+      }
+      nums.forEach(function (el) { el.textContent = "0"; });
+      window.requestAnimationFrame(frame);
+    }
+
+    if (!("IntersectionObserver" in window)) { run(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { run(); io.disconnect(); }
+      });
+    }, { threshold: 0.25 });
+    io.observe(panel);
+  }
+
   /* ---- Q1 Journal Explorer ------------------------------------------- */
   // Cards are rendered by Jekyll from _data/journals.yml on /journals/; this
   // drives domain filtering, search, the minimum-impact-factor slider, sorting
@@ -3597,6 +3755,7 @@
     safe(initMessageForm);
     safe(initDeadlineTracker);
     safe(initDeadlineBadge);
+    safe(initGlance);
     safe(initJournalExplorer);
     safe(initResearchIdeas);
     safe(initLinkLibrary);
