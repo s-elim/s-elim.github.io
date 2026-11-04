@@ -172,10 +172,10 @@ body { background: var(--bg); color: var(--text); }
 // --- Hero ------------------------------------------------------------------
 // Above the laptop breakpoint the hero is two columns: the intro on the left
 // and the "At a glance" panel on the right, with the portrait straddling the
-// panel's top edge. The panel column grows with the window (31vw, capped),
+// panel's top edge. The panel column grows with the window (30vw, capped),
 // so a wide screen fills the band that used to sit empty beside the bio.
 .hero.hero--clean {
-  --glance-w: clamp(380px, 31vw, 600px);
+  --glance-w: clamp(380px, 30vw, 680px);
   --avatar: 152px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--glance-w);
@@ -487,7 +487,7 @@ a.glance-wip__title:hover { color: var(--accent); }
   font-size: 1.04rem;
   line-height: 1.7;
   color: var(--text);
-  max-width: 88ch;
+  max-width: none; // fill the intro column: Selim wants the bio lines to use the full width
   margin: 0 0 1.1rem;
 }
 .hero--clean .hero__bio strong { color: var(--text-strong); font-weight: 600; }
