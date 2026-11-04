@@ -1068,13 +1068,53 @@
     window.setInterval(render, 1000);
   }
 
-  /* ---- Home-page "At a glance" panel --------------------------------- */
-  // A one-off count-up on the stat numbers. Jekyll renders the final values,
-  // so without JS (or with reduced motion) the panel still reads correctly.
+  /* ---- Home-page "Research arc" panel -------------------------------- */
+  // Jekyll renders the whole arc and CSS owns the hover cards and the
+  // bottom-to-top entrance, so the panel is complete without JS. Here we
+  // (1) hold the entrance until the panel is actually in view, (2) run the
+  // one-off count-up on the footer numbers and (3) make a first tap on a
+  // touch screen peek at a paper's card before a second tap follows the link.
   function initGlance() {
     var panel = document.getElementById("glance");
     if (!panel) return;
+    initArcEntrance(panel);
     initGlanceCounts(panel);
+    initArcTouchPeek(panel);
+  }
+
+  function initArcEntrance(panel) {
+    if (prefersReduced || !("IntersectionObserver" in window)) return;
+    panel.classList.add("arc-wait");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { panel.classList.remove("arc-wait"); io.disconnect(); }
+      });
+    }, { threshold: 0.2 });
+    io.observe(panel);
+    // Never leave the arc paused if the observer misfires (e.g. print, bfcache).
+    window.addEventListener("load", function () {
+      window.setTimeout(function () { panel.classList.remove("arc-wait"); }, 4000);
+    });
+  }
+
+  function initArcTouchPeek(panel) {
+    if (!window.matchMedia || !window.matchMedia("(hover: none)").matches) return;
+    var open = null;
+    function close() {
+      if (open) { open.classList.remove("is-open"); open = null; }
+    }
+    panel.addEventListener("click", function (e) {
+      var node = e.target.closest ? e.target.closest(".arc-node") : null;
+      if (!node) { close(); return; }
+      if (node === open) return; // second tap: follow the link
+      e.preventDefault();
+      close();
+      node.classList.add("is-open");
+      open = node;
+    });
+    document.addEventListener("click", function (e) {
+      if (open && !panel.contains(e.target)) close();
+    });
   }
 
   function initGlanceCounts(panel) {

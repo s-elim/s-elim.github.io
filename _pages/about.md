@@ -11,9 +11,13 @@ redirect_from:
 
 {% assign p = site.data.profiles %}
 {%- comment -%}
-  "At a glance" panel: counts only, all from _data/*.yml. Publication counts
-  use the same rule as /publications/ (patents and in-preparation work
-  excluded); first-author also counts a shared first authorship (dagger).
+  "Research arc" hero panel, all from _data/*.yml. The footer counts use the
+  same rule as /publications/ (patents and in-preparation work excluded);
+  first-author also counts a shared first authorship (dagger). The arc itself
+  draws every non-patent paper with a `thrust` onto one of four layers:
+  published work as beads, "Under Review" / "In Preparation" work as labelled
+  chips (in-preparation papers are drawn even though they are not counted).
+  Within a layer: published beads first, then chips, each oldest to newest.
 {%- endcomment -%}
 {%- assign pubs = site.data.publications -%}
 {%- assign glance_pubs = 0 -%}
@@ -25,6 +29,14 @@ redirect_from:
     {%- if lead == "Md Selim Sarowar" or pub.authors contains "Md Selim Sarowar†" -%}{%- assign glance_first = glance_first | plus: 1 -%}{%- endif -%}
   {%- endif -%}
 {%- endfor -%}
+{%- assign arc_pubs = pubs | reverse -%}
+{%- assign arc_years = pubs | map: "year" | uniq | sort -%}
+{%- assign arc_year_min = arc_years | first -%}
+{%- assign arc_year_max = arc_years | last -%}
+{%- assign arc_passes = "published,progress" | split: "," -%}
+{%- comment -%} key|eyebrow|name, top layer first; "~" separates layers (";" would split "&amp;"). {%- endcomment -%}
+{%- assign arc_layers = "agency|Agency|Agentic Robotics~world-models|Imagination|World Models~vla|Action|Vision-Language-Action~perception|Perception|3D Vision & 6D Pose" | split: "~" -%}
+{%- assign arc_pubs_url = '/publications/' | relative_url -%}
 
 <section class="hero hero--clean">
   <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="Portrait of {{ p.name }}" width="152" height="152">
@@ -54,20 +66,73 @@ redirect_from:
       </span>
     </div>
   </div>
-  <aside class="glance" id="glance" aria-label="At a glance">
+  <aside class="glance glance--arc" id="glance" aria-label="Research arc">
     <div class="glance__head">
-      <span class="glance__eyebrow">At a glance</span>
+      <span class="glance__eyebrow">Research arc</span>
+      <span class="glance__hint" aria-hidden="true">{{ arc_year_min }} &rarr; {{ arc_year_max }}</span>
     </div>
-    <div class="glance__body">
-      <div class="glance__module glance__module--stats">
-        <div class="glance__row"><span class="glance__label">By the numbers</span></div>
-        <div class="glance-stats">
-          <a class="glance-stat" href="{{ '/publications/' | relative_url }}"><span class="glance-stat__num" data-count="{{ glance_pubs }}">{{ glance_pubs }}</span><span class="glance-stat__label">Publications</span></a>
-          <a class="glance-stat" href="{{ '/publications/' | relative_url }}"><span class="glance-stat__num" data-count="{{ glance_first }}">{{ glance_first }}</span><span class="glance-stat__label">First-author</span></a>
-          <a class="glance-stat" href="{{ '/experience/' | relative_url }}"><span class="glance-stat__num" data-count="{{ site.data.reviewing | size }}">{{ site.data.reviewing | size }}</span><span class="glance-stat__label">Venues reviewed</span></a>
-          <a class="glance-stat" href="#awards"><span class="glance-stat__num" data-count="{{ site.data.awards | size }}">{{ site.data.awards | size }}</span><span class="glance-stat__label">Awards</span></a>
-        </div>
+    <div class="arc">
+      <div class="arc__apex" style="--i:4">
+        <span class="arc__star" aria-hidden="true">&#9733;</span>
+        <span class="arc__apex-label">Physical Super Intelligence</span>
       </div>
+      <ol class="arc__layers" aria-label="Research layers, bottom to top">
+        {%- for layer in arc_layers -%}
+          {%- assign ldef = layer | split: "|" -%}
+          {%- assign lkey = ldef[0] -%}
+          {%- assign li = 3 | minus: forloop.index0 -%}
+          {%- assign j = 0 -%}
+        <li class="arc-layer arc-layer--{{ lkey }}" style="--i:{{ li }}">
+          <span class="arc-layer__tick" aria-hidden="true"></span>
+          <span class="arc-layer__label"><span class="arc-layer__key">{{ ldef[1] }}</span><span class="arc-layer__name">{{ ldef[2] | escape }}</span></span>
+          <span class="arc-layer__nodes">
+            {%- for pass in arc_passes -%}
+            {%- for yr in arc_years -%}
+            {%- for pub in arc_pubs -%}
+              {%- if pub.type == "patent" or pub.thrust != lkey or pub.year != yr -%}{%- continue -%}{%- endif -%}
+              {%- assign kind = "" -%}
+              {%- if pub.status == "Under Review" -%}{%- assign kind = "review" -%}
+              {%- elsif pub.status == "In Preparation" -%}{%- assign kind = "prep" -%}
+              {%- elsif pub.status == nil or pub.status == "" or pub.status == "Accepted" -%}{%- assign kind = "pub" -%}
+              {%- endif -%}
+              {%- if kind == "" -%}{%- continue -%}{%- endif -%}
+              {%- if pass == "published" and kind != "pub" -%}{%- continue -%}{%- endif -%}
+              {%- if pass == "progress" and kind == "pub" -%}{%- continue -%}{%- endif -%}
+              {%- if pub.short -%}{%- assign nm = pub.short -%}
+              {%- else -%}
+                {%- assign tparts = pub.title | split: ":" -%}
+                {%- if tparts.size > 1 -%}{%- assign nm = tparts[0] -%}{%- else -%}{%- assign nm = pub.title | truncate: 28 -%}{%- endif -%}
+              {%- endif -%}
+              {%- if pub.status and pub.status != "" -%}{%- assign st = pub.status -%}
+              {%- elsif pub.type == "preprint" -%}{%- assign st = "Preprint" -%}
+              {%- elsif pub.venue contains "(Accepted)" -%}{%- assign st = "Accepted" -%}
+              {%- else -%}{%- assign st = "Published" -%}{%- endif -%}
+              {%- assign vshort = pub.venue_short | default: pub.thumb -%}
+              {%- assign href = pub.url | default: arc_pubs_url -%}
+              {%- assign vclean = pub.venue | remove: " (Accepted)" -%}
+              {%- if pub.type == "preprint" -%}{%- assign vclean = "preprints.org" -%}{%- endif -%}
+            <a class="arc-node arc-node--{{ kind }}" href="{{ href }}"{% if pub.url %} target="_blank" rel="noopener"{% endif %} style="--j:{{ j }}" aria-label="{{ pub.title | escape }} &mdash; {{ vclean | escape }}, {{ pub.year }}, {{ st }}">
+              <span class="arc-node__dot" aria-hidden="true"></span>
+              {%- if kind != "pub" -%}<span class="arc-node__name">{{ nm | escape }}</span><span class="arc-node__meta">{% if vshort %}{{ vshort | escape }} &middot; {% endif %}{{ st }}</span>{%- endif -%}
+              <span class="arc-card" aria-hidden="true"><b class="arc-card__title">{{ pub.title | escape }}</b><span class="arc-card__meta">{{ vclean | escape }} &middot; {{ pub.year }} &middot; <span class="arc-card__state">{{ st }}</span></span></span>
+            </a>
+              {%- assign j = j | plus: 1 -%}
+            {%- endfor -%}
+            {%- endfor -%}
+            {%- endfor -%}
+          </span>
+        </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+    <div class="arc-foot">
+      <p class="arc-counts">
+        <a href="{{ arc_pubs_url }}"><b data-count="{{ glance_pubs }}">{{ glance_pubs }}</b> papers</a><span class="arc-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ arc_pubs_url }}"><b data-count="{{ glance_first }}">{{ glance_first }}</b> first-author</a><span class="arc-sep" aria-hidden="true">&middot;</span>
+        <a href="{{ '/experience/' | relative_url }}"><b data-count="{{ site.data.reviewing | size }}">{{ site.data.reviewing | size }}</b> venues reviewed</a><span class="arc-sep" aria-hidden="true">&middot;</span>
+        <a href="#awards"><b data-count="{{ site.data.awards | size }}">{{ site.data.awards | size }}</b> awards</a>
+      </p>
+      <p class="arc-legend" aria-label="Legend"><span><i class="arc-key arc-key--pub" aria-hidden="true"></i>Published</span><span><i class="arc-key arc-key--review" aria-hidden="true"></i>Under review</span><span><i class="arc-key arc-key--prep" aria-hidden="true"></i>In preparation</span></p>
     </div>
   </aside>
 </section>

@@ -1,0 +1,449 @@
+// ==========================================================================
+//  Research arc: the homepage hero panel (_pages/about.md, aside#glance).
+//  Four research layers climb a rail to the Physical Super Intelligence
+//  star; published papers are beads, in-flight papers are labelled chips.
+//  Hover / focus cards are pure CSS (anchored to the row, so they can never
+//  leave the panel); JS only holds the entrance until the panel is in view
+//  and adds tap-to-peek on touch screens (see initGlance in main.js).
+//  Keep this libsass-compatible (GitHub Pages): no @use, no Sass min()/max().
+// ==========================================================================
+
+:root {
+  --arc-perception:      #0891b2;
+  --arc-vla:             #2563eb;
+  --arc-wm:              #7c3aed;
+  --arc-agency:          #ea7317;
+  --arc-star:            #e0a106;
+  --arc-perception-soft: rgba(8, 145, 178, .11);
+  --arc-vla-soft:        rgba(37, 99, 235, .10);
+  --arc-wm-soft:         rgba(124, 58, 237, .10);
+  --arc-agency-soft:     rgba(234, 115, 23, .12);
+  --arc-star-glow:       rgba(224, 161, 6, .45);
+  --arc-on-hue:          #ffffff;
+  --arc-card-bg:         #ffffff;
+}
+:root[data-theme="dark"] {
+  --arc-perception:      #38bdf8;
+  --arc-vla:             #7fa9ff;
+  --arc-wm:              #b794ff;
+  --arc-agency:          #fb923c;
+  --arc-star:            #fbbf24;
+  --arc-perception-soft: rgba(56, 189, 248, .16);
+  --arc-vla-soft:        rgba(127, 169, 255, .16);
+  --arc-wm-soft:         rgba(183, 148, 255, .16);
+  --arc-agency-soft:     rgba(251, 146, 60, .18);
+  --arc-star-glow:       rgba(251, 191, 36, .55);
+  --arc-on-hue:          #0b1324;
+  --arc-card-bg:         #1f2f4b;
+}
+
+// --- Panel shell additions ----------------------------------------------------
+.glance--arc { padding-bottom: 1rem; }
+.glance__hint {
+  font-family: var(--font-head);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// --- Arc geometry ----------------------------------------------------------------
+.arc {
+  --rail: 1.15rem;              // width of the rail column (star / ticks)
+  --rail-x: calc(var(--rail) / 2 - 1px);
+  --label-w: minmax(9rem, 10.6rem);
+  position: relative;
+  margin-top: .15rem;
+}
+
+// Apex: the star sits on the rail axis; its segment runs down into AGENCY.
+.arc__apex {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: .85rem;
+  align-items: center;
+  padding: .1rem 0 .65rem;
+  --c: var(--arc-star);
+}
+.arc__apex::before {
+  content: "";
+  position: absolute;
+  left: var(--rail-x);
+  top: 50%;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--arc-star), var(--arc-agency));
+}
+.arc__star {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--rail);
+  height: var(--rail);
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--arc-star);
+  filter: drop-shadow(0 0 5px var(--arc-star-glow));
+}
+.arc__apex-label {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  color: var(--text-strong);
+}
+
+// Layers: rail | label | nodes. Each row paints its own rail segment so the
+// line stays continuous however tall the node area wraps.
+.arc__layers { list-style: none; margin: 0; padding: 0; }
+.arc-layer {
+  position: relative;
+  display: grid;
+  margin: 0;
+  grid-template-columns: var(--rail) var(--label-w) minmax(0, 1fr);
+  column-gap: .85rem;
+  align-items: center;
+  padding: .5rem 0;
+}
+.arc-layer--agency     { --c: var(--arc-agency);     --c-soft: var(--arc-agency-soft);     --c-prev: var(--arc-wm); }
+.arc-layer--world-models { --c: var(--arc-wm);       --c-soft: var(--arc-wm-soft);         --c-prev: var(--arc-vla); }
+.arc-layer--vla        { --c: var(--arc-vla);        --c-soft: var(--arc-vla-soft);        --c-prev: var(--arc-perception); }
+.arc-layer--perception { --c: var(--arc-perception); --c-soft: var(--arc-perception-soft); --c-prev: var(--arc-perception); }
+.arc-layer::before {
+  content: "";
+  position: absolute;
+  left: var(--rail-x);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to top, var(--c-prev), var(--c));
+}
+.arc-layer:last-child::before { bottom: 50%; border-radius: 0 0 2px 2px; }
+.arc-layer__tick {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--rail);
+  height: var(--rail);
+}
+.arc-layer__tick::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 2px solid var(--c);
+  box-shadow: 0 0 0 3px var(--c-soft);
+}
+.arc-layer__label { min-width: 0; line-height: 1.2; }
+.arc-layer__key {
+  display: block;
+  font-family: var(--font-head);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c);
+}
+.arc-layer__name {
+  display: block;
+  margin-top: .14rem;
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.arc-layer__nodes {
+  position: relative;               // hover cards are positioned against this cell
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .45rem;
+}
+
+// --- Nodes: beads (published) and chips (in flight) ----------------------------------
+// No transform / filter on .arc-node itself: it must not become the hover card's
+// containing block (the card is anchored to the row's node area instead).
+.arc-node {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--text-strong);
+  text-decoration: none;
+  border-radius: 999px;
+}
+.arc-node__dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 3px var(--c-soft);
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+}
+.arc-node--pub { padding: .3rem; margin: -.3rem -.05rem; }
+.arc-node--pub:hover .arc-node__dot,
+.arc-node--pub:focus-visible .arc-node__dot,
+.arc-node--pub.is-open .arc-node__dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 4px var(--c);
+}
+.arc-node--review,
+.arc-node--prep {
+  padding: .22rem .62rem .22rem .5rem;
+  border: 1px solid var(--c);
+  background: var(--c-soft);
+  font-family: var(--font-head);
+  font-size: .72rem;
+  line-height: 1.25;
+  transition: background .18s var(--ease), color .18s var(--ease), box-shadow .18s var(--ease);
+}
+.arc-node--review .arc-node__dot,
+.arc-node--prep .arc-node__dot {
+  width: 9px;
+  height: 9px;
+  background: transparent;
+  border: 2px solid var(--c);
+  box-shadow: none;
+}
+.arc-node--prep { border-style: dashed; }
+.arc-node--prep .arc-node__dot { border-style: dashed; border-width: 1.5px; }
+.arc-node--review,
+.arc-node--prep { max-width: 100%; }
+.arc-node__name { font-weight: 700; white-space: nowrap; }
+// The meta may wrap, so a chip can always shrink into its row instead of
+// pushing the panel (and the page) wider.
+.arc-node__meta { color: var(--muted); font-weight: 500; }
+.arc-node__name + .arc-node__meta { margin-left: -.05rem; }
+.arc-node--review:hover,
+.arc-node--prep:hover,
+.arc-node--review:focus-visible,
+.arc-node--prep:focus-visible,
+.arc-node--review.is-open,
+.arc-node--prep.is-open {
+  background: var(--c);
+  color: var(--arc-on-hue);
+  box-shadow: 0 4px 14px var(--c-soft);
+}
+.arc-node--review:hover .arc-node__meta,
+.arc-node--prep:hover .arc-node__meta,
+.arc-node--review:focus-visible .arc-node__meta,
+.arc-node--prep:focus-visible .arc-node__meta,
+.arc-node--review.is-open .arc-node__meta,
+.arc-node--prep.is-open .arc-node__meta { color: inherit; opacity: .85; }
+.arc-node--review:hover .arc-node__dot,
+.arc-node--prep:hover .arc-node__dot,
+.arc-node--review:focus-visible .arc-node__dot,
+.arc-node--prep:focus-visible .arc-node__dot,
+.arc-node--review.is-open .arc-node__dot,
+.arc-node--prep.is-open .arc-node__dot { border-color: var(--arc-on-hue); }
+.arc-node:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+// --- Hover / focus card (no JS needed) ------------------------------------------------
+// Anchored to the row's node area: left edge at the first node, never wider
+// than the area, so it cannot overflow the panel or the viewport. Rows open
+// downward; the bottom two open upward so they never spill below the panel.
+.arc-card {
+  position: absolute;
+  left: 0;
+  top: calc(100% + .5rem);
+  z-index: 30;
+  width: max-content;
+  max-width: 100%;
+  min-width: #{"min(100%, 15rem)"};
+  padding: .7rem .9rem .68rem;
+  border-radius: 12px;
+  background: var(--arc-card-bg);
+  border: 1px solid var(--border-strong);
+  border-top: 3px solid var(--c);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text);
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity .16s var(--ease), transform .16s var(--ease), visibility 0s linear .16s;
+  pointer-events: none;
+}
+.arc-layer:last-child .arc-card,
+.arc-layer:nth-last-child(2) .arc-card {
+  top: auto;
+  bottom: calc(100% + .5rem);
+  transform: translateY(-4px);
+}
+.arc-node:hover .arc-card,
+.arc-node:focus-visible .arc-card,
+.arc-node.is-open .arc-card {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+  pointer-events: auto;
+}
+.arc-card__title {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1.38;
+  color: var(--text-strong);
+}
+.arc-card__meta { display: block; margin-top: .3rem; color: var(--muted); }
+.arc-card__state { color: var(--c); font-weight: 600; }
+
+// --- Footer: counts + legend --------------------------------------------------------
+.arc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .4rem 1rem;
+  margin-top: .85rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--border);
+}
+.arc-counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .1rem .5rem;
+  margin: 0;
+  font-size: .78rem;
+  color: var(--muted);
+}
+.arc-counts a { color: inherit; text-decoration: none; white-space: nowrap; }
+.arc-counts b {
+  margin-right: .1em;
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+  transition: color .2s var(--ease);
+}
+.arc-counts a:hover b,
+.arc-counts a:focus-visible b { color: var(--accent); }
+.arc-sep { color: var(--border-strong); }
+.arc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .75rem;
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.arc-key {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: .32rem;
+  border-radius: 50%;
+  vertical-align: -1px;
+  background: var(--muted);
+}
+.arc-key--review { background: transparent; border: 2px solid var(--muted); }
+.arc-key--prep   { background: transparent; border: 1.5px dashed var(--muted); }
+
+// --- Entrance: the arc lights up bottom to top ------------------------------------------
+// Pure CSS so it also plays without JS. `backwards` fill (not `both`) so the
+// resting styles, including hover transforms, win once the animation ends.
+// JS adds .arc-wait until the panel scrolls into view, then removes it.
+@keyframes arc-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes arc-grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes arc-pop {
+  0%   { transform: scale(.3); opacity: 0; }
+  70%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes arc-twinkle {
+  from { filter: drop-shadow(0 0 3px var(--arc-star-glow)); }
+  to   { filter: drop-shadow(0 0 9px var(--arc-star-glow)); }
+}
+.arc-layer,
+.arc__apex {
+  animation: arc-rise .55s var(--ease) backwards;
+  animation-delay: calc(var(--i) * 120ms + 120ms);
+}
+.arc-layer::before,
+.arc__apex::before {
+  transform-origin: bottom;
+  animation: arc-grow .5s var(--ease) backwards;
+  animation-delay: calc(var(--i) * 120ms + 60ms);
+}
+.arc-node__dot {
+  animation: arc-pop .45s var(--ease) backwards;
+  animation-delay: calc(var(--i) * 120ms + 320ms + var(--j) * 40ms);
+}
+.arc__star {
+  animation: arc-pop .6s var(--ease) backwards, arc-twinkle 3.4s ease-in-out infinite alternate;
+  animation-delay: 760ms, 1.5s;
+}
+.arc-wait .arc-layer,
+.arc-wait .arc__apex,
+.arc-wait .arc-layer::before,
+.arc-wait .arc__apex::before,
+.arc-wait .arc-node__dot,
+.arc-wait .arc__star { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-layer,
+  .arc__apex,
+  .arc-layer::before,
+  .arc__apex::before,
+  .arc-node__dot,
+  .arc__star { animation: none !important; }
+  .arc-node__dot,
+  .arc-node--review,
+  .arc-node--prep,
+  .arc-card,
+  .arc-counts b { transition: none; }
+}
+
+// --- Responsive ----------------------------------------------------------------------------
+// Two label layouts. SIDE: rail | label | nodes (needs roughly 330px of node
+// room so chips do not wrap on every row). STACKED: label above the nodes.
+// The panel is clamp(380px, 34vw, 700px) wide above $bp-lg (_redesign.scss),
+// so SIDE only has that room from about 1760px up; between $bp-lg and there
+// the panel is 380-500px wide and the labels stack. Below $bp-lg the panel is
+// full width again (SIDE), and phones stack once more.
+$arc-side-min: 1760px;
+
+@media (min-width: #{$bp-lg + 1}) and (max-width: #{$arc-side-min - 1}), (max-width: $bp-sm) {
+  .arc-layer {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    row-gap: .38rem;
+    padding: .45rem 0;
+  }
+  .arc-layer__tick { grid-row: 1 / span 2; }
+  .arc-layer__label,
+  .arc-layer__nodes { grid-column: 2; }
+  .arc-layer__label { display: flex; align-items: baseline; gap: .55rem; }
+  .arc-layer__name { margin-top: 0; }
+}
+@media (max-width: $bp-lg) {
+  .arc { --label-w: minmax(9.5rem, 11rem); }
+}
+@media (max-width: $bp-sm) {
+  .arc-foot { gap: .5rem .75rem; }
+  .arc-legend { gap: .25rem .6rem; }
+}

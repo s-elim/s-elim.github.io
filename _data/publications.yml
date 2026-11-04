@@ -8,8 +8,14 @@
 # Rank box; add it for conferences/workshops.
 # `impact`: journal impact info (e.g. "SCIE-Q1, IF: 4.2") - rendered as a pill
 # beside the type box; also drives the SCIE-Q1 stat on the publications page.
+# `thrust`: research layer drawn on the homepage Research Arc panel:
+#   perception | vla | world-models | agency. Patents carry none and are not
+#   drawn; a non-patent entry without one is simply skipped there.
+# `short`: display name for the arc's in-progress chips. Optional: when
+#   absent the part of the title before ":" is used.
 
 - title: 'AGI: Agentic Intelligence and Latent Lookahead for Robust Manipulation'
+  thrust: 'agency'
   authors: 'Md Selim Sarowar, Taeung Kang, Soon Kwon, and Sungho Kim*'
   venue: 'IEEE International Conference on Robotics and Automation'
   venue_short: "ICRA'27"
@@ -26,6 +32,7 @@
     - { label: 'Code', url: 'https://github.com/s-elim/AGI', kind: 'code' }
 
 - title: 'AFFORD-X: Affordance-Grounded Agentic Policy for Zero-Shot Robot Manipulation'
+  thrust: 'agency'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'IEEE/CVF Conference on Computer Vision and Pattern Recognition'
   venue_short: "CVPR'27"
@@ -42,6 +49,7 @@
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
 - title: 'Agentic-WM: Grounding Multimodal Policies in Hierarchical Latent World Model'
+  thrust: 'world-models'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
   venue_short: "RSS'27"
@@ -59,6 +67,7 @@
     - { label: 'Code', url: 'https://github.com/s-elim/Agentic-World-Model', kind: 'code' }
 
 - title: 'PLUMB-Bench: A Physically Verified Benchmark for Precise, Generalizable Robot Manipulation'
+  thrust: 'vla'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
   venue_short: "RSS'27"
@@ -75,6 +84,8 @@
     - { label: 'Code', url: 'https://github.com/Physical-Super-Intelligence/PLUMB_Bench', kind: 'code' }
 
 - title: 'World Models, Vision-Language-Action Models, and Agentic Robotics: A Survey Toward Physical Superintelligence'
+  thrust: 'world-models'
+  short: 'WM/VLA Survey'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Korea Robotics Society Annual Conference, South Korea'
   venue_short: "KRoS'27"
@@ -94,6 +105,8 @@
     }
 
 - title: 'Planning on a Residual-Based Pose Posterior Closes the Grasp-Success Gap Between Estimated and Annotated Object Poses'
+  thrust: 'perception'
+  short: 'Pose Posterior'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
   impact: 'SCIE-Q1, IF: 4.9'
@@ -109,6 +122,7 @@
     - { label: 'Code', url: 'https://github.com/s-elim/msp-framework', kind: 'code' }
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
+  thrust: 'vla'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
   venue: 'British Machine Vision Conference (Accepted)'
   venue_short: "BMVC'26"
@@ -133,6 +147,7 @@
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=IYv9sR4feE', kind: 'link' }
 
 - title: 'HNH40K: A Robust Dataset and Risk-Weighted Learning for Hand Filtering'
+  thrust: 'perception'
   authors: 'Ashikuzzaman†, Md Selim Sarowar†, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
   venue: 'British Machine Vision Conference (Accepted)'
   venue_short: "BMVC'26"
@@ -156,6 +171,7 @@
     - { label: 'OpenReview', url: 'https://openreview.net/forum?id=C23KZbQblz', kind: 'link' }
 
 - title: 'What Matters: Datasets or Robust Frameworks in Modern Robot Learning?'
+  thrust: 'vla'
   authors: '*Md Selim Sarowar'
   venue: 'Artificial Intelligence Review'
   impact: 'SCIE-Q1/Top 3%, IF: 19'
@@ -180,6 +196,7 @@
     - { label: 'PDF', url: 'https://www.preprints.org/frontend/manuscript/3ee3d162809a7afeecdf18301ded8c7f/download_pub', kind: 'pdf' }
 
 - title: 'GST-VLA: Structured Gaussian Spatial Tokens for 3D Depth-Aware Vision-Language-Action Models'
+  thrust: 'vla'
   authors: 'Md Selim Sarowar, and Sungho Kim*'
   venue: 'International Conference on Machine Learning Workshop (Accepted)'
   venue_short: "ICMLw'26"
@@ -203,6 +220,7 @@
     - { label: 'PDF', url: 'https://openreview.net/pdf?id=J57nR3hyAd', kind: 'pdf' }
 
 - title: 'C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data'
+  thrust: 'perception'
   authors: 'Md Selim Sarowar, Manar Alnaasan and Sungho Kim*'
   venue: 'IEEE Access'
   impact: 'SCIE-Q1, IF: 4.2'
@@ -227,6 +245,7 @@
     - { label: 'PDF', url: 'https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11400555', kind: 'pdf' }
 
 - title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
+  thrust: 'perception'
   authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
   impact: 'SCIE-Q1, IF: 4.9'
@@ -250,12 +269,15 @@
     - { label: 'PDF', url: 'https://www.nature.com/articles/s41598-026-67440-x.pdf', kind: 'pdf' }
 
 - title: 'Vision-Language-Action and Vision Language Models for Robot Manipulation: A Comprehensive Review Towards Real-World Applications'
+  thrust: 'vla'
+  short: 'VLA Review'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Artificial Intelligence Review'
   impact: 'SCIE-Q1/Top 3%, IF: 19'
   year: 2026
   type: 'journal'
   status: 'Under Review'
+  thumb: 'AI Review'
   image: '/images/10-years-robotics-taxonomy.webp'
   url: 'https://www.preprints.org/manuscript/202606.0400'
   links:
@@ -272,6 +294,7 @@
   thumb: 'KR Patent'
 
 - title: 'Dependency-Aware Reliable Orchestration for Smart-IoT Control with Reasoning-Aligned LLMs'
+  thrust: 'agency'
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Md. Nuruzzaman and Md Ariful Islam Mozumder'
   venue: 'IEEE International Conference on Electrical, Computer and Energy Technologies (Accepted)'
   venue_short: "ICECET'26"
@@ -298,6 +321,7 @@
     - { label: 'Code', url: 'https://github.com/s-elim/Smart-IOT-AI-Agent', kind: 'code' }
 
 - title: 'VFM-VLM: Vision Foundation Model and Vision Language Model based Visual Comparison for 3D Pose Estimation'
+  thrust: 'perception'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
   venue_short: "IEIE'26"
@@ -312,6 +336,7 @@
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2512.07215', kind: 'pdf' }
 
 - title: 'VLM6D: VLM based 6DoF Pose Estimation based on RGB-D Images'
+  thrust: 'perception'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Institute of Electronics and Information Engineers Conference, South Korea'
   venue_short: "IEIE'25"
@@ -325,6 +350,7 @@
     - { label: 'PDF', url: 'https://arxiv.org/pdf/2511.00120', kind: 'pdf' }
 
 - title: 'Hand Gesture Recognition Systems: A Review of Methods, Datasets, and Emerging Trends'
+  thrust: 'perception'
   authors: '*Md Selim Sarowar, Nur E Jannatul Farjana, et al.'
   venue: 'International Journal of Computer Applications'
   year: 2025
@@ -357,6 +383,7 @@
   thumb: 'India Patent'
 
 - title: 'Improvement of Denoising in Images Using Generic Image Denoising Network (GID Net)'
+  thrust: 'perception'
   authors: 'Md Selim Sarowar, Kaustav Dutta, and *Rasmita Lenka'
   venue: 'IEEE 2nd International Conference on Applied Electromagnetics, Signal Processing and Communication (AESPC), Nov. 2021'
   venue_short: "AESPC'21"
