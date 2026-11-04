@@ -240,39 +240,9 @@ body { background: var(--bg); color: var(--text); }
   text-transform: uppercase;
   color: var(--muted);
 }
-.glance__live {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-  animation: glance-pulse 2.2s ease-in-out infinite;
-}
-@keyframes glance-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px var(--accent-soft); }
-  50%      { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); }
-}
-.glance__clock {
-  display: inline-flex;
-  align-items: baseline;
-  gap: .5rem;
-  min-width: 0;
-  font-family: var(--font-mono);
-  font-size: .8rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-strong);
-  white-space: nowrap;
-}
-.glance__clock small {
-  font-family: var(--font-body);
-  font-size: .76rem;
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .glance__body { display: grid; grid-template-columns: minmax(0, 1fr); }
 .glance__module { min-width: 0; padding: .9rem 0; border-top: 1px solid var(--border); }
-.glance__module--wip { padding-bottom: 0; }
+.glance__module { padding-bottom: 0; }
 .glance__row {
   display: flex;
   align-items: center;
@@ -288,96 +258,12 @@ body { background: var(--bg); color: var(--text); }
   text-transform: uppercase;
   color: var(--muted);
 }
-.glance__count { font-size: .76rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
-.glance__more {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  font-size: .78rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.glance__more i { font-size: .7em; transition: transform .2s var(--ease); }
-.glance__more:hover { text-decoration: underline; text-underline-offset: 3px; }
-.glance__more:hover i { transform: translateX(2px); }
-.glance__more--foot { margin-top: .55rem; }
-.glance__empty { margin: 0; font-size: .86rem; color: var(--muted); }
-
-.glance-pill {
-  display: inline-flex;
-  align-items: center;
-  max-width: 11rem;
-  padding: .14rem .55rem;
-  border-radius: 6px;
-  font-family: var(--font-head);
-  font-size: .74rem;
-  font-weight: 600;
-  line-height: 1.45;
-  background: var(--tag-bg);
-  color: var(--tag-fg);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.glance-pill--venue { font-size: .8rem; }
-
-// Deadline countdown (filled by initGlance; static days from Jekyll).
-.glance-dl__meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .35rem .6rem;
-  margin-bottom: .65rem;
-}
-.glance-dl__stage { font-size: .84rem; color: var(--text); }
-.glance-dl__timer {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: .45rem;
-}
-.glance-dl__unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: .55rem .25rem .45rem;
-  border-radius: 10px;
-  background: var(--surface-2);
-}
-.glance-dl__unit b {
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
-  min-width: 2ch;
-  text-align: center;
-}
-.glance-dl__unit small {
-  margin-top: .3rem;
-  font-family: var(--font-head);
-  font-size: .64rem;
-  font-weight: 600;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.glance-dl.is-urgent .glance-dl__unit b { color: #b91c1c; }
-:root[data-theme="dark"] .glance-dl.is-urgent .glance-dl__unit b { color: #fca5a5; }
 
 // Counts
 .glance-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: .5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem .75rem;
 }
 .glance-stat {
   display: block;
@@ -390,7 +276,7 @@ body { background: var(--bg); color: var(--text); }
 .glance-stat__num {
   display: block;
   font-family: var(--font-serif);
-  font-size: 1.75rem;
+  font-size: 2.4rem;
   font-weight: 700;
   line-height: 1.05;
   color: var(--text-strong);
@@ -407,48 +293,6 @@ body { background: var(--bg); color: var(--text); }
 a.glance-stat:hover .glance-stat__num,
 a.glance-stat:focus-visible .glance-stat__num { color: var(--accent); }
 
-// In progress
-.glance-wip { list-style: none; margin: 0; padding: 0; }
-.glance-wip__item {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: .55rem;
-  padding: .38rem 0;
-  border-top: 1px dashed var(--border);
-}
-.glance-wip__item:first-child { border-top: 0; padding-top: 0; }
-.glance-wip__title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: .88rem;
-  font-weight: 600;
-  color: var(--text-strong);
-  text-decoration: none;
-}
-a.glance-wip__title:hover { color: var(--accent); }
-.glance-wip__status {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  font-size: .72rem;
-  font-weight: 500;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.glance-wip__status::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: .9;
-}
-.glance-wip__status--under-review { color: #b45309; }
-:root[data-theme="dark"] .glance-wip__status--under-review { color: #fbbf24; }
-
 .glance a:focus-visible,
 .glance button:focus-visible {
   outline: 2px solid var(--focus-ring);
@@ -456,8 +300,7 @@ a.glance-wip__title:hover { color: var(--accent); }
   border-radius: 6px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .glance__live { animation: none; }
-  .glance__more i { transition: none; }
+  .glance-stat__num { transition: none; }
 }
 .hero--clean .hero__name {
   font-size: 2.9rem;
@@ -675,8 +518,7 @@ a.hero__status:hover { color: var(--accent); }
     margin-top: .5rem;
     padding-top: 1.2rem;
   }
-  .glance__body { grid-template-columns: 1fr 1fr; column-gap: 2rem; }
-  .glance__module--wip { grid-column: 1 / -1; }
+  .glance-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: $bp-md) {
   .hero--clean .hero__avatar {
@@ -685,10 +527,7 @@ a.hero__status:hover { color: var(--accent); }
   }
   .hero--clean .glance { padding: 1.05rem 1.1rem 1rem; }
   .glance__body { grid-template-columns: 1fr; column-gap: 0; }
-  .glance__clock small { display: none; }
-  .glance-dl__unit b { font-size: 1.3rem; }
-  .glance-stat__num { font-size: 1.5rem; }
-  .glance-pill { max-width: 7.5rem; }
+  .glance-stat__num { font-size: 1.7rem; }
   .hero--clean .hero__name { font-size: 2.15rem; }
 }
 @media (max-width: $bp-sm) {

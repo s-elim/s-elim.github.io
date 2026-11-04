@@ -11,44 +11,20 @@ redirect_from:
 
 {% assign p = site.data.profiles %}
 {%- comment -%}
-  "At a glance" panel. Every number and row comes from _data/*.yml:
-  - publication counts use the same rule as /publications/ (patents and
-    in-preparation work excluded); first-author also counts a shared first
-    authorship marked with a dagger;
-  - the next deadline is the earliest future submission-type stage in
-    _data/conferences.yml (label mentions submission / abstract /
-    registration / deadline). Jekyll renders it once at build time and
-    initGlance() in assets/js/main.js keeps it ticking from #deadlines-mini.
+  "At a glance" panel: counts only, all from _data/*.yml. Publication counts
+  use the same rule as /publications/ (patents and in-preparation work
+  excluded); first-author also counts a shared first authorship (dagger).
 {%- endcomment -%}
 {%- assign pubs = site.data.publications -%}
 {%- assign glance_pubs = 0 -%}
 {%- assign glance_first = 0 -%}
-{%- assign glance_wip = 0 -%}
 {%- for pub in pubs -%}
-  {%- if pub.status == "Under Review" or pub.status == "In Preparation" -%}{%- assign glance_wip = glance_wip | plus: 1 -%}{%- endif -%}
   {%- if pub.status != "In Preparation" and pub.type != "patent" -%}
     {%- assign glance_pubs = glance_pubs | plus: 1 -%}
     {%- assign lead = pub.authors | remove: "*" | strip | slice: 0, 16 -%}
     {%- if lead == "Md Selim Sarowar" or pub.authors contains "Md Selim Sarowar†" -%}{%- assign glance_first = glance_first | plus: 1 -%}{%- endif -%}
   {%- endif -%}
 {%- endfor -%}
-{%- assign today_n = site.time | date: "%Y%m%d" | plus: 0 -%}
-{%- assign nd_n = 99999999 -%}
-{%- for c in site.data.conferences -%}{%- for t in c.timeline -%}
-  {%- if t.date and t.date != 'tba' -%}
-    {%- assign lbl = t.label | downcase -%}
-    {%- if lbl contains "submission" or lbl contains "abstract" or lbl contains "registration" or lbl contains "deadline" -%}
-      {%- assign dn = t.date | date: "%Y%m%d" | plus: 0 -%}
-      {%- if dn >= today_n and dn < nd_n -%}{%- assign nd_n = dn -%}{%- assign nd_c = c -%}{%- assign nd_t = t -%}{%- endif -%}
-    {%- endif -%}
-  {%- endif -%}
-{%- endfor -%}{%- endfor -%}
-{%- if nd_t -%}
-  {%- assign nd_epoch = nd_t.date | date: "%s" | plus: 0 -%}
-  {%- assign now_epoch = site.time | date: "%s" | plus: 0 -%}
-  {%- assign nd_days = nd_epoch | minus: now_epoch | divided_by: 86400 -%}
-  {%- if nd_days < 0 -%}{%- assign nd_days = 0 -%}{%- endif -%}
-{%- endif -%}
 
 <section class="hero hero--clean">
   <img class="hero__avatar" src="{{ '/images/' | append: p.avatar | relative_url }}" alt="Portrait of {{ p.name }}" width="152" height="152">
@@ -80,28 +56,9 @@ redirect_from:
   </div>
   <aside class="glance" id="glance" aria-label="At a glance">
     <div class="glance__head">
-      <span class="glance__eyebrow"><span class="glance__live" aria-hidden="true"></span>At a glance</span>
-      <span class="glance__clock"><small>{{ p.location }}</small><span data-glance-clock title="Current time in Korea (KST, UTC+9)">KST &middot; UTC+9</span></span>
+      <span class="glance__eyebrow">At a glance</span>
     </div>
     <div class="glance__body">
-      <div class="glance__module glance-dl" data-glance-deadline>
-        <div class="glance__row">
-          <span class="glance__label">Next deadline</span>
-          <a class="glance__more" href="{{ '/deadlines/' | relative_url }}">All deadlines <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-        </div>
-        <div class="glance-dl__meta"{% unless nd_t %} hidden{% endunless %}>
-          <span class="glance-pill glance-pill--venue" data-dl-name>{% if nd_t %}{{ nd_c.name }}{% if nd_c.edition %}&rsquo;{{ nd_c.edition | slice: 2, 2 }}{% endif %}{% endif %}</span>
-          <span class="glance-dl__stage" data-dl-stage>{% if nd_t %}{{ nd_t.label }} &middot; {{ nd_t.date | date: "%b %-d, %Y" }}{% if nd_t.tz %} ({{ nd_t.tz }}){% endif %}{% endif %}</span>
-        </div>
-        <div class="glance-dl__timer" data-dl-timer role="timer" aria-atomic="true"{% unless nd_t %} hidden{% endunless %}{% if nd_t %} aria-label="About {{ nd_days }} days until the {{ nd_c.name }} {{ nd_t.label | downcase }}"{% endif %}>
-          <span class="glance-dl__unit"><b data-dl-d>{% if nd_t %}{{ nd_days }}{% else %}0{% endif %}</b><small>days</small></span>
-          <span class="glance-dl__unit"><b data-dl-h>&ndash;</b><small>hrs</small></span>
-          <span class="glance-dl__unit"><b data-dl-m>&ndash;</b><small>min</small></span>
-          <span class="glance-dl__unit"><b data-dl-s>&ndash;</b><small>sec</small></span>
-        </div>
-        <p class="glance__empty" data-dl-empty{% if nd_t %} hidden{% endif %}>No upcoming deadlines listed.</p>
-      </div>
-
       <div class="glance__module glance__module--stats">
         <div class="glance__row"><span class="glance__label">By the numbers</span></div>
         <div class="glance-stats">
@@ -110,29 +67,6 @@ redirect_from:
           <a class="glance-stat" href="{{ '/experience/' | relative_url }}"><span class="glance-stat__num" data-count="{{ site.data.reviewing | size }}">{{ site.data.reviewing | size }}</span><span class="glance-stat__label">Venues reviewed</span></a>
           <a class="glance-stat" href="#awards"><span class="glance-stat__num" data-count="{{ site.data.awards | size }}">{{ site.data.awards | size }}</span><span class="glance-stat__label">Awards</span></a>
         </div>
-      </div>
-
-      <div class="glance__module glance__module--wip">
-        <div class="glance__row">
-          <span class="glance__label">In progress</span>
-          <span class="glance__count">{{ glance_wip }} paper{% if glance_wip != 1 %}s{% endif %}</span>
-        </div>
-        <ul class="glance-wip">
-          {%- assign wip_shown = 0 -%}
-          {%- for pub in pubs -%}
-            {%- if pub.status == "Under Review" or pub.status == "In Preparation" -%}
-              {%- if wip_shown < 5 -%}
-                {%- assign wip_shown = wip_shown | plus: 1 -%}
-          <li class="glance-wip__item">
-            {%- if pub.url %}<a class="glance-wip__title" href="{{ pub.url }}" target="_blank" rel="noopener" title="{{ pub.title | escape }}">{{ pub.title | split: ":" | first }}</a>{% else %}<a class="glance-wip__title" href="{{ '/publications/' | relative_url }}" title="{{ pub.title | escape }}">{{ pub.title | split: ":" | first }}</a>{% endif %}
-            <span class="glance-pill">{{ pub.venue_short | default: pub.venue }}</span>
-            <span class="glance-wip__status glance-wip__status--{{ pub.status | slugify }}">{{ pub.status }}</span>
-          </li>
-              {%- endif -%}
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
-        {% if glance_wip > 5 %}<a class="glance__more glance__more--foot" href="{{ '/publications/' | relative_url }}">+{{ glance_wip | minus: 5 }} more <i class="fas fa-arrow-right" aria-hidden="true"></i></a>{% endif %}
       </div>
     </div>
   </aside>
@@ -387,7 +321,7 @@ redirect_from:
       {%- for t in c.timeline -%}
         {%- if t.date and t.date != 'tba' -%}
           {%- unless dl_first %},{% endunless %}{% assign dl_first = false %}
-          {"n":{{ c.name | jsonify }},"e":{{ c.edition | default: "" | jsonify }},"l":{{ t.label | default: "" | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }},"z":{{ t.tz | default: "" | jsonify }}}
+          {"n":{{ c.name | jsonify }},"d":{{ t.date | date: "%Y-%m-%d" | jsonify }},"t":{{ t.time | default: "23:59" | jsonify }},"z":{{ t.tz | default: "" | jsonify }}}
         {%- endif -%}
       {%- endfor -%}
     {%- endfor -%}
