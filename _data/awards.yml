@@ -1,5 +1,9 @@
 # Awards & Honors (Awards page). `org`, `date` optional; `points` are plain text.
 # `category`: fellowship (Fellowships & Scholarships) | honor (Honors & Recognition).
+- title: 'Academic Excellence Award'
+  category: 'honor'
+  org: 'NIIED, Government of South Korea'
+  date: 'Dec 2026'
 - title: 'Global Korea Scholarship (GKS/KGSP)'
   category: 'fellowship'
   date: 'Sept 2024 - Aug 2027'
