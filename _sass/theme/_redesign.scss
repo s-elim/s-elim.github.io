@@ -185,7 +185,10 @@ body { background: var(--bg); color: var(--text); }
   row-gap: 0;
   align-items: start;
   justify-items: stretch;
-  padding: 3rem 0 1rem;
+  // No top padding: the name and the portrait start right under the header
+  // (Selim, 2026-11-05: "start all from the top, no blank space").
+  padding: 0 0 1rem;
+  margin-top: -1rem;
   text-align: left;
 }
 .hero--clean .hero__avatar {
@@ -203,7 +206,7 @@ body { background: var(--bg); color: var(--text); }
   box-shadow: 0 0 0 1px var(--border), var(--shadow-md);
   object-fit: cover;
 }
-.hero--clean .hero__intro { grid-column: 1; grid-row: 1; align-self: center; min-width: 0; }
+.hero--clean .hero__intro { grid-column: 1; grid-row: 1; align-self: start; min-width: 0; } // top of the name lines up with the top of the portrait
 .hero--clean .glance {
   grid-column: 2;
   grid-row: 1;
@@ -445,7 +448,7 @@ a.hero__status:hover { color: var(--accent); }
   .hero.hero--clean {
     grid-template-columns: 1fr;
     row-gap: 1.25rem;
-    padding-top: 2rem;
+    padding-top: 1rem;
   }
   .hero--clean .hero__avatar {
     grid-column: 1;
