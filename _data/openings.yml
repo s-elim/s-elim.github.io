@@ -10,9 +10,9 @@
 #  Update openings: python scripts/manage.py openings run
 # ==========================================================================
 
-last_updated: '2026-11-06T00:00:48.562052+00:00'
+last_updated: '2026-11-06T23:41:53.485013+00:00'
 last_updated_human: 6 November 2026
-total_count: 103
+total_count: 100
 openings:
   - id: ellis-institute-finland-tampere-university-phd-postd
     title: 'PhD & Postdoc Positions in Embodied AI and Robot Learning'
@@ -529,7 +529,7 @@ openings:
                            The CVG group is part of the Institute for Visual Computing (IVC).
                            Our research and education focuses on computer vision with a particular focus on
                            geometric aspects. Our goal is to study and develop techniques to extract 3D shape, motion,
-                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research 3D Scenes 3D Reconstruction 3D dense reconstruction from RGB-(D) images or point clouds. Read More Geometry Image Matching Point correspondences for visual localization and mapping. Read More 3D Scenes Parameteric Scene Representations Reconstr
+                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research 3D Scenes Datasets We create datasets for 3D reconstruction, scene understanding, and visual localization. Read More Geometry Image Matching Point correspondences for visual localization and mapping. Read More 3D Scenes 3D Reconstruction 3D den
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1358,48 +1358,6 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from LinkedIn (NVIDIA)
-  - id: kodiak-world-model-research-scientist-physical-ai-re
-    title: World Model Research Scientist- Physical AI
-    position_type: Research Scientist
-    institution: Kodiak
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Mountain View
-    country: USA
-    region: USA
-    research_topics:
-      - World Models
-      - Embodied AI
-      - Physical AI
-    description: >-
-      World Model Research Scientist- Physical AI at Kodiak. Location: Mountain View, CA. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Highly Relevant
-    relevance_explanation:
-      matched_topics:
-        - World Models
-        - Embodied AI
-        - Physical AI
-      technical_alignment: Focuses directly on World Models, Embodied AI and physical robot control.
-      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (Kodiak)
-    source_url: 'https://linkedin.com/jobs/view/world-model-research-scientist-physical-ai-at-kodiak-4451483925'
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from LinkedIn (Kodiak)
   - id: holiday-robotics-senior-research-scientist-engineer-
     title: 'Senior Research Scientist / Engineer: Dynamics, Planning & Control'
     position_type: Research Scientist
@@ -1983,6 +1941,48 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from LinkedIn (Horizon Robotics)
+  - id: feather-robotics-physical-ai-researcher-research-sci
+    title: Physical AI Researcher
+    position_type: Research Scientist
+    institution: Feather Robotics
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: San Francisco Bay Area
+    country: Not specified
+    region: Europe
+    research_topics:
+      - Embodied AI
+      - Physical AI
+      - Robot Learning
+    description: >-
+      Physical AI Researcher at Feather Robotics. Location: San Francisco Bay Area. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Highly Relevant
+    relevance_explanation:
+      matched_topics:
+        - Embodied AI
+        - Physical AI
+        - Robot Learning
+      technical_alignment: Focuses directly on Embodied AI, Physical AI and physical robot control.
+      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Feather Robotics)
+    source_url: 'https://linkedin.com/jobs/view/physical-ai-researcher-at-feather-robotics-4486971153'
+    first_seen: '2026-11-06'
+    last_seen: '2026-11-06'
+    last_verified: '2026-11-06'
+    history:
+      - date: '2026-11-06'
+        event: Discovered from LinkedIn (Feather Robotics)
   - id: applied-intuition-research-scientist-world-action-fo
     title: Research Scientist - World-Action Foundation Model, Robotics
     position_type: Research Scientist
@@ -2525,126 +2525,6 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from LinkedIn (Molg)
-  - id: meta-ai-research-scientist-multimodal-perception-res
-    title: AI Research Scientist, Multimodal Perception
-    position_type: Research Scientist
-    institution: Meta
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Burlingame
-    country: USA
-    region: USA
-    research_topics:
-      - Computer Vision
-      - Multimodal Learning
-    description: >-
-      AI Research Scientist, Multimodal Perception at Meta. Location: Burlingame, CA. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Computer Vision
-        - Multimodal Learning
-      technical_alignment: Involves Computer Vision, Multimodal Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (Meta)
-    source_url: 'https://linkedin.com/jobs/view/ai-research-scientist-multimodal-perception-at-meta-4483930342'
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from LinkedIn (Meta)
-  - id: nvidia-senior-machine-learning-engineer-perception-a
-    title: Senior Machine Learning Engineer, Perception - Autonomous Driving
-    position_type: Research Engineer
-    institution: NVIDIA
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: New York
-    country: USA
-    region: USA
-    research_topics:
-      - Computer Vision
-      - Machine Learning
-      - Autonomous Systems
-    description: >-
-      Senior Machine Learning Engineer, Perception - Autonomous Driving at NVIDIA. Location: New York, United States. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Computer Vision
-        - Machine Learning
-        - Autonomous Systems
-      technical_alignment: Involves Computer Vision, Machine Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (NVIDIA)
-    source_url: 'https://linkedin.com/jobs/view/senior-machine-learning-engineer-perception-autonomous-driving-at-nvidia-4475147039'
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from LinkedIn (NVIDIA)
-  - id: meta-research-scientist-computer-vision-phd-phd-2026
-    title: Research Scientist, Computer Vision (PhD)
-    position_type: PhD
-    institution: Meta
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Burlingame
-    country: USA
-    region: USA
-    research_topics:
-      - Computer Vision
-    description: >-
-      Research Scientist, Computer Vision (PhD) at Meta. Location: Burlingame, CA. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Potentially Relevant
-    relevance_explanation:
-      matched_topics:
-        - Computer Vision
-      technical_alignment: Touches related methods in Computer Vision.
-      research_alignment: Adjacent domain in visual intelligence or robotic systems.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (Meta)
-    source_url: 'https://linkedin.com/jobs/view/research-scientist-computer-vision-phd-at-meta-4482554877'
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from LinkedIn (Meta)
   - id: uk-academic-institution-faculty-in-robotics-faculty-
     title: Faculty in Robotics
     position_type: Faculty
@@ -2801,6 +2681,45 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
+  - id: uk-academic-institution-faculty-position-in-school-o
+    title: Faculty Position in School of Robotics (Full Rank)
+    position_type: Faculty
+    institution: UK Academic Institution
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Not specified
+    country: UK
+    region: UK
+    research_topics:
+      - Robot Learning
+    description: >-
+      Faculty Position in School of Robotics (Full Rank) XJTLU Entrepreneur College (Taicang Campus) - School of Robotics Xi'an Jiaotong - Liverpool University Location: Suzhou Salary: Competitive Date Placed: 25 Oct
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+      technical_alignment: Involves Robot Learning methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: jobs.ac.uk (UK Academic Institution)
+    source_url: 'https://jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
+    application_url: 'https://www.jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
+    first_seen: '2026-11-06'
+    last_seen: '2026-11-06'
+    last_verified: '2026-11-06'
+    history:
+      - date: '2026-11-06'
+        event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: imperial-college-london-research-associate-in-dexter
     title: Research Associate in Dexterous Manipulation and Robot Learning
     position_type: Research Associate
@@ -2836,45 +2755,6 @@ openings:
     source: jobs.ac.uk (UK Academic Institution)
     source_url: 'https://jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
     application_url: 'https://www.jobs.ac.uk/job/DTE325/research-associate-in-dexterous-manipulation-and-robot-learning'
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from jobs.ac.uk (UK Academic Institution)
-  - id: uk-academic-institution-faculty-position-in-school-o
-    title: Faculty Position in School of Robotics (Full Rank)
-    position_type: Faculty
-    institution: UK Academic Institution
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: UK
-    region: UK
-    research_topics:
-      - Robot Learning
-    description: >-
-      Faculty Position in School of Robotics (Full Rank) XJTLU Entrepreneur College (Taicang Campus) - School of Robotics Xi'an Jiaotong - Liverpool University Location: Suzhou Salary: Competitive Date Placed: 25 Oct
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Robot Learning
-      technical_alignment: Involves Robot Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: jobs.ac.uk (UK Academic Institution)
-    source_url: 'https://jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
-    application_url: 'https://www.jobs.ac.uk/job/DTK058/faculty-position-in-school-of-robotics-full-rank'
     first_seen: '2026-11-06'
     last_seen: '2026-11-06'
     last_verified: '2026-11-06'
@@ -3367,51 +3247,6 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from jobs.ac.uk (UK Academic Institution)
-  - id: uk-academic-institution-research-fellow-in-multimoda
-    title: Research Fellow in Multimodal Physics-Informed Foundation Model for Air Quality Applications
-    position_type: Research Fellow
-    institution: UK Academic Institution
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: UK
-    region: UK
-    research_topics:
-      - Computer Vision
-      - Multimodal Learning
-      - Foundation Models
-    description: >-
-      Research Fellow in Multimodal Physics-Informed Foundation Model for Air Quality Applications Centre of Vision, Speech & Signal Processing University of Surrey Location: Guildford Salary: £38,448 to £43,099 per annum Date Placed: 23 Oct
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Computer Vision
-        - Multimodal Learning
-        - Foundation Models
-      technical_alignment: Involves Computer Vision, Multimodal Learning methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: jobs.ac.uk (UK Academic Institution)
-    source_url: >-
-      https://jobs.ac.uk/job/DTJ699/research-fellow-in-multimodal-physics-informed-foundation-model-for-air-quality-applications
-    application_url: >-
-      https://www.jobs.ac.uk/job/DTJ699/research-fellow-in-multimodal-physics-informed-foundation-model-for-air-quality-applications
-    first_seen: '2026-11-06'
-    last_seen: '2026-11-06'
-    last_verified: '2026-11-06'
-    history:
-      - date: '2026-11-06'
-        event: Discovered from jobs.ac.uk (UK Academic Institution)
   - id: uk-academic-institution-phd-studentship-building-3d-
     title: 'PhD Studentship: Building 3D Games and Procedural Worlds with Agentic AI'
     position_type: PhD
@@ -3815,6 +3650,45 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from AcademicTransfer (Netherlands)
+  - id: dutch-universities-academictransfer-assistant-profes
+    title: Assistant professor in ultra low latency hybrid neuromorphic photonics
+    position_type: Faculty
+    institution: Dutch Universities (AcademicTransfer)
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: Delft / Amsterdam
+    country: Netherlands
+    region: Europe
+    research_topics:
+      - Machine Learning
+    description: >-
+      Assistant Professor In Ultra-Low Latency Hybrid Neuromorphic Photonics Neuromorphic photonics is emerging as a promising paradigm to overcome bottlenecks in conventional computing, offering ultra-fast and low-energy information processing. Recent advances include both spiking and deep learning schemes implemented on photonic chi… Deadline 8 Jan ’27 Published today Eindhoven Eindhoven University of Technology (TU/e)
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Potentially Relevant
+    relevance_explanation:
+      matched_topics:
+        - Machine Learning
+      technical_alignment: Touches related methods in Machine Learning.
+      research_alignment: Adjacent domain in visual intelligence or robotic systems.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: AcademicTransfer (Netherlands)
+    source_url: 'https://academictransfer.com/en/jobs/365389/assistant-professor-in-ultra-low-latency-hybrid-neuromorphic-photonics'
+    application_url: 'https://www.academictransfer.com/en/jobs/365389/assistant-professor-in-ultra-low-latency-hybrid-neuromorphic-photonics/'
+    first_seen: '2026-11-06'
+    last_seen: '2026-11-06'
+    last_verified: '2026-11-06'
+    history:
+      - date: '2026-11-06'
+        event: Discovered from AcademicTransfer (Netherlands)
   - id: dutch-universities-academictransfer-senior-geoai-exp
     title: Senior geoai expert
     position_type: PhD
@@ -4174,8 +4048,8 @@ openings:
     history:
       - date: '2026-11-06'
         event: Discovered from Public Academic Search
-  - id: university-research-institute-phd-opportunity-in-wor
-    title: PhD Opportunity in World Models for Space Robotics
+  - id: university-research-institute-two-fully-funded-phd-p
+    title: 'Two Fully Funded PhD Positions in World Models & Embodied ... - LinkedIn'
     position_type: PhD
     institution: University / Research Institute
     department: Not specified
@@ -4186,11 +4060,9 @@ openings:
     region: Europe
     research_topics:
       - World Models
-      - Embodied AI
-      - Physical AI
-      - Robot Learning
+      - Manipulation
     description: >-
-      This PhD will develop world-model-based and uncertainty-aware approaches for embodied intelligence, enabling robots to predict, plan, and adapt under severe uncertainty. The research focuses on learning predictive world models of environment and contact dynamics to support simulation-driven planning, risk-sensitive control, and online adaptation for improved robustness and safety.
+      We invite applications for two fully funded PhD positions in the are aof WorldModels & Embodied Tactile based Grasping an Manipulation of Indutrial Objectsat the RoboTac Lab, BMW Center of AI ...
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -4203,15 +4075,13 @@ openings:
     relevance_explanation:
       matched_topics:
         - World Models
-        - Embodied AI
-        - Physical AI
-        - Robot Learning
-      technical_alignment: Focuses directly on World Models, Embodied AI and physical robot control.
+        - Manipulation
+      technical_alignment: Focuses directly on World Models and physical robot control.
       research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
       qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
       potential_gaps: None identified
     source: Public Academic Search
-    source_url: 'https://danilab.org/post/26-02-01-phd-opportunity-in-world-models-for-space-robotics'
+    source_url: 'https://linkedin.com/pulse/two-fully-funded-phd-positions-world-models-embodied-tactile-rwj3e'
     first_seen: '2026-11-06'
     last_seen: '2026-11-06'
     last_verified: '2026-11-06'
