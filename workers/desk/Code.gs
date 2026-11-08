@@ -22,9 +22,10 @@
  * Install: see README.md beside this file (paste, Run setup, Deploy).
  */
 
-var VERSION = '2026.11.03-repeat2';
+var VERSION = '2026.11.09-taskblocks';
 var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
+  taskNotes: 8192,          // the most Google Tasks keeps; read and write alike, so a save never cuts a note
   importDocs: 500,
   rangeDays: 400,
   passphrase: 4,
@@ -35,7 +36,7 @@ var LIMITS = {
   failedLogins: 10,         // per hour, everyone together
   syncFreshMs: 60e3,        // one shared Google + Notion answer per minute
   syncForceGapMs: 10e3,     // a forced refresh at most every 10 seconds
-  cacheChunk: 90000         // CacheService keeps at most 100 KB per key
+  cacheChunk: 30000         // CacheService keeps at most 100 KB per key; Hangul is 3 bytes a character
 };
 var COLLECTIONS = ['entries', 'tasks', 'settings'];
 var ID_RE = /^[A-Za-z0-9_.:-]{1,80}$/;
@@ -477,7 +478,7 @@ function cacheKey(parts) {
 function sync(raw) {
   var r = parseRange(raw);
   var cache = CacheService.getScriptCache();
-  var key = cacheKey([r.from, r.to, r.timeMin, r.timeMax, r.tz, mode(), cache.get('sync:gen') || '0']);
+  var key = cacheKey([VERSION, r.from, r.to, r.timeMin, r.timeMax, r.tz, mode(), cache.get('sync:gen') || '0']);
   var meta = cache.get(key + ':meta');
   if (meta) {
     meta = JSON.parse(meta);
@@ -515,6 +516,9 @@ function clip(s, n) {
   return s.length > n ? s.slice(0, n) + '…' : s;
 }
 
+// A plain cut: clip's ellipsis would put a full-length note over Google's limit.
+function taskNote(s) { return String(s == null ? '' : s).slice(0, LIMITS.taskNotes); }
+
 function stripHtml(s) {
   return String(s || '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ')
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&').trim();
@@ -548,7 +552,8 @@ function eventOut(c, ev, palette) {
     location: clip(ev.location, 200), description: clip(stripHtml(ev.description), 800),
     link: ev.htmlLink || '', video: video, attendees: (ev.attendees || []).length,
     editable: c.accessRole === 'owner' || c.accessRole === 'writer' || c.writable === true,
-    recurring: !!ev.recurringEventId, series: ev.recurringEventId || '', declined: !!(me && me.responseStatus === 'declined')
+    recurring: !!ev.recurringEventId, series: ev.recurringEventId || '', declined: !!(me && me.responseStatus === 'declined'),
+    taskKey: (ev.extendedProperties && ev.extendedProperties.private && ev.extendedProperties.private.deskTask) || ''
   };
   return mode() === 'open' ? stripCallLinks(out) : out;
 }
@@ -615,7 +620,7 @@ function collectTasks(list, opts, out, completedOnly) {
 }
 
 function taskOut(list, t) {
-  return { id: t.id, listId: list.id, list: list.title || '', title: t.title || '', notes: clip(t.notes, 600),
+  return { id: t.id, listId: list.id, list: list.title || '', title: t.title || '', notes: taskNote(t.notes),
     due: t.due ? String(t.due).slice(0, 10) : '', done: t.status === 'completed', completed: t.completed || '',
     link: t.webViewLink || '', parent: t.parent || '' };
 }
@@ -702,6 +707,8 @@ function createEvent(req) {
   }
   var resource = { summary: clip(req.title || 'Untitled', 250), description: clip(req.description, 4000), location: clip(req.location, 300), start: t.start, end: t.end };
   if (rep) resource.recurrence = [rep.rule];
+  // Ties a time block to its task; private, so only this script sees it.
+  if (req.taskKey) resource.extendedProperties = { private: { deskTask: clip(req.taskKey, 300) } };
   var cal = req.calendarId || 'primary';
   var ev = Calendar.Events.insert(resource, cal);
   return { ok: true, id: ev.id, link: ev.htmlLink || '', repeat: rep ? rep.rule : '', event: eventOut(calendarOf(cal), ev, {}) };
@@ -734,7 +741,7 @@ function deleteEvent(req) {
 }
 
 function createTask(req) {
-  var body = { title: clip(req.title || 'Untitled', 1000), notes: clip(req.notes, 4000) };
+  var body = { title: clip(req.title || 'Untitled', 1000), notes: taskNote(req.notes) };
   if (DATE_RE.test(req.due || '')) body.due = req.due + 'T00:00:00.000Z';
   var listId = req.listId || '@default';
   var t = Tasks.Tasks.insert(body, listId);
@@ -751,7 +758,7 @@ function setTask(req) {
     if (!req.done) patch.completed = null;
   }
   if (typeof req.title === 'string' && req.title.trim()) patch.title = clip(req.title.trim(), 1000);
-  if (typeof req.notes === 'string') patch.notes = clip(req.notes, 4000);
+  if (typeof req.notes === 'string') patch.notes = taskNote(req.notes);
   if (req.due === '') patch.due = null;
   else if (DATE_RE.test(req.due || '')) patch.due = req.due + 'T00:00:00.000Z';
   var t = Tasks.Tasks.patch(patch, req.listId, req.id);

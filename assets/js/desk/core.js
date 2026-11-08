@@ -423,7 +423,7 @@
       color: ev.color || "#3b82f6", calendar: ev.calendar || "", link: ev.link || "", video: ev.video || "",
       location: ev.location || "", description: ev.description || "", attendees: ev.attendees || 0,
       eventId: ev.id, calendarId: ev.calendarId || "", editable: !!ev.editable, recurring: !!ev.recurring,
-      series: ev.series || "", declined: !!ev.declined
+      series: ev.series || "", declined: !!ev.declined, taskKey: ev.taskKey || ""
     };
   }
   // Does an event touch a given local day? All-day ends are exclusive.
@@ -458,6 +458,34 @@
     var byDue = function (a, c) { return a.due < c.due ? -1 : a.due > c.due ? 1 : (a.time || "99") < (c.time || "99") ? -1 : 1; };
     b.overdue.sort(byDue); b.today.sort(byDue); b.upcoming.sort(byDue);
     return b;
+  }
+
+  // The time blocks a task still has ahead of it, soonest first. A linked event
+  // matches by key. One with no link (made before links existed) matches by
+  // title, but only a one-off on a calendar you can write to: Block time could
+  // have made that, and not somebody's weekly "Lab meeting".
+  function taskBlocks(task, events, now) {
+    var norm = function (s) { return String(s || "").trim().toLowerCase(); }, want = norm(task.title);
+    return events.filter(function (e) {
+      if (e.allDay || e.end <= now) return false;
+      return e.taskKey ? e.taskKey === task.key : e.editable && !e.recurring && norm(e.title) === want;
+    }).sort(function (a, b) { return a.start - b.start; });
+  }
+
+  /* ---- the agenda, day by day ------------------------------------------ */
+  function agendaDay(date, opts) {
+    return {
+      date: date,
+      events: (opts.events || []).filter(function (e) { return eventOnDay(e, date); }),
+      tasks: (opts.tasks || []).filter(function (t) { return !t.done && t.due === date; }),
+      deadlines: (opts.deadlines || []).filter(function (d) { return !d.done && d.date === date; })
+    };
+  }
+  // One entry per day from opts.today on, for opts.days days.
+  function agendaDays(opts) {
+    var first = parseYmd(opts.today), out = [];
+    for (var i = 0; i < opts.days; i++) out.push(agendaDay(ymd(addDays(first, i)), opts));
+    return out;
   }
 
   /* ---- outbound links and text ---------------------------------------- */
@@ -621,6 +649,7 @@
     freeSlots: freeSlots, nowNext: nowNext, planSlot: planSlot,
     conferenceDeadlines: conferenceDeadlines, collectDeadlines: collectDeadlines,
     normEvent: normEvent, eventOnDay: eventOnDay, unifyTasks: unifyTasks, bucketTasks: bucketTasks,
+    taskBlocks: taskBlocks, agendaDays: agendaDays,
     gcalTemplateUrl: gcalTemplateUrl, htmlToText: htmlToText, entryMarkdown: entryMarkdown,
     notionDefaults: notionDefaults, normaliseEntry: normaliseEntry
   };

@@ -312,7 +312,13 @@
     var wd = S.ui.workday, from = t.due && t.due > today() ? C.parseYmd(t.due) : new Date();
     var slot = C.planSlot(events(), from, { start: wd.start, end: wd.end, length: 60, min: 30 }) ||
       { date: C.ymd(from), start: wd.start, end: C.addMinutes(wd.start, 60) };
-    Desk.calendar.newEvent(slot.date, slot.start, slot.end, t.title);
+    Desk.calendar.newEvent(slot.date, slot.start, slot.end, t.title, t.key);
+  }
+  // "Today 14:00–15:00", "Tomorrow 09:00–10:00", "Tue 17 Nov 14:00–15:00".
+  function blockLabel(e) {
+    var t = today(), day = C.ymd(e.start);
+    var label = day === t ? "Today" : day === C.ymd(C.addDays(C.parseYmd(t), 1)) ? "Tomorrow" : fmtDate(day, { weekday: "short", day: "numeric", month: "short" });
+    return label + " " + hhmm(e.start) + "–" + hhmm(e.end);
   }
 
   function quickDues() {
@@ -320,9 +326,12 @@
     return [["Today", C.ymd(t)], ["Tomorrow", C.ymd(C.addDays(t, 1))], ["Next Mon", C.ymd(C.addDays(C.startOfWeek(t), 7))], ["No date", ""]];
   }
 
+  // A daily repeat can put a hundred blocks on one task.
+  var BLOCK_LIST = 6;
   function editTask(key) {
     var t = allTasks().filter(function (x) { return x.key === key; })[0];
     if (!t) return;
+    var blocks = t.done ? [] : C.taskBlocks(t, events(), new Date());
     var d = dialog("dk-task", "Task",
       '<label class="dk-field"><span>Title</span><input type="text" class="dk-input" id="dk-t-title" value="' + esc(t.title) + '"></label>' +
       (Desk.marks ? Desk.marks.field(C.taskMarkKey(t)) : "") +
@@ -331,7 +340,10 @@
       '<div class="dk-chips" id="dk-t-quick" role="group" aria-label="Set the due date">' + quickDues().map(function (q) {
         return '<button type="button" class="dk-chip" data-setdue="' + q[1] + '">' + q[0] + '</button>';
       }).join("") + '</div>' +
-      '<label class="dk-field"><span>Notes</span><textarea class="dk-input" id="dk-t-notes" rows="3">' + esc(t.notes) + '</textarea></label>' +
+      '<label class="dk-field"><span>Notes</span><textarea class="dk-input" id="dk-t-notes" rows="3" maxlength="8192">' + esc(t.notes) + '</textarea></label>' +
+      (blocks.length ? '<div class="dk-field"><span>Time blocked</span><div class="dk-chips" id="dk-t-blocks">' + blocks.slice(0, BLOCK_LIST).map(function (b) {
+        return '<button type="button" class="dk-chip" data-openev="' + esc(b.id) + '"><i class="fas fa-clock" aria-hidden="true"></i> ' + esc(blockLabel(b)) + '</button>';
+      }).join("") + (blocks.length > BLOCK_LIST ? '<span class="dk-task__more">+' + (blocks.length - BLOCK_LIST) + ' more</span>' : "") + '</div></div>' : "") +
       '<p class="dk-hint" id="dk-t-msg" role="status"></p>',
       '<button type="button" class="dk-btn dk-btn--danger" id="dk-t-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' +
       '<button type="button" class="dk-btn" id="dk-t-block"><i class="fas fa-clock" aria-hidden="true"></i> Block time</button>' +
@@ -343,6 +355,11 @@
       if (b) $("dk-t-due").value = b.getAttribute("data-setdue");
     });
     $("dk-t-block").addEventListener("click", function () { d.close(); blockTime(key); });
+    // The event opens over this dialog, so anything typed here is still there after.
+    if (blocks.length) $("dk-t-blocks").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-openev]");
+      if (b) openEvent(b.getAttribute("data-openev"));
+    });
     $("dk-t-save").addEventListener("click", function () {
       var title = $("dk-t-title").value.trim(), due = $("dk-t-due").value, notes = $("dk-t-notes").value;
       if (!title) { $("dk-t-title").focus(); return; }
@@ -350,7 +367,8 @@
       msg.textContent = "Saving…";
       var p;
       if (t.source === "google") {
-        p = call("setTask", { listId: t.listId, id: t.id, title: title, due: due, notes: notes }).then(function () {
+        // Untouched notes are left out, so a stale copy can never overwrite newer text.
+        p = call("setTask", { listId: t.listId, id: t.id, title: title, due: due, notes: notes === t.notes ? undefined : notes }).then(function () {
           var g = googleTask(t);
           if (g) { g.title = title; g.due = due; g.notes = notes; }
         });
@@ -856,6 +874,15 @@
       '<i class="fas fa-plus" aria-hidden="true"></i></button></li>';
   }
 
+  // Today plus the next 13 days.
+  var AGENDA_DAYS = 14;
+  // A day's deadlines and open tasks, under its events.
+  function agendaExtras(day, t, evs) {
+    var tasks = C.starFirst(day.tasks, isStarred);
+    return (day.deadlines.length ? '<ul class="dk-dls">' + day.deadlines.map(deadlineRow).join("") + '</ul>' : "") +
+      (tasks.length ? '<ul class="dk-tasks">' + tasks.map(function (x) { return taskRow(x, t, evs, true); }).join("") + '</ul>' : "");
+  }
+
   function panelAgenda(t) {
     var g = S.sync && S.sync.google;
     var body;
@@ -863,10 +890,11 @@
     else if (g && !g.ok) body = '<div class="dk-empty is-bad"><p>' + esc(g.error || "Google failed.") + '</p></div>';
     else if (!S.sync) body = '<div class="dk-empty"><p>Waiting for the first sync…</p></div>';
     else {
-      var now = new Date(), all = events(), base = C.parseYmd(t);
+      var now = new Date(), all = events();
+      var days = C.agendaDays({ today: t, days: AGENDA_DAYS, events: all, tasks: allTasks(), deadlines: deadlines() });
       // Today's events and the free gaps between them, in time order; all-day
       // events sort first. The now line goes before the first thing still ahead.
-      var rows = eventsOn(t).map(function (e) { return { at: e.allDay ? 0 : e.start.getTime(), timed: !e.allDay, html: eventRow(e, now) }; })
+      var rows = days[0].events.map(function (e) { return { at: e.allDay ? 0 : e.start.getTime(), timed: !e.allDay, html: eventRow(e, now) }; })
         .concat(freeToday(t, 30).map(function (s) { return { at: s.start.getTime(), timed: true, html: freeRow(t, s) }; }))
         .sort(function (p, q) { return p.at - q.at; });
       var nowLine = '<li class="dk-now" aria-label="Now"><span>' + hhmm(now) + '</span></li>';
@@ -876,24 +904,38 @@
         list += r.html;
       });
       if (!nowPlaced && rows.length) list += nowLine;
-      var weekHtml = "";
-      for (var d = 1; d <= 6; d++) {
-        var dayYmd = C.ymd(C.addDays(base, d));
-        var dayEvs = all.filter(function (e) { return C.eventOnDay(e, dayYmd); });
-        if (d === 1 || dayEvs.length) {
-          var sub = d === 1 ? "Tomorrow" : fmtDate(dayYmd, { weekday: "short", day: "numeric", month: "short" });
-          weekHtml += '<h4 class="dk-sub">' + esc(sub) + '</h4>' +
-            (dayEvs.length ? '<ol class="dk-evs">' + dayEvs.map(function (e) { return eventRow(e, now, true); }).join("") + '</ol>' : '<p class="dk-quiet">Free.</p>');
-        }
-      }
-      body = (rows.length ? '<ol class="dk-evs">' + list + '</ol>' : '<p class="dk-quiet">Nothing scheduled today.</p>') + weekHtml;
+      var todayEvs = rows.length ? '<ol class="dk-evs">' + list + '</ol>' : "";
+      var todayRest = agendaExtras(days[0], t, all);
+      // Tomorrow always gets a heading; a later day only when something is on it.
+      var later = days.slice(1).map(function (day, i) {
+        var empty = !day.events.length && !day.tasks.length && !day.deadlines.length;
+        if (empty && i > 0) return "";
+        var sub = i === 0 ? "Tomorrow" : fmtDate(day.date, { weekday: "short", day: "numeric", month: "short" });
+        return '<h4 class="dk-sub">' + esc(sub) + '</h4>' + (empty ? '<p class="dk-quiet">Free.</p>' :
+          (day.events.length ? '<ol class="dk-evs">' + day.events.map(function (e) { return eventRow(e, now, true); }).join("") + '</ol>' : "") +
+          agendaExtras(day, t, all));
+      }).join("");
+      body = '<h4 class="dk-sub">Today</h4>' + (todayEvs || todayRest ? todayEvs + todayRest : '<p class="dk-quiet">Nothing scheduled today.</p>') + later;
     }
     return '<section class="dk-panel dk-panel--agenda" aria-label="Agenda"><header class="dk-panel__head"><h3><i class="fas fa-clock" aria-hidden="true"></i> Agenda</h3>' +
       '<button type="button" class="dk-link" data-go="calendar">Calendar</button></header>' + body + '</section>';
   }
 
-  function taskRow(task, t) {
-    var due = task.due ? (task.due === t ? "" : C.countdown(C.dayDiff(t, task.due))) : "";
+  // What sits under a task's title: its upcoming time blocks, then its notes.
+  var BLOCK_CHIPS = 2;
+  function taskExtras(task, evs) {
+    var blocks = task.done ? [] : C.taskBlocks(task, evs, new Date());
+    var chips = blocks.slice(0, BLOCK_CHIPS).map(function (b) {
+      return '<button type="button" class="dk-task__block" data-event="' + esc(b.id) + '" title="Open this time block"><i class="fas fa-clock" aria-hidden="true"></i> ' + esc(blockLabel(b)) + '</button>';
+    }).join("") + (blocks.length > BLOCK_CHIPS ? '<span class="dk-task__more">+' + (blocks.length - BLOCK_CHIPS) + ' more</span>' : "");
+    var notes = String(task.notes || "").trim();
+    return (chips ? '<span class="dk-task__blocks">' + chips + '</span>' : "") +
+      (notes ? '<button type="button" class="dk-task__notes" data-edittask="' + esc(task.key) + '" title="' + esc(notes) + '"><span>' + esc(notes) + '</span></button>' : "");
+  }
+
+  // `inAgenda`: the day heading already says when, so the countdown is dropped.
+  function taskRow(task, t, evs, inAgenda) {
+    var due = task.due && !inAgenda ? (task.due === t ? "" : C.countdown(C.dayDiff(t, task.due))) : "";
     var multi = S.sync && S.sync.google && (S.sync.google.tasklists || []).length > 1;
     // Due today -> push to tomorrow; anything else (late, undated, later) -> pull to today.
     var toTomorrow = task.due === t, moveTo = toTomorrow ? C.ymd(C.addDays(C.parseYmd(t), 1)) : t, moveLabel = toTomorrow ? "Tomorrow" : "Today";
@@ -905,7 +947,8 @@
     return '<li class="dk-task' + (task.done ? " is-done" : "") + (task.parent ? " is-sub" : "") + '">' +
       '<label class="dk-check" title="' + (task.done ? "Mark as not done" : "Mark as done") + '"><input type="checkbox" data-task="' + esc(task.key) + '"' + (task.done ? " checked" : "") + ' aria-label="Done: ' + esc(task.title) + '">' +
       '<span class="dk-check__box" aria-hidden="true"></span></label>' +
-      '<button type="button" class="dk-task__title" data-edittask="' + esc(task.key) + '" title="Edit, reschedule or delete">' + taskTitle(task) + '</button>' +
+      '<div class="dk-task__main"><button type="button" class="dk-task__title" data-edittask="' + esc(task.key) + '" title="Edit, reschedule or delete">' + taskTitle(task) + '</button>' +
+      taskExtras(task, evs) + '</div>' +
       (task.time ? '<span class="dk-task__time">' + esc(task.time) + '</span>' : "") +
       (due ? '<span class="dk-task__due' + (task.due < t && !task.done ? " is-late" : "") + '">' + esc(due) + '</span>' : "") +
       ((multi && task.source === "google") || task.source === "desk" ? '<span class="dk-task__list">' + esc(task.list) + '</span>' : "") +
@@ -915,7 +958,7 @@
 
   var TASK_CAP = 15;
   function panelTasks(t) {
-    var b = C.bucketTasks(allTasks(), t);
+    var b = C.bucketTasks(allTasks(), t), evs = events();
     ["overdue", "today", "upcoming", "undated"].forEach(function (k) { b[k] = C.starFirst(b[k], isStarred); });
     var soon = C.ymd(C.addDays(C.parseYmd(t), 7));
     var upcoming = b.upcoming.filter(function (x) { return x.due <= soon; });
@@ -930,7 +973,7 @@
       if (!shown.length) return "";
       var badge = shown.length < total ? shown.length + "/" + total : String(total);
       return '<h4 class="dk-sub ' + (cls || "") + '">' + title + ' <span>' + badge + '</span></h4><ul class="dk-tasks">' +
-        shown.map(function (x) { return taskRow(x, t); }).join("") + '</ul>';
+        shown.map(function (x) { return taskRow(x, t, evs); }).join("") + '</ul>';
     };
     var g = S.sync && S.sync.google;
     var html = group("Overdue", gOverdue, b.overdue.length, "is-late") +
@@ -942,7 +985,7 @@
     if (!totalOpen) html = '<p class="dk-quiet">' + (g && !g.configured ? "No desk tasks. Add one above." : "Nothing open. Good.") + '</p>' + html;
     if (b.done.length) {
       html += '<button type="button" class="dk-link dk-link--sub" data-act="toggle-done">' + (S.ui.showDoneTasks ? "Hide" : "Show") + " " + plural(b.done.length, "finished task") + '</button>' +
-        (S.ui.showDoneTasks ? '<ul class="dk-tasks">' + b.done.map(function (x) { return taskRow(x, t); }).join("") + '</ul>' : "");
+        (S.ui.showDoneTasks ? '<ul class="dk-tasks">' + b.done.map(function (x) { return taskRow(x, t, evs); }).join("") + '</ul>' : "");
     }
     var note = g && !g.configured ? '<p class="dk-hint">Tasks are kept on the desk until Google Tasks is connected.</p>' : "";
     return '<section class="dk-panel dk-panel--tasks" aria-label="Tasks"><header class="dk-panel__head"><h3><i class="fas fa-check-square" aria-hidden="true"></i> Tasks</h3>' +

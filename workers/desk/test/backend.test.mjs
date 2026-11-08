@@ -379,6 +379,128 @@ test('task writes create, complete, reopen, rename and delete Google Tasks', () 
   assert.equal(gas.call({ action: 'setTask', done: true }).status, 400);
 });
 
+// ------------------------------------------- task links and long task notes
+
+const focusBlock = (extra = {}) => ({ action: 'createEvent', title: 'Focus block', date: '2026-10-12', start: '10:00', end: '11:00', tz: 'Asia/Seoul', ...extra });
+const lastInsert = gas => gas.calls.events.filter(c => c[0] === 'insert').pop()[2];
+const calendarWith = events => ({ calendars: [GOOGLE.calendars[0]], events: { me: events } });
+const timedEvent = (id, extra = {}) => ({ id, status: 'confirmed', summary: id, start: { dateTime: '2026-10-12T10:00:00+09:00' }, end: { dateTime: '2026-10-12T11:00:00+09:00' }, ...extra });
+const LONG_NOTE = ''.padEnd(8000, '한글 note line\n');
+
+test('createEvent stores the task link in a private extended property', () => {
+  const gas = ready({ google: GOOGLE });
+  assert.equal(gas.call(focusBlock({ taskKey: 'g:L1:t1' })).ok, true);
+  assert.equal(lastInsert(gas).extendedProperties?.private?.deskTask, 'g:L1:t1');
+});
+
+test('createEvent reports the task link on the event it returns', () => {
+  const gas = ready({ google: GOOGLE });
+  const made = gas.call(focusBlock({ taskKey: 'g:L1:t1' }));
+  assert.equal(made.ok, true);
+  assert.equal(made.event.taskKey, 'g:L1:t1');
+});
+
+test('createEvent without a taskKey adds no extended properties and returns an empty link', () => {
+  const gas = ready({ google: GOOGLE });
+  const made = gas.call(focusBlock());
+  assert.equal(made.ok, true);
+  assert.equal(lastInsert(gas).extendedProperties, undefined);
+  assert.equal(made.event.taskKey, '');
+});
+
+test('createEvent treats an empty taskKey as no link', () => {
+  const gas = ready({ google: GOOGLE });
+  const made = gas.call(focusBlock({ taskKey: '' }));
+  assert.equal(made.ok, true);
+  assert.equal(lastInsert(gas).extendedProperties, undefined);
+  assert.equal(made.event.taskKey, '');
+});
+
+test('sync reports the task link stored on an event', () => {
+  const gas = ready({ google: calendarWith([timedEvent('linked', { extendedProperties: { private: { deskTask: 'd:abc' } } })]) });
+  const s = gas.call({ action: 'sync', ...RANGE });
+  assert.deepEqual(s.google.events.map(e => [e.id, e.taskKey]), [['linked', 'd:abc']]);
+});
+
+test('sync gives an event with no task link an empty taskKey', () => {
+  const gas = ready({ google: calendarWith([timedEvent('plain')]) });
+  const s = gas.call({ action: 'sync', ...RANGE });
+  assert.deepEqual(s.google.events.map(e => [e.id, e.taskKey]), [['plain', '']]);
+});
+
+test('sync copes with extended properties that hold no desk task', () => {
+  const gas = ready({ google: calendarWith([
+    timedEvent('shared-only', { extendedProperties: { shared: { otherApp: 'x' } } }),
+    timedEvent('other-private', { extendedProperties: { private: { otherApp: 'x' } } }),
+  ]) });
+  const s = gas.call({ action: 'sync', ...RANGE });
+  assert.deepEqual(s.google.warnings, [], 'a bag with no private part must not lose the whole calendar');
+  assert.deepEqual(s.google.events.map(e => [e.id, e.taskKey]), [['shared-only', ''], ['other-private', '']]);
+});
+
+test('a block linked at creation is still linked on the next sync', () => {
+  const gas = ready({ google: GOOGLE });
+  assert.equal(gas.call(focusBlock({ taskKey: 'g:L1:t1' })).ok, true);
+  const s = gas.call({ action: 'sync', ...RANGE });
+  assert.equal(s.google.events.find(e => e.title === 'Focus block').taskKey, 'g:L1:t1');
+});
+
+test('sync brings an 8000-character task note through whole', () => {
+  const gas = ready({ google: { ...GOOGLE, tasks: { L1: [
+    { id: 'long', title: 'Long note', status: 'needsAction', notes: LONG_NOTE },
+    { id: 'none', title: 'No note', status: 'needsAction' },
+  ] } } });
+  const s = gas.call({ action: 'sync', ...RANGE });
+  const notesOf = id => s.google.tasks.find(t => t.id === id).notes;
+  assert.equal(notesOf('long').length, 8000);
+  assert.equal(notesOf('long').endsWith('…'), false, 'no ellipsis');
+  assert.equal(notesOf('long') === LONG_NOTE, true, 'the text itself is unchanged');
+  assert.equal(notesOf('none'), '', 'a task with no note still reads as empty');
+});
+
+test('setTask sends an 8000-character note to Google whole', () => {
+  const gas = ready({ google: GOOGLE });
+  assert.equal(gas.call({ action: 'setTask', listId: 'L1', id: 't1', notes: LONG_NOTE }).ok, true);
+  const [, , , patch] = gas.calls.tasks.find(c => c[0] === 'patch');
+  assert.equal(patch.notes.length, 8000);
+  assert.equal(patch.notes === LONG_NOTE, true, 'the text itself is unchanged');
+});
+
+test('setTask answers with the whole note, so the browser cannot write back a clipped one', () => {
+  const gas = ready({ google: GOOGLE });
+  const r = gas.call({ action: 'setTask', listId: 'L1', id: 't1', notes: LONG_NOTE });
+  assert.equal(r.ok, true);
+  assert.equal(r.task.notes.length, 8000);
+});
+
+test('a note past the Google Tasks limit is cut to exactly that limit, with no added ellipsis', () => {
+  const gas = ready({ google: GOOGLE });
+  assert.equal(gas.call({ action: 'setTask', listId: 'L1', id: 't1', notes: 'x'.repeat(9000) }).ok, true);
+  assert.equal(gas.call({ action: 'createTask', title: 'New', notes: 'y'.repeat(9000) }).ok, true);
+  const [, , , patch] = gas.calls.tasks.find(c => c[0] === 'patch');
+  const [, , body] = gas.calls.tasks.find(c => c[0] === 'insert');
+  assert.equal(patch.notes === 'x'.repeat(8192), true, 'setTask');
+  assert.equal(body.notes === 'y'.repeat(8192), true, 'createTask');
+});
+
+test('sync cache chunks stay under 100 KB even when every character takes three bytes', () => {
+  const korean = Array.from({ length: 12 }, (_, i) => ({ id: 'k' + i, title: 'Korean ' + i, status: 'needsAction', notes: '한'.repeat(8000) }));
+  const gas = ready({ google: { ...GOOGLE, tasks: { L1: korean } } });
+  gas.call({ action: 'sync', ...RANGE });
+  const chunks = Object.entries(gas.cache).filter(([k]) => /^sync:.*:\d+$/.test(k));
+  assert.ok(chunks.length > 1, 'the answer is big enough to need several chunks');
+  chunks.forEach(([k, v]) => assert.ok(Buffer.byteLength(v, 'utf8') <= 100 * 1024, k + ' is ' + Buffer.byteLength(v, 'utf8') + ' bytes'));
+  assert.equal(gas.call({ action: 'sync', ...RANGE }).cached, true, 'and it still reads back whole');
+});
+
+test('a new version does not answer from the previous version\'s sync snapshot', () => {
+  const gas = ready({ google: GOOGLE });
+  gas.call({ action: 'sync', ...RANGE });
+  assert.equal(gas.call({ action: 'sync', ...RANGE }).cached, true);
+  gas.ctx.VERSION = 'next-deploy';
+  assert.equal(gas.call({ action: 'sync', ...RANGE }).cached, undefined);
+});
+
 // ----------------------------------------------------------------- notion
 
 test('notion helpers map rows, types and blocks', () => {

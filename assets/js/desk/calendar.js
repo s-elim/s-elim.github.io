@@ -447,9 +447,10 @@
   }
   function repeatOf(key) { return (REPEATS.filter(function (r) { return r[0] === key; })[0] || REPEATS[0])[1]; }
 
-  // `title` prefills the form (Block time on a task). With more than one
-  // writable calendar a picker appears; the last one used is remembered.
-  function newEvent(date, start, end, title) {
+  // `title` prefills the form and `taskKey` ties the event to its task (Block
+  // time on a task). With more than one writable calendar a picker appears; the
+  // last one used is remembered.
+  function newEvent(date, start, end, title, taskKey) {
     var a = A(), esc = a.esc, g = a.googleReady(), S = a.S;
     var cals = g ? (S.sync.google.calendars || []).filter(function (c) { return c.writable; }) : [];
     var pick = cals.filter(function (c) { return c.id === S.ui.newCal; })[0] || cals.filter(function (c) { return c.primary; })[0] || cals[0];
@@ -474,7 +475,7 @@
       var calSel = document.getElementById("dk-ne-cal"), calId = calSel ? calSel.value : "";
       if (calId) { S.ui.newCal = calId; a.saveUi(); }
       document.getElementById("dk-ne-go").disabled = true;
-      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz, repeat: o.repeat, calendarId: calId || undefined }).then(function (r) {
+      a.call("createEvent", { title: o.title, date: o.date, start: o.start, end: o.end, allDay: o.allDay, tz: o.tz, repeat: o.repeat, calendarId: calId || undefined, taskKey: taskKey || undefined }).then(function (r) {
         d.close(); a.toast(r.repeat ? "Repeating event created (" + C.repeatLabel(o.repeat, o.date) + ")." : "Event created."); cal.extra = null; a.resync();
       }, function (err) { document.getElementById("dk-ne-go").disabled = false; document.getElementById("dk-ne-msg").textContent = err.message; });
     };

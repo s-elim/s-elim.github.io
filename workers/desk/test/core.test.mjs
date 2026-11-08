@@ -316,3 +316,238 @@ test('a weekly repeat starts on one of its days, wherever the date was typed', (
   assert.equal(core.alignToDays('2026-11-16', ['MO']), '2026-11-16');
   assert.equal(core.alignToDays('', ['MO']), '');
 });
+
+// ------------------------------------------------------------- agendaDays
+// Fixtures go through the real normEvent and unifyTasks, so a change in their
+// shape shows up here too. The order of items within one day is not pinned.
+
+const TWO_WEEKS = ['2026-10-11', '2026-10-12', '2026-10-13', '2026-10-14', '2026-10-15', '2026-10-16', '2026-10-17',
+  '2026-10-18', '2026-10-19', '2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23', '2026-10-24'];
+const AFTER_TWO_WEEKS = '2026-10-25';
+const agendaEvent = (title, start, end) => core.normEvent({ id: title, calendarId: 'me', title, start, end });
+const hourOn = (title, date) => agendaEvent(title, date + 'T10:00:00', date + 'T11:00:00');
+const agendaTask = (title, due, done = false) => core.unifyTasks([{ id: title, listId: 'L1', title, due, done }], [])[0];
+const agendaDeadline = (title, date, done = false) => ({ key: 'desk:' + title, title, date, time: '', source: 'Desk', done });
+const titlesOf = list => list.map(item => item.title).sort();
+// { date: [titles] } for just the days with something in that column.
+const filledDays = (days, column) => Object.fromEntries(days.filter(d => d[column].length).map(d => [d.date, titlesOf(d[column])]));
+
+test('agendaDays returns one empty day per date when there is nothing to show', () => {
+  const out = core.agendaDays({ today: '2026-10-11', days: 14, events: [], tasks: [], deadlines: [] });
+  assert.deepEqual(out, TWO_WEEKS.map(date => ({ date, events: [], tasks: [], deadlines: [] })));
+});
+
+test('agendaDays treats missing lists as empty', () => {
+  const empty = date => ({ date, events: [], tasks: [], deadlines: [] });
+  assert.deepEqual(core.agendaDays({ today: '2026-10-11', days: 2 }), [empty('2026-10-11'), empty('2026-10-12')]);
+  assert.deepEqual(core.agendaDays({ today: '2026-10-11', days: 1, events: undefined, tasks: undefined, deadlines: undefined }), [empty('2026-10-11')]);
+  const [day] = core.agendaDays({ today: '2026-10-11', days: 1, tasks: [agendaTask('Solo', '2026-10-11')] });
+  assert.deepEqual([titlesOf(day.tasks), day.events, day.deadlines], [['Solo'], [], []], 'one list given, the others still empty');
+});
+
+test('agendaDays returns exactly as many days as asked for', () => {
+  const dates = days => core.agendaDays({ today: '2026-10-11', days }).map(d => d.date);
+  assert.deepEqual(dates(0), []);
+  assert.deepEqual(dates(1), ['2026-10-11']);
+  assert.deepEqual(dates(7), TWO_WEEKS.slice(0, 7));
+  assert.deepEqual(dates(14), TWO_WEEKS);
+});
+
+test('agendaDays gives consecutive dates across a month end and a year end', () => {
+  const dates = today => core.agendaDays({ today, days: 14 }).map(d => d.date);
+  assert.deepEqual(dates('2026-10-25'), ['2026-10-25', '2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29', '2026-10-30', '2026-10-31',
+    '2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-07']);
+  assert.deepEqual(dates('2026-12-25'), ['2026-12-25', '2026-12-26', '2026-12-27', '2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31',
+    '2027-01-01', '2027-01-02', '2027-01-03', '2027-01-04', '2027-01-05', '2027-01-06', '2027-01-07']);
+});
+
+test('agendaDays includes the last day of the window and nothing after it', () => {
+  const out = core.agendaDays({
+    today: '2026-10-11', days: 14,
+    events: [hourOn('Last event', '2026-10-24'), hourOn('Too late event', AFTER_TWO_WEEKS)],
+    tasks: [agendaTask('Last task', '2026-10-24'), agendaTask('Too late task', AFTER_TWO_WEEKS)],
+    deadlines: [agendaDeadline('Last deadline', '2026-10-24'), agendaDeadline('Too late deadline', AFTER_TWO_WEEKS)],
+  });
+  assert.equal(out.length, 14);
+  assert.equal(out[13].date, '2026-10-24');
+  assert.deepEqual(filledDays(out, 'events'), { '2026-10-24': ['Last event'] });
+  assert.deepEqual(filledDays(out, 'tasks'), { '2026-10-24': ['Last task'] });
+  assert.deepEqual(filledDays(out, 'deadlines'), { '2026-10-24': ['Last deadline'] });
+});
+
+test('agendaDays shows items in the second week, past the old 7-day limit', () => {
+  const secondWeek = TWO_WEEKS.slice(7);
+  const expected = label => Object.fromEntries(secondWeek.map(d => [d, [label + ' ' + d]]));
+  const out = core.agendaDays({
+    today: '2026-10-11', days: 14,
+    events: secondWeek.map(d => hourOn('Event ' + d, d)),
+    tasks: secondWeek.map(d => agendaTask('Task ' + d, d)),
+    deadlines: secondWeek.map(d => agendaDeadline('Deadline ' + d, d)),
+  });
+  assert.deepEqual(filledDays(out, 'events'), expected('Event'));
+  assert.deepEqual(filledDays(out, 'tasks'), expected('Task'));
+  assert.deepEqual(filledDays(out, 'deadlines'), expected('Deadline'));
+});
+
+test('agendaDays puts a multi-day event on every day it touches, with exclusive all-day ends', () => {
+  const out = core.agendaDays({
+    today: '2026-10-11', days: 5,
+    events: [
+      agendaEvent('Conference', '2026-10-12', '2026-10-14'),
+      agendaEvent('Overnight', '2026-10-13T22:00:00', '2026-10-14T02:00:00'),
+      agendaEvent('Ends at midnight', '2026-10-11T22:00:00', '2026-10-12T00:00:00'),
+      agendaEvent('Began earlier', '2026-10-09T09:00:00', '2026-10-11T10:00:00'),
+      agendaEvent('Runs off the end', '2026-10-15T09:00:00', '2026-10-20T09:00:00'),
+    ],
+  });
+  assert.deepEqual(filledDays(out, 'events'), {
+    '2026-10-11': ['Began earlier', 'Ends at midnight'],
+    '2026-10-12': ['Conference'],
+    '2026-10-13': ['Conference', 'Overnight'],
+    '2026-10-14': ['Overnight'],
+    '2026-10-15': ['Runs off the end'],
+  });
+});
+
+test('agendaDays lists open tasks on their due date, and no undated, overdue or done ones', () => {
+  const tasks = [
+    agendaTask('Due today', '2026-10-11'),
+    agendaTask('Due later', '2026-10-20'),
+    agendaTask('Undated', ''),
+    agendaTask('Overdue', '2026-10-09'),
+    agendaTask('Finished', '2026-10-20', true),
+    ...core.unifyTasks([], [{ id: 'd1', version: 1, data: { title: 'Desk task', due: '2026-10-13' } }]),
+  ];
+  const out = core.agendaDays({ today: '2026-10-11', days: 14, tasks });
+  assert.deepEqual(filledDays(out, 'tasks'), { '2026-10-11': ['Due today'], '2026-10-13': ['Desk task'], '2026-10-20': ['Due later'] });
+});
+
+test('agendaDays lists open deadlines on their date and drops done ones', () => {
+  const deadlines = core.collectDeadlines({
+    today: '2026-10-11',
+    entries: [
+      { id: 'a', title: 'Open paper', deadline: '2026-10-20', status: 'inbox' },
+      { id: 'b', title: 'Done paper', deadline: '2026-10-20', status: 'done' },
+      { id: 'c', title: 'Missed paper', deadline: '2026-10-05', status: 'inbox' },
+    ],
+  });
+  assert.equal(deadlines.length, 3, 'all three reach agendaDays');
+  const out = core.agendaDays({ today: '2026-10-11', days: 14, deadlines });
+  assert.deepEqual(filledDays(out, 'deadlines'), { '2026-10-20': ['Open paper'] });
+});
+
+test('agendaDays leaves its inputs unchanged', () => {
+  const input = {
+    today: '2026-10-11', days: 3,
+    events: [hourOn('Later', '2026-10-12'), hourOn('Sooner', '2026-10-11')],
+    tasks: [agendaTask('Task', '2026-10-12'), agendaTask('Done task', '2026-10-11', true)],
+    deadlines: [agendaDeadline('Deadline', '2026-10-12'), agendaDeadline('Done deadline', '2026-10-11', true)],
+  };
+  const before = structuredClone(input);
+  core.agendaDays(input);
+  assert.deepEqual(input, before);
+});
+
+// ------------------------------------------------------------- taskBlocks
+
+const blockTask = () => core.unifyTasks([{ id: 't1', listId: 'L1', title: 'Write intro', due: '', done: false }], [])[0];
+const LINKED = { taskKey: 'g:L1:t1' };
+// A block later today (NOW is 09:30), unlinked and with an unrelated title unless told otherwise.
+const block = (id, h1, h2, extra = {}) => ev(h1, 0, h2, 0, { id, title: 'Some block', taskKey: '', editable: true, recurring: false, ...extra });
+const blockIds = (task, events) => core.taskBlocks(task, events, NOW).map(e => e.id);
+
+test('normEvent carries the task link of a time block', () => {
+  assert.equal(core.normEvent({ id: 'b', calendarId: 'me', start: '2026-10-12T10:00:00', taskKey: 'g:L1:t1' }).taskKey, 'g:L1:t1');
+});
+
+test('normEvent gives an unlinked event an empty taskKey', () => {
+  assert.equal(core.normEvent({ id: 'b', calendarId: 'me', start: '2026-10-12T10:00:00' }).taskKey, '');
+});
+
+test('taskBlocks finds events linked by taskKey, whatever their title', () => {
+  const events = [block('renamed', 10, 11, { title: 'Renamed in Google Calendar', ...LINKED }), block('stranger', 12, 13, { title: 'Lunch' })];
+  assert.deepEqual(blockIds(blockTask(), events), ['renamed']);
+  const deskTask = core.unifyTasks([], [{ id: 'abc', version: 1, data: { title: 'Desk task' } }])[0];
+  assert.deepEqual(blockIds(deskTask, [block('desk', 10, 11, { taskKey: 'd:abc' }), block('google', 12, 13, LINKED)]), ['desk']);
+});
+
+test('taskBlocks picks up unlinked events by title, ignoring case and surrounding whitespace', () => {
+  const events = [
+    block('exact', 10, 11, { title: 'Write intro' }),
+    block('case', 11, 12, { title: 'WRITE INTRO' }),
+    block('spaces', 12, 13, { title: '  write Intro\t' }),
+  ];
+  assert.deepEqual(blockIds(blockTask(), events), ['exact', 'case', 'spaces']);
+  const paddedTask = { ...blockTask(), title: '  WRITE intro ' };
+  assert.deepEqual(blockIds(paddedTask, [block('exact', 10, 11, { title: 'Write intro' })]), ['exact'], 'the task title is normalised too');
+});
+
+test('taskBlocks does not pick up unlinked events whose title only resembles the task', () => {
+  const events = [
+    block('same', 10, 11, { title: 'Write intro' }),
+    block('longer', 11, 12, { title: 'Write intro draft' }),
+    block('inner-space', 12, 13, { title: 'Write  intro' }),
+  ];
+  assert.deepEqual(blockIds(blockTask(), events), ['same']);
+});
+
+test('taskBlocks does not take a repeating or read-only event for a block on its title alone', () => {
+  const events = [
+    block('weekly', 10, 11, { title: 'Write intro', recurring: true }),
+    block('shared', 12, 13, { title: 'Write intro', editable: false }),
+  ];
+  assert.deepEqual(blockIds(blockTask(), events), []);
+});
+
+test('taskBlocks keeps a linked event even when it repeats or is read-only', () => {
+  const events = [block('daily', 10, 11, { ...LINKED, recurring: true }), block('shared', 12, 13, { ...LINKED, editable: false })];
+  assert.deepEqual(blockIds(blockTask(), events), ['daily', 'shared']);
+});
+
+test('taskBlocks refuses an event linked to another task, even with an identical title', () => {
+  const events = [block('mine', 10, 11, LINKED), block('theirs', 12, 13, { title: 'Write intro', taskKey: 'g:L1:t2' })];
+  assert.deepEqual(blockIds(blockTask(), events), ['mine']);
+});
+
+test('taskBlocks never counts all-day events, linked or not', () => {
+  const allDay = (id, extra) => ({ id, start: new Date(2026, 9, 12), end: new Date(2026, 9, 13), allDay: true, ...extra });
+  const events = [
+    allDay('by-key', { title: 'Anything', ...LINKED }),
+    allDay('by-title', { title: 'Write intro', taskKey: '' }),
+    block('timed', 10, 11, LINKED),
+  ];
+  assert.deepEqual(blockIds(blockTask(), events), ['timed']);
+});
+
+test('taskBlocks drops blocks that have ended and keeps the one in progress', () => {
+  const events = [
+    ev(8, 0, 9, 0, { id: 'ended', title: 'Write intro', ...LINKED }),
+    ev(9, 0, 9, 30, { id: 'ends-now', title: 'Write intro', ...LINKED }),
+    ev(9, 0, 10, 0, { id: 'running', title: 'Write intro', ...LINKED }),
+    ev(9, 30, 10, 0, { id: 'starts-now', title: 'Write intro', ...LINKED }),
+    ev(11, 0, 12, 0, { id: 'later', title: 'Write intro', ...LINKED }),
+  ];
+  assert.deepEqual(blockIds(blockTask(), events), ['running', 'starts-now', 'later']);
+});
+
+test('taskBlocks sorts by start across days, whatever the input order', () => {
+  const tomorrow = { id: 'tomorrow', title: 'Some block', start: new Date(2026, 9, 12, 8, 0), end: new Date(2026, 9, 12, 9, 0), allDay: false, ...LINKED };
+  const events = [tomorrow, block('afternoon', 14, 15, LINKED), block('morning', 10, 11, LINKED)];
+  assert.deepEqual(blockIds(blockTask(), events), ['morning', 'afternoon', 'tomorrow']);
+});
+
+test('taskBlocks leaves the event list in its original order', () => {
+  const events = [block('later', 14, 15, LINKED), block('earlier', 10, 11, LINKED)];
+  core.taskBlocks(blockTask(), events, NOW);
+  assert.deepEqual(events.map(e => e.id), ['later', 'earlier']);
+});
+
+test('taskBlocks returns an empty list when nothing belongs to the task', () => {
+  assert.deepEqual(core.taskBlocks(blockTask(), [], NOW), []);
+  assert.deepEqual(core.taskBlocks(blockTask(), [block('other', 10, 11, { title: 'Lunch' })], NOW), []);
+});
+
+test('taskBlocks reads the link off an event that came through normEvent', () => {
+  const e = core.normEvent({ id: 'b', calendarId: 'me', title: 'Renamed', start: '2026-10-12T10:00:00', end: '2026-10-12T11:00:00', taskKey: 'g:L1:t1' });
+  assert.deepEqual(blockIds(blockTask(), [e]), ['b@me']);
+});

@@ -515,6 +515,10 @@ i.dk-dot::before { margin-top: .35rem; }
   font: 600 .72rem var(--font-body);
   text-decoration: none;
 }
+.dk-panel--agenda {
+  .dk-panel__head + .dk-sub { margin-top: .25rem; }
+  .dk-evs + ul, .dk-dls + .dk-tasks { margin-top: .3rem; }
+}
 .dk-now {
   display: flex;
   align-items: center;
@@ -558,9 +562,9 @@ i.dk-dot::before { margin-top: .35rem; }
   background: var(--good) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center / 80% no-repeat;
 }
 .dk-check input:focus-visible + .dk-check__box { box-shadow: 0 0 0 3px var(--focus-ring); }
+.dk-task__main { flex: 1; min-width: 0; display: grid; gap: .15rem; }
 .dk-task__title {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   padding: 0;
   border: 0;
   background: none;
@@ -575,6 +579,44 @@ i.dk-dot::before { margin-top: .35rem; }
 }
 .dk-task__time, .dk-task__due, .dk-task__list { flex: 0 0 auto; color: var(--muted); font: 500 .7rem/1.9 var(--font-mono); }
 .dk-task__due.is-late { color: var(--dk-hot); }
+.dk-task__blocks { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; }
+.dk-task__block {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .02rem .45rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: 600 .68rem/1.6 var(--font-mono);
+  cursor: pointer;
+  i { font-size: .6rem; }
+  &:hover, &:focus-visible { border-color: var(--accent); }
+}
+.dk-task__more { color: var(--muted); font: 500 .68rem/1.6 var(--font-mono); }
+// The clamp lives on the inner span: browsers do not clamp a button's own box.
+.dk-task__notes {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: .76rem;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  &:hover { color: var(--text); }
+  span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+}
 .dk-task__list { max-width: 6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 // Today / Tomorrow / Block time appear over the row's right end on hover or
 // keyboard focus. Touch screens have no hover, so there they live in the task
