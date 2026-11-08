@@ -45,8 +45,9 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --porcelain _data/conferences.yml)" ]; then
-            git add _data/conferences.yml
+          # The page carries the "Updated <date>" label, so it changes every run.
+          if [ -n "$(git status --porcelain _data/conferences.yml _pages/deadlines.html)" ]; then
+            git add _data/conferences.yml _pages/deadlines.html
             git commit -m "chore(deadlines): automated monthly sync [skip ci]"
             git pull --rebase origin master
             git push origin master

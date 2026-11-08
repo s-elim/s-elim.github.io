@@ -3,6 +3,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CONFERENCES_YML = REPO_ROOT / "_data" / "conferences.yml"
+# Its subtitle shows the date of the last successful sync.
+DEADLINES_PAGE = REPO_ROOT / "_pages" / "deadlines.html"
 
 # Both lists are MIT-licensed and community-maintained. ccf-deadlines is the
 # primary source (it is usually first to carry a new call); ai-deadlines from

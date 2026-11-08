@@ -5,11 +5,11 @@ import os
 import httpx
 import yaml
 
-from .config import BIENNIAL, CCF_RAW, CONFERENCES_YML, HF_RAW, SOURCES, USER_AGENT
+from .config import BIENNIAL, CCF_RAW, CONFERENCES_YML, DEADLINES_PAGE, HF_RAW, SOURCES, USER_AGENT
 from .confirm import confirmed
 from .merge import is_unconfirmed, plan_venue, unconfirmed
 from .sources import ISO_DATE, parse_ccf, parse_hf
-from .yamlio import replace_entries, stamp_header
+from .yamlio import replace_entries, stamp_header, stamp_page
 
 
 def _fetch(client, url, parse, tries: int = 2):
@@ -137,4 +137,10 @@ def run_deadlines(dry_run: bool = False, today: str = "") -> int:
         with open(CONFERENCES_YML, "w", encoding="utf-8", newline="\n") as f:
             f.write(new_text)
         print("Wrote %s" % CONFERENCES_YML)
+    if not dry_run:
+        # The lists were read, so the page is current as of today even when
+        # no venue changed.
+        page = DEADLINES_PAGE.read_text(encoding="utf-8")
+        with open(DEADLINES_PAGE, "w", encoding="utf-8", newline="\n") as f:
+            f.write(stamp_page(page, today))
     return len(changed)

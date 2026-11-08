@@ -350,13 +350,13 @@
   flag: "🇲🇾"
   dates: August 18-22, 2027
   website: https://icdar2027.org/call-for-papers
-  note: The call for papers gives 20 Feb 2027 for full papers and the Important Dates page gives 28 Feb; the earlier date is shown until they agree.
+  note: Conference track shown. The separate IJDAR journal track closes 15 Nov 2026.
   timeline:
     - label: Abstract Deadline
-      date: 2027-01-31
+      date: 2027-02-26
       tz: AoE
     - label: Paper Submission
-      date: 2027-02-20
+      date: 2027-03-05
       tz: AoE
     - label: Reviews Released
       date: 2027-04-20

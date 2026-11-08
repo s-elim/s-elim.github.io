@@ -12,6 +12,8 @@ import yaml
 _ORDER = ("name", "edition", "category", "rank", "location", "flag", "dates", "website", "note")
 _ALWAYS_QUOTED = {"rank", "flag"}
 _STAMP = re.compile(r"^#  Last automated update:.*$", re.M)
+_PAGE_STAMP = re.compile(r'(<span class="deadlines__verified">)[^<]*(</span>)')
+_MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 
 def _scalar(value, quote=False) -> str:
@@ -77,3 +79,14 @@ def replace_entries(text: str, changed: dict) -> str:
 def stamp_header(text: str, today: str, count: int) -> str:
     line = "#  Last automated update: %s (%d venue%s changed)" % (today, count, "" if count == 1 else "s")
     return _STAMP.sub(line, text, count=1)
+
+
+def stamp_page(text: str, today: str) -> str:
+    """Put the sync date ("Updated 1 Nov 2026") in the /deadlines/ subtitle.
+    Only the label text changes, so the frozen page keeps its markup."""
+    year, month, day = (int(p) for p in today.split("-"))
+    label = "Updated %d %s %d" % (day, _MONTHS[month - 1], year)
+    new, n = _PAGE_STAMP.subn(lambda m: m.group(1) + label + m.group(2), text, count=1)
+    if n != 1:
+        raise SystemExit("Refusing to write: the date label is missing from the deadlines page.")
+    return new

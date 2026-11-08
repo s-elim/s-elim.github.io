@@ -280,3 +280,17 @@ def test_stamp_header_records_the_run():
     out = stamp_header(SAMPLE, "2026-11-01", 3)
     assert "#  Last automated update: 2026-11-01 (3 venues changed)" in out
     assert out.count("Last automated update") == 1
+
+
+def test_stamp_page_updates_only_the_date_label():
+    import pytest
+    from deadlines.config import DEADLINES_PAGE
+    from deadlines.yamlio import stamp_page
+    page = DEADLINES_PAGE.read_text(encoding="utf-8")
+    out = stamp_page(page, "2026-12-01")
+    assert '<span class="deadlines__verified">Updated 1 Dec 2026</span>' in out
+    assert stamp_page(out, "2026-12-01") == out, "running twice changes nothing"
+    head, tail = page.split('<span class="deadlines__verified">', 1)
+    assert out.startswith(head) and out.endswith(tail.split("</span>", 1)[1]), "the rest of the page is untouched"
+    with pytest.raises(SystemExit):
+        stamp_page("no label here", "2026-12-01")
