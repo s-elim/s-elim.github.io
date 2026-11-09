@@ -1,7 +1,7 @@
 # Research & Work experience (Experience page). `org`, `extra`, `points` are raw HTML.
 # `date` renders as a pill on the right; `current: true` adds a pulsing Current badge.
 - role: 'Graduate Research Assistant'
-  org: '<a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea <span class="fi fi-kr"></span>'
+  org: '<a href="https://avil-lab.github.io/avil/" target="_blank" rel="noopener">Advanced Visual Intelligence Lab (AVI)</a> · Yeungnam University, South Korea <span class="fi fi-kr"></span>'
   date: 'Aug 2025 - Sep 2027'
   current: true
   extra: 'Advisor: <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>'

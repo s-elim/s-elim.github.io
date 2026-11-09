@@ -43,7 +43,7 @@ redirect_from:
   <div class="hero__intro">
     <h1 class="hero__name">{{ p.name }}</h1>
     <span class="hero__role">M.Sc. (Research) Student &middot; 3D Computer Vision &amp; Physical Super Intelligence</span>
-    <span class="hero__affil"><a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, Yeungnam University &middot; GKS Scholar</span>
+    <span class="hero__affil"><a href="https://avil-lab.github.io/avil/" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, Yeungnam University &middot; GKS Scholar</span>
     <p class="hero__bio">I build embodied agents that perceive, reason and act in the physical world, working toward <strong>physical super intelligence</strong>. My work spans <strong>3D computer vision &amp; 6D pose estimation</strong>, <strong>vision-language-action (VLA) models</strong> and <strong>latent world models</strong> for robot manipulation, with first-author papers at <strong>BMVC&rsquo;26</strong> and in <strong>IEEE Access</strong>. <button type="button" class="news-more js-modal-open" data-modal-target="#about-modal">More about me &rarr;</button></p>
     <a class="hero__status" href="mailto:{{ p.email }}?subject=Research%20collaboration%20%2F%20PhD%20opportunity">Open to research collaborations &amp; PhD positions</a>
     <div class="hero__chips">
@@ -146,7 +146,7 @@ redirect_from:
       </button>
     </div>
     <div class="modal__body">
-<p>I am pursuing an <strong>M.Sc. in Computer Vision &amp; AI</strong> at <a href="http://www.ynu.kr/_english/main/index.php" target="_blank" rel="noopener">Yeungnam University (YU)</a>, where I am maintaining a perfect <strong>CGPA of 4.5/4.5 (Ranked 1st / Top 1)</strong>. I am a <a href="https://www.studyinkorea.go.kr/" target="_blank" rel="noopener">Global Korea Scholarship (GKS)</a> scholar funded by NIIED, with additional support from the <strong>RLRC &amp; RISE</strong> industry-collaboration projects. I am a member of the <a href="https://avilabyu.wixsite.com/avil" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, supervised by <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>.</p>
+<p>I am pursuing an <strong>M.Sc. in Computer Vision &amp; AI</strong> at <a href="http://www.ynu.kr/_english/main/index.php" target="_blank" rel="noopener">Yeungnam University (YU)</a>, where I am maintaining a perfect <strong>CGPA of 4.5/4.5 (Ranked 1st / Top 1)</strong>. I am a <a href="https://www.studyinkorea.go.kr/" target="_blank" rel="noopener">Global Korea Scholarship (GKS)</a> scholar funded by NIIED, with additional support from the <strong>RLRC &amp; RISE</strong> industry-collaboration projects. I am a member of the <a href="https://avil-lab.github.io/avil/" target="_blank" rel="noopener">Advanced Visual Intelligence Lab</a>, supervised by <a href="https://scholar.google.com/citations?user=3TptC38AAAAJ&hl=en" target="_blank" rel="noopener">Prof. Sungho Kim</a>.</p>
 
 <p>My research focuses on <strong>3D computer vision &amp; spatial intelligence, 6D pose estimation, vision-language-action (VLA) models, world models, and agentic robotics</strong> for robot manipulation. I aim to build embodied agents capable of perceiving, reasoning, and acting within the physical world, working toward <strong>physical super intelligence</strong>. My contributions in these areas include first-author publications at <strong>BMVC'26</strong> and in <strong>IEEE Access (SCIE-Q1)</strong>.</p>
 
