@@ -48,7 +48,7 @@
     - { label: 'Project Page', url: 'https://physical-super-intelligence.github.io/AFFORD-X/', kind: 'project' }
     - { label: 'Code', url: 'https://github.com/Physical-AGI/AFFORD-X', kind: 'code' }
 
-- title: 'Agentic-WM: Grounding Multimodal Policies in Hierarchical Latent World Model'
+- title: 'Agentic-LWM: Grounding Multimodal Policies in Hierarchical Latent World Model'
   thrust: 'world-models'
   authors: 'Md Selim Sarowar and Sungho Kim*'
   venue: 'Robotics: Science and Systems'
