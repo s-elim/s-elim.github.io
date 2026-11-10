@@ -223,6 +223,8 @@
 
 - title: 'C3G-VM6D: Data-Efficient C3G Vision Model Aided 6D Pose Estimation based on RGB-D Data'
   thrust: 'perception'
+  arc_label: true
+  arc_venue: 'IEEE Access'
   authors: 'Md Selim Sarowar, Manar Alnaasan and Sungho Kim*'
   venue: 'IEEE Access'
   impact: 'SCIE-Q1, IF: 4.2'

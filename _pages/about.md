@@ -17,7 +17,8 @@ redirect_from:
   draws every non-patent paper with a `thrust` onto one of four layers:
   published work as beads, "Under Review" / "In Preparation" work as labelled
   chips (in-preparation papers are drawn even though they are not counted).
-  A published paper with `arc_label: true` is drawn as a solid labelled chip.
+  A published paper with `arc_label: true` is drawn as a solid labelled chip;
+  `arc_venue` overrides the venue shown on a chip (for papers with no venue_short).
   Within a layer: published beads first, then chips, each oldest to newest.
 {%- endcomment -%}
 {%- assign pubs = site.data.publications -%}
@@ -108,7 +109,7 @@ redirect_from:
               {%- elsif pub.type == "preprint" -%}{%- assign st = "Preprint" -%}
               {%- elsif pub.venue contains "(Accepted)" -%}{%- assign st = "Accepted" -%}
               {%- else -%}{%- assign st = "Published" -%}{%- endif -%}
-              {%- assign vshort = pub.venue_short | default: pub.thumb -%}
+              {%- assign vshort = pub.arc_venue | default: pub.venue_short | default: pub.thumb -%}
               {%- assign href = pub.url | default: arc_pubs_url -%}
               {%- assign vclean = pub.venue | remove: " (Accepted)" -%}
               {%- if pub.type == "preprint" -%}{%- assign vclean = "preprints.org" -%}{%- endif -%}
