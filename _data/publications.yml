@@ -250,6 +250,7 @@
 
 - title: 'Fusion VLM-Gait: RGB-D Fusion in Vision-Language Models for Explainable Multi-Task Parkinsonian Gait Analysis'
   thrust: 'perception'
+  arc_label: true
   authors: 'Manar Alnaasan, Md Selim Sarowar and Sungho Kim*'
   venue: 'Scientific Reports'
   impact: 'SCIE-Q1, IF: 4.9'
