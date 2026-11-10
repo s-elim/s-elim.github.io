@@ -206,7 +206,26 @@ body { background: var(--bg); color: var(--text); }
   box-shadow: 0 0 0 1px var(--border), var(--shadow-md);
   object-fit: cover;
 }
-.hero--clean .hero__intro { grid-column: 1; grid-row: 1; align-self: start; min-width: 0; } // top of the name lines up with the top of the portrait
+// Intro card (Selim, 2026-11-11: "make it a card, it looks good if both sides are
+// cards"): same shell as the Research arc panel, sharing its top edge (halfway
+// down the portrait) and its bottom edge, with the content centred vertically.
+.hero--clean .hero__intro {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: stretch;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: calc(var(--avatar) / 2);
+  padding: 2rem 2.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.hero--clean .hero__intro > :last-child { margin-bottom: 0; }
+.hero--clean .hero__intro .hero__status { align-self: flex-start; }
 .hero--clean .glance {
   grid-column: 2;
   grid-row: 1;
@@ -458,7 +477,7 @@ a.hero__status:hover { color: var(--accent); }
     height: 120px;
     margin: 0;
   }
-  .hero--clean .hero__intro { grid-row: 2; align-self: auto; }
+  .hero--clean .hero__intro { grid-row: 2; align-self: auto; margin-top: 0; padding: 1.4rem 1.5rem; }
   .hero--clean .glance {
     grid-column: 1;
     grid-row: 3;
@@ -472,6 +491,7 @@ a.hero__status:hover { color: var(--accent); }
     height: 112px;
   }
   .hero--clean .glance { padding: 1.05rem 1.1rem 1rem; }
+  .hero--clean .hero__intro { padding: 1.05rem 1.1rem 1.1rem; }
   .hero--clean .hero__name { font-size: 2.15rem; }
 }
 @media (max-width: $bp-sm) {
