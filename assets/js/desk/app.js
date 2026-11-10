@@ -17,7 +17,8 @@
     { id: "today", label: "Today", icon: "fa-sun" },
     { id: "board", label: "Board", icon: "fa-th-large" },
     { id: "calendar", label: "Calendar", icon: "fa-calendar-alt" },
-    { id: "notion", label: "Research OS", icon: "fa-database" }
+    { id: "notion", label: "Research OS", icon: "fa-database" },
+    { id: "review", label: "Week", icon: "fa-chart-bar" }
   ];
   var README = "https://github.com/s-elim/s-elim.github.io/blob/master/workers/desk/README.md";
   var AUTO_REFRESH_MS = 5 * 60e3;
@@ -71,7 +72,8 @@
 
   // Rich text from the editor is stored as HTML; only this whitelist survives.
   var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, S: 1, STRIKE: 1, CODE: 1, BR: 1, UL: 1, OL: 1, LI: 1, P: 1, DIV: 1, SPAN: 1, MARK: 1, A: 1 };
-  var OK_CLASS = /^(tc-[1-6]|hl-[1-5]|pin)$/;
+  var OK_CLASS = /^(tc-[1-6]|hl-[1-5]|pin|dk-ref|is-missing)$/;
+  var REF_ID = /^[A-Za-z0-9_.:-]{1,80}$/; // an entry id, as the backend accepts it
   var DROP_TAGS = { SCRIPT: 1, STYLE: 1, TEMPLATE: 1, NOSCRIPT: 1, IFRAME: 1, OBJECT: 1, TITLE: 1 };
   function scrub(n) {
     if (n.nodeType === 3) return;
@@ -88,6 +90,8 @@
     Array.prototype.slice.call(n.attributes).forEach(function (a) {
       var name = a.name.toLowerCase();
       if (tag === "A" && name === "href" && safeUrl(a.value)) return;
+      // A link to another entry, written by core.linkRefs: only an id-shaped value.
+      if (tag === "SPAN" && name === "data-ref" && REF_ID.test(a.value) && /\bdk-ref\b/.test(n.getAttribute("class") || "")) return;
       if ((tag === "SPAN" || tag === "MARK") && name === "class") {
         var keep = a.value.split(/\s+/).filter(function (c) { return OK_CLASS.test(c); });
         if (keep.length) { n.setAttribute("class", keep.join(" ")); return; }
@@ -117,7 +121,9 @@
      Every call is one POST to the Apps Script web app (workers/desk/Code.gs).
      The body goes as text/plain so the browser sends a simple request: Apps
      Script cannot answer a CORS preflight. */
-  function call(action, payload) {
+  // opts.direct: never queue (used by the queue itself when it replays).
+  function call(action, payload, opts) {
+    opts = opts || {};
     var body = Object.assign({ action: action }, payload || {});
     if (S.token) body.token = S.token;
     var ctrl = window.AbortController ? new AbortController() : null;
@@ -132,8 +138,10 @@
       });
     }, function (e) {
       done();
-      var err = new Error(e && e.name === "AbortError" ? "The desk took too long to answer." : "Cannot reach the desk.");
+      var abort = !!(e && e.name === "AbortError");
+      var err = new Error(abort ? "The desk took too long to answer." : "Cannot reach the desk.");
       err.offline = true;
+      err.kind = abort ? "abort" : "network";
       throw err;
     }).then(function (j) {
       done();
@@ -145,7 +153,32 @@
         throw err;
       }
       return j;
+    }).catch(function (err) {
+      // No network at all (not a slow answer, which may still have landed):
+      // keep the write on this device and carry on as if it had succeeded.
+      if (!opts.direct && err.offline && err.kind === "network" && Desk.queue && Desk.queue.QUEUEABLE[action] && (S.mode !== "private" || S.token)) {
+        Desk.queue.add(action, payload);
+        S.offline = true;
+        toast("Offline: kept on this device, it will sync when the desk is reachable again.");
+        renderStatus();
+        return Desk.queue.synth(action, payload);
+      }
+      throw err;
     });
+  }
+
+  // Which backend actions the deployed script has (health.features; an older
+  // script reports none).
+  function feature(name) {
+    var f = S.health && S.health.features;
+    return !!(f && f.indexOf(name) !== -1);
+  }
+  // Private images come through the backend as data URLs, fetched once per page.
+  var imgCache = {};
+  function imageData(id) {
+    if (imgCache[id]) return imgCache[id];
+    imgCache[id] = call("getImage", { id: id }).then(function (r) { return r.image.dataUrl; }, function (err) { delete imgCache[id]; throw err; });
+    return imgCache[id];
   }
 
   function persist() {
@@ -180,11 +213,28 @@
     return null;
   }
   function upsertEntry(doc) {
-    var rec = { id: doc.id, version: doc.version, e: C.normaliseEntry(doc.id, doc.data) };
+    var e = C.normaliseEntry(doc.id, doc.data);
+    // Search text is built once here, not on every keystroke in the board.
+    var rec = { id: doc.id, version: doc.version, e: e, hay: C.entryHaystack(e, plain), pending: !!doc.pending };
     var i = S.entries.findIndex(function (x) { return x.id === doc.id; });
     if (doc.deleted) { if (i !== -1) S.entries.splice(i, 1); }
     else if (i === -1) S.entries.push(rec);
     else S.entries[i] = rec;
+  }
+  // A document from the server (or the offline queue) lands in the right place.
+  function applyDoc(doc) {
+    if (!doc || !doc.collection) return;
+    if (doc.collection === "entries") upsertEntry(doc);
+    else if (doc.collection === "tasks") {
+      var i = S.deskTasks.findIndex(function (d) { return d.id === doc.id; });
+      if (doc.deleted) { if (i !== -1) S.deskTasks.splice(i, 1); }
+      else if (i === -1) S.deskTasks.push(doc);
+      else S.deskTasks[i] = doc;
+    } else if (doc.collection === "settings") {
+      if (doc.id === "prefs") S.prefs = { id: "prefs", version: doc.version, data: Object.assign({}, S.prefs.data, doc.data) };
+      else if (doc.id === "marks" && Desk.marks) Desk.marks.apply(doc);
+    }
+    persist();
   }
   function entryData(e) {
     var out = {};
@@ -415,7 +465,9 @@
     renderStatus();
     var range = defaultRange();
     range.fresh = !quiet;
-    return call("load", { sync: range }).then(function (r) {
+    // Offline changes go first, so the load that follows already shows them.
+    var pre = Desk.queue && Desk.queue.size() ? Desk.queue.replay() : Promise.resolve(null);
+    return pre.then(function () { return call("load", { sync: range }); }).then(function (r) {
       applyLoad(r);
       S.offline = false;
       if (Desk.calendar) Desk.calendar.invalidate();
@@ -509,8 +561,37 @@
     },
     board: function () { return ["Ideas · plans · goals · targets", "Board"]; },
     calendar: function () { return ["Google Calendar · tasks · deadlines", "Calendar"]; },
-    notion: function () { return ["Notion", "Research OS"]; }
+    notion: function () { return ["Notion", "Research OS"]; },
+    review: function () { return ["Hours · tasks · entries · deadlines", "Week in review"]; }
   };
+
+  /* ---- keeping the user's place across a redraw --------------------------
+     render() replaces the view's HTML, also on background refreshes. The
+     focused control is found again afterwards by id or by the data attribute
+     it carries (and its position among equals), and the scroll stays put. */
+  var FOCUS_ATTRS = ["data-entry", "data-event", "data-edittask", "data-task", "data-taskdue", "data-block", "data-mkfor", "data-go", "data-ttab",
+    "data-free", "data-pin", "data-layout", "data-axis", "data-quick", "data-act", "data-calmode", "data-calnav", "data-layer", "data-dayview",
+    "data-day", "data-slot", "data-workback", "data-rvshift", "data-calday", "data-ref", "data-drag", "data-href", "data-rvcopy"];
+  function cssEsc(s) { return window.CSS && CSS.escape ? CSS.escape(s) : String(s).replace(/["\\]/g, "\\$&"); }
+  function focusKey(body) {
+    var el = document.activeElement;
+    if (!el || el === body || !body.contains(el)) return null;
+    if (el.id) return { sel: "#" + cssEsc(el.id), idx: 0 };
+    for (var i = 0; i < FOCUS_ATTRS.length; i++) {
+      if (!el.hasAttribute(FOCUS_ATTRS[i])) continue;
+      var sel = "[" + FOCUS_ATTRS[i] + '="' + cssEsc(el.getAttribute(FOCUS_ATTRS[i])) + '"]';
+      return { sel: sel, idx: Math.max(0, Array.prototype.indexOf.call(body.querySelectorAll(sel), el)) };
+    }
+    return null;
+  }
+  function restoreFocus(body, key) {
+    if (!key) return;
+    var all;
+    try { all = body.querySelectorAll(key.sel); } catch (e) { return; }
+    var el = all[key.idx] || all[0];
+    if (!el || el === document.activeElement) return;
+    try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+  }
 
   function mount() {
     S.mounted = true;
@@ -521,8 +602,8 @@
         '<aside class="dk-side" aria-label="Desk navigation">' +
           '<div class="dk-brand"><span class="dk-brand__mark" aria-hidden="true"><i class="fas fa-compass"></i></span>' +
             '<span class="dk-brand__text"><span class="dk-brand__title">Research Desk</span><span class="dk-brand__kicker">Physical Super Intelligence</span></span></div>' +
-          '<nav class="dk-nav" role="tablist" aria-label="Desk views">' + VIEWS.map(function (v, i) {
-            return '<button type="button" role="tab" class="dk-navi" data-view="' + v.id + '" title="' + v.label + ' (' + (i + 1) + ')">' +
+          '<nav class="dk-nav" role="tablist" aria-label="Desk views" aria-orientation="vertical">' + VIEWS.map(function (v, i) {
+            return '<button type="button" role="tab" id="dk-tab-' + v.id + '" class="dk-navi" data-view="' + v.id + '" aria-controls="dk-body" tabindex="-1" title="' + v.label + ' (' + (i + 1) + ')">' +
               '<i class="fas ' + v.icon + '" aria-hidden="true"></i><span>' + v.label + '</span><span class="dk-navi__n" data-count="' + v.id + '"></span></button>';
           }).join("") + '</nav>' +
           '<div class="dk-minical" id="dk-minical"></div>' +
@@ -540,14 +621,28 @@
               '<button type="button" class="dk-icon" id="dk-refresh" title="Refresh from Google and Notion (R)" aria-label="Refresh"><i class="fas fa-sync-alt" aria-hidden="true"></i></button>' +
               '<button type="button" class="dk-btn dk-btn--primary" id="dk-new" title="New entry (N)" aria-label="New entry"><i class="fas fa-plus" aria-hidden="true"></i><span class="dk-btn__label">New entry</span></button>' +
             '</div></header>' +
-          '<div class="dk-body" id="dk-body"></div>' +
+          '<div class="dk-body" id="dk-body" role="tabpanel" aria-labelledby="dk-tab-' + S.ui.view + '"></div>' +
         '</section>' +
       '</div>' +
       '<div class="dk-toast" id="dk-toast" role="status" aria-live="polite"></div>';
 
-    host.querySelector(".dk-nav").addEventListener("click", function (e) {
+    var nav = host.querySelector(".dk-nav");
+    nav.addEventListener("click", function (e) {
       var b = e.target.closest("[data-view]");
       if (b) setView(b.getAttribute("data-view"));
+    });
+    // Arrow keys move between the tabs and open them; Home and End jump.
+    nav.addEventListener("keydown", function (e) {
+      var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      var n = VIEWS.length, i = VIEWS.findIndex(function (v) { return v.id === S.ui.view; }), j;
+      if (step) j = (i + step + n) % n;
+      else if (e.key === "Home") j = 0;
+      else if (e.key === "End") j = n - 1;
+      else return;
+      e.preventDefault();
+      setView(VIEWS[j].id);
+      var b = nav.querySelector('[data-view="' + VIEWS[j].id + '"]');
+      if (b) b.focus();
     });
     $("dk-minical").addEventListener("click", onMiniClick);
     $("dk-refresh").addEventListener("click", function () { refresh(false); });
@@ -573,7 +668,9 @@
     if (!S.mounted || !$("dk-body")) return;
     host.classList.toggle("is-compact", S.ui.density === "compact");
     host.querySelectorAll(".dk-navi").forEach(function (b) {
-      b.setAttribute("aria-selected", String(b.getAttribute("data-view") === S.ui.view));
+      var on = b.getAttribute("data-view") === S.ui.view;
+      b.setAttribute("aria-selected", String(on));
+      b.setAttribute("tabindex", on ? "0" : "-1");
     });
     var tt = TITLES[S.ui.view]();
     $("dk-kicker").textContent = tt[0];
@@ -582,6 +679,13 @@
     renderCounts();
     renderMini();
     var body = $("dk-body");
+    body.setAttribute("aria-labelledby", "dk-tab-" + S.ui.view);
+    var fk = focusKey(body), top = body.scrollTop;
+    renderView(body);
+    if (body.scrollTop !== top) body.scrollTop = top;
+    restoreFocus(body, fk);
+  }
+  function renderView(body) {
     if (S.ui.view === "today") {
       // A background refresh must not eat what is being typed into quick add.
       var q = $("dk-quick-text"), typed = q ? q.value : "", focused = q && document.activeElement === q, caret = q ? q.selectionStart : 0;
@@ -593,6 +697,10 @@
     }
     else if (S.ui.view === "board") renderBoardInto(body);
     else if (S.ui.view === "calendar") Desk.calendar.render(body);
+    else if (S.ui.view === "review") {
+      if (Desk.review) Desk.review.render(body);
+      else body.innerHTML = '<div class="dk-empty"><p>The week in review did not load (review.js). Reload the page.</p></div>';
+    }
     else body.innerHTML = viewNotion();
   }
 
@@ -611,9 +719,11 @@
     var dot = function (name, on, bad, title) {
       return '<span class="dk-dot' + (on ? " is-on" : "") + (bad ? " is-bad" : "") + '" title="' + esc(title) + '">' + name + '</span>';
     };
+    var waiting = Desk.queue ? Desk.queue.size() : 0;
     el.innerHTML =
       '<span class="dk-sync__text' + (S.offline ? " is-bad" : "") + '">' +
-        (S.syncing ? "Syncing…" : at ? (S.offline ? "Offline · " : "Synced ") + esc(hhmm(at)) : "Not synced yet") + '</span>' +
+        (S.syncing ? "Syncing…" : at ? (S.offline ? "Offline · " : "Synced ") + esc(hhmm(at)) : "Not synced yet") +
+        (waiting ? ' <span class="dk-sync__q" title="Changes kept on this device until the desk is reachable">' + waiting + ' waiting</span>' : "") + '</span>' +
       '<span class="dk-sync__dots">' +
       dot("Calendar", g && g.ok, g && g.configured && !g.ok, g ? (g.ok ? "Google Calendar and Tasks connected" : g.configured ? "Google: " + (g.error || "error") : "Google not connected") : "Google") +
       dot("Notion", n && n.ok, n && n.configured && !n.ok, n ? (n.ok ? "Notion connected" : n.configured ? "Notion: " + (n.error || "every source failed") : "Notion not connected") : "Notion") +
@@ -1002,9 +1112,11 @@
       '<span class="dk-dl__meta"><i class="dk-swatch" style="--c:' + esc(d.color) + '"></i>' + esc(d.source) +
       (d.status ? " · " + esc(d.status) : "") + ' · ' + esc(fmtDate(d.date, { weekday: "short", day: "numeric", month: "short" })) +
       (d.time ? " " + esc(d.time) + (d.tz ? " " + esc(d.tz) : "") : "") + '</span></span>';
-    if (target) return '<li class="dk-dl"><button type="button" class="dk-dl__b" ' + target + '>' + inner + '</button></li>';
-    if (href) return '<li class="dk-dl"><a class="dk-dl__b" href="' + esc(href) + '" target="_blank" rel="noopener">' + inner + '</a></li>';
-    return '<li class="dk-dl"><span class="dk-dl__b">' + inner + '</span></li>';
+    // Work back: a chain of dated tasks before this date (workback.js).
+    var wb = Desk.workback && !d.done && d.days >= 0 ? '<button type="button" class="dk-dl__wb" data-workback="' + esc(d.key) + '" title="Work back: dated tasks leading up to this deadline" aria-label="Work back from ' + esc(d.title) + '"><i class="fas fa-stream" aria-hidden="true"></i></button>' : "";
+    if (target) return '<li class="dk-dl"><button type="button" class="dk-dl__b" ' + target + '>' + inner + '</button>' + wb + '</li>';
+    if (href) return '<li class="dk-dl"><a class="dk-dl__b" href="' + esc(href) + '" target="_blank" rel="noopener">' + inner + '</a>' + wb + '</li>';
+    return '<li class="dk-dl"><span class="dk-dl__b">' + inner + '</span>' + wb + '</li>';
   }
 
   function panelDeadlines() {
@@ -1064,49 +1176,55 @@
     out.textContent = bits.join(" · ");
   }
 
-  function quickAdd() {
-    var inp = $("dk-quick-text");
-    var raw = inp.value.trim();
-    if (!raw) { inp.focus(); return; }
-    var mode = S.ui.quickMode, p = C.parseQuick(raw, null, { repeats: mode === "event" }), title = p.title || raw;
-    var done = function (msg, opts) { inp.value = ""; paintQuickPreview(); toast(msg, opts); };
+  // One sentence becomes a task, an event or an idea ("review GaussVLA fri 3pm
+  // 1h"). Shared by quick add on Today and the command palette. Resolves true
+  // when something was created.
+  function capture(raw, mode) {
+    raw = String(raw || "").trim();
+    if (!raw) return Promise.resolve(false);
+    var p = C.parseQuick(raw, null, { repeats: mode === "event" }), title = p.title || raw;
+    var ok = function (msg, opts) { toast(msg, opts); render(); return true; };
+    var bad = function (what) { return function (err) { failed(err, what); return false; }; };
     if (mode === "idea") {
       var id = newId("e");
-      saveEntry(id, entryData(C.normaliseEntry(id, { title: title, tags: p.tags, deadline: p.date }))).then(function () {
-        done("Idea added to the board.", { action: "Open", onAction: function () { Desk.editor.open(id); } });
-      }, function (err) { failed(err, "Not saved"); });
-      return;
+      return saveEntry(id, entryData(C.normaliseEntry(id, { title: title, tags: p.tags, deadline: p.date }))).then(function () {
+        return ok("Idea added to the board.", { action: "Open", onAction: function () { Desk.editor.open(id); } });
+      }, bad("Not saved"));
     }
     if (mode === "event") {
       var ev = { title: title, date: p.date || today(), start: p.start, end: p.end || "", allDay: !p.start, tz: tz(), repeat: p.repeat || null };
       if (!googleReady()) {
         window.open(C.gcalTemplateUrl(ev), "_blank", "noopener");
-        done("Opened Google Calendar with the event filled in.");
-        return;
+        return Promise.resolve(ok("Opened Google Calendar with the event filled in."));
       }
-      call("createEvent", { title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz, repeat: ev.repeat })
+      return call("createEvent", { title: ev.title, date: ev.date, start: ev.start, end: ev.end, allDay: ev.allDay, tz: ev.tz, repeat: ev.repeat })
         .then(function (r) {
           // A repeating event comes back as the series, not an occurrence; the
           // refresh below brings its occurrences instead.
           if (r.event && !r.repeat) S.sync.google.events.push(r.event);
-          done(r.repeat ? "Repeating event added (" + C.repeatLabel(ev.repeat, ev.date) + ")." : "Event added to Google Calendar.");
-          render();
           resync();
-        }, function (err) { failed(err, "Google Calendar"); });
-      return;
+          return ok(r.queued ? "Event kept on this device until the desk is reachable." : r.repeat ? "Repeating event added (" + C.repeatLabel(ev.repeat, ev.date) + ")." : "Event added to Google Calendar.");
+        }, bad("Google Calendar"));
     }
     if (tasksReady()) {
-      call("createTask", { title: title, due: p.date, notes: p.start ? "At " + p.start + (p.end ? "–" + p.end : "") : "" }).then(function (r) {
+      return call("createTask", { title: title, due: p.date, notes: p.start ? "At " + p.start + (p.end ? "–" + p.end : "") : "" }).then(function (r) {
         S.sync.google.tasks.push(r.task);
         persist();
-        done("Task added to Google Tasks.");
-        render();
-      }, function (err) { failed(err, "Google Tasks"); });
-      return;
+        return ok(r.queued ? "Task kept on this device until the desk is reachable." : "Task added to Google Tasks.");
+      }, bad("Google Tasks"));
     }
     var tid = newId("t");
-    saveDeskTask(tid, { title: title, due: p.date, time: p.start, done: false, createdAt: new Date().toISOString(), tags: p.tags })
-      .then(function () { done("Task added."); }, function (err) { failed(err, "Task not saved"); });
+    return saveDeskTask(tid, { title: title, due: p.date, time: p.start, done: false, createdAt: new Date().toISOString(), tags: p.tags })
+      .then(function () { return ok("Task added."); }, bad("Task not saved"));
+  }
+  function quickAdd() {
+    var inp = $("dk-quick-text");
+    var raw = inp.value.trim();
+    if (!raw) { inp.focus(); return; }
+    capture(raw, S.ui.quickMode).then(function (made) {
+      var q = $("dk-quick-text");
+      if (made && q) { q.value = ""; paintQuickPreview(); }
+    });
   }
 
   /* ---- Board ---------------------------------------------------------- */
@@ -1139,15 +1257,15 @@
 
   function boardRows() {
     var f = S.ui.board, q = f.q.trim().toLowerCase();
-    var rows = S.entries.map(function (r) { return r.e; }).filter(function (e) {
+    var rows = S.entries.filter(function (r) {
+      var e = r.e;
       if (f.kind !== "all" && e.kind !== f.kind) return false;
       if (f.axis !== "all" && e.axis !== f.axis) return false;
       if (f.status === "open" && (e.status === "done" || e.status === "parked")) return false;
       if (f.status !== "open" && f.status !== "all" && e.status !== f.status) return false;
-      if (!q) return true;
-      var hay = [e.title, e.venue, e.sourceLabel, e.tags.join(" "), plain(e.thesis), plain(e.gap), plain(e.experiment), plain(e.risk)].join(" ").toLowerCase();
-      return hay.indexOf(q) !== -1;
-    });
+      // r.hay was built once in upsertEntry.
+      return !q || r.hay.indexOf(q) !== -1;
+    }).map(function (r) { return r.e; });
     rows.sort(function (a, b) {
       if (f.sort === "pinned" && a.pinned !== b.pinned) return a.pinned ? -1 : 1;
       if (f.sort === "conviction" && a.conviction !== b.conviction) return b.conviction - a.conviction;
@@ -1254,10 +1372,20 @@
 
   /* ---- event delegation ---------------------------------------------- */
   function onBodyClick(e) {
-    var t = e.target.closest("button, a");
+    var t = e.target.closest("button, a, .dk-ref");
     if (!t) return;
     var v;
+    if (t.classList.contains("dk-ref")) {
+      v = t.getAttribute("data-ref");
+      if (entryDoc(v)) Desk.editor.open(v); else toast("That entry no longer exists.", { error: true });
+      return;
+    }
     if (t.hasAttribute("data-mkfor")) { if (Desk.marks) Desk.marks.openFor(t); return; }
+    if ((v = t.getAttribute("data-workback"))) {
+      var dl = deadlines().filter(function (d) { return d.key === v; })[0];
+      if (dl && Desk.workback) Desk.workback.open({ title: dl.title, date: dl.date, source: dl.source });
+      return;
+    }
     if ((v = t.getAttribute("data-entry"))) { Desk.editor.open(v); return; }
     if ((v = t.getAttribute("data-pin"))) { var r = entryDoc(v); if (r) { r.e.pinned = !r.e.pinned; render(); patchEntry(v, { pinned: r.e.pinned }); } return; }
     if ((v = t.getAttribute("data-event"))) { openEvent(v); return; }
@@ -1435,6 +1563,11 @@
         }).join("") + '</select><span>before each timed event</span></div>' +
         '<p class="dk-hint">Works while the desk is open in a tab (it can be in the background).' +
         (S.ui.remind.on && canNotify() && Notification.permission !== "granted" ? ' <b>Notifications are blocked for this site right now.</b>' : "") + '</p></section>' +
+      '<section class="dk-set"><h4>Images</h4>' + (feature("getImage")
+        ? '<p class="dk-hint">New images stay private in Drive and are shown through the desk. Images attached before this update still carry a link anyone can open.</p>' +
+          '<div class="dk-row"><button type="button" class="dk-btn" id="dk-lock-images"><i class="fas fa-lock" aria-hidden="true"></i> Make every image private</button></div><p class="dk-hint" id="dk-lock-msg" role="status"></p>'
+        : '<p class="dk-hint">Images are shared by link until the backend in workers/desk/Code.gs is pasted into Apps Script and redeployed' + (h.version ? " (running v" + esc(h.version) + ")" : "") + '.</p>') +
+      '</section>' +
       '<section class="dk-set"><h4>Your data</h4>' +
         (exportDue() ? '<p class="dk-due"><i class="fas fa-archive" aria-hidden="true"></i> ' + (S.prefs.data.lastExportAt ? "The last export is over three months old." : "No export yet.") + ' Export a copy to keep the desk independent of any one service.</p>' : "") +
         '<p class="dk-hint">Every save keeps a revision in the Sheet. Export a JSON copy each quarter' +
@@ -1442,7 +1575,7 @@
         '<div class="dk-row"><button type="button" class="dk-btn" id="dk-export"><i class="fas fa-download" aria-hidden="true"></i> Export JSON</button>' +
         '<label class="dk-btn dk-file"><i class="fas fa-upload" aria-hidden="true"></i> Import JSON<input type="file" id="dk-import" accept="application/json,.json" hidden></label></div>' +
         '<p class="dk-hint" id="dk-import-msg" role="status"></p></section>' +
-      '<section class="dk-set"><h4>Keyboard</h4><p class="dk-hint"><kbd>1</kbd>–<kbd>4</kbd> views · <kbd>N</kbd> new entry · <kbd>T</kbd> quick add · <kbd>/</kbd> search · <kbd>R</kbd> refresh · <kbd>[</kbd> <kbd>]</kbd> move the calendar · <kbd>Ctrl</kbd>+<kbd>S</kbd> save in the editor</p></section>';
+      '<section class="dk-set"><h4>Keyboard</h4><p class="dk-hint"><kbd>Ctrl</kbd>+<kbd>K</kbd> command palette (capture, jump, act) · <kbd>1</kbd>–<kbd>5</kbd> views · <kbd>N</kbd> new entry · <kbd>T</kbd> quick add · <kbd>/</kbd> search · <kbd>R</kbd> refresh · <kbd>[</kbd> <kbd>]</kbd> move the calendar · <kbd>Ctrl</kbd>+<kbd>S</kbd> save in the editor · arrow keys move between the views in the sidebar</p></section>';
     var d = dialog("dk-settings-d", "Desk settings", body, S.mode === "private" ? '<button type="button" class="dk-btn dk-btn--danger" id="dk-signout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign out on this device</button>' : "");
     d.querySelector("#dk-watch").addEventListener("click", function (e) {
       var b = e.target.closest("[data-watch]");
@@ -1478,6 +1611,14 @@
     d.querySelector("#dk-wd-end").addEventListener("change", setHours);
     d.querySelector("#dk-export").addEventListener("click", exportJson);
     d.querySelector("#dk-import").addEventListener("change", importJson);
+    var lock = d.querySelector("#dk-lock-images");
+    if (lock) lock.addEventListener("click", function () {
+      lock.disabled = true;
+      d.querySelector("#dk-lock-msg").textContent = "Working…";
+      call("lockImages").then(function (r) {
+        d.querySelector("#dk-lock-msg").textContent = r.locked + " of " + r.total + " images are now private.";
+      }, function (err) { lock.disabled = false; d.querySelector("#dk-lock-msg").textContent = err.message; });
+    });
     if (d.querySelector("#dk-signout")) d.querySelector("#dk-signout").addEventListener("click", function () { d.close(); signOut("Signed out on this device."); });
     d.querySelector("#dk-deleted-show").addEventListener("click", showDeleted);
     call("health").then(function (r) { S.health = r; }, function () {});
@@ -1550,7 +1691,7 @@
     if (tag === "input" || tag === "textarea" || tag === "select" || e.target.isContentEditable) return;
     if (document.querySelector("dialog[open]")) return;
     var k = e.key;
-    if (k >= "1" && k <= "4") { setView(VIEWS[+k - 1].id); e.preventDefault(); }
+    if (k >= "1" && k <= "5") { setView(VIEWS[+k - 1].id); e.preventDefault(); }
     else if (k === "n") { Desk.editor.open(null); e.preventDefault(); }
     else if (k === "r") { refresh(false); e.preventDefault(); }
     else if (k === "t") { setView("today"); setTimeout(function () { var q = $("dk-quick-text"); if (q) q.focus(); }, 0); e.preventDefault(); }
@@ -1565,7 +1706,9 @@
     allTasks: allTasks, entryDoc: entryDoc, entryData: entryData, saveEntry: saveEntry, deleteEntry: deleteEntry, saveUi: saveUi,
     googleReady: googleReady, tasksReady: tasksReady, notionReady: notionReady, fetchSync: fetchSync, openEvent: openEvent,
     toggleTask: toggleTask, refresh: refresh, resync: resync, cardHtml: cardHtml,
-    persist: persist, findEvent: findEventById
+    persist: persist, findEvent: findEventById,
+    setView: setView, openSettings: openSettings, editTask: editTask, setTaskDue: setTaskDue, blockTime: blockTime, exportJson: exportJson,
+    feature: feature, imageData: imageData, capture: capture, savePrefs: savePrefs, saveDeskTask: saveDeskTask, applyDoc: applyDoc
   };
 
   function boot() {
@@ -1590,6 +1733,8 @@
     }
     document.addEventListener("keydown", onKey);
     wireLanes();
+    // What the deployed backend can do; features missing there stay hidden.
+    call("health").then(function (r) { S.health = r; render(); }, function () {});
     // Show the last copy at once, then bring it up to date; but only on a
     // signed-in device, so a locked desk never flashes old data before the
     // server has checked the passcode.

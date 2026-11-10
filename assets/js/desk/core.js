@@ -559,7 +559,11 @@
       tags: Array.isArray(d.tags) ? d.tags : [], sourceLabel: d.sourceLabel || "", sourceUrl: d.sourceUrl || "",
       thesis: d.thesis || "", gap: d.gap || "", experiment: d.experiment || "", risk: d.risk || "",
       pinned: !!d.pinned,
-      images: (Array.isArray(d.images) ? d.images : []).filter(function (im) { return im && typeof im === "object" && /^https:\/\//.test(im.url || ""); }),
+      // Older images carry a public Drive link; newer ones are private and are
+      // fetched through the backend by id (editor.js, imageData).
+      images: (Array.isArray(d.images) ? d.images : []).filter(function (im) {
+        return im && typeof im === "object" && (/^https:\/\//.test(im.url || "") || (im.private === true && /^[\w-]{10,120}$/.test(String(im.id || ""))));
+      }),
       notionUrl: d.notionUrl || "", calendarUrl: d.calendarUrl || "",
       addedAt: d.addedAt || "", updatedAt: d.updatedAt || ""
     };
@@ -636,8 +640,203 @@
     return top.concat(rest);
   }
 
+  /* ---- command palette ----------------------------------------------------
+     Subsequence match with bonuses for word starts and runs, so "mv tmr" finds
+     "Move to tomorrow" and "gauss" finds "Review GaussVLA". 0 means no match. */
+  function paletteScore(query, text) {
+    var q = String(query || "").toLowerCase().replace(/\s+/g, " ").trim(), t = String(text || "").toLowerCase();
+    if (!q) return 1;
+    if (t.indexOf(q) !== -1) return 100 + (t.indexOf(q) === 0 ? 20 : 0) - Math.min(20, t.length / 10);
+    var score = 0, ti = 0, run = 0;
+    for (var qi = 0; qi < q.length; qi++) {
+      var ch = q[qi];
+      if (ch === " ") { run = 0; continue; }
+      var at = t.indexOf(ch, ti);
+      if (at === -1) return 0;
+      var wordStart = at === 0 || /[\s\-_:(/]/.test(t[at - 1]);
+      score += 2 + (wordStart ? 4 : 0) + (at === ti ? 1 + run : 0);
+      run = at === ti ? run + 1 : 0;
+      ti = at + 1;
+    }
+    return score;
+  }
+  // items: [{ label, keywords?, ... }]. Returns the best `limit` with a score.
+  function paletteFilter(items, query, limit) {
+    var out = [];
+    (items || []).forEach(function (it, i) {
+      var s = paletteScore(query, it.label + " " + (it.keywords || ""));
+      if (s > 0) out.push({ item: it, score: s + (it.boost || 0), i: i });
+    });
+    out.sort(function (a, b) { return b.score - a.score || a.i - b.i; });
+    return out.slice(0, limit || 12).map(function (x) { return x.item; });
+  }
+
+  /* ---- deadline work-back -------------------------------------------------
+     A template is [{ title, before }] with `before` in days. Dates that would
+     already have passed land on today, so nothing is created in the past. */
+  var WORKBACK_DEFAULT = [
+    { title: "Outline and related work", before: 28 },
+    { title: "Freeze experiments", before: 14 },
+    { title: "Full draft", before: 7 },
+    { title: "Figures and tables final", before: 5 },
+    { title: "Internal review", before: 3 },
+    { title: "Polish and submit", before: 1 }
+  ];
+  function normTemplate(tpl) {
+    return (Array.isArray(tpl) ? tpl : []).map(function (r) {
+      return { title: String((r && r.title) || "").trim().slice(0, 200), before: Math.max(0, Math.min(365, Math.round(Number(r && r.before)) || 0)) };
+    }).filter(function (r) { return r.title; });
+  }
+  function workBack(deadlineYmd, template, todayYmd) {
+    if (!isYmd(deadlineYmd)) return [];
+    var d = parseYmd(deadlineYmd);
+    return normTemplate(template).map(function (r) {
+      var due = ymd(addDays(d, -r.before)), late = isYmd(todayYmd) && due < todayYmd;
+      return { title: r.title, before: r.before, due: late ? todayYmd : due, clamped: late };
+    }).sort(function (a, b) { return a.due < b.due ? -1 : a.due > b.due ? 1 : b.before - a.before; });
+  }
+
+  /* ---- the week in review ---------------------------------------------- */
+  function weekBounds(anchorYmd) {
+    var s = startOfWeek(parseYmd(anchorYmd));
+    return { from: ymd(s), to: ymd(addDays(s, 6)), start: s, end: addDays(s, 7) };
+  }
+  function minutesBetween(a, b) { return Math.max(0, Math.round((b - a) / 6e4)); }
+  // opts: { week: "YYYY-MM-DD" (any day in it), today, events (normEvent), tasks (unified),
+  // entries, deadlines (collectDeadlines), workday: { start, end } }
+  function weekReview(opts) {
+    var w = weekBounds(opts.week || opts.today), today = opts.today || w.from;
+    var inWeek = function (ymdStr) { return ymdStr >= w.from && ymdStr <= w.to; };
+    var events = (opts.events || []).filter(function (e) { return e && !e.allDay && e.start < w.end && e.end > w.start; });
+    var byCal = {}, meetingMin = 0, blockMin = 0;
+    events.forEach(function (e) {
+      var s = e.start < w.start ? w.start : e.start, x = e.end > w.end ? w.end : e.end, m = minutesBetween(s, x);
+      var cal = e.calendar || "Calendar";
+      byCal[cal] = (byCal[cal] || 0) + m;
+      if (e.taskKey) blockMin += m; else meetingMin += m;
+    });
+    var wd = opts.workday || { start: "08:00", end: "22:00" };
+    var dayMin = Math.max(0, minutesOf(wd.end) - minutesOf(wd.start));
+    var days = [];
+    for (var i = 0; i < 7; i++) {
+      var dayYmd = ymd(addDays(w.start, i));
+      var dayEv = events.filter(function (e) { return eventOnDay(e, dayYmd); });
+      var busy = dayEv.reduce(function (n, e) {
+        var d0 = atMinutes(dayYmd, minutesOf(wd.start)), d1 = atMinutes(dayYmd, minutesOf(wd.end));
+        var s = e.start < d0 ? d0 : e.start, x = e.end > d1 ? d1 : e.end;
+        return n + (x > s ? minutesBetween(s, x) : 0);
+      }, 0);
+      days.push({ date: dayYmd, busy: busy, free: Math.max(0, dayMin - busy), events: dayEv.length, past: dayYmd < today, today: dayYmd === today });
+    }
+    var tasks = opts.tasks || [];
+    var done = tasks.filter(function (t) { return t.done && inWeek(String(t.completed || "").slice(0, 10)); });
+    var open = tasks.filter(function (t) { return !t.done && t.due && inWeek(t.due); });
+    var slipped = tasks.filter(function (t) { return !t.done && t.due && t.due >= w.from && t.due < today; });
+    var entries = opts.entries || [];
+    var added = entries.filter(function (e) { return inWeek(String(e.addedAt || "").slice(0, 10)); });
+    var changed = entries.filter(function (e) { return inWeek(String(e.updatedAt || "").slice(0, 10)) && !inWeek(String(e.addedAt || "").slice(0, 10)); });
+    var deadlines = (opts.deadlines || []).filter(function (d) { return inWeek(d.date); });
+    var nextWeek = weekBounds(ymd(addDays(w.start, 7)));
+    var ahead = (opts.deadlines || []).filter(function (d) { return !d.done && d.date >= nextWeek.from && d.date <= nextWeek.to; });
+    return {
+      from: w.from, to: w.to, days: days,
+      meetingMinutes: meetingMin, blockMinutes: blockMin, byCalendar: byCal,
+      freeMinutes: days.reduce(function (n, d) { return n + d.free; }, 0),
+      tasksDone: done, tasksOpen: open, tasksSlipped: slipped,
+      entriesAdded: added, entriesChanged: changed,
+      deadlines: deadlines, deadlinesAhead: ahead
+    };
+  }
+
+  /* ---- [[title]] links between entries ---------------------------------
+     Typed as [[Some title]] in a rich-text field; on save the text becomes a
+     <span class="dk-ref" data-ref="id">title</span>, so a later rename of the
+     target cannot break the link. Unknown titles stay as typed. */
+  var REF_RE = /\[\[([^\[\]<>]{1,200})\]\]/g;
+  function titleIndex(entries) {
+    var idx = {};
+    (entries || []).forEach(function (e) { var t = String(e.title || "").trim().toLowerCase(); if (t && !idx[t]) idx[t] = e.id; });
+    return idx;
+  }
+  function escText(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  // Runs only over text between tags, never inside one.
+  function linkRefs(html, entries, selfId) {
+    var idx = titleIndex(entries);
+    return String(html || "").split(/(<[^>]+>)/).map(function (part) {
+      if (part.charAt(0) === "<") return part;
+      return part.replace(REF_RE, function (all, raw) {
+        var title = raw.trim(), id = idx[title.toLowerCase()];
+        if (!id || id === selfId) return all;
+        return '<span class="dk-ref" data-ref="' + escText(id) + '">' + escText(title) + '</span>';
+      });
+    }).join("");
+  }
+  function refsIn(html) {
+    var out = [], re = /<span class="dk-ref" data-ref="([^"]+)">/g, m;
+    while ((m = re.exec(String(html || "")))) if (out.indexOf(m[1]) === -1) out.push(m[1]);
+    return out;
+  }
+  // Entries whose rich-text fields point at `id`.
+  function backlinks(id, entries) {
+    return (entries || []).filter(function (e) {
+      if (e.id === id) return false;
+      return RT_FIELDS.some(function (f) { return refsIn(e[f]).indexOf(id) !== -1; });
+    });
+  }
+  // Shows each link with the target's current title; a missing target is marked.
+  function refreshRefs(html, entries) {
+    var byId = {};
+    (entries || []).forEach(function (e) { byId[e.id] = e.title || "Untitled"; });
+    return String(html || "").replace(/<span class="dk-ref" data-ref="([^"]+)">([\s\S]*?)<\/span>/g, function (all, id, text) {
+      if (!byId[id]) return '<span class="dk-ref is-missing" data-ref="' + id + '">' + text + '</span>';
+      return '<span class="dk-ref" data-ref="' + id + '">' + escText(byId[id]) + '</span>';
+    });
+  }
+
+  /* ---- offline write queue ----------------------------------------------
+     Items are { action, payload, at }. Puts to the same document fold into
+     one, keeping the first baseVersion (what the device last saw from the
+     server) and the latest data; a delete after puts replaces them. */
+  function queueKey(it) {
+    var p = it.payload || {};
+    if (it.action === "put" || it.action === "delete") return it.action === "delete" ? "doc:" + p.collection + ":" + p.id : "doc:" + p.collection + ":" + p.id;
+    if (it.action === "setTask") return "task:" + p.listId + ":" + p.id;
+    if (it.action === "updateEvent") return "event:" + p.calendarId + ":" + p.id;
+    return "";
+  }
+  function queueAdd(queue, item) {
+    var list = (queue || []).slice(), key = queueKey(item);
+    if (!key) return list.concat([item]);
+    var i = -1;
+    for (var j = 0; j < list.length; j++) if (queueKey(list[j]) === key) { i = j; }
+    if (i === -1) return list.concat([item]);
+    var prev = list[i], next = item;
+    if (item.action === "put" && prev.action === "put") {
+      next = { action: "put", at: item.at, payload: Object.assign({}, item.payload, { baseVersion: prev.payload.baseVersion }) };
+    } else if (item.action === "setTask" && prev.action === "setTask") {
+      next = { action: "setTask", at: item.at, payload: Object.assign({}, prev.payload, item.payload) };
+    } else if (item.action === "updateEvent" && prev.action === "updateEvent") {
+      next = { action: "updateEvent", at: item.at, payload: Object.assign({}, prev.payload, item.payload) };
+    } else if (item.action === "delete" && prev.action === "put") {
+      next = { action: "delete", at: item.at, payload: Object.assign({}, item.payload, { base: prev.payload.baseVersion }) };
+    }
+    list.splice(i, 1);
+    return list.concat([next]);
+  }
+
+  // Plain text for the board search, built once per entry (plainFn turns
+  // stored HTML into text).
+  function entryHaystack(e, plainFn) {
+    return [e.title, e.venue, e.sourceLabel, (e.tags || []).join(" ")].concat(RT_FIELDS.map(function (f) { return plainFn(e[f]); })).join(" ").toLowerCase();
+  }
+
   var core = {
     AXES: AXES, KINDS: KINDS, STATUSES: STATUSES, SOURCE_COLORS: SOURCE_COLORS, DEFAULT_WATCH: DEFAULT_WATCH,
+    paletteScore: paletteScore, paletteFilter: paletteFilter,
+    WORKBACK_DEFAULT: WORKBACK_DEFAULT, normTemplate: normTemplate, workBack: workBack,
+    weekBounds: weekBounds, weekReview: weekReview,
+    linkRefs: linkRefs, refsIn: refsIn, backlinks: backlinks, refreshRefs: refreshRefs,
+    queueKey: queueKey, queueAdd: queueAdd, entryHaystack: entryHaystack,
     RT_FIELDS: RT_FIELDS, RT_LABEL: RT_LABEL, TEXT_COLORS: TEXT_COLORS, HIGHLIGHTS: HIGHLIGHTS,
     eventMarkKey: eventMarkKey, taskMarkKey: taskMarkKey, isMarkKey: isMarkKey, normMark: normMark, normMarks: normMarks,
     markClass: markClass, pruneMarks: pruneMarks, starFirst: starFirst,

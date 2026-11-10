@@ -22,10 +22,15 @@
  * Install: see README.md beside this file (paste, Run setup, Deploy).
  */
 
-var VERSION = '2026.11.09-taskblocks';
+var VERSION = '2026.11.10-desk-upgrade';
+// What this backend can do beyond the 2026.11.09 one; the page reads it from
+// health and hides anything the deployed script does not have yet.
+var FEATURES = ['getImage', 'lockImages', 'revisionCompaction'];
 var LIMITS = {
   doc: 45000,               // a Sheets cell holds 50,000 characters
   taskNotes: 8192,          // the most Google Tasks keeps; read and write alike, so a save never cuts a note
+  revisionsPerDoc: 40,      // newest versions kept per document; older ones are dropped at compaction
+  revisionsCompactEvery: 200, // compact once this many rows were added since the last compaction
   importDocs: 500,
   rangeDays: 400,
   passphrase: 4,
@@ -136,11 +141,11 @@ var ACTIONS = {
   createEvent: createEvent, updateEvent: updateEvent, deleteEvent: deleteEvent,
   createTask: createTask, setTask: setTask, deleteTask: deleteTask,
   notionTargets: notionTargets, notionSchema: notionSchema, notionCreate: notionCreate,
-  uploadImage: uploadImage
+  uploadImage: uploadImage, getImage: getImage, lockImages: lockImages
 };
 var GOOGLE_WRITES = { createEvent: 1, updateEvent: 1, deleteEvent: 1, createTask: 1, setTask: 1, deleteTask: 1 };
 var WRITES = { put: 1, 'delete': 1, restore: 1, 'import': 1, createEvent: 1, updateEvent: 1, deleteEvent: 1,
-  createTask: 1, setTask: 1, deleteTask: 1, notionCreate: 1, uploadImage: 1 };
+  createTask: 1, setTask: 1, deleteTask: 1, notionCreate: 1, uploadImage: 1, lockImages: 1 };
 
 function handle(req) {
   try {
@@ -181,7 +186,7 @@ function mode() { return String(prop('DESK_MODE') || 'open').trim().toLowerCase(
 
 function health() {
   return {
-    ok: true, service: 'desk', version: VERSION, mode: mode(),
+    ok: true, service: 'desk', version: VERSION, mode: mode(), features: FEATURES.slice(),
     configured: { sheet: !!prop('SHEET_ID'), notion: !!prop('NOTION_TOKEN'), google: true, images: !!prop('IMAGE_FOLDER_ID') }
   };
 }
@@ -246,9 +251,18 @@ function issueToken(pass) {
   return { token: payload + '.' + signToken(pass, payload), exp: exp };
 }
 
+// Compares every character whatever the input, so timing says nothing about
+// how much of a forged signature was right.
+function safeEqual(a, b) {
+  a = String(a); b = String(b);
+  var n = Math.max(a.length, b.length), diff = a.length ^ b.length;
+  for (var i = 0; i < n; i++) diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return diff === 0;
+}
+
 function verifyToken(pass, token) {
   var parts = String(token || '').split('.');
-  if (parts.length !== 2 || signToken(pass, parts[0]) !== parts[1]) return false;
+  if (parts.length !== 2 || !safeEqual(signToken(pass, parts[0]), parts[1])) return false;
   try {
     var pad = parts[0] + '==='.slice((parts[0].length + 3) % 4);
     var claims = JSON.parse(Utilities.newBlob(Utilities.base64DecodeWebSafe(pad)).getDataAsString());
@@ -351,8 +365,39 @@ function writeDoc(collection, id, data, opts) {
     sh.appendRow(row);
     rows.push({ row: sh.getLastRow(), collection: collection, id: id, version: version, updatedAt: now, deleted: !!opts.deleted, text: text });
   }
-  sheet(REV_SHEET).appendRow(row);
+  var rev = sheet(REV_SHEET);
+  rev.appendRow(row);
+  compactRevisions(rev);
   return { collection: collection, id: id, version: version, updatedAt: now, deleted: !!opts.deleted, data: JSON.parse(text) };
+}
+
+// The revisions tab would otherwise grow by a row per save forever, and every
+// History, Restore or Recently deleted read scans all of it. Every
+// revisionsCompactEvery new rows, keep only the newest revisionsPerDoc
+// versions of each document and rewrite the tab. Runs inside the write lock.
+function compactRevisions(sh, force) {
+  var props = PropertiesService.getScriptProperties();
+  var last = sh.getLastRow(), mark = Number(props.getProperty('REV_COMPACTED_AT') || 0);
+  if (!force && last - mark < LIMITS.revisionsCompactEvery) return { dropped: 0, rows: last };
+  if (last < 2) { props.setProperty('REV_COMPACTED_AT', String(last)); return { dropped: 0, rows: last }; }
+  var rows = sh.getRange(2, 1, last - 1, 6).getValues();
+  var perDoc = {};
+  rows.forEach(function (r, i) {
+    var k = String(r[0]) + '|' + String(r[1]);
+    (perDoc[k] = perDoc[k] || []).push({ i: i, v: Number(r[2]) || 0 });
+  });
+  var keep = {};
+  Object.keys(perDoc).forEach(function (k) {
+    perDoc[k].sort(function (a, b) { return b.v - a.v; }).slice(0, LIMITS.revisionsPerDoc).forEach(function (x) { keep[x.i] = true; });
+  });
+  var kept = rows.filter(function (r, i) { return keep[i]; });
+  var dropped = rows.length - kept.length;
+  if (dropped > 0) {
+    sh.clearContents();
+    sh.getRange(1, 1, kept.length + 1, 6).setValues([HEADER].concat(kept.map(function (r) { return r.map(String); })));
+  }
+  props.setProperty('REV_COMPACTED_AT', String(kept.length + 1));
+  return { dropped: dropped, rows: kept.length + 1 };
 }
 
 function docsOf(rows, collection, deleted) {
@@ -965,6 +1010,44 @@ function uploadImage(req) {
   if (!folderId) throw fail(503, 'Run setup() in the Apps Script editor first.');
   var blob = Utilities.newBlob(Utilities.base64Decode(m[2]), m[1], clip(String(req.name || 'image').replace(/[^\w. -]/g, '_'), 100));
   var file = DriveApp.getFolderById(folderId).createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  return { ok: true, image: { id: file.getId(), url: 'https://drive.google.com/thumbnail?id=' + file.getId() + '&sz=w1600' } };
+  // Private: only this script (running as the owner) reads it back, via getImage.
+  file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+  return { ok: true, image: { id: file.getId(), url: '', private: true } };
+}
+
+var IMAGE_ID_RE = /^[\w-]{10,120}$/;
+
+// Only files inside the desk's own folder, so an id cannot fetch anything
+// else the owner's Drive can see.
+function imageFile(id) {
+  if (!IMAGE_ID_RE.test(String(id || ''))) throw fail(400, 'Invalid image id.');
+  var folderId = prop('IMAGE_FOLDER_ID');
+  if (!folderId) throw fail(503, 'Run setup() in the Apps Script editor first.');
+  var file;
+  try { file = DriveApp.getFileById(id); } catch (err) { throw fail(404, 'No such image.'); }
+  var parents = file.getParents(), inFolder = false;
+  while (parents.hasNext()) if (parents.next().getId() === folderId) inFolder = true;
+  if (!inFolder) throw fail(404, 'No such image.');
+  return file;
+}
+
+function getImage(req) {
+  var file = imageFile(req.id), blob = file.getBlob();
+  var mime = String(blob.getContentType() || 'image/jpeg');
+  if (!/^image\//.test(mime)) throw fail(415, 'Not an image.');
+  return { ok: true, image: { id: file.getId(), mime: mime, dataUrl: 'data:' + mime + ';base64,' + Utilities.base64Encode(blob.getBytes()) } };
+}
+
+// Takes the public link off every image uploaded before private images; the
+// page shows them through getImage from then on.
+function lockImages() {
+  var folderId = prop('IMAGE_FOLDER_ID');
+  if (!folderId) throw fail(503, 'Run setup() in the Apps Script editor first.');
+  var files = DriveApp.getFolderById(folderId).getFiles(), n = 0, total = 0;
+  while (files.hasNext()) {
+    var f = files.next();
+    total++;
+    try { f.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE); n++; } catch (err) { console.warn('desk: could not lock ' + f.getId() + ': ' + err); }
+  }
+  return { ok: true, locked: n, total: total };
 }

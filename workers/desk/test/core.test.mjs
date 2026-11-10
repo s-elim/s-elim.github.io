@@ -551,3 +551,109 @@ test('taskBlocks reads the link off an event that came through normEvent', () =>
   const e = core.normEvent({ id: 'b', calendarId: 'me', title: 'Renamed', start: '2026-10-12T10:00:00', end: '2026-10-12T11:00:00', taskKey: 'g:L1:t1' });
   assert.deepEqual(blockIds(blockTask(), [e]), ['b@me']);
 });
+
+// ---- 2026-11-10 upgrade: palette, work-back, week review, links, queue ----
+
+test('quick capture reads "review GaussVLA fri 3pm 1h" as a timed hour on Friday', () => {
+  const p = core.parseQuick('review GaussVLA fri 3pm 1h', NOW);
+  assert.deepEqual(p, { title: 'review GaussVLA', date: '2026-10-16', start: '15:00', end: '16:00', tags: [] });
+});
+
+test('paletteScore prefers substrings and word starts, and rejects non-matches', () => {
+  assert.ok(core.paletteScore('gauss', 'Review GaussVLA') > core.paletteScore('gauss', 'Degauss the monitor'));
+  assert.ok(core.paletteScore('mv tmr', 'Move to tomorrow: Draft rebuttal') > 0);
+  assert.equal(core.paletteScore('xyz', 'Move to tomorrow'), 0);
+  assert.equal(core.paletteScore('', 'anything'), 1);
+  const items = [{ label: 'Today' }, { label: 'Board' }, { label: 'Move to tomorrow: Book room' }, { label: 'Block time: Book room' }];
+  assert.deepEqual(core.paletteFilter(items, 'book', 10).map(x => x.label).sort(), ['Block time: Book room', 'Move to tomorrow: Book room']);
+  assert.equal(core.paletteFilter(items, 'book', 1).length, 1);
+  assert.deepEqual(core.paletteFilter(items, 'bo', 10).map(x => x.label)[0], 'Board');
+});
+
+test('workBack dates each step before the deadline and never in the past', () => {
+  const plan = core.workBack('2026-11-30', core.WORKBACK_DEFAULT, '2026-11-10');
+  assert.equal(plan.length, 6);
+  assert.equal(plan[0].title, 'Outline and related work');
+  assert.equal(plan[0].due, '2026-11-10', 'a step 28 days out already passed, so it lands on today');
+  assert.equal(plan[0].clamped, true);
+  assert.equal(plan[plan.length - 1].due, '2026-11-29');
+  assert.deepEqual(plan.map(p => p.due), plan.map(p => p.due).slice().sort());
+  assert.deepEqual(core.workBack('nonsense', core.WORKBACK_DEFAULT, '2026-11-10'), []);
+  assert.deepEqual(core.normTemplate([{ title: '  ', before: 3 }, { title: 'Draft', before: '9.6' }, { title: 'Far', before: 9999 }]),
+    [{ title: 'Draft', before: 10 }, { title: 'Far', before: 365 }]);
+});
+
+test('weekReview splits hours into meetings, task blocks and free time, and sorts tasks and entries', () => {
+  const ev = (id, day, h1, h2, extra = {}) => core.normEvent({ id, calendarId: 'c', calendar: 'Lab', title: id,
+    start: new Date(2026, 9, day, h1).toISOString(), end: new Date(2026, 9, day, h2).toISOString(), editable: true, ...extra });
+  // Week of Mon 5 Oct to Sun 11 Oct 2026; today is Sunday 11 Oct.
+  const events = [ev('meet', 6, 10, 11), ev('block', 7, 14, 16, { taskKey: 'g:L1:t1' }), ev('allday', 8, 0, 0, { allDay: true, start: '2026-10-08', end: '2026-10-09' })];
+  const tasks = [
+    { key: 'a', title: 'Done one', done: true, completed: '2026-10-07T10:00:00Z', due: '2026-10-07' },
+    { key: 'b', title: 'Slipped', done: false, due: '2026-10-08' },
+    { key: 'c', title: 'Later', done: false, due: '2026-10-20' },
+    { key: 'd', title: 'Done last week', done: true, completed: '2026-10-01T10:00:00Z', due: '' }
+  ];
+  const entries = [{ id: 'e1', title: 'New', addedAt: '2026-10-06T01:00:00Z', updatedAt: '2026-10-06T01:00:00Z' },
+    { id: 'e2', title: 'Old but edited', addedAt: '2026-09-01T01:00:00Z', updatedAt: '2026-10-09T01:00:00Z' }];
+  const deadlines = [{ key: 'x', title: 'This week', date: '2026-10-09', done: false }, { key: 'y', title: 'Next week', date: '2026-10-14', done: false }];
+  const rv = core.weekReview({ week: '2026-10-11', today: '2026-10-11', events, tasks, entries, deadlines, workday: { start: '08:00', end: '18:00' } });
+  assert.equal(rv.from, '2026-10-05');
+  assert.equal(rv.to, '2026-10-11');
+  assert.equal(rv.meetingMinutes, 60);
+  assert.equal(rv.blockMinutes, 120);
+  assert.equal(rv.byCalendar.Lab, 180);
+  assert.equal(rv.days.length, 7);
+  assert.equal(rv.days[1].busy, 60);
+  assert.equal(rv.days[1].free, 540);
+  assert.equal(rv.freeMinutes, 7 * 600 - 180);
+  assert.deepEqual(rv.tasksDone.map(t => t.key), ['a']);
+  assert.deepEqual(rv.tasksSlipped.map(t => t.key), ['b']);
+  assert.deepEqual(rv.entriesAdded.map(e => e.id), ['e1']);
+  assert.deepEqual(rv.entriesChanged.map(e => e.id), ['e2']);
+  assert.deepEqual(rv.deadlines.map(d => d.key), ['x']);
+  assert.deepEqual(rv.deadlinesAhead.map(d => d.key), ['y']);
+});
+
+test('[[title]] links resolve to ids, survive renames, and are found as backlinks', () => {
+  const entries = [{ id: 'e1', title: 'World model priors', thesis: '' }, { id: 'e2', title: 'Other', thesis: '' }];
+  const html = core.linkRefs('<p>Builds on [[world model priors]] and [[Nothing here]] and <b>[[Other]]</b></p>', entries, 'e2');
+  assert.equal(html, '<p>Builds on <span class="dk-ref" data-ref="e1">world model priors</span> and [[Nothing here]] and <b>[[Other]]</b></p>', 'unknown titles and self links stay as typed');
+  assert.deepEqual(core.refsIn(html), ['e1']);
+  assert.equal(core.linkRefs('<a href="https://x.y/[[q]]">[[Other]]</a>', entries, 'e1'), '<a href="https://x.y/[[q]]"><span class="dk-ref" data-ref="e2">Other</span></a>', 'never inside a tag');
+  const renamed = [{ id: 'e1', title: 'Priors v2' }];
+  assert.equal(core.refreshRefs(html, renamed), '<p>Builds on <span class="dk-ref" data-ref="e1">Priors v2</span> and [[Nothing here]] and <b>[[Other]]</b></p>');
+  assert.equal(core.refreshRefs(html, []), '<p>Builds on <span class="dk-ref is-missing" data-ref="e1">world model priors</span> and [[Nothing here]] and <b>[[Other]]</b></p>');
+  const all = [{ id: 'e1', title: 'World model priors', thesis: '', gap: '', experiment: '', risk: '' }, { id: 'e2', title: 'Other', thesis: html, gap: '', experiment: '', risk: '' }];
+  assert.deepEqual(core.backlinks('e1', all).map(e => e.id), ['e2']);
+  assert.deepEqual(core.backlinks('e2', all), []);
+});
+
+test('queueAdd folds writes to one document and keeps the first baseVersion', () => {
+  let q = [];
+  q = core.queueAdd(q, { action: 'put', at: 1, payload: { collection: 'entries', id: 'e1', data: { title: 'a' }, baseVersion: 3 } });
+  q = core.queueAdd(q, { action: 'put', at: 2, payload: { collection: 'entries', id: 'e1', data: { title: 'b' }, baseVersion: 3 } });
+  q = core.queueAdd(q, { action: 'setTask', at: 3, payload: { listId: 'L', id: 't', due: '2026-11-12' } });
+  q = core.queueAdd(q, { action: 'setTask', at: 4, payload: { listId: 'L', id: 't', done: true } });
+  q = core.queueAdd(q, { action: 'createTask', at: 5, payload: { title: 'x' } });
+  q = core.queueAdd(q, { action: 'createTask', at: 6, payload: { title: 'y' } });
+  assert.equal(q.length, 4);
+  assert.deepEqual(q[0].payload, { collection: 'entries', id: 'e1', data: { title: 'b' }, baseVersion: 3 });
+  assert.deepEqual(q[1].payload, { listId: 'L', id: 't', due: '2026-11-12', done: true });
+  q = core.queueAdd(q, { action: 'delete', at: 7, payload: { collection: 'entries', id: 'e1' } });
+  assert.equal(q.filter(i => i.payload.id === 'e1').length, 1);
+  assert.equal(q[q.length - 1].action, 'delete');
+  assert.equal(q[q.length - 1].payload.base, 3);
+});
+
+test('entryHaystack joins title, tags and the plain text of every field, lowercased', () => {
+  const e = core.normaliseEntry('e1', { title: 'GaussVLA', tags: ['vla'], venue: 'BMVC', thesis: '<p>Spatial <b>tokens</b></p>' });
+  const hay = core.entryHaystack(e, core.htmlToText);
+  assert.ok(hay.indexOf('gaussvla') !== -1 && hay.indexOf('vla') !== -1 && hay.indexOf('spatial tokens') !== -1 && hay.indexOf('bmvc') !== -1);
+  assert.equal(hay.indexOf('<b>'), -1);
+});
+
+test('normaliseEntry keeps private images by id and public ones by link, drops the rest', () => {
+  const e = core.normaliseEntry('e1', { images: [{ id: 'abcdefghijkl', private: true }, { id: 'x', url: 'https://drive.google.com/thumbnail?id=x' }, { id: 'short', private: true }, { url: 'http://insecure' }] });
+  assert.deepEqual(e.images.map(i => i.id || i.url), ['abcdefghijkl', 'x']);
+});

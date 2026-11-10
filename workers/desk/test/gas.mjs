@@ -17,6 +17,7 @@ function fakeSheet(name) {
     getLastRow: () => rows.length,
     appendRow: r => { rows.push(r.map(String)); return sheet; },
     setFrozenRows: () => sheet,
+    clearContents: () => { rows = []; return sheet; },
     getRange: (a, col, nr, nc) => {
       if (typeof a === 'string') return { setNumberFormat: () => {} };
       return {
@@ -109,21 +110,39 @@ export function makeGas({ google = {}, notion = {}, now = () => Date.now() } = {
       base64EncodeWebSafe: x => toBuf(x).toString('base64').replace(/\+/g, '-').replace(/\//g, '_'),
       base64DecodeWebSafe: s => toSigned(Buffer.from(s.replace(/-/g, '+').replace(/_/g, '/'), 'base64')),
       base64Decode: s => toSigned(Buffer.from(s, 'base64')),
-      newBlob: (bytes, mime, name) => ({ bytes, mime, name, getDataAsString: () => toBuf(bytes).toString('utf8') }),
+      base64Encode: x => toBuf(x).toString('base64'),
+      newBlob: (bytes, mime, name) => ({ bytes, mime, name, getDataAsString: () => toBuf(bytes).toString('utf8'), getBytes: () => bytes, getContentType: () => mime }),
     },
     UrlFetchApp: { fetch: fetchOne, fetchAll: list => list.map(r => fetchOne(r.url, r)) },
-    DriveApp: {
-      Access: { ANYONE_WITH_LINK: 'ANYONE_WITH_LINK' },
-      Permission: { VIEW: 'VIEW' },
-      createFolder: name => ({ getId: () => 'folder-' + name }),
-      getFolderById: () => ({
-        createFile: blob => {
-          const file = { id: 'file' + drive.length, blob, sharing: null };
-          drive.push(file);
-          return { getId: () => file.id, setSharing: (a, p) => { file.sharing = [a, p]; } };
+    DriveApp: (() => {
+      const iter = list => { let i = 0; return { hasNext: () => i < list.length, next: () => list[i++] }; };
+      const handle = file => ({
+        getId: () => file.id,
+        setSharing: (a, p) => { file.sharing = [a, p]; },
+        getBlob: () => file.blob,
+        getParents: () => iter([{ getId: () => file.folder }]),
+      });
+      return {
+        Access: { ANYONE_WITH_LINK: 'ANYONE_WITH_LINK', PRIVATE: 'PRIVATE' },
+        Permission: { VIEW: 'VIEW', NONE: 'NONE' },
+        createFolder: name => ({ getId: () => 'folder-' + name }),
+        getFolderById: folderId => ({
+          createFile: blob => {
+            const file = { id: 'file' + drive.length + '-' + randomUUID().slice(0, 8), blob, sharing: null, folder: folderId };
+            drive.push(file);
+            return handle(file);
+          },
+          getFiles: () => iter(drive.filter(f => f.folder === folderId).map(handle)),
+        }),
+        getFileById: id => {
+          const file = drive.find(f => f.id === id);
+          if (!file) throw new Error('No file ' + id);
+          return handle(file);
         },
-      }),
-    },
+        // Tests plant a file outside the desk folder with this.
+        _plant: (id, folder, blob) => { drive.push({ id, blob, sharing: null, folder }); },
+      };
+    })(),
     Calendar: {
       Colors: { get: () => ({ event: { 11: { background: '#dc2127' } } }) },
       CalendarList: {

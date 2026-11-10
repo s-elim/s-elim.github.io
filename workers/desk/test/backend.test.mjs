@@ -535,13 +535,100 @@ test('creating a Notion row types each field from the live schema', () => {
 
 // ----------------------------------------------------------------- images
 
-test('images go to the Drive folder, shared by link, with a daily cap', () => {
+test('images go to the Drive folder, private, with a daily cap', () => {
   const gas = ready();
   const png = 'data:image/png;base64,' + Buffer.from('fake png bytes').toString('base64');
   const r = gas.call({ action: 'uploadImage', name: 'fig 1.png', dataUrl: png });
-  assert.match(r.image.url, /^https:\/\/drive\.google\.com\/thumbnail\?id=file0&sz=w1600$/);
-  assert.deepEqual(gas.drive[0].sharing, ['ANYONE_WITH_LINK', 'VIEW']);
+  assert.equal(r.image.id, gas.drive[0].id);
+  assert.deepEqual(gas.drive[0].sharing, ['PRIVATE', 'NONE']);
   assert.equal(gas.call({ action: 'uploadImage', dataUrl: 'data:text/html;base64,PGgxPg==' }).status, 400);
   gas.props['img:d:' + Math.floor(T0 / 864e5)] = '60';
   assert.equal(gas.call({ action: 'uploadImage', dataUrl: png }).status, 429);
+});
+
+// ---- 2026-11-10 upgrade: health features, private images, revision compaction, safeEqual ----
+
+const PNG = 'data:image/png;base64,' + Buffer.from('fake png bytes').toString('base64');
+
+test('health lists the features a newer page can rely on', () => {
+  const h = ready().call({ action: 'health' });
+  assert.deepEqual(h.features, ['getImage', 'lockImages', 'revisionCompaction']);
+  assert.equal(h.version, '2026.11.10-desk-upgrade');
+});
+
+test('uploaded images are private and come back only through getImage', () => {
+  const gas = ready();
+  const up = gas.call({ action: 'uploadImage', name: 'fig.png', dataUrl: PNG });
+  assert.equal(up.ok, true);
+  assert.equal(up.image.private, true);
+  assert.equal(up.image.url, '');
+  assert.deepEqual(gas.drive[0].sharing, ['PRIVATE', 'NONE']);
+  const got = gas.call({ action: 'getImage', id: up.image.id });
+  assert.equal(got.ok, true);
+  assert.equal(got.image.dataUrl, PNG);
+  assert.equal(got.image.mime, 'image/png');
+});
+
+test('getImage refuses ids outside the desk folder and malformed ids', () => {
+  const gas = ready();
+  gas.ctx.DriveApp._plant('elsewhere-0123456789', 'some-other-folder', { getContentType: () => 'image/png', getBytes: () => [1, 2, 3] });
+  assert.equal(gas.call({ action: 'getImage', id: 'elsewhere-0123456789' }).status, 404);
+  assert.equal(gas.call({ action: 'getImage', id: 'nope' }).status, 400);
+  assert.equal(gas.call({ action: 'getImage', id: 'missing-0123456789' }).status, 404);
+});
+
+test('lockImages takes the public link off every image in the folder', () => {
+  const gas = ready();
+  gas.call({ action: 'uploadImage', name: 'a.png', dataUrl: PNG });
+  gas.call({ action: 'uploadImage', name: 'b.png', dataUrl: PNG });
+  gas.drive.forEach(f => { f.sharing = ['ANYONE_WITH_LINK', 'VIEW']; }); // as the previous backend left them
+  gas.ctx.DriveApp._plant('elsewhere-0123456789', 'other', {});
+  const r = gas.call({ action: 'lockImages' });
+  assert.deepEqual([r.locked, r.total], [2, 2]);
+  assert.ok(gas.drive.filter(f => f.folder !== 'other').every(f => f.sharing[0] === 'PRIVATE'));
+  assert.equal(gas.drive.find(f => f.folder === 'other').sharing, null);
+});
+
+test('compaction keeps the newest revisions per document, and restore and history still work', () => {
+  const gas = ready();
+  const rev = Object.values(gas.ctx.SpreadsheetApp._books)[0].getSheetByName('revisions');
+  const N = gas.ctx.LIMITS.revisionsPerDoc, every = gas.ctx.LIMITS.revisionsCompactEvery;
+  let v = 0;
+  for (let i = 0; i < every + 5; i++) { gas.tick(1100); v = gas.call({ action: 'put', collection: 'entries', id: 'busy', data: { title: 'v' + i }, baseVersion: v || undefined }).doc.version; }
+  gas.call({ action: 'put', collection: 'entries', id: 'quiet', data: { title: 'only' } });
+  assert.ok(rev.getLastRow() - 1 <= N + 1 + every, 'rows are bounded: ' + rev.getLastRow());
+  const revs = gas.call({ action: 'revisions', collection: 'entries', id: 'busy' }).revisions;
+  assert.ok(revs.length >= N && revs.length <= N + 6, 'the newest ' + N + ' plus the writes since the last compaction: ' + revs.length);
+  assert.equal(revs[0].version, v, 'newest first');
+  assert.equal(gas.call({ action: 'revision', collection: 'entries', id: 'busy', version: v }).revision.data.title, 'v' + (every + 4));
+  assert.equal(gas.call({ action: 'revision', collection: 'entries', id: 'busy', version: 1 }).status, 404, 'the oldest is gone');
+  assert.equal(gas.call({ action: 'revisions', collection: 'entries', id: 'quiet' }).revisions.length, 1, 'a quiet document keeps its history');
+  gas.call({ action: 'delete', collection: 'entries', id: 'busy', base: v });
+  const back = gas.call({ action: 'restore', collection: 'entries', id: 'busy' });
+  assert.equal(back.doc.data.title, 'v' + (every + 4));
+  assert.equal(back.doc.deleted, false);
+});
+
+test('compaction is a no-op below the threshold and can be forced', () => {
+  const gas = ready();
+  const rev = Object.values(gas.ctx.SpreadsheetApp._books)[0].getSheetByName('revisions');
+  for (let i = 0; i < 50; i++) { gas.tick(1100); gas.call({ action: 'put', collection: 'settings', id: 'marks', data: { items: { n: i } } }); }
+  assert.equal(rev.getLastRow(), 51, 'nothing dropped yet');
+  const r = gas.fn('compactRevisions', rev, true);
+  assert.equal(r.dropped, 50 - gas.ctx.LIMITS.revisionsPerDoc);
+  assert.equal(rev.getLastRow(), 1 + gas.ctx.LIMITS.revisionsPerDoc);
+  assert.equal(String(rev._rows()[0][0]), 'collection', 'the header row survives a rewrite');
+});
+
+test('safeEqual compares whole strings in constant shape and token checks still pass', () => {
+  const gas = ready();
+  assert.equal(gas.fn('safeEqual', 'abc', 'abc'), true);
+  assert.equal(gas.fn('safeEqual', 'abc', 'abd'), false);
+  assert.equal(gas.fn('safeEqual', 'abc', 'ab'), false);
+  assert.equal(gas.fn('safeEqual', '', ''), true);
+  assert.equal(gas.fn('safeEqual', '', 'a'), false);
+  Object.assign(gas.props, { DESK_MODE: 'private', DESK_PASSPHRASE: 'open sesame' });
+  const t = gas.call({ action: 'auth', passphrase: 'open sesame' }).token;
+  assert.equal(gas.call({ action: 'list', collection: 'entries', token: t }).ok, true);
+  assert.equal(gas.call({ action: 'list', collection: 'entries', token: t.slice(0, -1) + (t.slice(-1) === 'A' ? 'B' : 'A') }).status, 401);
 });

@@ -57,7 +57,7 @@
             return '<div class="dk-field"><span>' + PH[f][0] + ' <em>' + PH[f][1] + '</em></span>' +
               '<div class="dk-rt dk-rt--edit" id="dk-ed-' + f + '" contenteditable="true" role="textbox" aria-multiline="true" aria-label="' + PH[f][0] + '" data-ph="' + PH[f][2] + '"></div></div>';
           }).join("") +
-          '<div class="dk-field"><span>Images <em>kept in the “Research Desk images” Drive folder, visible to anyone with the link</em></span><div class="dk-thumbs" id="dk-ed-thumbs"></div>' +
+          '<div class="dk-field"><span>Images <em id="dk-ed-imgnote">kept in the “Research Desk images” Drive folder</em></span><div class="dk-thumbs" id="dk-ed-thumbs"></div>' +
             '<div class="dk-row"><label class="dk-btn dk-file"><i class="fas fa-image" aria-hidden="true"></i> Attach<input type="file" id="dk-ed-img" accept="image/*" multiple hidden></label>' +
             '<span class="dk-hint" id="dk-ed-imghint">Up to ' + MAX_IMAGES + '. Resized to 1600 px before upload.</span></div></div>' +
           '<p class="dk-hint" id="dk-ed-links"></p>' +
@@ -67,6 +67,7 @@
             '<button type="button" class="dk-btn dk-btn--quiet" id="dk-ed-history" title="Earlier versions"><i class="fas fa-history" aria-hidden="true"></i> History</button>' +
             '<button type="button" class="dk-btn dk-btn--quiet" id="dk-ed-notion" title="Create a row in Research OS"><i class="fas fa-database" aria-hidden="true"></i> Notion</button>' +
             '<button type="button" class="dk-btn dk-btn--quiet" id="dk-ed-cal" title="Put this on Google Calendar"><i class="fas fa-calendar-plus" aria-hidden="true"></i> Calendar</button>' +
+            '<button type="button" class="dk-btn dk-btn--quiet" id="dk-ed-wb" title="Dated tasks leading up to the deadline" hidden><i class="fas fa-stream" aria-hidden="true"></i> Work back</button>' +
             '<button type="button" class="dk-btn dk-btn--quiet dk-btn--danger" id="dk-ed-del"><i class="fas fa-trash-alt" aria-hidden="true"></i> Delete</button>' +
           '</div>' +
           '<div class="dk-ed__save"><button type="button" class="dk-btn" id="dk-ed-cancel">Cancel</button>' +
@@ -141,7 +142,9 @@
   function markClean() { ed.clean = snapshot(); ed.forced = false; }
   function markDirty() {
     $("dk-ed-state").textContent = isDirty() ? "Unsaved" : ed.version ? "Saved" : "";
+    $("dk-ed-wb").hidden = !Desk.workback || !C.isYmd($("dk-ed-deadline").value);
   }
+  function allEntries() { return A().S.entries.map(function (r) { return r.e; }); }
 
   function wire(d) {
     d.addEventListener("cancel", function (e) { e.preventDefault(); close(); });
@@ -193,7 +196,21 @@
       var b = e.target.closest("[data-rmimg]");
       if (b) { ed.images.splice(+b.getAttribute("data-rmimg"), 1); renderThumbs(); markDirty(); return; }
       var img = e.target.closest("img[data-full]");
-      if (img) window.open(img.src, "_blank", "noopener");
+      if (!img || !img.src) return;
+      // A data URL cannot open in a new tab, so every image opens in a dialog.
+      A().dialog("dk-imgview", img.alt || "Image", '<img class="dk-imgview" src="' + A().esc(img.src) + '" alt="' + A().esc(img.alt || "") + '">');
+    });
+    $("dk-ed-wb").addEventListener("click", function () {
+      if (Desk.workback) Desk.workback.open({ title: $("dk-ed-title").value.trim() || "Untitled", date: $("dk-ed-deadline").value, source: "Desk" });
+    });
+    // Links to and from other entries: open them, after the usual unsaved check.
+    $("dk-ed-links").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-reflink]");
+      if (!b) return;
+      var id = b.getAttribute("data-reflink");
+      if (isDirty() && !window.confirm("Discard unsaved changes?")) return;
+      markClean();
+      open(id);
     });
     $("dk-ed-history").addEventListener("click", openHistory);
     $("dk-ed-notion").addEventListener("click", openPush);
@@ -227,13 +244,25 @@
     $("dk-ed-tags").value = e.tags.join(", ");
     $("dk-ed-srclabel").value = e.sourceLabel;
     $("dk-ed-srcurl").value = e.sourceUrl;
-    C.RT_FIELDS.forEach(function (f) { $("dk-ed-" + f).innerHTML = a.sanitize(e[f]); });
+    var entries = allEntries();
+    // Links show the target's current title, whatever was typed at the time.
+    C.RT_FIELDS.forEach(function (f) { $("dk-ed-" + f).innerHTML = a.sanitize(C.refreshRefs(e[f], entries)); });
     ed.images = e.images.slice();
     renderThumbs();
+    $("dk-ed-imgnote").textContent = a.feature("getImage") ? "private in Drive, shown through the desk; up to " + MAX_IMAGES
+      : "in Drive, shared by link until the backend is updated; up to " + MAX_IMAGES;
     var links = [];
     if (a.safeUrl(e.notionUrl)) links.push('<a href="' + a.esc(e.notionUrl) + '" target="_blank" rel="noopener"><i class="fas fa-database" aria-hidden="true"></i> In Notion</a>');
     if (a.safeUrl(e.calendarUrl)) links.push('<a href="' + a.esc(e.calendarUrl) + '" target="_blank" rel="noopener"><i class="fas fa-calendar" aria-hidden="true"></i> On the calendar</a>');
     if (e.addedAt) links.push("Added " + a.esc(new Date(e.addedAt).toLocaleDateString()));
+    var refBtn = function (x) { return '<button type="button" class="dk-link" data-reflink="' + a.esc(x.id) + '">' + a.esc(x.title || "Untitled") + '</button>'; };
+    var outIds = [];
+    C.RT_FIELDS.forEach(function (f) { C.refsIn(e[f]).forEach(function (id) { if (outIds.indexOf(id) === -1) outIds.push(id); }); });
+    var outs = outIds.map(a.entryDoc).filter(Boolean).map(function (r) { return r.e; });
+    if (outs.length) links.push("Links to " + outs.map(refBtn).join(", "));
+    var ins = C.backlinks(e.id, entries);
+    if (ins.length) links.push("Linked from " + ins.map(refBtn).join(", "));
+    links.push('<span class="dk-quiet">Type [[a title]] in a field to link another entry.</span>');
     $("dk-ed-links").innerHTML = links.join(" · ");
   }
 
@@ -248,7 +277,10 @@
       sourceLabel: $("dk-ed-srclabel").value.trim().slice(0, 300), sourceUrl: $("dk-ed-srcurl").value.trim().slice(0, 1000),
       images: ed.images.slice(0, MAX_IMAGES)
     });
-    C.RT_FIELDS.forEach(function (f) { data[f] = a.sanitize($("dk-ed-" + f).innerHTML).slice(0, 40000); });
+    // [[title]] typed in a field becomes a link by id (core.linkRefs), then is
+    // sanitised once more so only the span shape the whitelist knows survives.
+    var entries = allEntries();
+    C.RT_FIELDS.forEach(function (f) { data[f] = a.sanitize(C.linkRefs(a.sanitize($("dk-ed-" + f).innerHTML), entries, ed.id)).slice(0, 40000); });
     return data;
   }
 
@@ -303,11 +335,21 @@
   function renderThumbs() {
     var box = $("dk-ed-thumbs");
     if (!ed.images.length) { box.innerHTML = '<span class="dk-quiet">None.</span>'; return; }
+    var a = A(), viaBackend = a.feature("getImage");
     box.innerHTML = ed.images.map(function (im, i) {
-      var url = im && A().safeUrl(im.url);
-      return '<span class="dk-thumb">' + (url ? '<img alt="Attachment ' + (i + 1) + '" src="' + A().esc(url) + '" data-full="1" loading="lazy">' : '<span class="dk-quiet">Image ' + (i + 1) + '</span>') +
-        '<button type="button" data-rmimg="' + i + '" aria-label="Remove image"><i class="fas fa-times" aria-hidden="true"></i></button></span>';
+      var url = im && a.safeUrl(im.url), id = im && /^[\w-]{10,120}$/.test(String(im.id || "")) ? im.id : "";
+      var alt = "Attachment " + (i + 1), body;
+      // With the new backend every image comes through it (public links too, so
+      // locking them later changes nothing here); without it, only linked ones show.
+      if (viaBackend && id) body = '<img alt="' + alt + '" data-full="1" data-imgid="' + a.esc(id) + '" class="is-loading">';
+      else if (url) body = '<img alt="' + alt + '" src="' + a.esc(url) + '" data-full="1" loading="lazy">';
+      else body = '<span class="dk-quiet" title="Shown once the backend is updated">Image ' + (i + 1) + ' (private)</span>';
+      return '<span class="dk-thumb">' + body + '<button type="button" data-rmimg="' + i + '" aria-label="Remove image ' + (i + 1) + '"><i class="fas fa-times" aria-hidden="true"></i></button></span>';
     }).join("");
+    Array.prototype.forEach.call(box.querySelectorAll("img[data-imgid]"), function (img) {
+      a.imageData(img.getAttribute("data-imgid")).then(function (src) { img.src = src; img.classList.remove("is-loading"); },
+        function (err) { img.replaceWith(Object.assign(document.createElement("span"), { className: "dk-quiet", textContent: img.alt + ": " + err.message })); });
+    });
   }
 
   function downscale(file) {
@@ -341,7 +383,7 @@
       return p.then(function () {
         return downscale(file).then(function (img) {
           return A().call("uploadImage", { name: file.name.slice(0, 100), dataUrl: img.url }).then(function (r) {
-            ed.images.push({ id: r.image.id, url: r.image.url });
+            ed.images.push(r.image.private ? { id: r.image.id, url: "", private: true } : { id: r.image.id, url: r.image.url });
             markDirty();
             renderThumbs();
           });

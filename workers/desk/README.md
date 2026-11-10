@@ -60,13 +60,21 @@ and drops rows whose status means finished. JSON in the `NOTION_SOURCES` or
 ### Changing the code later
 
 Paste the new `Code.gs`, then **Deploy** > **Manage deployments** > pencil >
-Version **New version** > **Deploy**. The URL stays the same.
+Version **New version** > **Deploy**. The URL stays the same. The page asks the
+script for its version and feature list, so a page newer than the script hides
+what the script cannot do yet (private images need `2026.11.10-desk-upgrade` or
+later).
 
 ## Because anyone can edit
 
 - Changes are metered: 60 a minute and 3,000 a day for everyone together, 60
   images a day. Reading is never limited.
-- Every save keeps a revision row; an entry's **History** restores any of them.
+- Every save keeps a revision row; an entry's **History** restores any of the
+  newest 40 per document. Every 200 saves the script drops older ones so the
+  revisions tab, and every History read, stays small.
+- Images live in the Drive folder with no public link and reach the page only
+  through the script. Images attached before 2026-11-10 kept a public link;
+  **Settings > Images > Make every image private** removes it.
   Deletes are soft: **Settings > Recently deleted** brings them back, and a
   delete shows **Undo** for a few seconds.
 - Meeting call links (Meet, Zoom, Teams, Webex) are removed from calendar data
@@ -133,8 +141,25 @@ safer if the email ever arrives.
   time for a new event (the form offers each calendar you can write to), drag an
   event to move it, or drag its bottom edge to change its length; a toast offers
   Undo. Dragging works with a mouse or pen; on touch, tap an event to edit it.
-- Keys: `1`-`4` views, `N` new entry, `T` quick add, `/` search, `R` refresh,
-  `[` `]` move the calendar, `Ctrl+S` save.
+- **Week**: hours in meetings and in blocks tied to tasks, free hours per day,
+  tasks finished and slipped, entries added or changed, deadlines this week and
+  next. **Copy as text** gives the same as plain text for a weekly update.
+- **Work back** (the stream icon on a deadline, or the editor when an entry has
+  a deadline): editable steps such as outline, freeze experiments and full draft
+  become dated tasks; steps whose date has passed are skipped. The steps can be
+  saved as your template.
+- **Links between entries**: type `[[an entry title]]` in a rich-text field. On
+  save it becomes a link by id, so renaming the target keeps it; the editor
+  lists **Links to** and **Linked from**.
+- **Offline**: when the script cannot be reached, saves, task and event changes
+  wait on the device (the sync line shows how many) and go out on the next
+  refresh. A save the server refuses because the entry changed meanwhile is kept
+  as a separate "(offline copy)" entry, so nothing typed is lost.
+- Keys: `Ctrl+K` command palette (jump to a view, entry, task or event; move a
+  task to today or tomorrow, block time, mark done, work back; start with `+` to
+  capture a task, event or idea in the quick-add grammar), `1`-`5` views, arrow
+  keys between views in the sidebar, `N` new entry, `T` quick add, `/` search,
+  `R` refresh, `[` `]` move the calendar, `Ctrl+S` save.
 
 ## Develop and test
 
