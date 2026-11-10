@@ -17,6 +17,7 @@ redirect_from:
   draws every non-patent paper with a `thrust` onto one of four layers:
   published work as beads, "Under Review" / "In Preparation" work as labelled
   chips (in-preparation papers are drawn even though they are not counted).
+  A published paper with `arc_label: true` is drawn as a solid labelled chip.
   Within a layer: published beads first, then chips, each oldest to newest.
 {%- endcomment -%}
 {%- assign pubs = site.data.publications -%}
@@ -111,9 +112,9 @@ redirect_from:
               {%- assign href = pub.url | default: arc_pubs_url -%}
               {%- assign vclean = pub.venue | remove: " (Accepted)" -%}
               {%- if pub.type == "preprint" -%}{%- assign vclean = "preprints.org" -%}{%- endif -%}
-            <a class="arc-node arc-node--{{ kind }}" href="{{ href }}"{% if pub.url %} target="_blank" rel="noopener"{% endif %} style="--j:{{ j }}" aria-label="{{ pub.title | escape }} &mdash; {{ vclean | escape }}, {{ pub.year }}, {{ st }}">
+            <a class="arc-node arc-node--{{ kind }}{% if kind == 'pub' and pub.arc_label %} arc-node--named{% endif %}" href="{{ href }}"{% if pub.url %} target="_blank" rel="noopener"{% endif %} style="--j:{{ j }}" aria-label="{{ pub.title | escape }} &mdash; {{ vclean | escape }}, {{ pub.year }}, {{ st }}">
               <span class="arc-node__dot" aria-hidden="true"></span>
-              {%- if kind != "pub" -%}<span class="arc-node__name">{{ nm | escape }}</span><span class="arc-node__meta">{% if vshort %}{{ vshort | escape }} &middot; {% endif %}{{ st }}</span>{%- endif -%}
+              {%- if kind != "pub" or pub.arc_label -%}<span class="arc-node__name">{{ nm | escape }}</span><span class="arc-node__meta">{% if vshort %}{{ vshort | escape }} &middot; {% endif %}{{ st }}</span>{%- endif -%}
               <span class="arc-card" aria-hidden="true"><b class="arc-card__title">{{ pub.title | escape }}</b><span class="arc-card__meta">{{ vclean | escape }} &middot; {{ pub.year }} &middot; <span class="arc-card__state">{{ st }}</span></span></span>
             </a>
               {%- assign j = j | plus: 1 -%}

@@ -243,6 +243,37 @@
 .arc-node--prep:focus-visible .arc-node__dot,
 .arc-node--review.is-open .arc-node__dot,
 .arc-node--prep.is-open .arc-node__dot { border-color: var(--arc-on-hue); }
+// Highlighted published paper (`arc_label: true`): a labelled chip with a solid
+// border and filled dot, so it reads as published, not in flight.
+.arc-node--pub.arc-node--named {
+  max-width: 100%;
+  margin: 0;
+  padding: .22rem .62rem .22rem .5rem;
+  border: 1px solid var(--c);
+  background: var(--c-soft);
+  font-family: var(--font-head);
+  font-size: .72rem;
+  line-height: 1.25;
+  transition: background .18s var(--ease), color .18s var(--ease), box-shadow .18s var(--ease);
+}
+.arc-node--pub.arc-node--named .arc-node__dot { width: 9px; height: 9px; box-shadow: none; }
+.arc-node--pub.arc-node--named:hover,
+.arc-node--pub.arc-node--named:focus-visible,
+.arc-node--pub.arc-node--named.is-open {
+  background: var(--c);
+  color: var(--arc-on-hue);
+  box-shadow: 0 4px 14px var(--c-soft);
+}
+.arc-node--pub.arc-node--named:hover .arc-node__meta,
+.arc-node--pub.arc-node--named:focus-visible .arc-node__meta,
+.arc-node--pub.arc-node--named.is-open .arc-node__meta { color: inherit; opacity: .85; }
+.arc-node--pub.arc-node--named:hover .arc-node__dot,
+.arc-node--pub.arc-node--named:focus-visible .arc-node__dot,
+.arc-node--pub.arc-node--named.is-open .arc-node__dot {
+  transform: none;
+  background: var(--arc-on-hue);
+  box-shadow: none;
+}
 .arc-node:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 // --- Hover / focus card (no JS needed) ------------------------------------------------

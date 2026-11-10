@@ -123,6 +123,7 @@
 
 - title: 'GaussVLA: Geometry-Aware Spatial Reasoning for Vision-Language-Action Model'
   thrust: 'vla'
+  arc_label: true
   authors: 'Md Selim Sarowar, Md Tanvir Islam, Sungho Kim*, and Sangtae Ahn'
   venue: 'British Machine Vision Conference (Accepted)'
   venue_short: "BMVC'26"
@@ -148,6 +149,7 @@
 
 - title: 'HNH40K: A Robust Dataset and Risk-Weighted Learning for Hand Filtering'
   thrust: 'perception'
+  arc_label: true
   authors: 'Ashikuzzaman†, Md Selim Sarowar†, Md Tanvir Islam, Sangtae Ahn, and Khan Muhammad'
   venue: 'British Machine Vision Conference (Accepted)'
   venue_short: "BMVC'26"
