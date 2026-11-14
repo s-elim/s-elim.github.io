@@ -10,9 +10,9 @@
 #  Update openings: python scripts/manage.py openings run
 # ==========================================================================
 
-last_updated: '2026-11-14T00:17:09.231394+00:00'
+last_updated: '2026-11-14T22:55:07.345349+00:00'
 last_updated_human: 14 November 2026
-total_count: 100
+total_count: 99
 openings:
   - id: ellis-institute-finland-tampere-university-phd-postd
     title: 'PhD & Postdoc Positions in Embodied AI and Robot Learning'
@@ -529,7 +529,7 @@ openings:
                            The CVG group is part of the Institute for Visual Computing (IVC).
                            Our research and education focuses on computer vision with a particular focus on
                            geometric aspects. Our goal is to study and develop techniques to extract 3D shape, motion,
-                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research 3D Scenes 3D Reconstruction 3D dense reconstruction from RGB-(D) images or point clouds. Read More Robotics Robotics Localization, Mapping, Planning, and Scene Understanding for Robotics. Read More 3D Scenes Datasets We create datasets for 3D r
+                           appearance and calibration information from images. Specifically, our group is working on the problems of structure-from-motion, self-calibration, photometric calibration, camera networks, stereo and rectification, shape-from-silhouettes, multi-view matching, 3D modeling and image-based representations. We aim to develop new theories and algorithms, as well as systems and applications. Our current focus is on mobile computer vision and modeling large-scale scenes and dynamic events. Meet the Team Featured Research Robotics Robotics Localization, Mapping, Planning, and Scene Understanding for Robotics. Read More Geometry Privacy Preservance Privacy preserving techniques in mapping, localization and features. Read More Geometry Line Features and Hybrid Met
     requirements: []
     preferred_qualifications: []
     salary: Not specified
@@ -1156,6 +1156,47 @@ openings:
     history:
       - date: '2026-11-14'
         event: Discovered from LinkedIn (North Carolina Agricultural and Technical State University)
+  - id: cedars-sinai-postdoctoral-scientist-center-for-auton
+    title: Postdoctoral Scientist -Center for Autonomous Robotic Surgery (Robotics Track)
+    position_type: Postdoc
+    institution: Cedars-Sinai
+    department: Not specified
+    lab: Not specified
+    principal_investigator: Not specified
+    city: West Hollywood
+    country: USA
+    region: USA
+    research_topics:
+      - Robot Learning
+      - Autonomous Systems
+    description: >-
+      Postdoctoral Scientist -Center for Autonomous Robotic Surgery (Robotics Track) at Cedars-Sinai. Location: West Hollywood, CA. Public research opening tracked via LinkedIn academic search.
+    requirements: []
+    preferred_qualifications: []
+    salary: Not specified
+    funding: Not specified
+    deadline_human: Rolling / Open until filled
+    start_date: Not specified
+    employment_type: Full-time
+    status: New
+    relevance: Relevant
+    relevance_explanation:
+      matched_topics:
+        - Robot Learning
+        - Autonomous Systems
+      technical_alignment: Involves Robot Learning, Autonomous Systems methodology.
+      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
+      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
+      potential_gaps: None identified
+    source: LinkedIn (Cedars-Sinai)
+    source_url: >-
+      https://linkedin.com/jobs/view/postdoctoral-scientist-center-for-autonomous-robotic-surgery-robotics-track-at-cedars-sinai-4489350485
+    first_seen: '2026-11-14'
+    last_seen: '2026-11-14'
+    last_verified: '2026-11-14'
+    history:
+      - date: '2026-11-14'
+        event: Discovered from LinkedIn (Cedars-Sinai)
   - id: brookhaven-national-laboratory-postdoctoral-research
     title: Postdoctoral Research Associate - Robotics and Embodied AI
     position_type: Postdoc
@@ -1898,48 +1939,6 @@ openings:
     history:
       - date: '2026-11-14'
         event: Discovered from LinkedIn (Nissan Motor Corporation)
-  - id: feather-robotics-physical-ai-researcher-research-sci
-    title: Physical AI Researcher
-    position_type: Research Scientist
-    institution: Feather Robotics
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: San Francisco Bay Area
-    country: Not specified
-    region: Europe
-    research_topics:
-      - Embodied AI
-      - Physical AI
-      - Robot Learning
-    description: >-
-      Physical AI Researcher at Feather Robotics. Location: San Francisco Bay Area. Public research opening tracked via LinkedIn academic search.
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Highly Relevant
-    relevance_explanation:
-      matched_topics:
-        - Embodied AI
-        - Physical AI
-        - Robot Learning
-      technical_alignment: Focuses directly on Embodied AI, Physical AI and physical robot control.
-      research_alignment: Core alignment with Physical Super Intelligence and world model thesis directions.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: LinkedIn (Feather Robotics)
-    source_url: 'https://linkedin.com/jobs/view/physical-ai-researcher-at-feather-robotics-4486971153'
-    first_seen: '2026-11-14'
-    last_seen: '2026-11-14'
-    last_verified: '2026-11-14'
-    history:
-      - date: '2026-11-14'
-        event: Discovered from LinkedIn (Feather Robotics)
   - id: applied-intuition-research-scientist-world-action-fo
     title: Research Scientist - World-Action Foundation Model, Robotics
     position_type: Research Scientist
@@ -3885,44 +3884,6 @@ openings:
     history:
       - date: '2026-11-14'
         event: Discovered from AcademicTransfer (Netherlands)
-  - id: tu-delft-phd-position-in-ai-for-software-reuse-and-a
-    title: PhD Position in AI for Software Reuse and Agentic Development
-    position_type: PhD
-    institution: TU Delft
-    department: Not specified
-    lab: Not specified
-    principal_investigator: Not specified
-    city: Not specified
-    country: Netherlands
-    region: Europe
-    research_topics:
-      - Agentic Robotics
-    description: >-
-      How can AI agents build on existing software instead of reinventing it? Join this collaboration between TU Delft and ING to research more reliable agentic software development.Job descriptionSoftware intensive organizations rely on increasingly…
-    requirements: []
-    preferred_qualifications: []
-    salary: Not specified
-    funding: Not specified
-    deadline_human: Rolling / Open until filled
-    start_date: Not specified
-    employment_type: Full-time
-    status: New
-    relevance: Relevant
-    relevance_explanation:
-      matched_topics:
-        - Agentic Robotics
-      technical_alignment: Involves Agentic Robotics methodology.
-      research_alignment: Substantial overlap with embodied perception and robotic manipulation priorities.
-      qualification_alignment: 'Candidate background in M.Sc. EE (AI & CV) with PyTorch and robotics experience meets baseline requirements.'
-      potential_gaps: None identified
-    source: EURAXESS Jobs (Latest)
-    source_url: 'https://euraxess.ec.europa.eu/jobs/476409'
-    first_seen: '2026-11-14'
-    last_seen: '2026-11-14'
-    last_verified: '2026-11-14'
-    history:
-      - date: '2026-11-14'
-        event: Discovered from EURAXESS Jobs (Latest)
   - id: university-research-institute-founding-robotics-engi
     title: Founding Robotics Engineer - Subsea/Autonomy
     position_type: Research Engineer
