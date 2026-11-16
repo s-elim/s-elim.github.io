@@ -20,6 +20,34 @@
     <div class="site-footer__meta">
       &copy; {{ site.time | date: '%Y' }} {{ p.name | default: site.name }}. All rights reserved.<br>
       Last updated {{ site.time | date: '%B %Y' }} · Built with <a href="https://jekyllrb.com" rel="nofollow noopener" target="_blank">Jekyll</a>.
+      {% if site.flag_counter_id and site.flag_counter_id != "" %}
+      {% assign fc = "https://s05.flagcounter.com/count2/" | append: site.flag_counter_id %}
+      {% assign fc_opts = "/columns_6/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" %}
+      <div class="footer-visitor-counter">
+        <a href="https://info.flagcounter.com/{{ site.flag_counter_id }}" target="_blank" rel="noopener" aria-label="Visitor map (Flag Counter)">
+          <img class="footer-visitor-counter__img" id="flag-counter" alt="Visitor flag counter" loading="lazy" decoding="async"
+               data-base="{{ fc }}" data-opts="{{ fc_opts }}">
+        </a>
+        <noscript><img class="footer-visitor-counter__img" src="{{ fc }}/bg_EEF2F7/txt_6B7383/border_EEF2F7{{ fc_opts }}" alt="Visitor flag counter"></noscript>
+      </div>
+      <script>
+        // One request, drawn in the footer's own colors so the counter blends in (light or dark theme).
+        (function () {
+          var img = document.getElementById('flag-counter');
+          if (!img) return;
+          function hex(c, fallback) {
+            var m = (c || '').match(/[\d.]+/g);
+            if (!m || m.length < 3 || (m.length > 3 && +m[3] === 0)) return fallback;
+            return m.slice(0, 3).map(function (v) { return ('0' + Math.round(+v).toString(16)).slice(-2); }).join('').toUpperCase();
+          }
+          var footer = img.closest('.site-footer');
+          var meta = img.closest('.site-footer__meta');
+          var bg = hex(footer && getComputedStyle(footer).backgroundColor, 'EEF2F7');
+          var tx = hex(meta && getComputedStyle(meta).color, '6B7383');
+          img.src = img.getAttribute('data-base') + '/bg_' + bg + '/txt_' + tx + '/border_' + bg + img.getAttribute('data-opts');
+        })();
+      </script>
+      {% endif %}
     </div>
   </div>
 </footer>
