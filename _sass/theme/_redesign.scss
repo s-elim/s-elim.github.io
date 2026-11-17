@@ -327,6 +327,34 @@ a.hero__status:hover { color: var(--accent); }
   padding: .32rem .7rem;
   border-radius: 6px;
 }
+// Core-thrust chips (World Models, JEPA, Agentic Robotics; Selim 2026-11-18):
+// calm at rest like the others, a blue-violet halo only on hover. The old
+// always-on .chip--glow stays disabled above.
+.hero--clean .hero__chips .chip--spark:hover {
+  color: #1e3a8a !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, .45), 0 0 18px rgba(59, 130, 246, .65),
+    0 0 38px rgba(139, 92, 246, .45) !important;
+  text-shadow: 0 0 10px rgba(99, 102, 241, .45);
+  animation: chip-spark 1.8s ease-in-out infinite;
+}
+:root[data-theme="dark"] .hero--clean .hero__chips .chip--spark:hover {
+  border-color: #a5b4fc !important;
+  text-shadow: none;
+}
+@keyframes chip-spark {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, .45), 0 0 18px rgba(59, 130, 246, .65),
+      0 0 38px rgba(139, 92, 246, .45);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, .6), 0 0 26px rgba(59, 130, 246, .8),
+      0 0 52px rgba(139, 92, 246, .6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero--clean .hero__chips .chip--spark:hover { animation: none; }
+}
 .hero--clean .hero__actions { gap: .55rem; }
 
 // --- Home sections -----------------------------------------------------------

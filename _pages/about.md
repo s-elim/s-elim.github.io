@@ -49,10 +49,10 @@ redirect_from:
     <p class="hero__bio">I build embodied agents that perceive, reason and act in the physical world, working toward <strong>physical super intelligence</strong>. My work spans <strong>3D computer vision &amp; 6D pose estimation</strong>, <strong>vision-language-action (VLA) models</strong> and <strong>latent world models</strong> for robot manipulation, with first-author papers at <strong>BMVC&rsquo;26</strong> and in <strong>IEEE Access</strong>. <button type="button" class="news-more js-modal-open" data-modal-target="#about-modal">More about me &rarr;</button></p>
     <a class="hero__status" href="mailto:{{ p.email }}?subject=Research%20collaboration%20%2F%20PhD%20opportunity">Open to research collaborations &amp; PhD positions</a>
     <div class="hero__chips">
-      <span class="chip">World Models</span>
+      <span class="chip chip--spark">World Models</span>
       <span class="chip">Vision-Language-Action Models</span>
-      <span class="chip">JEPA (H/V-JEPA)</span>
-      <span class="chip">Agentic Robotics</span>
+      <span class="chip chip--spark">JEPA (H/V-JEPA)</span>
+      <span class="chip chip--spark">Agentic Robotics</span>
       <span class="chip">6D Pose Estimation</span>
       <span class="chip">Spatial Intelligence</span>
       <span class="chip">Causal Learning</span>
