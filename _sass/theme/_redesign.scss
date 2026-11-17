@@ -328,32 +328,42 @@ a.hero__status:hover { color: var(--accent); }
   border-radius: 6px;
 }
 // Core-thrust chips (World Models, JEPA, Agentic Robotics; Selim 2026-11-18):
-// calm at rest like the others, a blue-violet halo only on hover. The old
-// always-on .chip--glow stays disabled above.
+// a pulsing blue glow, soft at rest (so it shows on phones too) and brighter on
+// hover. The glow lives on ::after because the chip's own box-shadow is set with
+// !important by the shared hover rule, and !important beats any animation. The
+// old .chip--glow stays disabled above.
+.hero--clean .hero__chips .chip--spark {
+  position: relative;
+  border-color: rgba(59, 130, 246, .55) !important;
+}
+.hero--clean .hero__chips .chip--spark::after {
+  content: "";
+  position: absolute;
+  top: -1px; right: -1px; bottom: -1px; left: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 10px 1px rgba(59, 130, 246, .75), 0 0 22px 4px rgba(37, 99, 235, .35);
+  opacity: .35;
+  animation: chip-spark 2.2s ease-in-out infinite;
+  transition: box-shadow .25s var(--ease);
+}
 .hero--clean .hero__chips .chip--spark:hover {
   color: #1e3a8a !important;
-  border-color: #6366f1 !important;
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, .45), 0 0 18px rgba(59, 130, 246, .65),
-    0 0 38px rgba(139, 92, 246, .45) !important;
-  text-shadow: 0 0 10px rgba(99, 102, 241, .45);
-  animation: chip-spark 1.8s ease-in-out infinite;
+  border-color: #3b82f6 !important;
+  text-shadow: 0 0 10px rgba(59, 130, 246, .45);
 }
-:root[data-theme="dark"] .hero--clean .hero__chips .chip--spark:hover {
-  border-color: #a5b4fc !important;
-  text-shadow: none;
+.hero--clean .hero__chips .chip--spark:hover::after {
+  box-shadow: 0 0 16px 3px rgba(59, 130, 246, .85), 0 0 34px 8px rgba(37, 99, 235, .45);
+  animation-duration: 1.2s;
 }
+:root[data-theme="dark"] .hero--clean .hero__chips .chip--spark { border-color: rgba(96, 165, 250, .6) !important; }
+:root[data-theme="dark"] .hero--clean .hero__chips .chip--spark:hover { border-color: #93c5fd !important; text-shadow: none; }
 @keyframes chip-spark {
-  0%, 100% {
-    box-shadow: 0 0 0 1px rgba(99, 102, 241, .45), 0 0 18px rgba(59, 130, 246, .65),
-      0 0 38px rgba(139, 92, 246, .45);
-  }
-  50% {
-    box-shadow: 0 0 0 1px rgba(99, 102, 241, .6), 0 0 26px rgba(59, 130, 246, .8),
-      0 0 52px rgba(139, 92, 246, .6);
-  }
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero--clean .hero__chips .chip--spark:hover { animation: none; }
+  .hero--clean .hero__chips .chip--spark::after { animation: none; opacity: .6; }
 }
 .hero--clean .hero__actions { gap: .55rem; }
 
