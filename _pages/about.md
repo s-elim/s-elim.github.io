@@ -53,7 +53,7 @@ redirect_from:
       <span class="chip">Vision-Language-Action Models</span>
       <span class="chip chip--spark">JEPA (H/V-JEPA)</span>
       <span class="chip chip--spark">Agentic Robotics</span>
-      <span class="chip">6D Pose Estimation</span>
+      <span class="chip chip--spark">Recursive Self-Improvement (RSI)</span>
       <span class="chip">Spatial Intelligence</span>
       <span class="chip">Causal Learning</span>
     </div>
