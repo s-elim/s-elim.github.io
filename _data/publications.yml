@@ -57,7 +57,7 @@
   type: 'conference'
   flagship: 'robotics'
   rank: 'A*'
-  status: 'In Preparation'
+  status: 'Under Review'
   featured: true
   image: '/images/awm-framework.webp'
   thumb: "RSS '27"
@@ -75,7 +75,7 @@
   type: 'conference'
   flagship: 'robotics'
   rank: 'A*'
-  status: 'In Preparation'
+  status: 'Under Review'
   image: '/images/plumb-bench-teaser.webp'
   thumb: "RSS '27"
   url: 'https://physical-super-intelligence.github.io/PLUMB_Bench/'
