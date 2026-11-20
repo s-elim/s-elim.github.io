@@ -1,4 +1,6 @@
 # Home page "Updates" timeline (most recent first). HTML allowed in `text`.
+- date: 'December 2026'
+  text: 'Selim Sarowar has been awarded the <strong>NIIED Academic Excellence Award</strong> (국립국제교육원상장) by the Government of Korea through the <a href="https://www.niied.go.kr/" target="_blank" rel="noopener">National Institute for International Education (NIIED)</a> for his contribution to Korean high-tech and research.'
 - date: 'November 2026'
   text: 'Participated in the <a href="https://kwirc.org/" target="_blank" rel="noopener"><strong>International Robot Contest 2026 (IRC 2026)</strong></a>, Manipulator category, at EXCO, Daegu, South Korea (13 Nov. 2026), with our project <a href="https://jk070599999-png.github.io/raccoon_ai_teacher/" target="_blank" rel="noopener"><strong>RaccoonBot AI Teacher</strong></a>.'
 - date: 'October 2026'

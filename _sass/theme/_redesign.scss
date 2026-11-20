@@ -394,7 +394,7 @@ a.hero__status:hover { color: var(--accent); }
   letter-spacing: .04em;
   padding-top: .15rem;
 }
-.news-list__text { margin: 0; color: var(--text); }
+.news-list__text { margin: 0; color: var(--text); word-break: keep-all; }
 .news-more {
   margin-top: .75rem;
   background: none;
@@ -435,8 +435,9 @@ a.hero__status:hover { color: var(--accent); }
   border-bottom: 1px solid var(--border);
 }
 .award-list__icon { color: #c08a12; font-size: .95rem; }
-.award-list__title { font-weight: 600; color: var(--text-strong); font-size: .96rem; line-height: 1.45; }
+.award-list__title { font-weight: 600; color: var(--text-strong); font-size: .96rem; line-height: 1.45; word-break: keep-all; }
 .award-list__org { display: block; font-weight: 400; color: var(--muted); font-size: .86rem; margin-top: .1rem; }
+.award-list__detail { display: block; font-weight: 400; color: var(--text); font-size: .84rem; line-height: 1.5; margin-top: .2rem; }
 .award-list__date { font-size: .8rem; color: var(--muted); white-space: nowrap; }
 
 // Resources (the links that used to crowd the hero)

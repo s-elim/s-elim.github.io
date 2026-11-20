@@ -273,7 +273,7 @@ redirect_from:
   {% for a in site.data.awards %}
   <li class="award-list__item">
     <i class="fas fa-medal award-list__icon" aria-hidden="true"></i>
-    <span class="award-list__title">{{ a.title }}{% if a.org %}<span class="award-list__org">{{ a.org }}</span>{% endif %}</span>
+    <span class="award-list__title">{{ a.title }}{% if a.org %}<span class="award-list__org">{{ a.org }}</span>{% endif %}{% if a.detail %}<span class="award-list__detail">{{ a.detail }}</span>{% endif %}</span>
     {% if a.date %}<span class="award-list__date">{{ a.date }}</span>{% endif %}
   </li>
   {% endfor %}
