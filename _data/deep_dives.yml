@@ -25,6 +25,48 @@
 # ==========================================================================
 
 dives:
+  - id: vizuara-world-models-vla
+    title: World Models and VLA, a Research Companion
+    subtitle: "Vizuara's two lecture series, Build a World Model from Scratch and the VLA and World Models for
+      Robotics bootcamp, turned into one interactive study and research guide"
+    kicker: 'Course companion · 22 Nov 2026'
+    cta: Open the companion
+    verdict_label: Status
+    summary: >-
+      Deep notes for all 21 available lectures (about 32 hours of video), every point linked to its timestamp, read
+      side by side with the papers they teach: 153 papers verified against their arXiv or DOI record and venue, Tier 1
+      papers read in full. An expert track covers nine topics, from RSSM and discrete-token world models to JEPA, latent planning,
+      diffusion policy and VLAs, each with derivations, critical analysis and exercises, plus a concept map,
+      comparison tables, a glossary and quizzes.
+    verdict: >-
+      Built and reviewed end to end by Claude Opus 5.5 on 21 and 22 Nov 2026. The review re-resolved every paper and
+      checked 33 lecture claims (29 correct, 4 corrected) and 17 paper statements (16 matched, 1 corrected). Still
+      open: 76 points marked "verify" that need the course notebooks or code, and 79 fields that show math as plain
+      text. Seven playlist entries were hidden on YouTube and are not covered.
+    highlights:
+      - >-
+        Every statement carries its kind: Lecture, Paper (with its section, equation or table), Synthesis, or
+        Research angle, which is an idea and never a result.
+      - >-
+        Where a lecture and a paper disagree, the page says so: the V-JEPA 2-AC rollout loss is the L1 norm in the
+        paper (Sec. 3, Eq. 2 and 3), not the squared error the lecture describes.
+      - >-
+        Of the 153 papers, 49 have no confirmed peer-reviewed version and are labeled Preprint; papers that could
+        not be verified are left out.
+      - >-
+        75 exercises across the nine topics, a 113-node concept map and 20 research angles, in one self-contained
+        file with no network requests; progress and notes stay in the browser.
+    page: /learn/vizuara-world-models-vla/
+    tags: [world models, VLA, JEPA, RSSM, diffusion policy, course companion]
+    source:
+      label: Vizuara on YouTube
+      url: https://www.youtube.com/@vizuara
+    links:
+      - label: Build a World Model from Scratch (playlist)
+        url: https://www.youtube.com/playlist?list=PLahzD_BXtne4
+      - label: VLA and World Models for Robotics (playlist)
+        url: https://www.youtube.com/playlist?list=PLPTV0NXA_ZSgd9IPtkZwrA09w3WRT0txK
+
   - id: language-eats-robotics
     title: Language Will Eat Robotics
     subtitle: "Tonghe Zhang's Saturday Robotics #33 talk, rebuilt as an interactive lecture on how frontier
