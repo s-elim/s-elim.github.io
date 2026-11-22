@@ -37,7 +37,10 @@ dives:
       side by side with the papers they teach: 153 papers verified against their arXiv or DOI record and venue, Tier 1
       papers read in full. An expert track covers nine topics, from RSSM and discrete-token world models to JEPA, latent planning,
       diffusion policy and VLAs, each with derivations, critical analysis and exercises, plus a concept map,
-      comparison tables, a glossary and quizzes.
+      comparison tables, a glossary and quizzes. A Frontier track adds eight topics on the 2024 to 2026 frontier:
+      NVIDIA Cosmos to Cosmos 3, Genie 1 to 4, Sora and Sora 2, World Labs Marble, Agentic World Action Models,
+      CaP-X, agentic policies and a frontier map, with 37 code, paper and system dissections pinned to commits and
+      58 exercises; what closed systems do not disclose is marked Not disclosed.
     verdict: >-
       Built and reviewed end to end by Claude Opus 5.5 on 21 and 22 Nov 2026. The review re-resolved every paper and
       checked 33 lecture claims (29 correct, 4 corrected) and 17 paper statements (16 matched, 1 corrected). Still
@@ -57,7 +60,7 @@ dives:
         75 exercises across the nine topics, a 113-node concept map and 20 research angles, in one self-contained
         file with no network requests; progress and notes stay in the browser.
     page: /learn/vizuara-world-models-vla/
-    tags: [world models, VLA, JEPA, RSSM, diffusion policy, course companion]
+    tags: [world models, VLA, JEPA, RSSM, diffusion policy, Frontier track, Cosmos, Genie, Sora, Marble, agentic policies, course companion]
     source:
       label: Vizuara on YouTube
       url: https://www.youtube.com/@vizuara
